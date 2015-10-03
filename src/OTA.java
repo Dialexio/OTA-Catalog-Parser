@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.1
+ * OTA Catalog Parser 0.1.1
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -30,15 +30,15 @@ import java.util.Locale;
 
 public class OTA {
 	public static void main(String[] args) {
-		boolean mwMarkup = false;
+		boolean checkModel = false, mwMarkup = false;
 		File file = null;
 		int i = 0;
 		NSDictionary entry, root;
-		String arg = "", device = "", fileName = "";
+		String arg = "", device = "", fileName = "", model = "";
 
-		System.out.println("OTA Catalog Parser v0.1");
+		System.out.println("OTA Catalog Parser v0.1.1\n");
 
-		// Checking arguments.
+		// Reading and (lazily) checking arguments.
 		while (i < args.length && args[i].startsWith("-")) {
 			arg = args[i++];
 
@@ -46,17 +46,25 @@ public class OTA {
 			if (arg.equals("-d")) {
 				if (i < args.length) {
 					device = args[i++];
+
+					if (device.equals("iPhone8,1") || device.equals("iPhone8,2"))
+						checkModel = true;
 				}
 				else
 					System.err.println("-d requires a device, e.g. iPad2,1 or iPhone6,2");
 			}
 			// We also need to know what file we're looking at.
 			else if (arg.equals("-f")) {
-				if (i < args.length) {
+				if (i < args.length)
 					fileName = args[i++];
-				}
 				else
 					System.err.println("-f requires a filename");
+			}
+			else if (arg.equals("-m")) {
+				if (i < args.length)
+					model = args[i++];
+				else
+					System.err.println("-m requires a device, e.g. N71AP or N66mAP");
 			}
 			else if (arg.equals("-w")) {
 				mwMarkup = true;
@@ -71,6 +79,10 @@ public class OTA {
 			System.err.println("You need to set a file name with the \"-f\" argument.");
 			System.exit(2);
 		}
+		if (checkModel && !model.endsWith("AP")) {
+			System.err.println("You need to set a model with the \"-m\" argument.");
+			System.exit(3);
+		}
 
 		file = new File(fileName);
 
@@ -80,12 +92,33 @@ public class OTA {
 
 			// Check every item in the array with the key "Assets."
 			for (NSObject item:assets) {
-				entry = (NSDictionary)item; //...which should be a <dict>. Each <dict> in this array is an OTA package.
+				entry = (NSDictionary)item; //...which will be a <dict>. Each <dict> in this array is an OTA package.
 
-				// Look in the <dict> properties to see if the item is intended for the device we're looking for.
+				// Load the "SupportedDevices" array.
 				NSObject[] supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
+
+				// Load the "SupportedDeviceModels" array.
+				// We need to check for existence first since older entries don't include it.
+				NSObject[] supportedDeviceModels = null;
+				if (checkModel && entry.containsKey("SupportedDeviceModels"))
+					supportedDeviceModels = ((NSArray)entry.objectForKey("SupportedDeviceModels")).getArray();
+
+				
 				for (NSObject supportedDevice:supportedDevices) {
-					if (supportedDevice.toString().equals(device)) { // We got one!
+					boolean modelMatch = true;
+
+					// Look for "model" argument in SupportedDeviceModels
+					if (checkModel && supportedDeviceModels != null) {
+						modelMatch = false;
+
+						for (NSObject supportedDeviceModel:supportedDeviceModels)
+							if (supportedDeviceModel.toString().equals(model)) {
+								modelMatch = true;
+								break;
+							}
+					}
+
+					if (modelMatch && supportedDevice.toString().equals(device)) { // We got one!
 
 						String fileSize, fileURL;
 
