@@ -22,19 +22,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import com.dd.plist.*;
 import java.io.File;
-import java.text.NumberFormat;
-import java.util.Locale;
-import java.util.regex.*;
 
 public class OTA {
 	public static void main(String[] args) {
 		boolean checkModel = false, mwMarkup = false;
 		File file = null;
 		int i = 0;
-		NSDictionary entry, root;
+		NSDictionary root;
 		String arg = "", device = "", fileName = "", model = "";
 
 		System.out.println("OTA Catalog Parser v0.1.1\n");
@@ -45,12 +41,8 @@ public class OTA {
 
 			// We need to know the device.
 			if (arg.equals("-d")) {
-				if (i < args.length) {
+				if (i < args.length)
 					device = args[i++];
-
-					if (device.equals("iPhone8,1") || device.equals("iPhone8,2"))
-						checkModel = true;
-				}
 				else
 					System.err.println("-d requires a device, e.g. iPad2,1 or iPhone6,2");
 			}
@@ -91,112 +83,76 @@ public class OTA {
 			root = (NSDictionary)PropertyListParser.parse(file); // The first <dict>.
 			NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
 
-			// Check every item in the array with the key "Assets."
+			// Look at every item in the array with the key "Assets."
 			for (NSObject item:assets) {
-				entry = (NSDictionary)item; //...which will be a <dict>. Each <dict> in this array is an OTA package.
+				boolean entryMatch = false;
+				OTAPackage entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
 
-				// Load the "SupportedDevices" array.
-				NSObject[] supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
+				// Device check.
+				for (NSObject supportedDevice:entry.supportedDevices()) {
+					if (device.equals(supportedDevice.toString()))
+						entryMatch = true;
 
-				// Load the "SupportedDeviceModels" array.
-				// We need to check for existence first since older entries don't include it.
-				NSObject[] supportedDeviceModels = null;
-				if (checkModel && entry.containsKey("SupportedDeviceModels"))
-					supportedDeviceModels = ((NSArray)entry.objectForKey("SupportedDeviceModels")).getArray();
+					if (device.equals("iPhone8,1") || device.equals("iPhone8,2")) {
+						entryMatch = false;
 
-				
-				for (NSObject supportedDevice:supportedDevices) {
-					boolean modelMatch = true;
-
-					// Look for "model" argument in SupportedDeviceModels
-					if (checkModel && supportedDeviceModels != null) {
-						modelMatch = false;
-
-						for (NSObject supportedDeviceModel:supportedDeviceModels)
-							if (supportedDeviceModel.toString().equals(model)) {
-								modelMatch = true;
-								break;
-							}
+						if (entry.supportedDeviceModels() != null) {
+							for (NSObject supportedDeviceModel:entry.supportedDeviceModels())
+								if (supportedDeviceModel.toString().equals(model)) {
+									entryMatch = true;
+									break;
+								}
+						}
 					}
+				}
 
-					if (modelMatch && supportedDevice.toString().equals(device)) { // We got one!
+				if (entryMatch) {
+					if (mwMarkup) {
+						System.out.println("|-");
 
-						Matcher timestamp;
-						Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{8}");
-						String date = null, fileSize, fileURL;
+						// Output iOS version and build. 
+						System.out.print("| " + entry.version());
+						if (entry.isBeta()) // Is this a beta?
+							System.out.print(" Beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
+						System.out.println();
+						System.out.println("| " + entry.build());
 
-						// Make sure we don't get the dummy file for some entries.
-						if (entry.containsKey("RealUpdateAttributes")) {
-							NSDictionary realUpdateAttrs = (NSDictionary)entry.get("RealUpdateAttributes");
-
-							fileSize = realUpdateAttrs.get("RealUpdateDownloadSize").toString();
-							fileURL = realUpdateAttrs.get("RealUpdateURL").toString();
-						}
+						// Print prerequisites if there are any.
+						if (entry.isUniversal())
+							System.out.println("| colspan=\"2\" {{n/a}}");
 						else {
-							fileSize = entry.get("_DownloadSize").toString();
-							fileURL = ((NSString)entry.get("__BaseURL")).getContent() + ((NSString)entry.get("__RelativePath")).getContent();
+							System.out.println("| " + entry.prerequisiteVer());
+							System.out.println("| " + entry.prerequisiteBuild());
 						}
 
-						// Extract the date from the URL.
-						// This is not 100% accurate, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
-						timestamp = timestampRegex.matcher(fileURL);
-						while (timestamp.find()) {
-							date = timestamp.group().substring(5);
-							break;
-						}
+						// Date as extracted from the URL.
+						System.out.println("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6, 8) + "}}");
 
-						// Give the file size some commas.
-						fileSize = NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(fileSize));
+						// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
+						System.out.print("| [" + entry.url() + " ");
+						System.out.println(entry.url().replace("com_apple_MobileAsset_SoftwareUpdate/", "") + "]");
 
-						// Time to spit out what we found.
-						if (mwMarkup) {
-							System.out.println("|-");
+						System.out.println("| " + entry.size());
+					}
+					else {
+						// Output iOS version and build.
+						System.out.println("iOS " + entry.version() + " (Build " + entry.build() + ")");
+						if (entry.isBeta()) // Is this a beta?
+							System.out.println("This is marked as a beta release.");
 
-							// Output iOS version and build. 
-							System.out.print("| " + entry.get("OSVersion"));
-							if (entry.containsKey("ReleaseType") && entry.get("ReleaseType").toString().equals("Beta")) // Is this a beta?
-								System.out.print("b#"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
-							System.out.println();
-							System.out.println("| " + entry.get("Build"));
+						// Report prerequisite. If one isn't found, it's "universal."
+						if (entry.isUniversal())
+							System.out.println("Requires: Not specified");
+						else
+							System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
 
-							// Report prerequisite. If one isn't found, it's "universal."
-							if (!entry.containsKey("PrerequisiteBuild"))
-								System.out.println("| colspan=\"2\" {{n/a}}");
-							else {
-								System.out.println("| " + entry.get("PrerequisiteOSVersion"));
-								System.out.println("| " + entry.get("PrerequisiteBuild"));
-							}
+						// Date as extracted from the URL.
+						System.out.println("Timestamp: " + entry.date().substring(0, 4) + "-" + entry.date().substring(4, 6) + "-" + entry.date().substring(6, 8));
 
-							// Date as extracted from the URL.
-							System.out.println("| {{date|" + date.substring(0, 4) + "|" + date.substring(4, 6) + "|" + date.substring(6, 8) + "}}");
+						System.out.println("URL: " + entry.url());
+						System.out.println("File size: " + entry.size());
 
-							// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
-							System.out.print("| [" + fileURL + " ");
-							fileURL = ((NSString)entry.get("__RelativePath")).getContent().replace("com_apple_MobileAsset_SoftwareUpdate/", "");
-							System.out.println(fileURL + "]");
-
-							System.out.println("| " + fileSize);
-						}
-						else {
-							// Output iOS version and build.
-							System.out.println("iOS " + entry.get("OSVersion") + " (Build " + entry.get("Build") + ")");
-							if (entry.containsKey("ReleaseType") && entry.get("ReleaseType").toString().equals("Beta")) // Is this a beta?
-								System.out.println("This is marked as a beta release.");
-
-							// Report prerequisite. If one isn't found, it's "universal."
-							if (!entry.containsKey("PrerequisiteBuild"))
-								System.out.println("Requires: Not specified");
-							else
-								System.out.println("Requires: iOS " + entry.get("PrerequisiteOSVersion") + " (Build " + entry.get("PrerequisiteBuild") + ")");
-
-							// Date as extracted from the URL.
-							System.out.println("Timestamp: " + date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6, 8));
-
-							System.out.println("URL: " + fileURL);
-							System.out.println("File size: " + fileSize);
-
-							System.out.println();
-						}
+						System.out.println();
 					}
 				}
 			}
