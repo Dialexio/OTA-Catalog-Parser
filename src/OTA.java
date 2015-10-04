@@ -27,6 +27,7 @@ import com.dd.plist.*;
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.regex.*;
 
 public class OTA {
 	public static void main(String[] args) {
@@ -120,7 +121,9 @@ public class OTA {
 
 					if (modelMatch && supportedDevice.toString().equals(device)) { // We got one!
 
-						String fileSize, fileURL;
+						Matcher timestamp;
+						Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{8}");
+						String date = null, fileSize, fileURL;
 
 						// Make sure we don't get the dummy file for some entries.
 						if (entry.containsKey("RealUpdateAttributes")) {
@@ -132,6 +135,14 @@ public class OTA {
 						else {
 							fileSize = entry.get("_DownloadSize").toString();
 							fileURL = ((NSString)entry.get("__BaseURL")).getContent() + ((NSString)entry.get("__RelativePath")).getContent();
+						}
+
+						// Extract the date from the URL.
+						// This is not 100% accurate, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
+						timestamp = timestampRegex.matcher(fileURL);
+						while (timestamp.find()) {
+							date = timestamp.group().substring(5);
+							break;
 						}
 
 						// Give the file size some commas.
@@ -156,6 +167,9 @@ public class OTA {
 								System.out.println("| " + entry.get("PrerequisiteBuild"));
 							}
 
+							// Date as extracted from the URL.
+							System.out.println("| {{date|" + date.substring(0, 4) + "|" + date.substring(4, 6) + "|" + date.substring(6, 8) + "}}");
+
 							// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
 							System.out.print("| [" + fileURL + " ");
 							fileURL = ((NSString)entry.get("__RelativePath")).getContent().replace("com_apple_MobileAsset_SoftwareUpdate/", "");
@@ -174,6 +188,9 @@ public class OTA {
 								System.out.println("Requires: Not specified");
 							else
 								System.out.println("Requires: iOS " + entry.get("PrerequisiteOSVersion") + " (Build " + entry.get("PrerequisiteBuild") + ")");
+
+							// Date as extracted from the URL.
+							System.out.println("Timestamp: " + date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6, 8));
 
 							System.out.println("URL: " + fileURL);
 							System.out.println("File size: " + fileSize);
