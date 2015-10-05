@@ -75,7 +75,7 @@ public class OTA {
 			System.err.println("You need to set a file name with the \"-f\" argument.");
 			System.exit(2);
 		}
-		if (checkModel && !model.endsWith("AP")) {
+		if (checkModel && !model.matches("[JKMNP]\\d(\\d)?(\\d)?[a-z]?AP")) {
 			System.err.println("You need to specify a model (e.g. N71AP) with the \"-m\" argument.");
 			System.exit(3);
 		}
