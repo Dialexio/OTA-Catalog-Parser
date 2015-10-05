@@ -27,7 +27,7 @@ import java.io.File;
 
 public class OTA {
 	public static void main(String[] args) {
-		boolean checkModel = false, mwMarkup = false;
+		boolean checkModel, mwMarkup = false;
 		File file = null;
 		int i = 0;
 		NSDictionary root;
@@ -64,6 +64,9 @@ public class OTA {
 			}
 		}
 
+		// Flag whether or not we need to check the model.
+		checkModel = (device.equals("iPhone8,1") || device.equals("iPhone8,2"));
+
 		if (device.isEmpty()) {
 			System.err.println("You need to set a device with the \"-d\" argument.");
 			System.exit(1);
@@ -73,7 +76,7 @@ public class OTA {
 			System.exit(2);
 		}
 		if (checkModel && !model.endsWith("AP")) {
-			System.err.println("You need to set a model with the \"-m\" argument.");
+			System.err.println("You need to specify a model (e.g. N71AP) with the \"-m\" argument.");
 			System.exit(3);
 		}
 
@@ -93,7 +96,7 @@ public class OTA {
 					if (device.equals(supportedDevice.toString()))
 						entryMatch = true;
 
-					if (device.equals("iPhone8,1") || device.equals("iPhone8,2")) {
+					if (checkModel) {
 						entryMatch = false;
 
 						if (entry.supportedDeviceModels() != null) {
@@ -113,7 +116,7 @@ public class OTA {
 						// Output iOS version and build. 
 						System.out.print("| " + entry.version());
 						if (entry.isBeta()) // Is this a beta?
-							System.out.print(" Beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
+							System.out.print(" beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
 						System.out.println();
 						System.out.println("| " + entry.build());
 
@@ -140,15 +143,16 @@ public class OTA {
 						if (entry.isBeta()) // Is this a beta?
 							System.out.println("This is marked as a beta release.");
 
-						// Report prerequisite. If one isn't found, it's "universal."
+						// Print prerequisites if there are any.
 						if (entry.isUniversal())
 							System.out.println("Requires: Not specified");
 						else
 							System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
 
 						// Date as extracted from the URL.
-						System.out.println("Timestamp: " + entry.date().substring(0, 4) + "-" + entry.date().substring(4, 6) + "-" + entry.date().substring(6, 8));
+						System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6, 8));
 
+						// Print out the URL and file size.
 						System.out.println("URL: " + entry.url());
 						System.out.println("File size: " + entry.size());
 
