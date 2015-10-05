@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.2
+ * OTA Catalog Parser 0.2.1
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.*;
 
 public class OTA {
 	public static void main(String[] args) {
@@ -35,9 +36,10 @@ public class OTA {
 		File file = null;
 		int i = 0;
 		NSDictionary root;
-		String arg = "", device = "", fileName = "", model = "", osVer = "";
+		String arg = "", device = "", model = "", osVer = "", xmlName = "";
 
-		System.out.println("OTA Catalog Parser v0.2\n");
+		System.out.println("OTA Catalog Parser v0.2.1");
+		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading and (lazily) checking arguments.
 		while (i < args.length && args[i].startsWith("-")) {
@@ -56,7 +58,7 @@ public class OTA {
 			// We also need to know what file we're looking at.
 			else if (arg.equals("-f")) {
 				if (i < args.length)
-					fileName = args[i++];
+					xmlName = args[i++];
 				else
 					System.err.println("-f requires a filename");
 			}
@@ -83,7 +85,7 @@ public class OTA {
 			System.err.println("You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
 			System.exit(1);
 		}
-		if (fileName.isEmpty()) {
+		if (xmlName.isEmpty()) {
 			System.err.println("You need to set a file name with the \"-f\" argument.");
 			System.exit(2);
 		}
@@ -96,7 +98,7 @@ public class OTA {
 			System.exit(4);
 		}
 
-		file = new File(fileName);
+		file = new File(xmlName);
 
 		try {
 			List<OTAPackage> entries = new ArrayList<OTAPackage>();;
@@ -164,6 +166,15 @@ public class OTA {
 
 			for (OTAPackage entry:entries) {
 				if (mwMarkup) {
+					Matcher name;
+					Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
+					String fileName = "";
+					name = nameRegex.matcher(entry.url());
+					while (name.find()) {
+						fileName = name.group().substring(5);
+						break;
+					}
+
 					System.out.println("|-");
 
 					// Output iOS version and build. 
@@ -186,7 +197,7 @@ public class OTA {
 
 					// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
 					System.out.print("| [" + entry.url() + " ");
-					System.out.println(entry.url().replace("com_apple_MobileAsset_SoftwareUpdate/", "") + "]");
+					System.out.println(fileName + "]");
 
 					System.out.println("| " + entry.size());
 				}
