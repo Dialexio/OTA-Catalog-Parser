@@ -31,9 +31,10 @@ class OTAPackage {
 	private boolean isUniversal = true;
 	private NSDictionary entry;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
-	private String date, prereqBuild, prereqVer, size, url;
+	private String build, date, prereqBuild = "", prereqVer, size, url;
 
 	public OTAPackage(NSDictionary entry) {
+		build = entry.get("Build").toString();
 		this.entry = entry;
 		Matcher timestamp;
 		Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{8}");
@@ -98,6 +99,18 @@ class OTAPackage {
 
 	public String size() {
 		return size = NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
+	}
+
+	//sortingBuild and sortingPrerequisiteBuild are used for sorting.
+	public String sortingBuild() {
+		return (Character.isLetter(build.charAt(1))) ? "0" + build : build;
+	}
+
+	public String sortingPrerequisiteBuild() {
+		if (prereqBuild.isEmpty())
+			return "0000000000";
+		else
+			return (Character.isLetter(prereqBuild.charAt(1))) ? "0" + prereqBuild : prereqBuild;
 	}
 
 	public NSObject[] supportedDeviceModels() {

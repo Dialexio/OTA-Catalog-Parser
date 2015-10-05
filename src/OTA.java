@@ -24,6 +24,10 @@
  */
 import com.dd.plist.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class OTA {
 	public static void main(String[] args) {
@@ -83,7 +87,9 @@ public class OTA {
 		file = new File(fileName);
 
 		try {
+			List<OTAPackage> entries = new ArrayList<OTAPackage>();;
 			root = (NSDictionary)PropertyListParser.parse(file); // The first <dict>.
+
 			NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
 
 			// Look at every item in the array with the key "Assets."
@@ -109,55 +115,65 @@ public class OTA {
 					}
 				}
 
-				if (entryMatch) {
-					if (mwMarkup) {
-						System.out.println("|-");
+				if (entryMatch)
+					entries.add(entry);
+			}
 
-						// Output iOS version and build. 
-						System.out.print("| " + entry.version());
-						if (entry.isBeta()) // Is this a beta?
-							System.out.print(" beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
-						System.out.println();
-						System.out.println("| " + entry.build());
+			Collections.sort(entries, new Comparator<OTAPackage>() {
+				@Override
+				public int compare(OTAPackage package1, OTAPackage package2) {
+					return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
+				}
+			});
 
-						// Print prerequisites if there are any.
-						if (entry.isUniversal())
-							System.out.println("| colspan=\"2\" {{n/a}}");
-						else {
-							System.out.println("| " + entry.prerequisiteVer());
-							System.out.println("| " + entry.prerequisiteBuild());
-						}
+			for (OTAPackage entry:entries) {
+				if (mwMarkup) {
+					System.out.println("|-");
 
-						// Date as extracted from the URL.
-						System.out.println("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6, 8) + "}}");
+					// Output iOS version and build. 
+					System.out.print("| " + entry.version());
+					if (entry.isBeta()) // Is this a beta?
+						System.out.print(" beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
+					System.out.println();
+					System.out.println("| " + entry.build());
 
-						// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
-						System.out.print("| [" + entry.url() + " ");
-						System.out.println(entry.url().replace("com_apple_MobileAsset_SoftwareUpdate/", "") + "]");
-
-						System.out.println("| " + entry.size());
-					}
+					// Print prerequisites if there are any.
+					if (entry.isUniversal())
+						System.out.println("| colspan=\"2\" {{n/a}}");
 					else {
-						// Output iOS version and build.
-						System.out.println("iOS " + entry.version() + " (Build " + entry.build() + ")");
-						if (entry.isBeta()) // Is this a beta?
-							System.out.println("This is marked as a beta release.");
-
-						// Print prerequisites if there are any.
-						if (entry.isUniversal())
-							System.out.println("Requires: Not specified");
-						else
-							System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
-
-						// Date as extracted from the URL.
-						System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6, 8));
-
-						// Print out the URL and file size.
-						System.out.println("URL: " + entry.url());
-						System.out.println("File size: " + entry.size());
-
-						System.out.println();
+						System.out.println("| " + entry.prerequisiteVer());
+						System.out.println("| " + entry.prerequisiteBuild());
 					}
+
+					// Date as extracted from the URL.
+					System.out.println("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6, 8) + "}}");
+
+					// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
+					System.out.print("| [" + entry.url() + " ");
+					System.out.println(entry.url().replace("com_apple_MobileAsset_SoftwareUpdate/", "") + "]");
+
+					System.out.println("| " + entry.size());
+				}
+				else {
+					// Output iOS version and build.
+					System.out.println("iOS " + entry.version() + " (Build " + entry.build() + ")");
+					if (entry.isBeta()) // Is this a beta?
+						System.out.println("This is marked as a beta release.");
+
+					// Print prerequisites if there are any.
+					if (entry.isUniversal())
+						System.out.println("Requires: Not specified");
+					else
+						System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
+
+					// Date as extracted from the URL.
+					System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6, 8));
+
+					// Print out the URL and file size.
+					System.out.println("URL: " + entry.url());
+					System.out.println("File size: " + entry.size());
+
+					System.out.println();
 				}
 			}
 		}
