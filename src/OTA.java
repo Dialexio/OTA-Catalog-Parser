@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.2.1
+ * OTA Catalog Parser 0.2.2
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -171,7 +171,7 @@ public class OTA {
 					String fileName = "";
 					name = nameRegex.matcher(entry.url());
 					while (name.find()) {
-						fileName = name.group().substring(5);
+						fileName = name.group();
 						break;
 					}
 
