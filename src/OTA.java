@@ -152,6 +152,12 @@ public class OTA {
 			Collections.sort(entries, new Comparator<OTAPackage>() {
 				@Override
 				public int compare(OTAPackage package1, OTAPackage package2) {
+					return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
+				}
+			});
+			Collections.sort(entries, new Comparator<OTAPackage>() {
+				@Override
+				public int compare(OTAPackage package1, OTAPackage package2) {
 					return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
 				}
 			});
