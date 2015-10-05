@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.1.1
+ * OTA Catalog Parser 0.2
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -31,20 +31,23 @@ import java.util.List;
 
 public class OTA {
 	public static void main(String[] args) {
-		boolean checkModel, mwMarkup = false;
+		boolean checkModel, mwMarkup = false, showBeta = false;
 		File file = null;
 		int i = 0;
 		NSDictionary root;
-		String arg = "", device = "", fileName = "", model = "";
+		String arg = "", device = "", fileName = "", model = "", osVer = "";
 
-		System.out.println("OTA Catalog Parser v0.1.1\n");
+		System.out.println("OTA Catalog Parser v0.2\n");
 
 		// Reading and (lazily) checking arguments.
 		while (i < args.length && args[i].startsWith("-")) {
 			arg = args[i++];
 
+			// Should we display beta?
+			if (arg.equals("-b"))
+				showBeta = true;
 			// We need to know the device.
-			if (arg.equals("-d")) {
+			else if (arg.equals("-d")) {
 				if (i < args.length)
 					device = args[i++];
 				else
@@ -63,16 +66,21 @@ public class OTA {
 				else
 					System.err.println("-m requires a device, e.g. N71AP or N66mAP");
 			}
-			else if (arg.equals("-w")) {
-				mwMarkup = true;
+			else if (arg.equals("-o")) {
+				if (i < args.length)
+					osVer = args[i++];
+				else
+					System.err.println("-o requires an OS version, e.g. 4.3 or 8.0.1");
 			}
+			else if (arg.equals("-w"))
+				mwMarkup = true;
 		}
 
 		// Flag whether or not we need to check the model.
-		checkModel = (device.equals("iPhone8,1") || device.equals("iPhone8,2"));
+		checkModel = (device.matches("iPhone8,(1|2)"));
 
-		if (device.isEmpty()) {
-			System.err.println("You need to set a device with the \"-d\" argument.");
+		if (!device.matches("(AppleTV|iP(ad|hone|od))\\d(\\d)?,\\d")) {
+			System.err.println("You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
 			System.exit(1);
 		}
 		if (fileName.isEmpty()) {
@@ -80,8 +88,12 @@ public class OTA {
 			System.exit(2);
 		}
 		if (checkModel && !model.matches("[JKMNP]\\d(\\d)?(\\d)?[a-z]?AP")) {
-			System.err.println("You need to specify a model (e.g. N71AP) with the \"-m\" argument.");
+			System.err.println("You need to specify a model with the \"-m\" argument, e.g. N71AP");
 			System.exit(3);
+		}
+		if (!osVer.isEmpty() && !osVer.matches("\\d\\.\\d(\\.\\d)?")) {
+			System.err.println("You need to specify a version of iOS if you are using the \"-o\" argument, e.g. 4.3 or 8.0.1");
+			System.exit(4);
 		}
 
 		file = new File(fileName);
@@ -99,11 +111,16 @@ public class OTA {
 
 				// Device check.
 				for (NSObject supportedDevice:entry.supportedDevices()) {
-					if (device.equals(supportedDevice.toString()))
+					// If -o wasn't set, set it to the entry.osVersion() so it can be added to the array.
+					if (osVer.isEmpty())
+						osVer = entry.osVersion();
+
+					if (device.equals(supportedDevice.toString()) && (osVer.compareTo(entry.osVersion()) <= 0))
 						entryMatch = true;
 
+					// Do we need to check the model?
 					if (checkModel) {
-						entryMatch = false;
+						entryMatch = false; // Entry will be skipped over until we can verify we want it.
 
 						if (entry.supportedDeviceModels() != null) {
 							for (NSObject supportedDeviceModel:entry.supportedDeviceModels())
@@ -113,6 +130,10 @@ public class OTA {
 								}
 						}
 					}
+
+					// Check if entry is for a beta firmware.
+					if (!showBeta && entry.isBeta())
+						entryMatch = false;
 				}
 
 				if (entryMatch)
@@ -131,7 +152,7 @@ public class OTA {
 					System.out.println("|-");
 
 					// Output iOS version and build. 
-					System.out.print("| " + entry.version());
+					System.out.print("| " + entry.osVersion());
 					if (entry.isBeta()) // Is this a beta?
 						System.out.print(" beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
 					System.out.println();
@@ -156,7 +177,7 @@ public class OTA {
 				}
 				else {
 					// Output iOS version and build.
-					System.out.println("iOS " + entry.version() + " (Build " + entry.build() + ")");
+					System.out.println("iOS " + entry.osVersion() + " (Build " + entry.build() + ")");
 					if (entry.isBeta()) // Is this a beta?
 						System.out.println("This is marked as a beta release.");
 

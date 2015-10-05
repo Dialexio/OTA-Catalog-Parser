@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.1.1
+ * OTA Catalog Parser 0.2
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -82,11 +82,15 @@ class OTAPackage {
 	}
 
 	public boolean isBeta() {
-		return entry.containsKey("ReleaseType") && entry.get("ReleaseType").toString().equals("Beta");
+		return (entry.containsKey("ReleaseType") && entry.get("ReleaseType").toString().equals("Beta"));
 	}
 
 	public boolean isUniversal() {
 		return isUniversal;
+	}
+
+	public String osVersion() {
+		return entry.get("OSVersion").toString();
 	}
 
 	public String prerequisiteBuild() {
@@ -101,14 +105,15 @@ class OTAPackage {
 		return size = NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
 	}
 
-	//sortingBuild and sortingPrerequisiteBuild are used for sorting.
+	// sortingBuild and sortingPrerequisiteBuild are used for sorting.
+	// (They're what they sound like, but with more zeroes.)
 	public String sortingBuild() {
 		return (Character.isLetter(build.charAt(1))) ? "0" + build : build;
 	}
 
 	public String sortingPrerequisiteBuild() {
 		if (prereqBuild.isEmpty())
-			return "0000000000";
+			return "0000000000"; // Bump this to the top.
 		else
 			return (Character.isLetter(prereqBuild.charAt(1))) ? "0" + prereqBuild : prereqBuild;
 	}
@@ -123,9 +128,5 @@ class OTAPackage {
 
 	public String url() {
 		return url;
-	}
-
-	public String version() {
-		return entry.get("OSVersion").toString();
 	}
 }
