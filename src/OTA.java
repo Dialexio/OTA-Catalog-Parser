@@ -109,33 +109,42 @@ public class OTA {
 				boolean entryMatch = false;
 				OTAPackage entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
 
+				// Beta check.
+				if (!showBeta && entry.isBeta())
+					continue;
+
 				// Device check.
 				for (NSObject supportedDevice:entry.supportedDevices()) {
-					// If -o wasn't set, set it to the entry.osVersion() so it can be added to the array.
-					if (osVer.isEmpty())
-						osVer = entry.osVersion();
-
-					if (device.equals(supportedDevice.toString()) && (osVer.compareTo(entry.osVersion()) <= 0))
+					if (device.equals(supportedDevice.toString())) {
 						entryMatch = true;
-
-					// Do we need to check the model?
-					if (checkModel) {
-						entryMatch = false; // Entry will be skipped over until we can verify we want it.
-
-						if (entry.supportedDeviceModels() != null) {
-							for (NSObject supportedDeviceModel:entry.supportedDeviceModels())
-								if (supportedDeviceModel.toString().equals(model)) {
-									entryMatch = true;
-									break;
-								}
-						}
+						break;
 					}
-
-					// Check if entry is for a beta firmware.
-					if (!showBeta && entry.isBeta())
-						entryMatch = false;
 				}
 
+				// Model check, if needed.
+				if (entryMatch && checkModel) {
+					entryMatch = false; // Skipping unless we can verify we want it.
+
+					// Make sure "SupportedDeviceModels" exists.
+					if (entry.supportedDeviceModels() != null) {
+						// Since it's an array, check each entry if the model matches.
+						for (NSObject supportedDeviceModel:entry.supportedDeviceModels())
+							if (supportedDeviceModel.toString().equals(model)) {
+								entryMatch = true;
+								break;
+							}
+					}
+				}
+
+				// OS version check.
+				if (entryMatch && !osVer.isEmpty()) {
+					if (osVer.compareTo(entry.osVersion()) <= 0)
+						entryMatch = true;
+					else
+						continue;
+				}
+
+				// Add it after it survives the checks.
 				if (entryMatch)
 					entries.add(entry);
 			}
