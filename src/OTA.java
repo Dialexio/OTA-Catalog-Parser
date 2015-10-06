@@ -38,7 +38,7 @@ public class OTA {
 		NSDictionary root;
 		String arg = "", device = "", model = "", osVer = "", xmlName = "";
 
-		System.out.println("OTA Catalog Parser v0.2.1");
+		System.out.println("OTA Catalog Parser v0.2.2");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading and (lazily) checking arguments.
