@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.2.2
+ * OTA Catalog Parser 0.2.3
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -38,7 +38,7 @@ public class OTA {
 		NSDictionary root;
 		String arg = "", device = "", model = "", osVer = "", xmlName = "";
 
-		System.out.println("OTA Catalog Parser v0.2.2");
+		System.out.println("OTA Catalog Parser v0.2.3");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading and (lazily) checking arguments.
@@ -195,13 +195,7 @@ public class OTA {
 					}
 
 					// Date as extracted from the URL.
-					System.out.print("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|");
-					// Account for shortened timestamps.
-					if (entry.date().substring(6).length() == 1)
-						System.out.print("0"+entry.date().substring(6));
-					else
-						System.out.print(entry.date().substring(6));
-					System.out.println("}}");
+					System.out.println("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6) + "}}");
 
 					// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
 					System.out.print("| [" + entry.url() + " ");
@@ -222,13 +216,7 @@ public class OTA {
 						System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
 
 					// Date as extracted from the URL.
-					System.out.print("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/");
-
-					// Account for shortened timestamps.
-					if (entry.date().substring(6).length() == 1)
-						System.out.println("0"+entry.date().substring(6));
-					else
-						System.out.println(entry.date().substring(6));
+					System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6));
 
 					// Print out the URL and file size.
 					System.out.println("URL: " + entry.url());

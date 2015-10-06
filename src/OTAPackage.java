@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.2.2
+ * OTA Catalog Parser 0.2.3
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -71,6 +71,8 @@ class OTAPackage {
 			date = timestamp.group().substring(5);
 			break;
 		}
+		if (date.length() == 7)
+			date = date.substring(0, 6) + "0" + date.substring(6);
 	}
 
 	public String build() {
