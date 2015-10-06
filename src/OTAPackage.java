@@ -37,7 +37,7 @@ class OTAPackage {
 		build = entry.get("Build").toString();
 		this.entry = entry;
 		Matcher timestamp;
-		Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{8}");
+		Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
 
 		// Obtain the prerequisite build and prerequisite version.

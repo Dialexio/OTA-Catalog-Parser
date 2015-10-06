@@ -182,6 +182,8 @@ public class OTA {
 					if (entry.isBeta()) // Is this a beta?
 						System.out.print(" beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
 					System.out.println();
+					if (device.matches("AppleTV\\d,\\d"))
+						System.out.println("| [MARKETING VERSION]");
 					System.out.println("| " + entry.build());
 
 					// Print prerequisites if there are any.
@@ -193,7 +195,13 @@ public class OTA {
 					}
 
 					// Date as extracted from the URL.
-					System.out.println("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6, 8) + "}}");
+					System.out.print("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|");
+					// Account for shortened timestamps.
+					if (entry.date().substring(6).length() == 1)
+						System.out.print("0"+entry.date().substring(6));
+					else
+						System.out.print(entry.date().substring(6));
+					System.out.println("}}");
 
 					// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
 					System.out.print("| [" + entry.url() + " ");
@@ -214,7 +222,13 @@ public class OTA {
 						System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
 
 					// Date as extracted from the URL.
-					System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6, 8));
+					System.out.print("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/");
+
+					// Account for shortened timestamps.
+					if (entry.date().substring(6).length() == 1)
+						System.out.println("0"+entry.date().substring(6));
+					else
+						System.out.println(entry.date().substring(6));
 
 					// Print out the URL and file size.
 					System.out.println("URL: " + entry.url());
