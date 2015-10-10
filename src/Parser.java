@@ -31,13 +31,15 @@ import java.util.HashMap;
 import java.util.regex.*;
 
 public class Parser {
+	private static String device = "", minOSVer = "", model = "";
+
 	public static void main(String[] args) {
+		ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
 		boolean checkModel, mwMarkup = false, showBeta = false;
 		File file = null;
-		HashMap<String, Integer> buildEntryCount = null, osEntryCount = null;
 		int i = 0;
 		NSDictionary root;
-		String arg = "", device = "", model = "", osVer = "", xmlName = "";
+		String arg = "", xmlName = "";
 
 		System.out.println("OTA Catalog Parser v0.3");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
@@ -71,7 +73,7 @@ public class Parser {
 			}
 			else if (arg.equals("-o")) {
 				if (i < args.length)
-					osVer = args[i++];
+					minOSVer = args[i++];
 				else
 					System.err.println("-o requires an OS version, e.g. 4.3 or 8.0.1");
 			}
@@ -94,7 +96,7 @@ public class Parser {
 			System.err.println("You need to specify a model with the \"-m\" argument, e.g. N71AP");
 			System.exit(3);
 		}
-		if (!osVer.isEmpty() && !osVer.matches("\\d\\.\\d(\\.\\d)?")) {
+		if (!minOSVer.isEmpty() && !minOSVer.matches("\\d\\.\\d(\\.\\d)?")) {
 			System.err.println("You need to specify a version of iOS if you are using the \"-o\" argument, e.g. 4.3 or 8.0.1");
 			System.exit(4);
 		}
@@ -102,7 +104,6 @@ public class Parser {
 		file = new File(xmlName);
 
 		try {
-			ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
 			root = (NSDictionary)PropertyListParser.parse(file); // The first <dict>.
 
 			NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
@@ -140,8 +141,8 @@ public class Parser {
 				}
 
 				// OS version check.
-				if (entryMatch && !osVer.isEmpty()) {
-					if (osVer.compareTo(entry.osVersion()) <= 0)
+				if (entryMatch && !minOSVer.isEmpty()) {
+					if (minOSVer.compareTo(entry.osVersion()) <= 0)
 						entryMatch = true;
 					else
 						continue;
@@ -166,121 +167,139 @@ public class Parser {
 			});
 
 			// Count the colspans for wiki markup.
-			if (mwMarkup) {
-				buildEntryCount = new HashMap<String, Integer>();
-				osEntryCount = new HashMap<String, Integer>();
-
-				for (OTAPackage entry:entryList) {
-					if (osEntryCount.containsKey(entry.osVersion()))
-						osEntryCount.put(entry.osVersion(), osEntryCount.get(entry.osVersion())+1);
-					else
-						osEntryCount.put(entry.osVersion(), 1);
-
-					if (buildEntryCount.containsKey(entry.build()))
-						buildEntryCount.put(entry.build(), buildEntryCount.get(entry.build())+1);
-					else
-						buildEntryCount.put(entry.build(), 1);
-				}
-			}
-
-			for (OTAPackage entry:entryList) {
-				if (mwMarkup) {
-					Matcher name;
-					Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
-					String fileName = "";
-					name = nameRegex.matcher(entry.url());
-					while (name.find()) {
-						fileName = name.group();
-						break;
-					}
-
-					System.out.println("|-");
-
-					// Output iOS version.
-					if (osEntryCount.containsKey(entry.osVersion())) {
-						System.out.print("| ");
-
-						// Only give colspan if there is more than one row with the OS version.
-						if (osEntryCount.get(entry.osVersion()).intValue() > 1)
-							System.out.print("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
-
-						System.out.print(entry.osVersion());
-
-						// Give it a beta label (if it is one).
-						if (entry.isBeta())
-							System.out.print(" beta #"); // Number sign should be replaced by user. We can't keep track of which beta this is.
-
-						System.out.println();
-						osEntryCount.remove(entry.osVersion()); //Remove the count since we're done with it.
-					}
-
-					// If this is an Apple TV, we need to leave space for the marketing version.
-					if (device.matches("AppleTV\\d,\\d")) {
-						System.out.print("| ");
-
-						// Only give colspan if there is more than one row with the OS version.
-						if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
-								System.out.println("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
-
-						System.out.println("[MARKETING VERSION]");
-					}
-
-
-					//Output build number.
-					if (buildEntryCount.containsKey(entry.build())) {
-						System.out.print("| ");
-
-						// Only give colspan if there is more than one row with the OS version.
-						if (buildEntryCount.get(entry.build()).intValue() > 1) {
-							System.out.print("colspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
-							buildEntryCount.remove(entry.build()); //Remove the count since we already used it.
-						}
-
-						System.out.println(entry.build());
-					}
-
-					// Print prerequisites if there are any.
-					if (entry.isUniversal())
-						System.out.println("| colspan=\"2\" {{n/a}}");
-					else {
-						System.out.println("| " + entry.prerequisiteVer());
-						System.out.println("| " + entry.prerequisiteBuild());
-					}
-
-					// Date as extracted from the URL.
-					System.out.println("| {{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6) + "}}");
-
-					// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
-					System.out.print("| [" + entry.url() + " ");
-					System.out.println(fileName + "]");
-
-					System.out.println("| " + entry.size());
-				}
-				else {
-					// Output iOS version and build.
-					System.out.println("iOS " + entry.osVersion() + " (Build " + entry.build() + ")");
-					if (entry.isBeta()) // Is this a beta?
-						System.out.println("This is marked as a beta release.");
-
-					// Print prerequisites if there are any.
-					if (entry.isUniversal())
-						System.out.println("Requires: Not specified");
-					else
-						System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
-
-					// Date as extracted from the URL.
-					System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6));
-
-					// Print out the URL and file size.
-					System.out.println("URL: " + entry.url());
-					System.out.println("File size: " + entry.size());
-
-					System.out.println();
-				}
-			}
+			if (mwMarkup)
+				printWikiMarkup(entryList);
+			else
+				printOutput(entryList);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static void printOutput(ArrayList<OTAPackage> entryList) {
+		for (OTAPackage entry:entryList) {
+			// Output iOS version and build.
+			System.out.println("iOS " + entry.osVersion() + " (Build " + entry.build() + ")");
+			if (entry.isBeta()) // Is this a beta?
+				System.out.println("This is marked as a beta release.");
+
+			// Print prerequisites if there are any.
+			if (entry.isUniversal())
+				System.out.println("Requires: Not specified");
+			else
+				System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
+
+			// Date as extracted from the URL.
+			System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6));
+
+			// Print out the URL and file size.
+			System.out.println("URL: " + entry.url());
+			System.out.println("File size: " + entry.size());
+
+			System.out.println();
+		}
+	}
+
+	private static void printWikiMarkup(ArrayList<OTAPackage> entryList) {
+		HashMap<String, Integer> buildEntryCount = null, osEntryCount = null;
+		buildEntryCount = new HashMap<String, Integer>();
+		osEntryCount = new HashMap<String, Integer>();
+
+		// Count the colspans for wiki markup.
+		for (OTAPackage entry:entryList) {
+			if (osEntryCount.containsKey(entry.osVersion()))
+				osEntryCount.put(entry.osVersion(), osEntryCount.get(entry.osVersion())+1); // Increment existing count.
+			else
+				osEntryCount.put(entry.osVersion(), 1); // An entry doesn't exist, so add the first count.
+
+			if (buildEntryCount.containsKey(entry.build()))
+				buildEntryCount.put(entry.build(), buildEntryCount.get(entry.build())+1); // Increment existing count.
+			else
+				buildEntryCount.put(entry.build(), 1); // An entry doesn't exist, so add the first count.
+		}
+
+		for (OTAPackage entry:entryList) {
+			Matcher name;
+			Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
+			String fileName = "";
+			name = nameRegex.matcher(entry.url());
+			while (name.find()) {
+				fileName = name.group();
+				break;
+			}
+
+			System.out.println("|-");
+
+			// Output iOS version.
+			if (osEntryCount.containsKey(entry.osVersion())) {
+				System.out.print("| ");
+
+				// Only give colspan if there is more than one row with the OS version.
+				if (osEntryCount.get(entry.osVersion()).intValue() > 1)
+					System.out.print("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+
+				System.out.print(entry.osVersion());
+
+				// Give it a beta label (if it is one).
+				if (entry.isBeta())
+					System.out.print(" beta #"); // Number sign should be replaced by user. We can't keep track of which beta this is.
+
+				System.out.println();
+				osEntryCount.remove(entry.osVersion()); //Remove the count since we're done with it.
+			}
+
+			// If this is an Apple TV, we need to leave space for the marketing version.
+			if (device.matches("AppleTV\\d,\\d")) {
+				System.out.print("| ");
+
+				// Only give colspan if there is more than one row with the OS version.
+				if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
+						System.out.println("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+
+				System.out.println("[MARKETING VERSION]");
+			}
+
+
+			//Output build number.
+			if (buildEntryCount.containsKey(entry.build())) {
+				System.out.print("| ");
+
+				// Only give colspan if there is more than one row with the OS version.
+				if (buildEntryCount.get(entry.build()).intValue() > 1) {
+					System.out.print("colspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
+				}
+
+				System.out.println(entry.build());
+			}
+
+			// Print prerequisites if there are any.
+			if (entry.isUniversal())
+				System.out.println("| colspan=\"2\" {{n/a}}");
+			else {
+				System.out.println("| " + entry.prerequisiteVer());
+				System.out.println("| " + entry.prerequisiteBuild());
+			}
+
+			// Date as extracted from the URL.
+			// Using the colspan count for build. (3.1.1 had two builds released on different dates for iPod touch 3G.)
+			if (buildEntryCount.containsKey(entry.build())) {
+				System.out.print("| ");
+
+				// Only give colspan if there is more than one row with the OS version.
+				if (buildEntryCount.get(entry.build()).intValue() > 1) {
+					System.out.print("colspan=\"" + buildEntryCount.get(entry.build()) + "\" ");
+					buildEntryCount.remove(entry.build()); //Remove the count since we already used it.
+				}
+
+				System.out.println("{{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6) + "}}");
+			}
+
+			// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
+			System.out.print("| [" + entry.url() + " ");
+			System.out.println(fileName + "]");
+
+			System.out.println("| " + entry.size());
 		}
 	}
 }
