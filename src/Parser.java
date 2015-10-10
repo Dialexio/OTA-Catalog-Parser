@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.2.3
+ * OTA Catalog Parser 0.3
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -27,17 +27,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.regex.*;
 
 public class Parser {
 	public static void main(String[] args) {
 		boolean checkModel, mwMarkup = false, showBeta = false;
 		File file = null;
+		HashMap<String, Integer> buildEntryCount = null, osEntryCount = null;
 		int i = 0;
 		NSDictionary root;
 		String arg = "", device = "", model = "", osVer = "", xmlName = "";
 
-		System.out.println("OTA Catalog Parser v0.2.3");
+		System.out.println("OTA Catalog Parser v0.3");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading and (lazily) checking arguments.
@@ -100,7 +102,7 @@ public class Parser {
 		file = new File(xmlName);
 
 		try {
-			ArrayList<OTAPackage> entries = new ArrayList<OTAPackage>();
+			ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
 			root = (NSDictionary)PropertyListParser.parse(file); // The first <dict>.
 
 			NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
@@ -147,23 +149,41 @@ public class Parser {
 
 				// Add it after it survives the checks.
 				if (entryMatch)
-					entries.add(entry);
+					entryList.add(entry);
 			}
 
-			Collections.sort(entries, new Comparator<OTAPackage>() {
+			Collections.sort(entryList, new Comparator<OTAPackage>() {
 				@Override
 				public int compare(OTAPackage package1, OTAPackage package2) {
 					return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
 				}
 			});
-			Collections.sort(entries, new Comparator<OTAPackage>() {
+			Collections.sort(entryList, new Comparator<OTAPackage>() {
 				@Override
 				public int compare(OTAPackage package1, OTAPackage package2) {
 					return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
 				}
 			});
 
-			for (OTAPackage entry:entries) {
+			// Count the colspans for wiki markup.
+			if (mwMarkup) {
+				buildEntryCount = new HashMap<String, Integer>();
+				osEntryCount = new HashMap<String, Integer>();
+
+				for (OTAPackage entry:entryList) {
+					if (osEntryCount.containsKey(entry.osVersion()))
+						osEntryCount.put(entry.osVersion(), osEntryCount.get(entry.osVersion())+1);
+					else
+						osEntryCount.put(entry.osVersion(), 1);
+
+					if (buildEntryCount.containsKey(entry.build()))
+						buildEntryCount.put(entry.build(), buildEntryCount.get(entry.build())+1);
+					else
+						buildEntryCount.put(entry.build(), 1);
+				}
+			}
+
+			for (OTAPackage entry:entryList) {
 				if (mwMarkup) {
 					Matcher name;
 					Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
@@ -176,14 +196,48 @@ public class Parser {
 
 					System.out.println("|-");
 
-					// Output iOS version and build. 
-					System.out.print("| " + entry.osVersion());
-					if (entry.isBeta()) // Is this a beta?
-						System.out.print(" beta #"); // Number sign is supposed to be replaced by user. We can't keep track of whether this is beta 2 or beta 89.
-					System.out.println();
-					if (device.matches("AppleTV\\d,\\d"))
-						System.out.println("| [MARKETING VERSION]");
-					System.out.println("| " + entry.build());
+					// Output iOS version.
+					if (osEntryCount.containsKey(entry.osVersion())) {
+						System.out.print("| ");
+
+						// Only give colspan if there is more than one row with the OS version.
+						if (osEntryCount.get(entry.osVersion()).intValue() > 1)
+							System.out.print("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+
+						System.out.print(entry.osVersion());
+
+						// Give it a beta label (if it is one).
+						if (entry.isBeta())
+							System.out.print(" beta #"); // Number sign should be replaced by user. We can't keep track of which beta this is.
+
+						System.out.println();
+						osEntryCount.remove(entry.osVersion()); //Remove the count since we're done with it.
+					}
+
+					// If this is an Apple TV, we need to leave space for the marketing version.
+					if (device.matches("AppleTV\\d,\\d")) {
+						System.out.print("| ");
+
+						// Only give colspan if there is more than one row with the OS version.
+						if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
+								System.out.println("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+
+						System.out.println("[MARKETING VERSION]");
+					}
+
+
+					//Output build number.
+					if (buildEntryCount.containsKey(entry.build())) {
+						System.out.print("| ");
+
+						// Only give colspan if there is more than one row with the OS version.
+						if (buildEntryCount.get(entry.build()).intValue() > 1) {
+							System.out.print("colspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
+							buildEntryCount.remove(entry.build()); //Remove the count since we already used it.
+						}
+
+						System.out.println(entry.build());
+					}
 
 					// Print prerequisites if there are any.
 					if (entry.isUniversal())
