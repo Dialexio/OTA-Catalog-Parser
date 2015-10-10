@@ -27,10 +27,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.regex.*;
 
-public class OTA {
+public class Parser {
 	public static void main(String[] args) {
 		boolean checkModel, mwMarkup = false, showBeta = false;
 		File file = null;
@@ -101,7 +100,7 @@ public class OTA {
 		file = new File(xmlName);
 
 		try {
-			List<OTAPackage> entries = new ArrayList<OTAPackage>();;
+			ArrayList<OTAPackage> entries = new ArrayList<OTAPackage>();
 			root = (NSDictionary)PropertyListParser.parse(file); // The first <dict>.
 
 			NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
