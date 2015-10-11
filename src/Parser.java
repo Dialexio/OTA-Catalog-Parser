@@ -31,12 +31,61 @@ import java.util.HashMap;
 import java.util.regex.*;
 
 public class Parser {
+	private static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
+	private static boolean checkModel, showBeta = false;
 	private static String device = "", minOSVer = "", model = "";
 
+	private static void addEntries(NSDictionary root) {
+		NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
+
+		// Look at every item in the array with the key "Assets."
+		for (NSObject item:assets) {
+			boolean entryMatch = false;
+			OTAPackage entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
+
+			// Beta check.
+			if (!showBeta && entry.isBeta())
+				continue;
+
+			// Device check.
+			for (NSObject supportedDevice:entry.supportedDevices()) {
+				if (device.equals(supportedDevice.toString())) {
+					entryMatch = true;
+					break;
+				}
+			}
+
+			// Model check, if needed.
+			if (entryMatch && checkModel) {
+				entryMatch = false; // Skipping unless we can verify we want it.
+
+				// Make sure "SupportedDeviceModels" exists.
+				if (entry.supportedDeviceModels() != null) {
+					// Since it's an array, check each entry if the model matches.
+					for (NSObject supportedDeviceModel:entry.supportedDeviceModels())
+						if (supportedDeviceModel.toString().equals(model)) {
+							entryMatch = true;
+							break;
+						}
+				}
+			}
+
+			// OS version check.
+			if (entryMatch && !minOSVer.isEmpty()) {
+				if (minOSVer.compareTo(entry.osVersion()) <= 0)
+					entryMatch = true;
+				else
+					continue;
+			}
+
+			// Add it after it survives the checks.
+			if (entryMatch)
+				entryList.add(entry);
+		}
+	}
+
 	public static void main(String[] args) {
-		ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
-		boolean checkModel, mwMarkup = false, showBeta = false;
-		File file = null;
+		boolean mwMarkup = false;
 		int i = 0;
 		NSDictionary root;
 		String arg = "", xmlName = "";
@@ -101,57 +150,11 @@ public class Parser {
 			System.exit(4);
 		}
 
-		file = new File(xmlName);
-
 		try {
-			root = (NSDictionary)PropertyListParser.parse(file); // The first <dict>.
+			//The first <dict>.
+			root = (NSDictionary)PropertyListParser.parse(new File(xmlName));
 
-			NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
-
-			// Look at every item in the array with the key "Assets."
-			for (NSObject item:assets) {
-				boolean entryMatch = false;
-				OTAPackage entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
-
-				// Beta check.
-				if (!showBeta && entry.isBeta())
-					continue;
-
-				// Device check.
-				for (NSObject supportedDevice:entry.supportedDevices()) {
-					if (device.equals(supportedDevice.toString())) {
-						entryMatch = true;
-						break;
-					}
-				}
-
-				// Model check, if needed.
-				if (entryMatch && checkModel) {
-					entryMatch = false; // Skipping unless we can verify we want it.
-
-					// Make sure "SupportedDeviceModels" exists.
-					if (entry.supportedDeviceModels() != null) {
-						// Since it's an array, check each entry if the model matches.
-						for (NSObject supportedDeviceModel:entry.supportedDeviceModels())
-							if (supportedDeviceModel.toString().equals(model)) {
-								entryMatch = true;
-								break;
-							}
-					}
-				}
-
-				// OS version check.
-				if (entryMatch && !minOSVer.isEmpty()) {
-					if (minOSVer.compareTo(entry.osVersion()) <= 0)
-						entryMatch = true;
-					else
-						continue;
-				}
-
-				// Add it after it survives the checks.
-				if (entryMatch)
-					entryList.add(entry);
-			}
+			addEntries(root);
 
 			Collections.sort(entryList, new Comparator<OTAPackage>() {
 				@Override
@@ -166,7 +169,6 @@ public class Parser {
 				}
 			});
 
-			// Count the colspans for wiki markup.
 			if (mwMarkup)
 				printWikiMarkup(entryList);
 			else
