@@ -312,7 +312,7 @@ public class Parser {
 					// Is there more than one of this prerequisite version tallied?
 					if (prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()).intValue() > 1) {
 						System.out.print("colspan=\"" + prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()) + "\" | ");
-						prereqEntryCount.remove(entry.build());
+						prereqEntryCount.get(entry.build()).remove(entry.prerequisiteVer());
 					}
 
 					System.out.println(entry.prerequisiteVer());
