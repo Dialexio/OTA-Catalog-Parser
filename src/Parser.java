@@ -33,7 +33,7 @@ import java.util.regex.*;
 public class Parser {
 	private static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
 	private static boolean checkModel, showBeta = false;
-	private static String device = "", minOSVer = "", model = "";
+	private static String device = "", maxOSVer = "", minOSVer = "", model = "";
 
 	private static void addEntries(NSDictionary root) {
 		NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
@@ -70,11 +70,13 @@ public class Parser {
 				}
 			}
 
-			// OS version check.
+			// OS version check. Move to the next item if it doesn't match.
+			if (entryMatch && !maxOSVer.isEmpty()) {
+				if (maxOSVer.compareTo(entry.osVersion()) < 0)
+					continue;
+			}
 			if (entryMatch && !minOSVer.isEmpty()) {
-				if (minOSVer.compareTo(entry.osVersion()) <= 0)
-					entryMatch = true;
-				else
+				if (minOSVer.compareTo(entry.osVersion()) > 0)
 					continue;
 			}
 
@@ -120,18 +122,24 @@ public class Parser {
 				else
 					System.err.println("-m requires a device, e.g. N71AP or N66mAP");
 			}
-			else if (arg.equals("-o")) {
+			else if (arg.equals("-max")) {
+				if (i < args.length)
+					maxOSVer = args[i++];
+				else
+					System.err.println("-max requires an OS version, e.g. 4.3 or 8.0.1");
+			}
+			else if (arg.equals("-min")) {
 				if (i < args.length)
 					minOSVer = args[i++];
 				else
-					System.err.println("-o requires an OS version, e.g. 4.3 or 8.0.1");
+					System.err.println("-min requires an OS version, e.g. 4.3 or 8.0.1");
 			}
 			else if (arg.equals("-w"))
 				mwMarkup = true;
 		}
 
 		// Flag whether or not we need to check the model.
-		checkModel = (device.matches("iPhone8,(1|2)"));
+		checkModel = device.matches("iPhone8,(1|2)");
 
 		if (!device.matches("(AppleTV|iP(ad|hone|od))\\d(\\d)?,\\d")) {
 			System.err.println("You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
@@ -145,9 +153,13 @@ public class Parser {
 			System.err.println("You need to specify a model with the \"-m\" argument, e.g. N71AP");
 			System.exit(3);
 		}
-		if (!minOSVer.isEmpty() && !minOSVer.matches("\\d\\.\\d(\\.\\d)?")) {
-			System.err.println("You need to specify a version of iOS if you are using the \"-o\" argument, e.g. 4.3 or 8.0.1");
+		if (!minOSVer.isEmpty() && !minOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
+			System.err.println("You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
 			System.exit(4);
+		}
+		if (!maxOSVer.isEmpty() && !maxOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
+			System.err.println("You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
+			System.exit(5);
 		}
 
 		try {

@@ -29,14 +29,14 @@ import java.util.regex.*;
 
 class OTAPackage {
 	private boolean isUniversal = true;
-	private NSDictionary entry;
+	private NSDictionary otaEntry;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 	private String build, date, prereqBuild = "", prereqVer, size, url;
 
 	public OTAPackage(NSDictionary entry) {
 		build = entry.get("Build").toString();
-		this.entry = entry;
 		Matcher timestamp;
+		otaEntry = entry;
 		Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
 
@@ -76,7 +76,7 @@ class OTAPackage {
 	}
 
 	public String build() {
-		return entry.get("Build").toString();
+		return otaEntry.get("Build").toString();
 	}
 
 	public String date() {
@@ -84,7 +84,7 @@ class OTAPackage {
 	}
 
 	public boolean isBeta() {
-		return (entry.containsKey("ReleaseType") && entry.get("ReleaseType").toString().equals("Beta"));
+		return (otaEntry.containsKey("ReleaseType") && otaEntry.get("ReleaseType").toString().equals("Beta"));
 	}
 
 	public boolean isUniversal() {
@@ -92,7 +92,7 @@ class OTAPackage {
 	}
 
 	public String osVersion() {
-		return entry.get("OSVersion").toString();
+		return otaEntry.get("OSVersion").toString();
 	}
 
 	public String prerequisiteBuild() {
