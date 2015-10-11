@@ -216,21 +216,36 @@ public class Parser {
 	}
 
 	private static void printWikiMarkup(ArrayList<OTAPackage> entryList) {
-		HashMap<String, Integer> buildEntryCount = null, osEntryCount = null;
-		buildEntryCount = new HashMap<String, Integer>();
-		osEntryCount = new HashMap<String, Integer>();
+		HashMap<String, Integer> buildEntryCount = new HashMap<String, Integer>(),
+								 osEntryCount = new HashMap<String, Integer>(),
+								 prereqNestedCount = new HashMap<String, Integer>();
+		HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 		// Count the colspans for wiki markup.
 		for (OTAPackage entry:entryList) {
 			if (osEntryCount.containsKey(entry.osVersion()))
-				osEntryCount.put(entry.osVersion(), osEntryCount.get(entry.osVersion())+1); // Increment existing count.
+				osEntryCount.replace(entry.osVersion(), osEntryCount.get(entry.osVersion())+1); // Increment existing count.
 			else
 				osEntryCount.put(entry.osVersion(), 1); // An entry doesn't exist, so add the first count.
 
+
 			if (buildEntryCount.containsKey(entry.build()))
-				buildEntryCount.put(entry.build(), buildEntryCount.get(entry.build())+1); // Increment existing count.
+				buildEntryCount.replace(entry.build(), buildEntryCount.get(entry.build())+1); // Increment existing count.
 			else
 				buildEntryCount.put(entry.build(), 1); // An entry doesn't exist, so add the first count.
+
+
+			// Load nested HashMap into variable temporarily, if it exists.
+			if (prereqEntryCount.containsKey(entry.build())) {
+				prereqNestedCount = prereqEntryCount.get(entry.build());
+			}
+
+			if (prereqNestedCount.containsKey(entry.prerequisiteVer()))
+				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
+			else
+				prereqNestedCount.put(entry.prerequisiteVer(), 1);
+
+			prereqEntryCount.put(entry.build(), prereqNestedCount);
 		}
 
 		for (OTAPackage entry:entryList) {
@@ -291,7 +306,19 @@ public class Parser {
 			if (entry.isUniversal())
 				System.out.println("| colspan=\"2\" {{n/a}}");
 			else {
-				System.out.println("| " + entry.prerequisiteVer());
+				// Prerequisite version
+				if (prereqEntryCount.containsKey(entry.build()) && prereqEntryCount.get(entry.build()).containsKey(entry.prerequisiteVer())) {
+					System.out.print("| ");
+					// Is there more than one of this prerequisite version tallied?
+					if (prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()).intValue() > 1) {
+						System.out.print("colspan=\"" + prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()) + "\" | ");
+						prereqEntryCount.remove(entry.build());
+					}
+
+					System.out.println(entry.prerequisiteVer());
+				}
+
+				// Prerequisite build
 				System.out.println("| " + entry.prerequisiteBuild());
 			}
 
