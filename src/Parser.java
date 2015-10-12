@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.3
+ * OTA Catalog Parser 0.3.1
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -92,7 +92,7 @@ public class Parser {
 		NSDictionary root;
 		String arg = "", xmlName = "";
 
-		System.out.println("OTA Catalog Parser v0.3");
+		System.out.println("OTA Catalog Parser v0.3.1");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading and (lazily) checking arguments.
@@ -222,7 +222,7 @@ public class Parser {
 								 prereqNestedCount = new HashMap<String, Integer>();
 		HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
-		// Count the colspans for wiki markup.
+		// Count the rowspans for wiki markup.
 		for (OTAPackage entry:entryList) {
 			// OS version
 			if (osEntryCount.containsKey(entry.osVersion())) // Increment existing count.
@@ -270,9 +270,9 @@ public class Parser {
 			if (osEntryCount.containsKey(entry.osVersion())) {
 				System.out.print("| ");
 
-				// Only give colspan if there is more than one row with the OS version.
+				// Only give rowspan if there is more than one row with the OS version.
 				if (osEntryCount.get(entry.osVersion()).intValue() > 1)
-					System.out.print("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+					System.out.print("rowspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
 
 				System.out.print(entry.osVersion());
 
@@ -288,9 +288,9 @@ public class Parser {
 			if (device.matches("AppleTV\\d(\\d)?,\\d")) {
 				System.out.print("| ");
 
-				// Only give colspan if there is more than one row with the OS version.
+				// Only give rowspan if there is more than one row with the OS version.
 				if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
-					System.out.println("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+					System.out.println("rowspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
 
 				System.out.println("[MARKETING VERSION]");
 			}
@@ -299,9 +299,9 @@ public class Parser {
 			if (buildEntryCount.containsKey(entry.build())) {
 				System.out.print("| ");
 
-				// Only give colspan if there is more than one row with the OS version.
+				// Only give rowspan if there is more than one row with the OS version.
 				if (buildEntryCount.get(entry.build()).intValue() > 1) {
-					System.out.print("colspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
+					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
 				}
 
 				System.out.println(entry.build());
@@ -316,7 +316,7 @@ public class Parser {
 					System.out.print("| ");
 					// Is there more than one of this prerequisite version tallied?
 					if (prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()).intValue() > 1) {
-						System.out.print("colspan=\"" + prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()) + "\" | ");
+						System.out.print("rowspan=\"" + prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()) + "\" | ");
 						prereqEntryCount.get(entry.build()).remove(entry.prerequisiteVer());
 					}
 
@@ -328,13 +328,13 @@ public class Parser {
 			}
 
 			// Date as extracted from the URL.
-			// Using the colspan count for build. (3.1.1 had two builds released on different dates for iPod touch 3G.)
+			// Using the same rowspan count as build. (3.1.1 had two builds released on different dates for iPod touch 3G.)
 			if (buildEntryCount.containsKey(entry.build())) {
 				System.out.print("| ");
 
-				// Only give colspan if there is more than one row with the OS version.
+				// Only give rowspan if there is more than one row with the OS version.
 				if (buildEntryCount.get(entry.build()).intValue() > 1) {
-					System.out.print("colspan=\"" + buildEntryCount.get(entry.build()) + "\" ");
+					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" ");
 					buildEntryCount.remove(entry.build()); //Remove the count since we already used it.
 				}
 
@@ -345,9 +345,9 @@ public class Parser {
 			if (fileEntryCount.containsKey(entry.url())) {
 				System.out.print("| ");
 
-				// Only give colspan if there is more than one row with the OS version.
+				// Only give rowspan if there is more than one row with the OS version.
 				if (fileEntryCount.get(entry.url()).intValue() > 1) {
-					System.out.print("colspan=\"" + fileEntryCount.get(entry.url()) + "\" | ");
+					System.out.print("rowspan=\"" + fileEntryCount.get(entry.url()) + "\" | ");
 				}
 
 				System.out.println("[" + entry.url() + " " + fileName + "]");
@@ -357,9 +357,9 @@ public class Parser {
 			if (fileEntryCount.containsKey(entry.url())) {
 				System.out.print("| ");
 
-				// Only give colspan if there is more than one row with the OS version.
+				// Only give rowspan if there is more than one row with the OS version.
 				if (fileEntryCount.get(entry.url()).intValue() > 1) {
-					System.out.print("colspan=\"" + fileEntryCount.get(entry.url()) + "\" | ");
+					System.out.print("rowspan=\"" + fileEntryCount.get(entry.url()) + "\" | ");
 					fileEntryCount.remove(entry.url());
 				}
 
