@@ -28,6 +28,9 @@ import java.util.Locale;
 import java.util.regex.*;
 
 class OTAPackage {
+	private final String buildNumToLetter = "(\\d)?\\d[A-M]"; // All "betas" have a 5 after the letter.
+	private final Pattern betaRegex = Pattern.compile(buildNumToLetter+"5");
+
 	private boolean isUniversal = true;
 	private NSDictionary otaEntry;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
@@ -71,6 +74,7 @@ class OTAPackage {
 			date = timestamp.group().substring(5);
 			break;
 		}
+
 		if (date.length() == 7)
 			date = date.substring(0, 6) + "0" + date.substring(6);
 	}
@@ -84,7 +88,8 @@ class OTAPackage {
 	}
 
 	public boolean isBeta() {
-		return (otaEntry.containsKey("ReleaseType") && otaEntry.get("ReleaseType").toString().equals("Beta"));
+		Matcher betaFlag = betaRegex.matcher(build);
+		return betaFlag.find();
 	}
 
 	public boolean isUniversal() {
@@ -108,9 +113,29 @@ class OTAPackage {
 	}
 
 	// sortingBuild and sortingPrerequisiteBuild are used for sorting.
-	// (They're what they sound like, but with more zeroes.)
+	// There are extra zeros in the front for both, and an
+	// extra 9 after the first build letter for non-betas.
 	public String sortingBuild() {
-		return (Character.isLetter(build.charAt(1))) ? "0" + build : build;
+		String sortBuild = build;
+
+		//Make 9A### appear before 10A###.
+		if (Character.isLetter(sortBuild.charAt(1)))
+			sortBuild = "0" + sortBuild;
+
+		if (!isBeta()) {
+			Pattern betaRegex = Pattern.compile(buildNumToLetter);
+			Matcher buildUpToLetter = betaRegex.matcher(sortBuild);
+			String afterLetter, upToLetter = "";
+
+			while (buildUpToLetter.find()) {
+				upToLetter = buildUpToLetter.group();
+				break;
+			}
+			afterLetter = sortBuild.replaceFirst(buildNumToLetter, "");
+
+			sortBuild = upToLetter + "9" + afterLetter;
+		}
+		return sortBuild;
 	}
 
 	public String sortingPrerequisiteBuild() {
