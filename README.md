@@ -1,4 +1,4 @@
-# OTA Parser
+# OTA Catalog Parser
 A somewhat crude Java program to view the [OTA update catalog for iOS](http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml). It can probably be optimized to be more efficient (aside from using another language, anyways :P), but it does what it was meant to.
 
 You must save the OTA update catalog to your computer. The program will output its findings into standard output.
