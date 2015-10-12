@@ -217,35 +217,41 @@ public class Parser {
 
 	private static void printWikiMarkup(ArrayList<OTAPackage> entryList) {
 		HashMap<String, Integer> buildEntryCount = new HashMap<String, Integer>(),
-								 osEntryCount = new HashMap<String, Integer>(),
+								 fileEntryCount = new HashMap<String, Integer>(),
+				 				 osEntryCount = new HashMap<String, Integer>(),
 								 prereqNestedCount = new HashMap<String, Integer>();
 		HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 		// Count the colspans for wiki markup.
 		for (OTAPackage entry:entryList) {
-			if (osEntryCount.containsKey(entry.osVersion()))
-				osEntryCount.replace(entry.osVersion(), osEntryCount.get(entry.osVersion())+1); // Increment existing count.
-			else
-				osEntryCount.put(entry.osVersion(), 1); // An entry doesn't exist, so add the first count.
+			// OS version
+			if (osEntryCount.containsKey(entry.osVersion())) // Increment existing count.
+				osEntryCount.replace(entry.osVersion(), osEntryCount.get(entry.osVersion())+1);
+			else // An entry doesn't exist, so add the first tally.
+				osEntryCount.put(entry.osVersion(), 1);
 
+			// Build
+			if (buildEntryCount.containsKey(entry.build())) // Increment existing count.
+				buildEntryCount.replace(entry.build(), buildEntryCount.get(entry.build())+1);
+			else // An entry doesn't exist, so add the first tally.
+				buildEntryCount.put(entry.build(), 1);
 
-			if (buildEntryCount.containsKey(entry.build()))
-				buildEntryCount.replace(entry.build(), buildEntryCount.get(entry.build())+1); // Increment existing count.
-			else
-				buildEntryCount.put(entry.build(), 1); // An entry doesn't exist, so add the first count.
-
-
-			// Load nested HashMap into variable temporarily, if it exists.
-			if (prereqEntryCount.containsKey(entry.build())) {
+			// Prerequisite version
+			if (prereqEntryCount.containsKey(entry.build())) // Load nested HashMap into variable temporarily, if it exists.
 				prereqNestedCount = prereqEntryCount.get(entry.build());
-			}
 
-			if (prereqNestedCount.containsKey(entry.prerequisiteVer()))
+			if (prereqNestedCount.containsKey(entry.prerequisiteVer())) // Increment existing count.
 				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
-			else
+			else // An entry doesn't exist, so add the first tally.
 				prereqNestedCount.put(entry.prerequisiteVer(), 1);
 
 			prereqEntryCount.put(entry.build(), prereqNestedCount);
+
+			// File
+			if (fileEntryCount.containsKey(entry.url())) // Increment existing count.
+				fileEntryCount.replace(entry.url(), fileEntryCount.get(entry.url())+1);
+			else // An entry doesn't exist, so add the first tally.
+				fileEntryCount.put(entry.url(), 1);
 		}
 
 		for (OTAPackage entry:entryList) {
@@ -279,16 +285,15 @@ public class Parser {
 			}
 
 			// If this is an Apple TV, we need to leave space for the marketing version.
-			if (device.matches("AppleTV\\d,\\d")) {
+			if (device.matches("AppleTV\\d(\\d)?,\\d")) {
 				System.out.print("| ");
 
 				// Only give colspan if there is more than one row with the OS version.
 				if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
-						System.out.println("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+					System.out.println("colspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
 
 				System.out.println("[MARKETING VERSION]");
 			}
-
 
 			//Output build number.
 			if (buildEntryCount.containsKey(entry.build())) {
@@ -336,11 +341,30 @@ public class Parser {
 				System.out.println("{{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6) + "}}");
 			}
 
-			// Prints out fileURL, reuses fileURL to store just the file name, and then prints fileURL again.
-			System.out.print("| [" + entry.url() + " ");
-			System.out.println(fileName + "]");
+			// Print file URL.
+			if (fileEntryCount.containsKey(entry.url())) {
+				System.out.print("| ");
 
-			System.out.println("| " + entry.size());
+				// Only give colspan if there is more than one row with the OS version.
+				if (fileEntryCount.get(entry.url()).intValue() > 1) {
+					System.out.print("colspan=\"" + fileEntryCount.get(entry.url()) + "\" | ");
+				}
+
+				System.out.println("[" + entry.url() + " " + fileName + "]");
+			}
+
+			//Print file size.
+			if (fileEntryCount.containsKey(entry.url())) {
+				System.out.print("| ");
+
+				// Only give colspan if there is more than one row with the OS version.
+				if (fileEntryCount.get(entry.url()).intValue() > 1) {
+					System.out.print("colspan=\"" + fileEntryCount.get(entry.url()) + "\" | ");
+					fileEntryCount.remove(entry.url());
+				}
+
+				System.out.println(entry.size());
+			}
 		}
 	}
 }
