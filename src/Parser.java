@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.3.1
+ * OTA Catalog Parser 0.3.2
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -24,11 +24,13 @@
  */
 import com.dd.plist.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.regex.*;
+import org.xml.sax.SAXException;
 
 public class Parser {
 	private static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
@@ -89,7 +91,7 @@ public class Parser {
 	public static void main(String[] args) {
 		boolean mwMarkup = false;
 		int i = 0;
-		NSDictionary root;
+		NSDictionary root = null;
 		String arg = "", xmlName = "";
 
 		System.out.println("OTA Catalog Parser v0.3.1");
@@ -142,53 +144,66 @@ public class Parser {
 		checkModel = device.matches("iPhone8,(1|2)");
 
 		if (!device.matches("(AppleTV|iP(ad|hone|od))\\d(\\d)?,\\d")) {
-			System.err.println("You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
+			System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
 			System.exit(1);
 		}
 		if (xmlName.isEmpty()) {
-			System.err.println("You need to set a file name with the \"-f\" argument.");
+			System.err.println("ERROR: You need to set a file name with the \"-f\" argument.");
 			System.exit(2);
 		}
 		if (checkModel && !model.matches("[JKMNP]\\d(\\d)?(\\d)?[a-z]?AP")) {
-			System.err.println("You need to specify a model with the \"-m\" argument, e.g. N71AP");
+			System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
 			System.exit(3);
 		}
 		if (!minOSVer.isEmpty() && !minOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
-			System.err.println("You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
+			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
 			System.exit(4);
 		}
 		if (!maxOSVer.isEmpty() && !maxOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
-			System.err.println("You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
+			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
 			System.exit(5);
 		}
 
 		try {
 			//The first <dict>.
 			root = (NSDictionary)PropertyListParser.parse(new File(xmlName));
-
-			addEntries(root);
-
-			Collections.sort(entryList, new Comparator<OTAPackage>() {
-				@Override
-				public int compare(OTAPackage package1, OTAPackage package2) {
-					return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
-				}
-			});
-			Collections.sort(entryList, new Comparator<OTAPackage>() {
-				@Override
-				public int compare(OTAPackage package1, OTAPackage package2) {
-					return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
-				}
-			});
-
-			if (mwMarkup)
-				printWikiMarkup(entryList);
-			else
-				printOutput(entryList);
+		}
+		catch (FileNotFoundException e) {
+			System.err.println("ERROR: The file \"" + xmlName + "\" can't be found.");
+			System.exit(6);
+		}
+		catch (PropertyListFormatException e) {
+			System.err.println("ERROR: This is not an Apple property list.");
+			System.exit(7);
+		}
+		catch (SAXException e) {
+			System.err.println("ERROR: This file does not have proper XML syntax.");
+			System.exit(8);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
+
+		addEntries(root);
+
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
+			@Override
+			public int compare(OTAPackage package1, OTAPackage package2) {
+				return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
+			}
+		});
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
+			@Override
+			public int compare(OTAPackage package1, OTAPackage package2) {
+				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
+			}
+		});
+
+		if (mwMarkup)
+			printWikiMarkup(entryList);
+		else
+			printOutput(entryList);
 	}
 
 	private static void printOutput(ArrayList<OTAPackage> entryList) {

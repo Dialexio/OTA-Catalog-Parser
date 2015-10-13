@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.3.1
+ * OTA Catalog Parser 0.3.2
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
