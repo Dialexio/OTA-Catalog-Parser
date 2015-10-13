@@ -35,6 +35,7 @@ import org.xml.sax.SAXException;
 public class Parser {
 	private static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
 	private static boolean checkModel, showBeta = false;
+	private static NSDictionary root = null;
 	private static String device = "", maxOSVer = "", minOSVer = "", model = "";
 
 	private static void addEntries(NSDictionary root) {
@@ -88,10 +89,31 @@ public class Parser {
 		}
 	}
 
+	private static void loadFile(File xmlName) {
+		try {
+			root = (NSDictionary)PropertyListParser.parse(xmlName);
+		}
+		catch (FileNotFoundException e) {
+			System.err.println("ERROR: The file \"" + xmlName + "\" can't be found.");
+			System.exit(2);
+		}
+		catch (PropertyListFormatException e) {
+			System.err.println("ERROR: This isn't an Apple property list.");
+			System.exit(6);
+		}
+		catch (SAXException e) {
+			System.err.println("ERROR: This file doesn't have proper XML syntax.");
+			System.exit(7);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+
 	public static void main(String[] args) {
 		boolean mwMarkup = false;
 		int i = 0;
-		NSDictionary root = null;
 		String arg = "", xmlName = "";
 
 		System.out.println("OTA Catalog Parser v0.3.1");
@@ -170,41 +192,11 @@ public class Parser {
 		// Right now, it's just a lazy check for iPhone8,1 or iPhone8,2.
 		checkModel = device.matches("iPhone8,(1|2)");
 
-		try {
-			//The first <dict>.
-			root = (NSDictionary)PropertyListParser.parse(new File(xmlName));
-		}
-		catch (FileNotFoundException e) {
-			System.err.println("ERROR: The file \"" + xmlName + "\" can't be found.");
-			System.exit(2);
-		}
-		catch (PropertyListFormatException e) {
-			System.err.println("ERROR: This is not an Apple property list.");
-			System.exit(6);
-		}
-		catch (SAXException e) {
-			System.err.println("ERROR: This file does not have proper XML syntax.");
-			System.exit(7);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
+		loadFile(new File(xmlName));
 
 		addEntries(root);
 
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
-			@Override
-			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
-			}
-		});
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
-			@Override
-			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
-			}
-		});
+		sort();
 
 		if (mwMarkup)
 			printWikiMarkup(entryList);
@@ -387,5 +379,20 @@ public class Parser {
 				System.out.println(entry.size());
 			}
 		}
+	}
+
+	private static void sort() {
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
+			@Override
+			public int compare(OTAPackage package1, OTAPackage package2) {
+				return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
+			}
+		});
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
+			@Override
+			public int compare(OTAPackage package1, OTAPackage package2) {
+				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
+			}
+		});
 	}
 }
