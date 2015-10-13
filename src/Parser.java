@@ -39,13 +39,14 @@ public class Parser {
 	private static String device = "", maxOSVer = "", minOSVer = "", model = "";
 
 	private static void addEntries(NSDictionary root) {
+		boolean matched;
 		NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
 		OTAPackage entry;
 
 		// Look at every item in the array with the key "Assets."
 		for (NSObject item:assets) {
-			boolean entryMatch = false;
 			entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
+			matched = false;
 
 			// Beta check.
 			if (!showBeta && entry.isBeta())
@@ -54,34 +55,34 @@ public class Parser {
 			// Device check.
 			for (NSObject supportedDevice:entry.supportedDevices()) {
 				if (device.equals(supportedDevice.toString())) {
-					entryMatch = true;
+					matched = true;
 					break;
 				}
 			}
 
 			// Model check, if needed.
-			if (entryMatch && checkModel) {
-				entryMatch = false; // Skipping unless we can verify we want it.
+			if (matched && checkModel) {
+				matched = false; // Skipping unless we can verify we want it.
 
 				// Make sure "SupportedDeviceModels" exists.
 				if (entry.supportedDeviceModels() != null) {
 					// Since it's an array, check each entry if the model matches.
 					for (NSObject supportedDeviceModel:entry.supportedDeviceModels())
 						if (supportedDeviceModel.toString().equals(model)) {
-							entryMatch = true;
+							matched = true;
 							break;
 						}
 				}
 			}
 
 			// OS version check. Move to the next item if it doesn't match.
-			if (entryMatch && !maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.osVersion()) < 0))
+			if (matched && !maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.osVersion()) < 0))
 					continue;
-			if (entryMatch && !minOSVer.isEmpty() && (minOSVer.compareTo(entry.osVersion()) > 0))
+			if (matched && !minOSVer.isEmpty() && (minOSVer.compareTo(entry.osVersion()) > 0))
 					continue;
 
 			// Add it after it survives the checks.
-			if (entryMatch)
+			if (matched)
 				entryList.add(entry);
 		}
 	}
@@ -113,7 +114,7 @@ public class Parser {
 		int i = 0;
 		String arg = "", xmlName = "";
 
-		System.out.println("OTA Catalog Parser v0.3.1");
+		System.out.println("OTA Catalog Parser v0.3.2");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading arguments (and performing some basic checks).
@@ -211,8 +212,17 @@ public class Parser {
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
 				System.out.println("Requires: Not specified");
-			else
-				System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
+			else {
+				System.out.print("Requires: ");
+
+				// Version isn't always specified.
+				if (entry.prerequisiteVer().equals("N/A"))
+					System.out.print("Version not specified");
+				else
+					System.out.print("iOS " + entry.prerequisiteVer());
+
+				System.out.println(" (Build " + entry.prerequisiteBuild() + ")");
+			}
 
 			// Date as extracted from the URL.
 			System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6));
@@ -228,12 +238,13 @@ public class Parser {
 	private static void printWikiMarkup(ArrayList<OTAPackage> entryList) {
 		HashMap<String, Integer> buildEntryCount = new HashMap<String, Integer>(),
 								 fileEntryCount = new HashMap<String, Integer>(),
-				 				 osEntryCount = new HashMap<String, Integer>(),
-								 prereqNestedCount = new HashMap<String, Integer>();
+				 				 osEntryCount = new HashMap<String, Integer>();
 		HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 		// Count the rowspans for wiki markup.
 		for (OTAPackage entry:entryList) {
+			HashMap<String, Integer> prereqNestedCount = new HashMap<String, Integer>();
+
 			// OS version
 			if (osEntryCount.containsKey(entry.osVersion())) // Increment existing count.
 				osEntryCount.replace(entry.osVersion(), osEntryCount.get(entry.osVersion())+1);

@@ -28,31 +28,28 @@ import java.util.Locale;
 import java.util.regex.*;
 
 class OTAPackage {
-	private final NSDictionary entry;
-	private final String build, prereqBuild, prereqVer, url; 
-	private final String buildNumToLetter = "(\\d)?\\d[A-M]";// All "betas" have a 5 after the letter.
-	private final Pattern betaRegex = Pattern.compile(buildNumToLetter+"5");
+	private final NSDictionary ENTRY;
+	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL; 
+	private final String REGEX_STRING_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-M]";// All "betas" have a 5 after the letter.
 
-	private boolean isUniversal = true;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 	private String date, size;
 
 	public OTAPackage(NSDictionary entry) {
-		build = entry.get("Build").toString();
+		BUILD = entry.get("Build").toString();
 		Matcher timestamp;
-		this.entry = entry;
+		this.ENTRY = entry;
 		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
 
 		// Obtain the prerequisite build and prerequisite version.
 		if (entry.containsKey("PrerequisiteBuild")) {
-			prereqBuild = entry.get("PrerequisiteBuild").toString();
-			prereqVer = (entry.containsKey("PrerequisiteOSVersion")) ? entry.get("PrerequisiteOSVersion").toString() : "{{n/a}}";
-			isUniversal = false;
+			PREREQ_BUILD = entry.get("PrerequisiteBuild").toString();
+			PREREQ_VER = (entry.containsKey("PrerequisiteOSVersion")) ? entry.get("PrerequisiteOSVersion").toString() : "N/A";
 		}
 		else {
-			prereqBuild = "";
-			prereqVer = "";
+			PREREQ_BUILD = "N/A";
+			PREREQ_VER = "N/A";
 		}
 
 		// Retrieve the list of supported models... if it exists.
@@ -65,16 +62,16 @@ class OTAPackage {
 			final NSDictionary realUpdateAttrs = (NSDictionary)entry.get("RealUpdateAttributes");
 
 			size = realUpdateAttrs.get("RealUpdateDownloadSize").toString();
-			url = realUpdateAttrs.get("RealUpdateURL").toString();
+			URL = realUpdateAttrs.get("RealUpdateURL").toString();
 		}
 		else {
 			size = entry.get("_DownloadSize").toString();
-			url = ((NSString)entry.get("__BaseURL")).getContent() + ((NSString)entry.get("__RelativePath")).getContent();
+			URL = ((NSString)entry.get("__BaseURL")).getContent() + ((NSString)entry.get("__RelativePath")).getContent();
 		}
 
 		// Extract the date from the URL.
 		// This is not 100% accurate information, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
-		timestamp = timestampRegex.matcher(url);
+		timestamp = timestampRegex.matcher(URL);
 		while (timestamp.find()) {
 			date = timestamp.group().substring(5);
 			break;
@@ -85,7 +82,7 @@ class OTAPackage {
 	}
 
 	public String build() {
-		return entry.get("Build").toString();
+		return ENTRY.get("Build").toString();
 	}
 
 	public String date() {
@@ -93,24 +90,26 @@ class OTAPackage {
 	}
 
 	public boolean isBeta() {
-		final Matcher betaFlag = betaRegex.matcher(build);
-		return betaFlag.find();
+		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_STRING_BUILD_UP_TO_LETTER+"5");
+		final Matcher BETA_MATCH = REGEX_BETA_CHECKER.matcher(BUILD);
+
+		return BETA_MATCH.find();
 	}
 
 	public boolean isUniversal() {
-		return isUniversal;
+		return (PREREQ_VER.equals("N/A") && PREREQ_BUILD.equals("N/A"));
 	}
 
 	public String osVersion() {
-		return entry.get("OSVersion").toString();
+		return ENTRY.get("OSVersion").toString();
 	}
 
 	public String prerequisiteBuild() {
-		return prereqBuild;
+		return PREREQ_BUILD;
 	}
 
 	public String prerequisiteVer() {
-		return prereqVer;
+		return PREREQ_VER;
 	}
 
 	public String size() {
@@ -121,14 +120,14 @@ class OTAPackage {
 	// There are extra zeros in the front for both, and an
 	// extra 9 after the first build letter for non-betas.
 	public String sortingBuild() {
-		String sortBuild = build;
+		String sortBuild = BUILD;
 
 		//Make 9A### appear before 10A###.
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = "0" + sortBuild;
 
 		if (!isBeta()) {
-			final Pattern betaRegex = Pattern.compile(buildNumToLetter);
+			final Pattern betaRegex = Pattern.compile(REGEX_STRING_BUILD_UP_TO_LETTER);
 			final Matcher buildUpToLetter = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";
 
@@ -136,7 +135,7 @@ class OTAPackage {
 				upToLetter = buildUpToLetter.group();
 				break;
 			}
-			afterLetter = sortBuild.replaceFirst(buildNumToLetter, "");
+			afterLetter = sortBuild.replaceFirst(REGEX_STRING_BUILD_UP_TO_LETTER, "");
 
 			sortBuild = upToLetter + "9" + afterLetter;
 		}
@@ -144,10 +143,10 @@ class OTAPackage {
 	}
 
 	public String sortingPrerequisiteBuild() {
-		if (prereqBuild.isEmpty())
+		if (PREREQ_BUILD.equals("N/A"))
 			return "0000000000"; // Bump this to the top.
 		else
-			return (Character.isLetter(prereqBuild.charAt(1))) ? "0" + prereqBuild : prereqBuild;
+			return (Character.isLetter(PREREQ_BUILD.charAt(1))) ? "0" + PREREQ_BUILD : PREREQ_BUILD;
 	}
 
 	public NSObject[] supportedDeviceModels() {
@@ -159,6 +158,6 @@ class OTAPackage {
 	}
 
 	public String url() {
-		return url;
+		return URL;
 	}
 }
