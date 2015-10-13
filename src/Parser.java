@@ -97,72 +97,78 @@ public class Parser {
 		System.out.println("OTA Catalog Parser v0.3.1");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
-		// Reading and (lazily) checking arguments.
+		// Reading arguments (and performing some basic checks).
 		while (i < args.length && args[i].startsWith("-")) {
 			arg = args[i++];
 
-			// Should we display beta?
 			if (arg.equals("-b"))
 				showBeta = true;
-			// We need to know the device.
+
 			else if (arg.equals("-d")) {
+				device = "";
+
 				if (i < args.length)
 					device = args[i++];
-				else
-					System.err.println("-d requires a device, e.g. iPad2,1 or iPhone6,2");
+
+				if (!device.matches("(AppleTV|iP(ad|hone|od))\\d(\\d)?,\\d")) {
+					System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
+					System.exit(1);
+				}
 			}
-			// We also need to know what file we're looking at.
+
 			else if (arg.equals("-f")) {
+				xmlName = "";
+
 				if (i < args.length)
 					xmlName = args[i++];
-				else
-					System.err.println("-f requires a filename");
+
+				if (xmlName.isEmpty()) {
+					System.err.println("ERROR: You need to supply a file name.");
+					System.exit(2);
+				}
 			}
+
 			else if (arg.equals("-m")) {
+				model = "";
+
 				if (i < args.length)
 					model = args[i++];
-				else
-					System.err.println("-m requires a device, e.g. N71AP or N66mAP");
+
+				if (model.matches("[JKMNP]\\d(\\d)?(\\d)?[a-z]?AP")) {
+					System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
+					System.exit(3);
+				}
 			}
+
 			else if (arg.equals("-max")) {
+				maxOSVer = "";
+
 				if (i < args.length)
 					maxOSVer = args[i++];
-				else
-					System.err.println("-max requires an OS version, e.g. 4.3 or 8.0.1");
+
+				if (!maxOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
+					System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
+					System.exit(4);
+				}
 			}
 			else if (arg.equals("-min")) {
+				minOSVer = "";
+
 				if (i < args.length)
 					minOSVer = args[i++];
-				else
-					System.err.println("-min requires an OS version, e.g. 4.3 or 8.0.1");
+
+				if (!minOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
+					System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
+					System.exit(5);
+				}
 			}
 			else if (arg.equals("-w"))
 				mwMarkup = true;
 		}
 
 		// Flag whether or not we need to check the model.
+		// Right now, it's just a lazy check for iPhone8,1 or iPhone8,2.
 		checkModel = device.matches("iPhone8,(1|2)");
-
-		if (!device.matches("(AppleTV|iP(ad|hone|od))\\d(\\d)?,\\d")) {
-			System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
-			System.exit(1);
-		}
-		if (xmlName.isEmpty()) {
-			System.err.println("ERROR: You need to set a file name with the \"-f\" argument.");
-			System.exit(2);
-		}
-		if (checkModel && !model.matches("[JKMNP]\\d(\\d)?(\\d)?[a-z]?AP")) {
-			System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
-			System.exit(3);
-		}
-		if (!minOSVer.isEmpty() && !minOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
-			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
-			System.exit(4);
-		}
-		if (!maxOSVer.isEmpty() && !maxOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
-			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
-			System.exit(5);
-		}
 
 		try {
 			//The first <dict>.
@@ -170,15 +176,15 @@ public class Parser {
 		}
 		catch (FileNotFoundException e) {
 			System.err.println("ERROR: The file \"" + xmlName + "\" can't be found.");
-			System.exit(6);
+			System.exit(2);
 		}
 		catch (PropertyListFormatException e) {
 			System.err.println("ERROR: This is not an Apple property list.");
-			System.exit(7);
+			System.exit(6);
 		}
 		catch (SAXException e) {
 			System.err.println("ERROR: This file does not have proper XML syntax.");
-			System.exit(8);
+			System.exit(7);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
