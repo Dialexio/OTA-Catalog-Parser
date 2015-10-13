@@ -40,11 +40,12 @@ public class Parser {
 
 	private static void addEntries(NSDictionary root) {
 		NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
+		OTAPackage entry;
 
 		// Look at every item in the array with the key "Assets."
 		for (NSObject item:assets) {
 			boolean entryMatch = false;
-			OTAPackage entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
+			entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
 
 			// Beta check.
 			if (!showBeta && entry.isBeta())
@@ -74,14 +75,10 @@ public class Parser {
 			}
 
 			// OS version check. Move to the next item if it doesn't match.
-			if (entryMatch && !maxOSVer.isEmpty()) {
-				if (maxOSVer.compareTo(entry.osVersion()) < 0)
+			if (entryMatch && !maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.osVersion()) < 0))
 					continue;
-			}
-			if (entryMatch && !minOSVer.isEmpty()) {
-				if (minOSVer.compareTo(entry.osVersion()) > 0)
+			if (entryMatch && !minOSVer.isEmpty() && (minOSVer.compareTo(entry.osVersion()) > 0))
 					continue;
-			}
 
 			// Add it after it survives the checks.
 			if (entryMatch)
@@ -89,7 +86,7 @@ public class Parser {
 		}
 	}
 
-	private static void loadFile(File xmlName) {
+	private static void loadFile(final File xmlName) {
 		try {
 			root = (NSDictionary)PropertyListParser.parse(xmlName);
 		}
@@ -111,7 +108,7 @@ public class Parser {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		boolean mwMarkup = false;
 		int i = 0;
 		String arg = "", xmlName = "";
@@ -240,13 +237,15 @@ public class Parser {
 			// OS version
 			if (osEntryCount.containsKey(entry.osVersion())) // Increment existing count.
 				osEntryCount.replace(entry.osVersion(), osEntryCount.get(entry.osVersion())+1);
-			else // An entry doesn't exist, so add the first tally.
+			// Since it hasn't been counted, add the first tally.
+			else
 				osEntryCount.put(entry.osVersion(), 1);
 
 			// Build
 			if (buildEntryCount.containsKey(entry.build())) // Increment existing count.
 				buildEntryCount.replace(entry.build(), buildEntryCount.get(entry.build())+1);
-			else // An entry doesn't exist, so add the first tally.
+			// Since it hasn't been counted, add the first tally.
+			else
 				buildEntryCount.put(entry.build(), 1);
 
 			// Prerequisite version
@@ -255,7 +254,8 @@ public class Parser {
 
 			if (prereqNestedCount.containsKey(entry.prerequisiteVer())) // Increment existing count.
 				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
-			else // An entry doesn't exist, so add the first tally.
+			// Since it hasn't been counted, add the first tally.
+			else
 				prereqNestedCount.put(entry.prerequisiteVer(), 1);
 
 			prereqEntryCount.put(entry.build(), prereqNestedCount);
@@ -263,7 +263,8 @@ public class Parser {
 			// File
 			if (fileEntryCount.containsKey(entry.url())) // Increment existing count.
 				fileEntryCount.replace(entry.url(), fileEntryCount.get(entry.url())+1);
-			else // An entry doesn't exist, so add the first tally.
+			// Since it hasn't been counted, add the first tally.
+			else 
 				fileEntryCount.put(entry.url(), 1);
 		}
 
@@ -291,7 +292,7 @@ public class Parser {
 
 				// Give it a beta label (if it is one).
 				if (entry.isBeta())
-					System.out.print(" beta #"); // Number sign should be replaced by user. We can't keep track of which beta this is.
+					System.out.print(" beta #"); // Number sign should be replaced by user; we can't keep track of which beta this is.
 
 				System.out.println();
 				osEntryCount.remove(entry.osVersion()); //Remove the count since we're done with it.
@@ -313,9 +314,8 @@ public class Parser {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (buildEntryCount.get(entry.build()).intValue() > 1) {
+				if (buildEntryCount.get(entry.build()).intValue() > 1)
 					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
-				}
 
 				System.out.println(entry.build());
 			}
@@ -340,14 +340,14 @@ public class Parser {
 				System.out.println("| " + entry.prerequisiteBuild());
 			}
 
-			// Date as extracted from the URL.
-			// Using the same rowspan count as build. (3.1.1 had two builds released on different dates for iPod touch 3G.)
+			// Date as extracted from the URL. Using the same rowspan count as build.
+			// (3.1.1 had two builds released on different dates for iPod touch 3G.)
 			if (buildEntryCount.containsKey(entry.build())) {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (buildEntryCount.get(entry.build()).intValue() > 1) {
-					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" ");
+					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
 					buildEntryCount.remove(entry.build()); //Remove the count since we already used it.
 				}
 
