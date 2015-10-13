@@ -153,7 +153,7 @@ public class Parser {
 				if (i < args.length)
 					model = args[i++];
 
-				if (model.matches("[JKMNP]\\d(\\d)?(\\d)?[a-z]?AP")) {
+				if (!model.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP")) {
 					System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
 					System.exit(3);
 				}
