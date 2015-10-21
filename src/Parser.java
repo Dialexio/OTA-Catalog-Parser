@@ -312,7 +312,7 @@ public class Parser {
 					System.out.print("| ");
 
 					// Only give rowspan if there is more than one row with the OS version.
-					if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
+					if (osEntryCount.get(entry.osVersion()).intValue() > 1)
 						System.out.print("rowspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
 
 					System.out.println("[MARKETING VERSION]");
