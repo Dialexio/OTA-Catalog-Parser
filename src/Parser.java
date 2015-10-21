@@ -306,18 +306,20 @@ public class Parser {
 					System.out.print(" beta #"); // Number sign should be replaced by user; we can't keep track of which beta this is.
 
 				System.out.println();
-				osEntryCount.remove(entry.osVersion()); //Remove the count since we're done with it.
-			}
 
-			// If this is an Apple TV, we need to leave space for the marketing version.
-			if (device.matches("AppleTV\\d(\\d)?,\\d")) {
-				System.out.print("| ");
+				// If this is an Apple TV, we need to leave space for the marketing version.
+				if (device.matches("AppleTV\\d(\\d)?,\\d")) {
+					System.out.print("| ");
 
-				// Only give rowspan if there is more than one row with the OS version.
-				if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
-					System.out.println("rowspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
+					// Only give rowspan if there is more than one row with the OS version.
+					if (osEntryCount.containsKey(entry.osVersion()) && (osEntryCount.get(entry.osVersion()).intValue() > 1))
+						System.out.print("rowspan=\"" + osEntryCount.get(entry.osVersion()) + "\" | ");
 
-				System.out.println("[MARKETING VERSION]");
+					System.out.println("[MARKETING VERSION]");
+				}
+
+				//Remove the count since we're done with it.
+				osEntryCount.remove(entry.osVersion());
 			}
 
 			//Output build number.
