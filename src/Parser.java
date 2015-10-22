@@ -34,24 +34,24 @@ import org.xml.sax.SAXException;
 
 public class Parser {
 	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
+	private final static HashMap<String, Integer> buildEntryCount = new HashMap<String, Integer>(),
+		fileEntryCount = new HashMap<String, Integer>(),
+		osEntryCount = new HashMap<String, Integer>();
+	private final static HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 	private static boolean checkModel, showBeta = false;
 	private static NSDictionary root = null;
 	private static String device = "", maxOSVer = "", minOSVer = "", model = "";
 
-	private static HashMap<String, Integer> buildEntryCount = new HashMap<String, Integer>(),
-			 fileEntryCount = new HashMap<String, Integer>(),
-			 osEntryCount = new HashMap<String, Integer>();
-	private static HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
-
 
 	private static void addEntries(final NSDictionary PLIST_ROOT) {
+		final NSObject[] ASSETS = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
+
 		boolean matched;
-		NSObject[] assets = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
 		OTAPackage entry;
 
 		// Look at every item in the array with the key "Assets."
-		for (NSObject item:assets) {
+		for (NSObject item:ASSETS) {
 			entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
 			matched = false;
 
@@ -94,10 +94,12 @@ public class Parser {
 		}
 	}
 
-	private static void countRowspan(ArrayList<OTAPackage> entryList) {
+	private static void countRowspan(final ArrayList<OTAPackage> ENTRYLIST) {
+		HashMap<String, Integer> prereqNestedCount;
+
 		// Count the rowspans for wiki markup.
-		for (OTAPackage entry:entryList) {
-			HashMap<String, Integer> prereqNestedCount = new HashMap<String, Integer>();
+		for (OTAPackage entry:ENTRYLIST) {
+			prereqNestedCount = new HashMap<String, Integer>();
 
 			// OS version
 			if (osEntryCount.containsKey(entry.osVersion())) // Increment existing count.
@@ -251,8 +253,8 @@ public class Parser {
 			printOutput(ENTRY_LIST);
 	}
 
-	private static void printOutput(ArrayList<OTAPackage> entryList) {
-		for (OTAPackage entry:entryList) {
+	private static void printOutput(final ArrayList<OTAPackage> ENTRYLIST) {
+		for (OTAPackage entry:ENTRYLIST) {
 			// Output iOS version and build.
 			System.out.print("iOS " + entry.osVersion() + " (Build " + entry.actualBuild() + ")");
 			if (!entry.actualBuild().equals(entry.declaredBuild()))
@@ -289,12 +291,12 @@ public class Parser {
 		}
 	}
 
-	private static void printWikiMarkup(ArrayList<OTAPackage> entryList) {
+	private static void printWikiMarkup(final ArrayList<OTAPackage> ENTRYLIST) {
 		final Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
 		Matcher name;
 		String fileName;
 
-		for (OTAPackage entry:entryList) {
+		for (OTAPackage entry:ENTRYLIST) {
 			fileName = "";
 
 			name = nameRegex.matcher(entry.url());
