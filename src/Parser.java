@@ -330,7 +330,10 @@ public class Parser {
 				if (buildEntryCount.get(entry.build()).intValue() > 1)
 					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
 
-				System.out.println(entry.build());
+				if (entry.build().equals(entry.actualBuild()))
+					System.out.println(entry.build() + " ");
+				else
+					System.out.println(entry.actualBuild() + "<ref name=\"fakefive\" />");
 			}
 
 			// Print prerequisites if there are any.

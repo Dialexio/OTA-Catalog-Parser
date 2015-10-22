@@ -29,18 +29,30 @@ import java.util.regex.*;
 
 class OTAPackage {
 	private final NSDictionary ENTRY;
-	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL; 
-	private final String REGEX_STRING_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-M]";// All "betas" have a 5 after the letter.
+	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL;
+	private String BUILD_UP_TO_LETTER;
+	private final String BUILD_UP_TO_LETTER_REGEX = "(\\d)?\\d[A-M]";
+	private final String FIVE_THOUSAND = "5\\d{3}";
 
+	private Matcher matchFinder;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 	private String date, size;
 
 	public OTAPackage(NSDictionary entry) {
 		BUILD = entry.get("Build").toString();
-		Matcher timestamp;
+		BUILD_UP_TO_LETTER = "";
 		this.ENTRY = entry;
-		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
+
+		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
+
+		// Get the build number up to (and including) the first letter.
+		final Pattern buildToLetterRegex = Pattern.compile(BUILD_UP_TO_LETTER_REGEX);
+		matchFinder = buildToLetterRegex.matcher(BUILD);
+		while (matchFinder.find()) {
+			BUILD_UP_TO_LETTER = matchFinder.group();
+			break;
+		}
 
 		// Obtain the prerequisite build and prerequisite version.
 		if (entry.containsKey("PrerequisiteBuild")) {
@@ -71,9 +83,9 @@ class OTAPackage {
 
 		// Extract the date from the URL.
 		// This is not 100% accurate information, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
-		timestamp = timestampRegex.matcher(URL);
-		while (timestamp.find()) {
-			date = timestamp.group().substring(5);
+		matchFinder = timestampRegex.matcher(URL);
+		while (matchFinder.find()) {
+			date = matchFinder.group().substring(5);
 			break;
 		}
 
@@ -81,8 +93,30 @@ class OTAPackage {
 			date = date.substring(0, 6) + "0" + date.substring(6);
 	}
 
+	// When a firmware reaches a final release, Apple creates an entry
+	// that is the build number with 5000 added to the end number
+	// in order to push devices with the beta firmware to the final
+	// release. This subtracts the 5000.
+	public String actualBuild() {
+		if (this.isBeta() && !BUILD.matches(BUILD_UP_TO_LETTER_REGEX + FIVE_THOUSAND + "[a-z]")) {
+			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(FIVE_THOUSAND);
+			matchFinder = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
+			String minusFiveThousand = "";
+
+			while (matchFinder.find()) {
+				minusFiveThousand = matchFinder.group();
+				break;
+			}
+
+			return BUILD_UP_TO_LETTER + (Integer.parseInt(minusFiveThousand) - 5000);
+		}
+
+		else
+			return BUILD;
+	}
+
 	public String build() {
-		return ENTRY.get("Build").toString();
+		return BUILD;
 	}
 
 	public String date() {
@@ -90,7 +124,7 @@ class OTAPackage {
 	}
 
 	public boolean isBeta() {
-		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_STRING_BUILD_UP_TO_LETTER+"5");
+		final Pattern REGEX_BETA_CHECKER = Pattern.compile(BUILD_UP_TO_LETTER_REGEX + FIVE_THOUSAND);
 		final Matcher BETA_MATCH = REGEX_BETA_CHECKER.matcher(BUILD);
 
 		return BETA_MATCH.find();
@@ -127,15 +161,15 @@ class OTAPackage {
 			sortBuild = "0" + sortBuild;
 
 		if (!isBeta()) {
-			final Pattern betaRegex = Pattern.compile(REGEX_STRING_BUILD_UP_TO_LETTER);
-			final Matcher buildUpToLetter = betaRegex.matcher(sortBuild);
+			final Pattern betaRegex = Pattern.compile(BUILD_UP_TO_LETTER_REGEX);
+			matchFinder = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";
 
-			while (buildUpToLetter.find()) {
-				upToLetter = buildUpToLetter.group();
+			while (matchFinder.find()) {
+				upToLetter = matchFinder.group();
 				break;
 			}
-			afterLetter = sortBuild.replaceFirst(REGEX_STRING_BUILD_UP_TO_LETTER, "");
+			afterLetter = sortBuild.replaceFirst(BUILD_UP_TO_LETTER_REGEX, "");
 
 			sortBuild = upToLetter + "9" + afterLetter;
 		}
