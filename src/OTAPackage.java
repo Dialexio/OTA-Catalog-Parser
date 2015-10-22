@@ -98,7 +98,7 @@ class OTAPackage {
 	// in order to push devices with the beta firmware to the final
 	// release. This subtracts the 5000.
 	public String actualBuild() {
-		if (this.isBeta() && !BUILD.matches(BUILD_UP_TO_LETTER_REGEX + FIVE_THOUSAND + "[a-z]")) {
+		if (this.declaredBeta() && !BUILD.matches(BUILD_UP_TO_LETTER_REGEX + FIVE_THOUSAND + "[a-z]")) {
 			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(FIVE_THOUSAND);
 			matchFinder = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
 			String minusFiveThousand = "";
@@ -115,19 +115,19 @@ class OTAPackage {
 			return BUILD;
 	}
 
-	public String build() {
-		return BUILD;
-	}
-
 	public String date() {
 		return date;
 	}
 
-	public boolean isBeta() {
+	public boolean declaredBeta() {
 		final Pattern REGEX_BETA_CHECKER = Pattern.compile(BUILD_UP_TO_LETTER_REGEX + FIVE_THOUSAND);
-		final Matcher BETA_MATCH = REGEX_BETA_CHECKER.matcher(BUILD);
+		matchFinder = REGEX_BETA_CHECKER.matcher(BUILD);
 
-		return BETA_MATCH.find();
+		return matchFinder.find();
+	}
+
+	public String declaredBuild() {
+		return BUILD;
 	}
 
 	public boolean isUniversal() {
@@ -160,7 +160,7 @@ class OTAPackage {
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = "0" + sortBuild;
 
-		if (!isBeta()) {
+		if (!declaredBeta()) {
 			final Pattern betaRegex = Pattern.compile(BUILD_UP_TO_LETTER_REGEX);
 			matchFinder = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";

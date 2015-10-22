@@ -49,7 +49,7 @@ public class Parser {
 			matched = false;
 
 			// Beta check.
-			if (!showBeta && entry.isBeta())
+			if (!showBeta && entry.declaredBeta())
 				continue;
 
 			// Device check.
@@ -205,8 +205,13 @@ public class Parser {
 	private static void printOutput(ArrayList<OTAPackage> entryList) {
 		for (OTAPackage entry:entryList) {
 			// Output iOS version and build.
-			System.out.println("iOS " + entry.osVersion() + " (Build " + entry.build() + ")");
-			if (entry.isBeta()) // Is this a beta?
+			System.out.print("iOS " + entry.osVersion() + " (Build " + entry.actualBuild() + ")");
+			if (!entry.actualBuild().equals(entry.declaredBuild()))
+				System.out.print(" (listed as " + entry.declaredBuild() + ")");
+			System.out.println();
+
+			// Is this a beta?
+			if (entry.declaredBeta())
 				System.out.println("This is marked as a beta release.");
 
 			// Print prerequisites if there are any.
@@ -253,15 +258,15 @@ public class Parser {
 				osEntryCount.put(entry.osVersion(), 1);
 
 			// Build
-			if (buildEntryCount.containsKey(entry.build())) // Increment existing count.
-				buildEntryCount.replace(entry.build(), buildEntryCount.get(entry.build())+1);
+			if (buildEntryCount.containsKey(entry.declaredBuild())) // Increment existing count.
+				buildEntryCount.replace(entry.declaredBuild(), buildEntryCount.get(entry.declaredBuild())+1);
 			// Since it hasn't been counted, add the first tally.
 			else
-				buildEntryCount.put(entry.build(), 1);
+				buildEntryCount.put(entry.declaredBuild(), 1);
 
 			// Prerequisite version
-			if (prereqEntryCount.containsKey(entry.build())) // Load nested HashMap into variable temporarily, if it exists.
-				prereqNestedCount = prereqEntryCount.get(entry.build());
+			if (prereqEntryCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
+				prereqNestedCount = prereqEntryCount.get(entry.declaredBuild());
 
 			if (prereqNestedCount.containsKey(entry.prerequisiteVer())) // Increment existing count.
 				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
@@ -269,7 +274,7 @@ public class Parser {
 			else
 				prereqNestedCount.put(entry.prerequisiteVer(), 1);
 
-			prereqEntryCount.put(entry.build(), prereqNestedCount);
+			prereqEntryCount.put(entry.declaredBuild(), prereqNestedCount);
 
 			// File
 			if (fileEntryCount.containsKey(entry.url())) // Increment existing count.
@@ -302,7 +307,7 @@ public class Parser {
 				System.out.print(entry.osVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.isBeta())
+				if (entry.declaredBeta())
 					System.out.print(" beta #"); // Number sign should be replaced by user; we can't keep track of which beta this is.
 
 				System.out.println();
@@ -323,15 +328,15 @@ public class Parser {
 			}
 
 			//Output build number.
-			if (buildEntryCount.containsKey(entry.build())) {
+			if (buildEntryCount.containsKey(entry.declaredBuild())) {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (buildEntryCount.get(entry.build()).intValue() > 1)
-					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
+				if (buildEntryCount.get(entry.declaredBuild()).intValue() > 1)
+					System.out.print("rowspan=\"" + buildEntryCount.get(entry.declaredBuild()) + "\" | ");
 
-				if (entry.build().equals(entry.actualBuild()))
-					System.out.println(entry.build() + " ");
+				if (entry.declaredBuild().equals(entry.actualBuild()))
+					System.out.println(entry.declaredBuild() + " ");
 				else
 					System.out.println(entry.actualBuild() + "<ref name=\"fakefive\" />");
 			}
@@ -341,12 +346,12 @@ public class Parser {
 				System.out.println("| colspan=\"2\" {{n/a}}");
 			else {
 				// Prerequisite version
-				if (prereqEntryCount.containsKey(entry.build()) && prereqEntryCount.get(entry.build()).containsKey(entry.prerequisiteVer())) {
+				if (prereqEntryCount.containsKey(entry.declaredBuild()) && prereqEntryCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteVer())) {
 					System.out.print("| ");
 					// Is there more than one of this prerequisite version tallied?
-					if (prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()).intValue() > 1) {
-						System.out.print("rowspan=\"" + prereqEntryCount.get(entry.build()).get(entry.prerequisiteVer()) + "\" | ");
-						prereqEntryCount.get(entry.build()).remove(entry.prerequisiteVer());
+					if (prereqEntryCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
+						System.out.print("rowspan=\"" + prereqEntryCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
+						prereqEntryCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
 
 					System.out.println(entry.prerequisiteVer());
@@ -358,13 +363,13 @@ public class Parser {
 
 			// Date as extracted from the URL. Using the same rowspan count as build.
 			// (3.1.1 had two builds released on different dates for iPod touch 3G.)
-			if (buildEntryCount.containsKey(entry.build())) {
+			if (buildEntryCount.containsKey(entry.declaredBuild())) {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (buildEntryCount.get(entry.build()).intValue() > 1) {
-					System.out.print("rowspan=\"" + buildEntryCount.get(entry.build()) + "\" | ");
-					buildEntryCount.remove(entry.build()); //Remove the count since we already used it.
+				if (buildEntryCount.get(entry.declaredBuild()).intValue() > 1) {
+					System.out.print("rowspan=\"" + buildEntryCount.get(entry.declaredBuild()) + "\" | ");
+					buildEntryCount.remove(entry.declaredBuild()); //Remove the count since we already used it.
 				}
 
 				System.out.println("{{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6) + "}}");
