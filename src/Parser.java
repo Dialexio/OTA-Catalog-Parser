@@ -290,20 +290,24 @@ public class Parser {
 	}
 
 	private static void printWikiMarkup(ArrayList<OTAPackage> entryList) {
+		final Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
+		Matcher name;
+		String fileName;
+
 		for (OTAPackage entry:entryList) {
-			Matcher name;
-			Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
-			String fileName = "";
+			fileName = "";
+
 			name = nameRegex.matcher(entry.url());
 			while (name.find()) {
 				fileName = name.group();
 				break;
 			}
 
+			// Let us begin!
 			System.out.println("|-");
 
-			// Output iOS version.
 			if (osEntryCount.containsKey(entry.osVersion())) {
+				// Output iOS version.
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
@@ -317,8 +321,9 @@ public class Parser {
 					System.out.print(" beta #"); // Number sign should be replaced by user; we can't keep track of which beta this is.
 
 				System.out.println();
+				// End of iOS version printing.
 
-				// If this is an Apple TV, we need to leave space for the marketing version.
+				// Output a filler for Marketing Version, if this is an Apple TV.
 				if (device.matches("AppleTV\\d(\\d)?,\\d")) {
 					System.out.print("| ");
 
@@ -333,7 +338,7 @@ public class Parser {
 				osEntryCount.remove(entry.osVersion());
 			}
 
-			//Output build number.
+			// Output build number.
 			if (buildEntryCount.containsKey(entry.declaredBuild())) {
 				System.out.print("| ");
 
@@ -341,10 +346,13 @@ public class Parser {
 				if (buildEntryCount.get(entry.declaredBuild()).intValue() > 1)
 					System.out.print("rowspan=\"" + buildEntryCount.get(entry.declaredBuild()) + "\" | ");
 
+				System.out.print(entry.declaredBuild());
+
+				// Do we have a fake beta?
 				if (entry.declaredBeta() && !entry.isBeta())
-					System.out.println(entry.actualBuild() + "<ref name=\"fakefive\" />");
-				else
-					System.out.println(entry.declaredBuild() + " ");
+					System.out.print("<ref name=\"fakefive\" />");
+
+				System.out.println();
 			}
 
 			// Print prerequisites if there are any.
