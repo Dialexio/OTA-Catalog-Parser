@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.3.2
+ * OTA Catalog Parser 0.3.3
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -33,14 +33,21 @@ import java.util.regex.*;
 import org.xml.sax.SAXException;
 
 public class Parser {
-	private static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
+	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
+
 	private static boolean checkModel, showBeta = false;
 	private static NSDictionary root = null;
 	private static String device = "", maxOSVer = "", minOSVer = "", model = "";
 
-	private static void addEntries(NSDictionary root) {
+	private static HashMap<String, Integer> buildEntryCount = new HashMap<String, Integer>(),
+			 fileEntryCount = new HashMap<String, Integer>(),
+			 osEntryCount = new HashMap<String, Integer>();
+	private static HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
+
+
+	private static void addEntries(final NSDictionary PLIST_ROOT) {
 		boolean matched;
-		NSObject[] assets = ((NSArray)root.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
+		NSObject[] assets = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
 		OTAPackage entry;
 
 		// Look at every item in the array with the key "Assets."
@@ -83,16 +90,56 @@ public class Parser {
 
 			// Add it after it survives the checks.
 			if (matched)
-				entryList.add(entry);
+				ENTRY_LIST.add(entry);
 		}
 	}
 
-	private static void loadFile(final File xmlName) {
+	private static void countRowspan(ArrayList<OTAPackage> entryList) {
+		// Count the rowspans for wiki markup.
+		for (OTAPackage entry:entryList) {
+			HashMap<String, Integer> prereqNestedCount = new HashMap<String, Integer>();
+
+			// OS version
+			if (osEntryCount.containsKey(entry.osVersion())) // Increment existing count.
+				osEntryCount.replace(entry.osVersion(), osEntryCount.get(entry.osVersion())+1);
+			// Since it hasn't been counted, add the first tally.
+			else
+				osEntryCount.put(entry.osVersion(), 1);
+
+			// Build
+			if (buildEntryCount.containsKey(entry.declaredBuild())) // Increment existing count.
+				buildEntryCount.replace(entry.declaredBuild(), buildEntryCount.get(entry.declaredBuild())+1);
+			// Since it hasn't been counted, add the first tally.
+			else
+				buildEntryCount.put(entry.declaredBuild(), 1);
+
+			// Prerequisite version
+			if (prereqEntryCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
+				prereqNestedCount = prereqEntryCount.get(entry.declaredBuild());
+
+			if (prereqNestedCount.containsKey(entry.prerequisiteVer())) // Increment existing count.
+				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
+			// Since it hasn't been counted, add the first tally.
+			else
+				prereqNestedCount.put(entry.prerequisiteVer(), 1);
+
+			prereqEntryCount.put(entry.declaredBuild(), prereqNestedCount);
+
+			// File
+			if (fileEntryCount.containsKey(entry.url())) // Increment existing count.
+				fileEntryCount.replace(entry.url(), fileEntryCount.get(entry.url())+1);
+			// Since it hasn't been counted, add the first tally.
+			else 
+				fileEntryCount.put(entry.url(), 1);
+		}
+	}
+
+	private static void loadFile(final File PLIST_NAME) {
 		try {
-			root = (NSDictionary)PropertyListParser.parse(xmlName);
+			root = (NSDictionary)PropertyListParser.parse(PLIST_NAME);
 		}
 		catch (FileNotFoundException e) {
-			System.err.println("ERROR: The file \"" + xmlName + "\" can't be found.");
+			System.err.println("ERROR: The file \"" + PLIST_NAME + "\" can't be found.");
 			System.exit(2);
 		}
 		catch (PropertyListFormatException e) {
@@ -112,9 +159,9 @@ public class Parser {
 	public static void main(final String[] args) {
 		boolean mwMarkup = false;
 		int i = 0;
-		String arg = "", xmlName = "";
+		String arg = "", plistName = "";
 
-		System.out.println("OTA Catalog Parser v0.3.2");
+		System.out.println("OTA Catalog Parser v0.3.3");
 		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading arguments (and performing some basic checks).
@@ -137,12 +184,12 @@ public class Parser {
 			}
 
 			else if (arg.equals("-f")) {
-				xmlName = "";
+				plistName = "";
 
 				if (i < args.length)
-					xmlName = args[i++];
+					plistName = args[i++];
 
-				if (xmlName.isEmpty()) {
+				if (plistName.isEmpty()) {
 					System.err.println("ERROR: You need to supply a file name.");
 					System.exit(2);
 				}
@@ -190,16 +237,18 @@ public class Parser {
 		// Right now, it's just a lazy check for iPhone8,1 or iPhone8,2.
 		checkModel = device.matches("iPhone8,(1|2)");
 
-		loadFile(new File(xmlName));
+		loadFile(new File(plistName));
 
 		addEntries(root);
 
 		sort();
 
-		if (mwMarkup)
-			printWikiMarkup(entryList);
+		if (mwMarkup) {
+			countRowspan(ENTRY_LIST);
+			printWikiMarkup(ENTRY_LIST);
+		}
 		else
-			printOutput(entryList);
+			printOutput(ENTRY_LIST);
 	}
 
 	private static void printOutput(ArrayList<OTAPackage> entryList) {
@@ -241,49 +290,6 @@ public class Parser {
 	}
 
 	private static void printWikiMarkup(ArrayList<OTAPackage> entryList) {
-		HashMap<String, Integer> buildEntryCount = new HashMap<String, Integer>(),
-								 fileEntryCount = new HashMap<String, Integer>(),
-				 				 osEntryCount = new HashMap<String, Integer>();
-		HashMap<String, HashMap<String, Integer>>prereqEntryCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
-
-		// Count the rowspans for wiki markup.
-		for (OTAPackage entry:entryList) {
-			HashMap<String, Integer> prereqNestedCount = new HashMap<String, Integer>();
-
-			// OS version
-			if (osEntryCount.containsKey(entry.osVersion())) // Increment existing count.
-				osEntryCount.replace(entry.osVersion(), osEntryCount.get(entry.osVersion())+1);
-			// Since it hasn't been counted, add the first tally.
-			else
-				osEntryCount.put(entry.osVersion(), 1);
-
-			// Build
-			if (buildEntryCount.containsKey(entry.declaredBuild())) // Increment existing count.
-				buildEntryCount.replace(entry.declaredBuild(), buildEntryCount.get(entry.declaredBuild())+1);
-			// Since it hasn't been counted, add the first tally.
-			else
-				buildEntryCount.put(entry.declaredBuild(), 1);
-
-			// Prerequisite version
-			if (prereqEntryCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
-				prereqNestedCount = prereqEntryCount.get(entry.declaredBuild());
-
-			if (prereqNestedCount.containsKey(entry.prerequisiteVer())) // Increment existing count.
-				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
-			// Since it hasn't been counted, add the first tally.
-			else
-				prereqNestedCount.put(entry.prerequisiteVer(), 1);
-
-			prereqEntryCount.put(entry.declaredBuild(), prereqNestedCount);
-
-			// File
-			if (fileEntryCount.containsKey(entry.url())) // Increment existing count.
-				fileEntryCount.replace(entry.url(), fileEntryCount.get(entry.url())+1);
-			// Since it hasn't been counted, add the first tally.
-			else 
-				fileEntryCount.put(entry.url(), 1);
-		}
-
 		for (OTAPackage entry:entryList) {
 			Matcher name;
 			Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
@@ -307,7 +313,7 @@ public class Parser {
 				System.out.print(entry.osVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.declaredBeta())
+				if (entry.isBeta())
 					System.out.print(" beta #"); // Number sign should be replaced by user; we can't keep track of which beta this is.
 
 				System.out.println();
@@ -335,19 +341,27 @@ public class Parser {
 				if (buildEntryCount.get(entry.declaredBuild()).intValue() > 1)
 					System.out.print("rowspan=\"" + buildEntryCount.get(entry.declaredBuild()) + "\" | ");
 
-				if (entry.declaredBuild().equals(entry.actualBuild()))
-					System.out.println(entry.declaredBuild() + " ");
-				else
+				if (entry.declaredBeta() && !entry.isBeta())
 					System.out.println(entry.actualBuild() + "<ref name=\"fakefive\" />");
+				else
+					System.out.println(entry.declaredBuild() + " ");
 			}
 
 			// Print prerequisites if there are any.
-			if (entry.isUniversal())
-				System.out.println("| colspan=\"2\" {{n/a}}");
+			if (entry.isUniversal()) {
+				System.out.print("| colspan=\"2\" {{n/a");
+
+				// Is this "universal" OTA update intended for betas?
+				if (entry.declaredBeta() && !entry.isBeta())
+					System.out.print("|Beta");
+
+				System.out.println("}}");
+			}
 			else {
 				// Prerequisite version
 				if (prereqEntryCount.containsKey(entry.declaredBuild()) && prereqEntryCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteVer())) {
 					System.out.print("| ");
+
 					// Is there more than one of this prerequisite version tallied?
 					if (prereqEntryCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
 						System.out.print("rowspan=\"" + prereqEntryCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
@@ -403,13 +417,13 @@ public class Parser {
 	}
 
 	private static void sort() {
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
+		Collections.sort(ENTRY_LIST, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
 				return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
 			}
 		});
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
+		Collections.sort(ENTRY_LIST, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
 				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());

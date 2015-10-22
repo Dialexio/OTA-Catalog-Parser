@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.3.2
+ * OTA Catalog Parser 0.3.3
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -30,33 +30,35 @@ import java.util.regex.*;
 class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL;
-	private String BUILD_UP_TO_LETTER;
-	private final String BUILD_UP_TO_LETTER_REGEX = "(\\d)?\\d[A-M]";
-	private final String FIVE_THOUSAND = "5\\d{3}";
+	private final String REGEX_BETA = "(\\d)?\\d[A-M]5\\d{3}[a-z]";
+	private final String REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-M]";
+	private final String REGEX_FIVEK = "5\\d{3}";
 
 	private Matcher matchFinder;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
-	private String date, size;
+	private String buildLeftSide, date, size;
 
 	public OTAPackage(NSDictionary entry) {
 		BUILD = entry.get("Build").toString();
-		BUILD_UP_TO_LETTER = "";
+		buildLeftSide = "";
 		this.ENTRY = entry;
 		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
 
 		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 
 		// Get the build number up to (and including) the first letter.
-		final Pattern buildToLetterRegex = Pattern.compile(BUILD_UP_TO_LETTER_REGEX);
+		final Pattern buildToLetterRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 		matchFinder = buildToLetterRegex.matcher(BUILD);
 		while (matchFinder.find()) {
-			BUILD_UP_TO_LETTER = matchFinder.group();
+			buildLeftSide = matchFinder.group();
 			break;
 		}
 
 		// Obtain the prerequisite build and prerequisite version.
 		if (entry.containsKey("PrerequisiteBuild")) {
 			PREREQ_BUILD = entry.get("PrerequisiteBuild").toString();
+
+			//We need a conditional here because 6.0 on the iPhone 5 excludes PrerequisiteOSVersion.
 			PREREQ_VER = (entry.containsKey("PrerequisiteOSVersion")) ? entry.get("PrerequisiteOSVersion").toString() : "N/A";
 		}
 		else {
@@ -71,10 +73,10 @@ class OTAPackage {
 		// Obtaining the size and URL.
 		// First, we need to make sure we don't get info for a dummy update.
 		if (entry.containsKey("RealUpdateAttributes")) {
-			final NSDictionary realUpdateAttrs = (NSDictionary)entry.get("RealUpdateAttributes");
+			final NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)entry.get("RealUpdateAttributes");
 
-			size = realUpdateAttrs.get("RealUpdateDownloadSize").toString();
-			URL = realUpdateAttrs.get("RealUpdateURL").toString();
+			size = REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize").toString();
+			URL = REAL_UPDATE_ATTRS.get("RealUpdateURL").toString();
 		}
 		else {
 			size = entry.get("_DownloadSize").toString();
@@ -98,8 +100,8 @@ class OTAPackage {
 	// in order to push devices with the beta firmware to the final
 	// release. This subtracts the 5000.
 	public String actualBuild() {
-		if (this.declaredBeta() && !BUILD.matches(BUILD_UP_TO_LETTER_REGEX + FIVE_THOUSAND + "[a-z]")) {
-			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(FIVE_THOUSAND);
+		if (this.declaredBeta() && !BUILD.matches(REGEX_BETA)) {
+			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_FIVEK);
 			matchFinder = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
 			String minusFiveThousand = "";
 
@@ -108,7 +110,7 @@ class OTAPackage {
 				break;
 			}
 
-			return BUILD_UP_TO_LETTER + (Integer.parseInt(minusFiveThousand) - 5000);
+			return buildLeftSide + (Integer.parseInt(minusFiveThousand) - 5000);
 		}
 
 		else
@@ -120,7 +122,7 @@ class OTAPackage {
 	}
 
 	public boolean declaredBeta() {
-		final Pattern REGEX_BETA_CHECKER = Pattern.compile(BUILD_UP_TO_LETTER_REGEX + FIVE_THOUSAND);
+		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BUILD_UP_TO_LETTER + REGEX_FIVEK);
 		matchFinder = REGEX_BETA_CHECKER.matcher(BUILD);
 
 		return matchFinder.find();
@@ -128,6 +130,13 @@ class OTAPackage {
 
 	public String declaredBuild() {
 		return BUILD;
+	}
+
+	public boolean isBeta() {
+		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BETA);
+		matchFinder = REGEX_BETA_CHECKER.matcher(BUILD);
+
+		return matchFinder.find();
 	}
 
 	public boolean isUniversal() {
@@ -161,7 +170,7 @@ class OTAPackage {
 			sortBuild = "0" + sortBuild;
 
 		if (!declaredBeta()) {
-			final Pattern betaRegex = Pattern.compile(BUILD_UP_TO_LETTER_REGEX);
+			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			matchFinder = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";
 
@@ -169,7 +178,7 @@ class OTAPackage {
 				upToLetter = matchFinder.group();
 				break;
 			}
-			afterLetter = sortBuild.replaceFirst(BUILD_UP_TO_LETTER_REGEX, "");
+			afterLetter = sortBuild.replaceFirst(REGEX_BUILD_UP_TO_LETTER, "");
 
 			sortBuild = upToLetter + "9" + afterLetter;
 		}
