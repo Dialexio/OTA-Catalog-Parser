@@ -29,12 +29,12 @@ import java.util.regex.*;
 
 class OTAPackage {
 	private final NSDictionary ENTRY;
-	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL;
-	private final String REGEX_BETA = "(\\d)?\\d[A-M]5\\d{3}[a-z]";
-	private final String REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-M]";
-	private final String REGEX_FIVEK = "5\\d{3}";
+	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL,
+		REGEX_BETA = "(\\d)?\\d[A-M]5\\d{3}[a-z]",
+		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-M]",
+		REGEX_FIVEK = "5\\d{3}";
 
-	private Matcher matchFinder;
+	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 	private String buildLeftSide, date, size;
 
@@ -48,11 +48,9 @@ class OTAPackage {
 
 		// Get the build number up to (and including) the first letter.
 		final Pattern buildToLetterRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
-		matchFinder = buildToLetterRegex.matcher(BUILD);
-		while (matchFinder.find()) {
-			buildLeftSide = matchFinder.group();
-			break;
-		}
+		match = buildToLetterRegex.matcher(BUILD);
+		if (match.find())
+			buildLeftSide = match.group();
 
 		// Obtain the prerequisite build and prerequisite version.
 		if (entry.containsKey("PrerequisiteBuild")) {
@@ -85,11 +83,9 @@ class OTAPackage {
 
 		// Extract the date from the URL.
 		// This is not 100% accurate information, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
-		matchFinder = timestampRegex.matcher(URL);
-		while (matchFinder.find()) {
-			date = matchFinder.group().substring(5);
-			break;
-		}
+		match = timestampRegex.matcher(URL);
+		if (match.find())
+			date = match.group().substring(5);
 
 		if (date.length() == 7)
 			date = date.substring(0, 6) + "0" + date.substring(6);
@@ -102,13 +98,11 @@ class OTAPackage {
 	public String actualBuild() {
 		if (this.declaredBeta() && !BUILD.matches(REGEX_BETA)) {
 			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_FIVEK);
-			matchFinder = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
+			match = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
 			String minusFiveThousand = "";
 
-			while (matchFinder.find()) {
-				minusFiveThousand = matchFinder.group();
-				break;
-			}
+			if (match.find())
+				minusFiveThousand = match.group();
 
 			return buildLeftSide + (Integer.parseInt(minusFiveThousand) - 5000);
 		}
@@ -123,9 +117,9 @@ class OTAPackage {
 
 	public boolean declaredBeta() {
 		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BUILD_UP_TO_LETTER + REGEX_FIVEK);
-		matchFinder = REGEX_BETA_CHECKER.matcher(BUILD);
+		match = REGEX_BETA_CHECKER.matcher(BUILD);
 
-		return matchFinder.find();
+		return match.find();
 	}
 
 	public String declaredBuild() {
@@ -134,9 +128,9 @@ class OTAPackage {
 
 	public boolean isBeta() {
 		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BETA);
-		matchFinder = REGEX_BETA_CHECKER.matcher(BUILD);
+		match = REGEX_BETA_CHECKER.matcher(BUILD);
 
-		return matchFinder.find();
+		return match.find();
 	}
 
 	public boolean isUniversal() {
@@ -152,7 +146,8 @@ class OTAPackage {
 	}
 
 	public String prerequisiteVer() {
-		return PREREQ_VER;
+		// Bit of a hack job to spit out "6.0" for the iPhone 5 with iOSUpdater.ipa package.
+		return (BUILD.equals("10A444")) ? "6.0" : PREREQ_VER;
 	}
 
 	public String size() {
@@ -171,13 +166,12 @@ class OTAPackage {
 
 		if (!declaredBeta()) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
-			matchFinder = betaRegex.matcher(sortBuild);
+			match = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";
 
-			while (matchFinder.find()) {
-				upToLetter = matchFinder.group();
-				break;
-			}
+			if (match.find())
+				upToLetter = match.group();
+
 			afterLetter = sortBuild.replaceFirst(REGEX_BUILD_UP_TO_LETTER, "");
 
 			sortBuild = upToLetter + "9" + afterLetter;
