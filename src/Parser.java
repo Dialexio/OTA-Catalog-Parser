@@ -57,7 +57,7 @@ public class Parser {
 			matched = false;
 
 			// Beta check.
-			if (!showBeta && entry.declaredBeta())
+			if (!showBeta && entry.isBeta())
 				continue;
 
 			// Device check.
@@ -274,8 +274,10 @@ public class Parser {
 			System.out.println();
 
 			// Is this a beta?
-			if (entry.declaredBeta())
-				System.out.println("This is marked as a beta release.");
+			if (entry.isBeta())
+				System.out.println("This is a beta release.");
+			else if (entry.declaredBeta())
+				System.out.println("This is marked as a beta release (but is not one).");
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
@@ -332,7 +334,8 @@ public class Parser {
 
 				// Give it a beta label (if it is one).
 				if (entry.isBeta())
-					System.out.print(" beta #"); // Number sign should be replaced by user; we can't keep track of which beta this is.
+					// Number sign should be replaced by user; we can't keep track of which beta this is.
+					System.out.print(" beta #");
 
 				System.out.println();
 				// End of iOS version printing.
@@ -357,12 +360,13 @@ public class Parser {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
+				// Count declaredBuild() instead of actualBuild() so the entry pointing betas to the final build is treated separately.
 				if (buildRowspanCount.get(entry.declaredBuild()).intValue() > 1) {
 					System.out.print("rowspan=\"" + buildRowspanCount.get(entry.declaredBuild()) + "\" | ");
 					buildRowspanCount.remove(entry.declaredBuild());
 				}
 
-				System.out.print(entry.declaredBuild());
+				System.out.print(entry.actualBuild());
 
 				// Do we have a fake beta?
 				if (entry.declaredBeta() && !entry.isBeta())
