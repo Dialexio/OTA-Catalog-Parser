@@ -34,10 +34,11 @@ import org.xml.sax.SAXException;
 
 public class Parser {
 	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
-	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
+	private final static HashMap<String, Integer> actualVersionRowspanCount = new HashMap<String, Integer>(),
+		buildRowspanCount = new HashMap<String, Integer>(),
 		dateRowspanCount = new HashMap<String, Integer>(),
 		fileRowspanCount = new HashMap<String, Integer>(),
-		osRowspanCount = new HashMap<String, Integer>();
+		marketingVersionRowspanCount = new HashMap<String, Integer>();
 	private final static HashMap<String, HashMap<String, Integer>> prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 	private static boolean checkModel, showBeta = false;
@@ -84,9 +85,9 @@ public class Parser {
 			}
 
 			// OS version check. Move to the next item if it doesn't match.
-			if (matched && !maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.osVersion()) < 0))
+			if (matched && !maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.marketingVersion()) < 0))
 					continue;
-			if (matched && !minOSVer.isEmpty() && (minOSVer.compareTo(entry.osVersion()) > 0))
+			if (matched && !minOSVer.isEmpty() && (minOSVer.compareTo(entry.marketingVersion()) > 0))
 					continue;
 
 			// Add it after it survives the checks.
@@ -101,6 +102,14 @@ public class Parser {
 		// Count the rowspans for wiki markup.
 		for (OTAPackage entry:ENTRYLIST) {
 			prereqNestedCount = new HashMap<String, Integer>();
+
+			// Actual version
+			// Increment the count if it exists.
+			if (actualVersionRowspanCount.containsKey(entry.actualVersion()))
+				actualVersionRowspanCount.replace(entry.actualVersion(), actualVersionRowspanCount.get(entry.actualVersion())+1);
+			// If it hasn't been counted, add the first tally.
+			else
+				actualVersionRowspanCount.put(entry.actualVersion(), 1);
 
 			// Build
 			// Increment the count if it exists.
@@ -126,21 +135,22 @@ public class Parser {
 			else
 				fileRowspanCount.put(entry.url(), 1);
 
-			// OS version
+			// Marketing version
 			// Increment the count if it exists.
-			if (osRowspanCount.containsKey(entry.osVersion()))
-				osRowspanCount.replace(entry.osVersion(), osRowspanCount.get(entry.osVersion())+1);
+			if (marketingVersionRowspanCount.containsKey(entry.marketingVersion()))
+				marketingVersionRowspanCount.replace(entry.marketingVersion(), marketingVersionRowspanCount.get(entry.marketingVersion())+1);
 			// If it hasn't been counted, add the first tally.
 			else
-				osRowspanCount.put(entry.osVersion(), 1);
+				marketingVersionRowspanCount.put(entry.marketingVersion(), 1);
 
 			// Prerequisite version
 			if (prereqRowspanCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
 				prereqNestedCount = prereqRowspanCount.get(entry.declaredBuild());
 
-			if (prereqNestedCount.containsKey(entry.prerequisiteVer())) // Increment existing count.
+			// Increment the count if it exists.
+			if (prereqNestedCount.containsKey(entry.prerequisiteVer()))
 				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
-			// Since it hasn't been counted, add the first tally.
+			// If it hasn't been counted, add the first tally.
 			else
 				prereqNestedCount.put(entry.prerequisiteVer(), 1);
 
@@ -268,7 +278,7 @@ public class Parser {
 	private static void printOutput(final ArrayList<OTAPackage> ENTRYLIST) {
 		for (OTAPackage entry:ENTRYLIST) {
 			// Output iOS version and build.
-			System.out.print("iOS " + entry.osVersion() + " (Build " + entry.actualBuild() + ")");
+			System.out.print("iOS " + entry.marketingVersion() + " (Build " + entry.actualBuild() + ")");
 			if (!entry.actualBuild().equals(entry.declaredBuild()))
 				System.out.print(" (listed as " + entry.declaredBuild() + ")");
 			System.out.println();
@@ -322,15 +332,37 @@ public class Parser {
 			// Let us begin!
 			System.out.println("|-");
 
-			if (osRowspanCount.containsKey(entry.osVersion())) {
-				// Output iOS version.
+			//Marketing Version for Apple Watch.
+			if (device.matches("Watch\\d(\\d)?,\\d") && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (osRowspanCount.get(entry.osVersion()).intValue() > 1)
-					System.out.print("rowspan=\"" + osRowspanCount.get(entry.osVersion()) + "\" | ");
+				if (marketingVersionRowspanCount.get(entry.marketingVersion()).intValue() > 1)
+					System.out.print("rowspan=\"" + marketingVersionRowspanCount.get(entry.marketingVersion()) + "\" | ");
 
-				System.out.print(entry.osVersion());
+				System.out.print(entry.marketingVersion());
+
+				// Give it a beta label (if it is one).
+				if (entry.isBeta())
+					// Number sign should be replaced by user; we can't keep track of which beta this is.
+					System.out.print(" beta #");
+
+				System.out.println();
+				// End of iOS version printing.
+
+				//Remove the count since we're done with it.
+				marketingVersionRowspanCount.remove(entry.marketingVersion());
+			}
+
+			// Output OS version.
+			if (actualVersionRowspanCount.containsKey(entry.actualVersion())) {
+				System.out.print("| ");
+
+				// Only give rowspan if there is more than one row with the OS version.
+				if (actualVersionRowspanCount.get(entry.actualVersion()).intValue() > 1)
+					System.out.print("rowspan=\"" + actualVersionRowspanCount.get(entry.actualVersion()) + "\" | ");
+
+				System.out.print(entry.actualVersion());
 
 				// Give it a beta label (if it is one).
 				if (entry.isBeta())
@@ -345,14 +377,14 @@ public class Parser {
 					System.out.print("| ");
 
 					// Only give rowspan if there is more than one row with the OS version.
-					if (osRowspanCount.get(entry.osVersion()).intValue() > 1)
-						System.out.print("rowspan=\"" + osRowspanCount.get(entry.osVersion()) + "\" | ");
+					if (actualVersionRowspanCount.get(entry.actualVersion()).intValue() > 1)
+						System.out.print("rowspan=\"" + actualVersionRowspanCount.get(entry.actualVersion()) + "\" | ");
 
 					System.out.println("[MARKETING VERSION]");
 				}
 
 				//Remove the count since we're done with it.
-				osRowspanCount.remove(entry.osVersion());
+				actualVersionRowspanCount.remove(entry.actualVersion());
 			}
 
 			// Output build number.
@@ -455,6 +487,12 @@ public class Parser {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
 				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
+			}
+		});
+		Collections.sort(ENTRY_LIST, new Comparator<OTAPackage>() {
+			@Override
+			public int compare(OTAPackage package1, OTAPackage package2) {
+				return ((OTAPackage)package1).marketingVersion().compareTo(((OTAPackage)package2).marketingVersion());
 			}
 		});
 	}

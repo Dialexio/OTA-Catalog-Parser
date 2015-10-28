@@ -30,8 +30,8 @@ import java.util.regex.*;
 class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL,
-		REGEX_BETA = "(\\d)?\\d[A-M]5\\d{3}[a-z]",
-		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-M]",
+		REGEX_BETA = "(\\d)?\\d[A-Z]5\\d{3}[a-z]",
+		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]",
 		REGEX_FIVEK = "5\\d{3}";
 
 	private Matcher match;
@@ -111,6 +111,10 @@ class OTAPackage {
 			return BUILD;
 	}
 
+	public String actualVersion() {
+		return ENTRY.get("OSVersion").toString();
+	}
+
 	public String date() {
 		return date;
 	}
@@ -137,8 +141,16 @@ class OTAPackage {
 		return (PREREQ_VER.equals("N/A") && PREREQ_BUILD.equals("N/A"));
 	}
 
-	public String osVersion() {
-		return ENTRY.get("OSVersion").toString();
+	public String marketingVersion() {
+		if (ENTRY.containsKey("MarketingVersion")) {
+			if (!ENTRY.get("MarketingVersion").toString().contains("."))
+				return ENTRY.get("MarketingVersion").toString() + ".0";
+			else
+				return ENTRY.get("MarketingVersion").toString();
+		}
+
+		else
+			return ENTRY.get("OSVersion").toString();
 	}
 
 	public String prerequisiteBuild() {
