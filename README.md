@@ -3,6 +3,15 @@ A somewhat crude Java program to view the [OTA update catalog for iOS](http://me
 
 You must save the OTA update catalog to your computer. The program will output its findings into standard output.
 
+## Running the Program
+This program requires [Java 8](http://www.java.com/en/download/) or newer to be installed.
+
+This is a command line program. Open the Command Prompt or Terminal, and run it like any other JAR file:
+
+`java -jar path/to/Parser.jar`
+
+Arguments can be added after the JAR name.
+
 ## Arguments
 * `-b` specifies that you would like to see beta releases. By default, this program will not display beta releases. _This argument is optional._
 * `-d <device>` specifies what device you're looking for. This argument is looking for a value like "iPad2,3" or "iPod7,1." (If you do not know what value to use, you may refer to the identifiers listed on [The iPhone Wiki](https://www.theiphonewiki.com/wiki/Models).) __This argument is required.__

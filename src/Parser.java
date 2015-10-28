@@ -191,7 +191,7 @@ public class Parser {
 				if (i < args.length)
 					device = args[i++];
 
-				if (!device.matches("(AppleTV|iP(ad|hone|od))\\d(\\d)?,\\d")) {
+				if (!device.matches("((AppleTV|iP(ad|hone|od))|Watch)\\d(\\d)?,\\d")) {
 					System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
 					System.exit(1);
 				}
