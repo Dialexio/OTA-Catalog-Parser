@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.3.3
+ * OTA Catalog Parser 0.4
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -33,6 +33,8 @@ import java.util.regex.*;
 import org.xml.sax.SAXException;
 
 public class Parser {
+	private final static String PROG_VER = "0.4";
+
 	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
 	private final static HashMap<String, Integer> actualVersionRowspanCount = new HashMap<String, Integer>(),
 		buildRowspanCount = new HashMap<String, Integer>(),
@@ -181,12 +183,9 @@ public class Parser {
 	}
 
 	public static void main(final String[] args) {
-		boolean mwMarkup = false;
+		boolean mwMarkup = false, version = false;
 		int i = 0;
 		String arg = "", plistName = "";
-
-		System.out.println("OTA Catalog Parser v0.3.3");
-		System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser\n");
 
 		// Reading arguments (and performing some basic checks).
 		while (i < args.length && args[i].startsWith("-")) {
@@ -242,6 +241,7 @@ public class Parser {
 					System.exit(4);
 				}
 			}
+
 			else if (arg.equals("-min")) {
 				minOSVer = "";
 
@@ -253,6 +253,10 @@ public class Parser {
 					System.exit(5);
 				}
 			}
+
+			else if (arg.equals("-v"))
+				version = true;
+
 			else if (arg.equals("-w"))
 				mwMarkup = true;
 		}
@@ -260,6 +264,11 @@ public class Parser {
 		// Flag whether or not we need to check the model.
 		// Right now, it's just a lazy check for iPhone8,1 or iPhone8,2.
 		checkModel = device.matches("iPhone8,(1|2)");
+
+		if (version) {
+			System.out.println("OTA Catalog Parser v" + PROG_VER);
+			System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser-Java\n");
+		}
 
 		loadFile(new File(plistName));
 

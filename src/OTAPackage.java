@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.3.3
+ * OTA Catalog Parser 0.4
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -56,8 +56,15 @@ class OTAPackage {
 		if (entry.containsKey("PrerequisiteBuild")) {
 			PREREQ_BUILD = entry.get("PrerequisiteBuild").toString();
 
-			//We need a conditional here because 6.0 on the iPhone 5 excludes PrerequisiteOSVersion.
-			PREREQ_VER = (entry.containsKey("PrerequisiteOSVersion")) ? entry.get("PrerequisiteOSVersion").toString() : "N/A";
+			// Thanks for making these conditionals a thing, 6.0 build 10A444.
+			if (entry.containsKey("PrerequisiteOSVersion"))
+				PREREQ_VER = entry.get("PrerequisiteOSVersion").toString();
+
+			else if (BUILD.equals("10A444"))
+				PREREQ_VER = "6.0";
+
+			else
+				PREREQ_VER = "N/A";
 		}
 		else {
 			PREREQ_BUILD = "N/A";
@@ -158,8 +165,7 @@ class OTAPackage {
 	}
 
 	public String prerequisiteVer() {
-		// Bit of a hack job to spit out "6.0" for the iPhone 5 with iOSUpdater.ipa package.
-		return (BUILD.equals("10A444")) ? "6.0" : PREREQ_VER;
+		return PREREQ_VER;
 	}
 
 	public String size() {
