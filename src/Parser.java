@@ -372,8 +372,8 @@ public class Parser {
 				System.out.println();
 				// End of iOS version printing.
 
-				// Output a filler for Marketing Version, if this is an Apple TV.
-				if (device.matches("AppleTV\\d(\\d)?,\\d")) {
+				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
+				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
 					System.out.print("| ");
 
 					// Only give rowspan if there is more than one row with the OS version.

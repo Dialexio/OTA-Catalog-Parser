@@ -4,11 +4,11 @@ A somewhat crude Java program to view an OTA update catalog for [iOS](http://mes
 ## Running the Program
 This program requires [Java 8](http://www.java.com/en/download/) or newer to be installed.
 
-This is a command line program. Open the Command Prompt or Terminal, and run it like any other JAR file:
+This is a command line program. Open the Command Prompt or Terminal, and run it like any other JAR file, with whatever arguments you find necessary:
 
 `java -jar path/to/Parser.jar -d DEVICE -f path/to/com_apple_MobileAsset_SoftwareUpdate.xml`
 
-Arguments can be added after the JAR name. The program will output its findings into standard output.
+The program will output its findings into standard output.
 
 ## Arguments
 * `-b` specifies that you would like to see beta releases. By default, this program will not display beta releases. _This argument is optional._
