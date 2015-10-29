@@ -45,7 +45,7 @@ public class Parser {
 
 	private static boolean checkModel, showBeta = false;
 	private static NSDictionary root = null;
-	private static String device = "", maxOSVer = "", minOSVer = "", model = "";
+	private static String device, maxOSVer = "", minOSVer = "", model;
 
 
 	private static void addEntries(final NSDictionary PLIST_ROOT) {
@@ -200,7 +200,7 @@ public class Parser {
 				if (i < args.length)
 					device = args[i++];
 
-				if (!device.matches("((AppleTV|iP(ad|hone|od))|Watch)\\d(\\d)?,\\d")) {
+				if (!device.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
 					System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
 					System.exit(1);
 				}
@@ -342,7 +342,7 @@ public class Parser {
 			System.out.println("|-");
 
 			//Marketing Version for Apple Watch.
-			if (device.matches("Watch\\d(\\d)?,\\d") && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
+			if (device.matches("Watch(\\d)?\\d,\\d") && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
@@ -357,7 +357,6 @@ public class Parser {
 					System.out.print(" beta #");
 
 				System.out.println();
-				// End of iOS version printing.
 
 				//Remove the count since we're done with it.
 				marketingVersionRowspanCount.remove(entry.marketingVersion());
@@ -379,7 +378,6 @@ public class Parser {
 					System.out.print(" beta #");
 
 				System.out.println();
-				// End of iOS version printing.
 
 				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
 				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
@@ -402,10 +400,11 @@ public class Parser {
 
 				// Only give rowspan if there is more than one row with the OS version.
 				// Count declaredBuild() instead of actualBuild() so the entry pointing betas to the final build is treated separately.
-				if (buildRowspanCount.get(entry.declaredBuild()).intValue() > 1) {
+				if (buildRowspanCount.get(entry.declaredBuild()).intValue() > 1)
 					System.out.print("rowspan=\"" + buildRowspanCount.get(entry.declaredBuild()) + "\" | ");
-					buildRowspanCount.remove(entry.declaredBuild());
-				}
+
+				//Remove the count since we're done with it.
+				buildRowspanCount.remove(entry.declaredBuild());
 
 				System.out.print(entry.actualBuild());
 
@@ -458,29 +457,27 @@ public class Parser {
 				System.out.println("{{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6) + "}}");
 			}
 
-			// Print file URL.
 			if (fileRowspanCount.containsKey(entry.url())) {
+				// Print file URL.
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (fileRowspanCount.get(entry.url()).intValue() > 1) {
+				if (fileRowspanCount.get(entry.url()).intValue() > 1)
 					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()) + "\" | ");
-				}
 
 				System.out.println("[" + entry.url() + " " + fileName + "]");
-			}
 
-			//Print file size.
-			if (fileRowspanCount.containsKey(entry.url())) {
+				//Print file size.
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (fileRowspanCount.get(entry.url()).intValue() > 1) {
+				if (fileRowspanCount.get(entry.url()).intValue() > 1)
 					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()) + "\" | ");
-					fileRowspanCount.remove(entry.url());
-				}
 
 				System.out.println(entry.size());
+
+				//Remove the count since we're done with it.
+				fileRowspanCount.remove(entry.url());
 			}
 		}
 	}
