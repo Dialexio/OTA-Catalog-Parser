@@ -287,31 +287,26 @@ public class Parser {
 	private static void printOutput(final ArrayList<OTAPackage> ENTRYLIST) {
 		for (OTAPackage entry:ENTRYLIST) {
 			// Output iOS version and build.
-			System.out.print("iOS " + entry.marketingVersion() + " (Build " + entry.actualBuild() + ")");
+			System.out.print("iOS " + entry.marketingVersion() + " (Build " + entry.actualBuild());
+
 			if (!entry.actualBuild().equals(entry.declaredBuild()))
-				System.out.print(" (listed as " + entry.declaredBuild() + ")");
-			System.out.println();
+				System.out.print(", listed as " + entry.declaredBuild());
+
+			System.out.println(")");
 
 			// Is this a beta?
 			if (entry.isBeta())
 				System.out.println("This is a beta release.");
+
 			else if (entry.declaredBeta())
 				System.out.println("This is marked as a beta release (but is not one).");
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
 				System.out.println("Requires: Not specified");
-			else {
-				System.out.print("Requires: ");
 
-				// Version isn't always specified.
-				if (entry.prerequisiteVer().equals("N/A"))
-					System.out.print("Version not specified");
-				else
-					System.out.print("iOS " + entry.prerequisiteVer());
-
-				System.out.println(" (Build " + entry.prerequisiteBuild() + ")");
-			}
+			else
+				System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
 
 			// Date as extracted from the URL.
 			System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6));
@@ -333,10 +328,8 @@ public class Parser {
 			fileName = "";
 
 			name = nameRegex.matcher(entry.url());
-			while (name.find()) {
+			if (name.find())
 				fileName = name.group();
-				break;
-			}
 
 			// Let us begin!
 			System.out.println("|-");
