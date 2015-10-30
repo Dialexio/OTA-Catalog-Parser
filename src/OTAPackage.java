@@ -118,10 +118,6 @@ class OTAPackage {
 			return BUILD;
 	}
 
-	public String actualVersion() {
-		return ENTRY.get("OSVersion").toString();
-	}
-
 	public String date() {
 		return date;
 	}
@@ -158,6 +154,10 @@ class OTAPackage {
 
 		else
 			return ENTRY.get("OSVersion").toString();
+	}
+
+	public String osVersion() {
+		return ENTRY.get("OSVersion").toString();
 	}
 
 	public String prerequisiteBuild() {

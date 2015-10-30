@@ -36,11 +36,11 @@ public class Parser {
 	private final static String PROG_VER = "0.4";
 
 	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
-	private final static HashMap<String, Integer> actualVersionRowspanCount = new HashMap<String, Integer>(),
-		buildRowspanCount = new HashMap<String, Integer>(),
+	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
 		dateRowspanCount = new HashMap<String, Integer>(),
 		fileRowspanCount = new HashMap<String, Integer>(),
-		marketingVersionRowspanCount = new HashMap<String, Integer>();
+		marketingVersionRowspanCount = new HashMap<String, Integer>(),
+		osVersionRowspanCount = new HashMap<String, Integer>();
 	private final static HashMap<String, HashMap<String, Integer>> prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 	private static boolean checkModel, showBeta = false;
@@ -49,7 +49,8 @@ public class Parser {
 
 
 	private static void addEntries(final NSDictionary PLIST_ROOT) {
-		final NSObject[] ASSETS = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray(); // Looking for the array with key "Assets."
+		// Looking for the array with key "Assets."
+		final NSObject[] ASSETS = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray();
 
 		boolean matched;
 		OTAPackage entry;
@@ -105,14 +106,6 @@ public class Parser {
 		for (OTAPackage entry:ENTRYLIST) {
 			prereqNestedCount = new HashMap<String, Integer>();
 
-			// Actual version
-			// Increment the count if it exists.
-			if (actualVersionRowspanCount.containsKey(entry.actualVersion()))
-				actualVersionRowspanCount.replace(entry.actualVersion(), actualVersionRowspanCount.get(entry.actualVersion())+1);
-			// If it hasn't been counted, add the first tally.
-			else
-				actualVersionRowspanCount.put(entry.actualVersion(), 1);
-
 			// Build
 			// Increment the count if it exists.
 			if (buildRowspanCount.containsKey(entry.declaredBuild()))
@@ -144,6 +137,14 @@ public class Parser {
 			// If it hasn't been counted, add the first tally.
 			else
 				marketingVersionRowspanCount.put(entry.marketingVersion(), 1);
+
+			// OS version
+			// Increment the count if it exists.
+			if (osVersionRowspanCount.containsKey(entry.osVersion()))
+				osVersionRowspanCount.replace(entry.osVersion(), osVersionRowspanCount.get(entry.osVersion())+1);
+			// If it hasn't been counted, add the first tally.
+			else
+				osVersionRowspanCount.put(entry.osVersion(), 1);
 
 			// Prerequisite version
 			if (prereqRowspanCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
@@ -285,28 +286,39 @@ public class Parser {
 	}
 
 	private static void printOutput(final ArrayList<OTAPackage> ENTRYLIST) {
+		String osName;
+
 		for (OTAPackage entry:ENTRYLIST) {
-			// Output iOS version and build.
-			System.out.print("iOS " + entry.marketingVersion() + " (Build " + entry.actualBuild());
+			if (device.startsWith("Watch"))
+				osName = "watchOS";
+			else if (device.matches("AppleTV(2,1|3,1|3,2)"))
+				osName = "iOS";
+			else if (device.startsWith("AppleTV"))
+				osName = "tvOS";
+			else
+				osName = "iOS";
 
-			if (!entry.actualBuild().equals(entry.declaredBuild()))
-				System.out.print(", listed as " + entry.declaredBuild());
-
-			System.out.println(")");
+			// Output OS version and build.
+			System.out.println(osName + " " + entry.marketingVersion() + " (Build " + entry.actualBuild() + ")");
+			System.out.println("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ").");
 
 			// Is this a beta?
+			System.out.print("Beta release: ");
 			if (entry.isBeta())
-				System.out.println("This is a beta release.");
+				System.out.println("Yes");
 
 			else if (entry.declaredBeta())
-				System.out.println("This is marked as a beta release (but is not one).");
+				System.out.println("Labeled as one, but not a beta");
+
+			else
+				System.out.println("No");
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
 				System.out.println("Requires: Not specified");
 
 			else
-				System.out.println("Requires: iOS " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
+				System.out.println("Requires: " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
 
 			// Date as extracted from the URL.
 			System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6));
@@ -356,14 +368,14 @@ public class Parser {
 			}
 
 			// Output OS version.
-			if (actualVersionRowspanCount.containsKey(entry.actualVersion())) {
+			if (osVersionRowspanCount.containsKey(entry.osVersion())) {
 				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (actualVersionRowspanCount.get(entry.actualVersion()).intValue() > 1)
-					System.out.print("rowspan=\"" + actualVersionRowspanCount.get(entry.actualVersion()) + "\" | ");
+				if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
+					System.out.print("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
 
-				System.out.print(entry.actualVersion());
+				System.out.print(entry.osVersion());
 
 				// Give it a beta label (if it is one).
 				if (entry.isBeta())
@@ -377,14 +389,14 @@ public class Parser {
 					System.out.print("| ");
 
 					// Only give rowspan if there is more than one row with the OS version.
-					if (actualVersionRowspanCount.get(entry.actualVersion()).intValue() > 1)
-						System.out.print("rowspan=\"" + actualVersionRowspanCount.get(entry.actualVersion()) + "\" | ");
+					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
+						System.out.print("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
 
 					System.out.println("[MARKETING VERSION]");
 				}
 
 				//Remove the count since we're done with it.
-				actualVersionRowspanCount.remove(entry.actualVersion());
+				osVersionRowspanCount.remove(entry.osVersion());
 			}
 
 			// Output build number.
