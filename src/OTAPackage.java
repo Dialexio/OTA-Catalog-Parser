@@ -30,9 +30,9 @@ import java.util.regex.*;
 class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL,
-		REGEX_BETA = "(\\d)?\\d[A-Z]5\\d{3}[a-z]",
-		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]",
-		REGEX_FIVEK = "5\\d{3}";
+		REGEX_BETA = "(\\d)?\\d[A-Z][45]\\d{3}[a-z]",
+		REGEX_BUILD_AFTER_LETTER = "[45]\\d{3}",
+		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]";
 
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
@@ -104,7 +104,7 @@ class OTAPackage {
 	// release. This subtracts the 5000.
 	public String actualBuild() {
 		if (this.declaredBeta() && !BUILD.matches(REGEX_BETA)) {
-			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_FIVEK);
+			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
 			match = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
 			String minusFiveThousand = "";
 
@@ -123,7 +123,7 @@ class OTAPackage {
 	}
 
 	public boolean declaredBeta() {
-		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BUILD_UP_TO_LETTER + REGEX_FIVEK);
+		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BUILD_UP_TO_LETTER + REGEX_BUILD_AFTER_LETTER);
 		match = REGEX_BETA_CHECKER.matcher(BUILD);
 
 		return match.find();

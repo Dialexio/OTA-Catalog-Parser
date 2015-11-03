@@ -441,7 +441,13 @@ public class Parser {
 						prereqRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
 
-					System.out.println(entry.prerequisiteVer());
+					System.out.print(entry.prerequisiteVer());
+
+					// Very quick check if prerequisite is a beta. Won't work if close to final release.
+					if (entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]"))
+						System.out.print(" beta #");
+
+					System.out.println();
 				}
 
 				// Prerequisite build
