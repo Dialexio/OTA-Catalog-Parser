@@ -436,7 +436,8 @@ public class Parser {
 					System.out.print("| ");
 
 					// Is there more than one of this prerequisite version tallied?
-					if (prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
+					// Also do not use rowspan if the prerequisite build is a beta.
+					if (!entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]") && prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
 						System.out.print("rowspan=\"" + prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
 						prereqRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
