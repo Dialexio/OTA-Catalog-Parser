@@ -304,8 +304,12 @@ public class Parser {
 
 			// Is this a beta?
 			System.out.print("Beta release: ");
-			if (entry.isBeta())
-				System.out.println("Yes");
+			if (entry.isBeta()) {
+				if (!entry.isDevBeta())
+					System.out.print("Public ");
+
+				System.out.println("Beta " + entry.betaNumber());
+			}
 
 			else if (entry.declaredBeta())
 				System.out.println("Labeled as one, but not a beta");
@@ -357,9 +361,16 @@ public class Parser {
 				System.out.print(entry.marketingVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.isBeta())
-					// Number sign should be replaced by user; we can't keep track of which beta this is.
-					System.out.print(" beta #");
+				if (entry.isBeta()) {
+					if (!entry.isDevBeta())
+						System.out.print(" Public Beta");
+					else
+						System.out.print(" beta");
+
+					// Don't print a 1 if this is the first beta.
+					if (entry.betaNumber() != 1)
+						System.out.print(" " + entry.betaNumber());
+				}
 
 				System.out.println();
 
@@ -378,9 +389,16 @@ public class Parser {
 				System.out.print(entry.osVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.isBeta())
-					// Number sign should be replaced by user; we can't keep track of which beta this is.
-					System.out.print(" beta #");
+				if (entry.isBeta()) {
+					if (!entry.isDevBeta())
+						System.out.print(" Public Beta");
+					else
+						System.out.print(" beta");
+
+					// Don't print a 1 if this is the first beta.
+					if (entry.betaNumber() != 1)
+						System.out.print(" " + entry.betaNumber());
+				}
 
 				System.out.println();
 

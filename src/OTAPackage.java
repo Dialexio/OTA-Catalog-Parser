@@ -29,7 +29,7 @@ import java.util.regex.*;
 
 class OTAPackage {
 	private final NSDictionary ENTRY;
-	private final String BUILD, PREREQ_BUILD, PREREQ_VER, URL,
+	private final String BUILD, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
 		REGEX_BETA = "(\\d)?\\d[A-Z][45]\\d{3}[a-z]",
 		REGEX_BUILD_AFTER_LETTER = "[45]\\d{3}",
 		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]";
@@ -41,6 +41,7 @@ class OTAPackage {
 	public OTAPackage(NSDictionary entry) {
 		BUILD = entry.get("Build").toString();
 		buildLeftSide = "";
+		DOC_ID = entry.containsKey("SUDocumentationID") ? entry.get("SUDocumentationID").toString() : "WELP";
 		this.ENTRY = entry;
 		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
 
@@ -118,6 +119,11 @@ class OTAPackage {
 			return BUILD;
 	}
 
+	// Returns the beta number if possible. Returns 0 if not found.
+	public int betaNumber() {
+		return (this.isBeta() && !DOC_ID.equals("PreRelease")) ? Integer.parseInt(DOC_ID.substring(DOC_ID.length()-1)) : 0;
+	}
+
 	public String date() {
 		return date;
 	}
@@ -138,6 +144,17 @@ class OTAPackage {
 		match = REGEX_BETA_CHECKER.matcher(BUILD);
 
 		return match.find();
+	}
+
+	public boolean isDevBeta() {
+		if (this.isBeta() && DOC_ID.equals("PreRelease"))
+			return true;
+		else {
+			final Pattern DEV_BETA = Pattern.compile("\\d(DevBeta|Seed)");
+			match = DEV_BETA.matcher(DOC_ID);
+
+			return match.find();
+		}
 	}
 
 	public boolean isUniversal() {
