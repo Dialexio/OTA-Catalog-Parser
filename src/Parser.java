@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.4
+ * OTA Catalog Parser 0.4.1
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -33,7 +33,7 @@ import java.util.regex.*;
 import org.xml.sax.SAXException;
 
 public class Parser {
-	private final static String PROG_VER = "0.4";
+	private final static String PROG_VER = "0.4.1";
 
 	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
 	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
@@ -311,7 +311,7 @@ public class Parser {
 				System.out.println("Beta " + entry.betaNumber());
 			}
 
-			else if (entry.declaredBeta())
+			else if (entry.isDeclaredBeta())
 				System.out.println("Labeled as one, but not a beta");
 
 			else
@@ -443,7 +443,7 @@ public class Parser {
 				System.out.print("| colspan=\"2\" {{n/a");
 
 				// Is this "universal" OTA update intended for betas?
-				if (entry.declaredBeta() && !entry.isBeta())
+				if (entry.isDeclaredBeta() && !entry.isBeta())
 					System.out.print("|Beta");
 
 				System.out.println("}}");

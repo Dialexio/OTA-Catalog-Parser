@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.4
+ * OTA Catalog Parser 0.4.1
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -29,18 +29,17 @@ import java.util.regex.*;
 
 class OTAPackage {
 	private final NSDictionary ENTRY;
-	private final String BUILD, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
+	private final String BUILD, BUILD_LEFT, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
 		REGEX_BETA = "(\\d)?\\d[A-Z][45]\\d{3}[a-z]",
 		REGEX_BUILD_AFTER_LETTER = "[45]\\d{3}",
 		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]";
-
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
-	private String buildLeftSide, date, size;
+	private String date, size;
 
 	public OTAPackage(NSDictionary entry) {
 		BUILD = entry.get("Build").toString();
-		buildLeftSide = "";
+
 		DOC_ID = entry.containsKey("SUDocumentationID") ? entry.get("SUDocumentationID").toString() : "WELP";
 		this.ENTRY = entry;
 		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
@@ -51,7 +50,9 @@ class OTAPackage {
 		final Pattern buildToLetterRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 		match = buildToLetterRegex.matcher(BUILD);
 		if (match.find())
-			buildLeftSide = match.group();
+			BUILD_LEFT = match.group();
+		else
+			BUILD_LEFT = "";
 
 		// Obtain the prerequisite build and prerequisite version.
 		if (entry.containsKey("PrerequisiteBuild")) {
@@ -104,7 +105,7 @@ class OTAPackage {
 	// in order to push devices with the beta firmware to the final
 	// release. This subtracts the 5000.
 	public String actualBuild() {
-		if (this.declaredBeta() && !BUILD.matches(REGEX_BETA)) {
+		if (this.isDeclaredBeta() && !BUILD.matches(REGEX_BETA)) {
 			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
 			match = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
 			String minusFiveThousand = "";
@@ -112,7 +113,7 @@ class OTAPackage {
 			if (match.find())
 				minusFiveThousand = match.group();
 
-			return buildLeftSide + (Integer.parseInt(minusFiveThousand) - 5000);
+			return BUILD_LEFT + (Integer.parseInt(minusFiveThousand) - 5000);
 		}
 
 		else
@@ -126,13 +127,6 @@ class OTAPackage {
 
 	public String date() {
 		return date;
-	}
-
-	public boolean declaredBeta() {
-		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BUILD_UP_TO_LETTER + REGEX_BUILD_AFTER_LETTER);
-		match = REGEX_BETA_CHECKER.matcher(BUILD);
-
-		return match.find();
 	}
 
 	public String declaredBuild() {
@@ -154,9 +148,14 @@ class OTAPackage {
 		}
 	}
 
+	public boolean isDeclaredBeta() {
+		return ENTRY.containsKey("ReleaseType") && ENTRY.get("ReleaseType").toString().equals("Beta");
+	}
+
 	public boolean isDevBeta() {
 		if (this.isBeta() && DOC_ID.equals("PreRelease"))
 			return true;
+
 		else {
 			final Pattern DEV_BETA = Pattern.compile("\\d(DevBeta|Seed)");
 			match = DEV_BETA.matcher(DOC_ID);
@@ -207,7 +206,7 @@ class OTAPackage {
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = "0" + sortBuild;
 
-		if (!declaredBeta()) {
+		if (!isDeclaredBeta()) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			match = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";
