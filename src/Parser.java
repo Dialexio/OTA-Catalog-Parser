@@ -431,8 +431,8 @@ public class Parser {
 
 				System.out.print(entry.actualBuild());
 
-				// Do we have a fake beta?
-				if (entry.declaredBeta() && !entry.isBeta())
+				// Do we have a false build number?
+				if (!entry.actualBuild().equals(entry.declaredBuild()))
 					System.out.print("<ref name=\"fakefive\" />");
 
 				System.out.println();

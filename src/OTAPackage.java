@@ -140,10 +140,18 @@ class OTAPackage {
 	}
 
 	public boolean isBeta() {
-		final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BETA);
-		match = REGEX_BETA_CHECKER.matcher(BUILD);
+		final Pattern DEV_BETA = Pattern.compile("\\d(DevBeta|PublicBeta|Seed)");
+		match = DEV_BETA.matcher(DOC_ID);
 
-		return match.find();
+		if (match.find())
+			return true;
+
+		else {
+			final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BETA);
+			match = REGEX_BETA_CHECKER.matcher(BUILD);
+	
+			return match.find();
+		}
 	}
 
 	public boolean isDevBeta() {
