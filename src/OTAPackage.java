@@ -37,12 +37,13 @@ class OTAPackage {
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 	private String date, size;
 
-	public OTAPackage(NSDictionary entry) {
-		BUILD = entry.get("Build").toString();
+	public OTAPackage(NSDictionary otaEntry) {
+		ENTRY = otaEntry;
+		otaEntry = null;
 
-		DOC_ID = entry.containsKey("SUDocumentationID") ? entry.get("SUDocumentationID").toString() : "WELP";
-		this.ENTRY = entry;
-		supportedDevices = ((NSArray)entry.objectForKey("SupportedDevices")).getArray();
+		BUILD = ENTRY.get("Build").toString();
+		DOC_ID = ENTRY.containsKey("SUDocumentationID") ? ENTRY.get("SUDocumentationID").toString() : "WELP";
+		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
 
 		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 
@@ -55,12 +56,12 @@ class OTAPackage {
 			BUILD_LEFT = "";
 
 		// Obtain the prerequisite build and prerequisite version.
-		if (entry.containsKey("PrerequisiteBuild")) {
-			PREREQ_BUILD = entry.get("PrerequisiteBuild").toString();
+		if (ENTRY.containsKey("PrerequisiteBuild")) {
+			PREREQ_BUILD = ENTRY.get("PrerequisiteBuild").toString();
 
 			// Thanks for making these conditionals a thing, 6.0 build 10A444.
-			if (entry.containsKey("PrerequisiteOSVersion"))
-				PREREQ_VER = entry.get("PrerequisiteOSVersion").toString();
+			if (ENTRY.containsKey("PrerequisiteOSVersion"))
+				PREREQ_VER = ENTRY.get("PrerequisiteOSVersion").toString();
 
 			else if (BUILD.equals("10A444"))
 				PREREQ_VER = "6.0";
@@ -74,20 +75,20 @@ class OTAPackage {
 		}
 
 		// Retrieve the list of supported models... if it exists.
-		if (entry.containsKey("SupportedDeviceModels"))
-			supportedDeviceModels = ((NSArray)entry.objectForKey("SupportedDeviceModels")).getArray();
+		if (ENTRY.containsKey("SupportedDeviceModels"))
+			supportedDeviceModels = ((NSArray)ENTRY.objectForKey("SupportedDeviceModels")).getArray();
 
 		// Obtaining the size and URL.
 		// First, we need to make sure we don't get info for a dummy update.
-		if (entry.containsKey("RealUpdateAttributes")) {
-			final NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)entry.get("RealUpdateAttributes");
+		if (ENTRY.containsKey("RealUpdateAttributes")) {
+			final NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)ENTRY.get("RealUpdateAttributes");
 
 			size = REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize").toString();
 			URL = REAL_UPDATE_ATTRS.get("RealUpdateURL").toString();
 		}
 		else {
-			size = entry.get("_DownloadSize").toString();
-			URL = ((NSString)entry.get("__BaseURL")).getContent() + ((NSString)entry.get("__RelativePath")).getContent();
+			size = ENTRY.get("_DownloadSize").toString();
+			URL = ((NSString)ENTRY.get("__BaseURL")).getContent() + ((NSString)ENTRY.get("__RelativePath")).getContent();
 		}
 
 		// Extract the date from the URL.
@@ -129,21 +130,23 @@ class OTAPackage {
 		return date;
 	}
 
-	public String date(char dmy) {
-		// Day
-		if (dmy == 'd')
-			return date.substring(6);
+	public String date(final char dmy) {
+		switch (dmy) {
+			// Day
+			case 'd':
+				return date.substring(6);
 
-		// Month
-		else if (dmy == 'm')
-			return date.substring(4, 6);
+			// Month
+			case 'm':
+				return date.substring(4, 6);
 
-		//Year
-		else if (dmy == 'y')
-			return date.substring(0, 4);
+			// Year
+			case 'y':
+				return date.substring(0, 4);
 
-		else
-			return date;
+			default:
+				return date;
+		}
 	}
 
 	public String declaredBuild() {
@@ -236,6 +239,10 @@ class OTAPackage {
 			sortBuild = upToLetter + '9' + afterLetter;
 		}
 		return sortBuild;
+	}
+
+	public String sortingMarketingVersion() {
+		return (this.marketingVersion().charAt(1) == '.') ? '0' + this.marketingVersion() : this.marketingVersion();
 	}
 
 	public String sortingPrerequisiteBuild() {

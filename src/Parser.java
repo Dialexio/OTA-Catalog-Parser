@@ -192,74 +192,80 @@ public class Parser {
 		while (i < args.length && args[i].startsWith("-")) {
 			arg = args[i++];
 
-			if (arg.equals("-b"))
-				showBeta = true;
+			switch (arg) {
+				case "-b":
+					showBeta = true;
+				break;
 
-			else if (arg.equals("-d")) {
-				device = "";
+				case "-d":
+					device = "";
 
-				if (i < args.length)
-					device = args[i++];
+					if (i < args.length)
+						device = args[i++];
 
-				if (!device.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
-					System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
-					System.exit(1);
-				}
+					if (!device.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
+						System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
+						System.exit(1);
+					}
+				break;
+
+				case "-f":
+					plistName = "";
+
+					if (i < args.length)
+						plistName = args[i++];
+
+					if (plistName.isEmpty()) {
+						System.err.println("ERROR: You need to supply a file name.");
+						System.exit(2);
+					}
+				break;
+
+				case "-m":
+					model = "";
+
+					if (i < args.length)
+						model = args[i++];
+
+					if (!model.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP")) {
+						System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
+						System.exit(3);
+					}
+				break;
+
+				case "-max":
+					maxOSVer = "";
+
+					if (i < args.length)
+						maxOSVer = args[i++];
+
+					if (!maxOSVer.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?")) {
+						System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
+						System.exit(4);
+					}
+				break;
+
+				case "-min":
+					minOSVer = "";
+
+					if (i < args.length)
+						minOSVer = args[i++];
+
+					if (!minOSVer.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?")) {
+						System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
+						System.exit(5);
+					}
+				break;
+
+				case "-v":
+					version = true;
+				break;
+
+				case "-w":
+					mwMarkup = true;
+				break;
 			}
 
-			else if (arg.equals("-f")) {
-				plistName = "";
-
-				if (i < args.length)
-					plistName = args[i++];
-
-				if (plistName.isEmpty()) {
-					System.err.println("ERROR: You need to supply a file name.");
-					System.exit(2);
-				}
-			}
-
-			else if (arg.equals("-m")) {
-				model = "";
-
-				if (i < args.length)
-					model = args[i++];
-
-				if (!model.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP")) {
-					System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
-					System.exit(3);
-				}
-			}
-
-			else if (arg.equals("-max")) {
-				maxOSVer = "";
-
-				if (i < args.length)
-					maxOSVer = args[i++];
-
-				if (!maxOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
-					System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
-					System.exit(4);
-				}
-			}
-
-			else if (arg.equals("-min")) {
-				minOSVer = "";
-
-				if (i < args.length)
-					minOSVer = args[i++];
-
-				if (!minOSVer.matches("\\d\\.\\d(\\.\\d)?(\\d)?")) {
-					System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
-					System.exit(5);
-				}
-			}
-
-			else if (arg.equals("-v"))
-				version = true;
-
-			else if (arg.equals("-w"))
-				mwMarkup = true;
 		}
 
 		// Flag whether or not we need to check the model.
@@ -523,7 +529,7 @@ public class Parser {
 		Collections.sort(ENTRY_LIST, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).marketingVersion().compareTo(((OTAPackage)package2).marketingVersion());
+				return ((OTAPackage)package1).sortingMarketingVersion().compareTo(((OTAPackage)package2).sortingMarketingVersion());
 			}
 		});
 	}
