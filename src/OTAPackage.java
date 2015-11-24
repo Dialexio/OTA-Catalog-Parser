@@ -97,7 +97,7 @@ class OTAPackage {
 			date = match.group().substring(5);
 
 		if (date.length() == 7)
-			date = date.substring(0, 6) + "0" + date.substring(6);
+			date = date.substring(0, 6) + '0' + date.substring(6);
 	}
 
 	// When a firmware reaches a final release, Apple creates an entry
@@ -221,7 +221,7 @@ class OTAPackage {
 
 		//Make 9A### appear before 10A###.
 		if (Character.isLetter(sortBuild.charAt(1)))
-			sortBuild = "0" + sortBuild;
+			sortBuild = '0' + sortBuild;
 
 		if (!isDeclaredBeta()) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
@@ -233,7 +233,7 @@ class OTAPackage {
 
 			afterLetter = sortBuild.replaceFirst(REGEX_BUILD_UP_TO_LETTER, "");
 
-			sortBuild = upToLetter + "9" + afterLetter;
+			sortBuild = upToLetter + '9' + afterLetter;
 		}
 		return sortBuild;
 	}
@@ -242,7 +242,7 @@ class OTAPackage {
 		if (PREREQ_BUILD.equals("N/A"))
 			return "0000000000"; // Bump this to the top.
 		else
-			return (Character.isLetter(PREREQ_BUILD.charAt(1))) ? "0" + PREREQ_BUILD : PREREQ_BUILD;
+			return (Character.isLetter(PREREQ_BUILD.charAt(1))) ? '0' + PREREQ_BUILD : PREREQ_BUILD;
 	}
 
 	public NSObject[] supportedDeviceModels() {
