@@ -129,6 +129,23 @@ class OTAPackage {
 		return date;
 	}
 
+	public String date(char dmy) {
+		// Day
+		if (dmy == 'd')
+			return date.substring(6);
+
+		// Month
+		else if (dmy == 'm')
+			return date.substring(4, 6);
+
+		//Year
+		else if (dmy == 'y')
+			return date.substring(0, 4);
+
+		else
+			return date;
+	}
+
 	public String declaredBuild() {
 		return BUILD;
 	}

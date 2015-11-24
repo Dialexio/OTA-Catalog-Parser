@@ -299,33 +299,28 @@ public class Parser {
 				osName = "iOS";
 
 			// Output OS version and build.
-			System.out.println(osName + " " + entry.marketingVersion() + " (Build " + entry.actualBuild() + ")");
-			System.out.println("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ").");
+			System.out.print(osName + ' ' + entry.marketingVersion());
 
-			// Is this a beta?
-			System.out.print("Beta release: ");
-			if (entry.isBeta()) {
-				if (!entry.isDevBeta())
-					System.out.print("Public ");
+				// Is this a beta?
+				if (entry.isBeta()) {
+					if (!entry.isDevBeta())
+						System.out.print(" Public");
+	
+					System.out.print(" Beta " + entry.betaNumber());
+				}
 
-				System.out.println("Beta " + entry.betaNumber());
-			}
-
-			else if (entry.isDeclaredBeta())
-				System.out.println("Labeled as one, but not a beta");
-
-			else
-				System.out.println("No");
+			System.out.println(" (Build " + entry.actualBuild() + ')');
+			System.out.println("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
 				System.out.println("Requires: Not specified");
 
 			else
-				System.out.println("Requires: " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ")");
+				System.out.println("Requires: " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ')');
 
 			// Date as extracted from the URL.
-			System.out.println("Timestamp: " + entry.date().substring(0, 4) + "/" + entry.date().substring(4, 6) + "/" + entry.date().substring(6));
+			System.out.println("Timestamp: " + entry.date('y') + '/' + entry.date('m') + '/' + entry.date('d'));
 
 			// Print out the URL and file size.
 			System.out.println("URL: " + entry.url());
@@ -369,7 +364,7 @@ public class Parser {
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() != 1)
-						System.out.print(" " + entry.betaNumber());
+						System.out.print(' ' + entry.betaNumber());
 				}
 
 				System.out.println();
@@ -397,7 +392,7 @@ public class Parser {
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() != 1)
-						System.out.print(" " + entry.betaNumber());
+						System.out.print(' ' + entry.betaNumber());
 				}
 
 				System.out.println();
@@ -484,7 +479,7 @@ public class Parser {
 					dateRowspanCount.remove(entry.actualBuild()); //Remove the count since we already used it.
 				}
 
-				System.out.println("{{date|" + entry.date().substring(0, 4) + "|" + entry.date().substring(4, 6) + "|" + entry.date().substring(6) + "}}");
+				System.out.println("{{date|" + entry.date('y') + '|' + entry.date('m') + '|' + entry.date('d') + "}}");
 			}
 
 			if (fileRowspanCount.containsKey(entry.url())) {
@@ -495,7 +490,7 @@ public class Parser {
 				if (fileRowspanCount.get(entry.url()).intValue() > 1)
 					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()) + "\" | ");
 
-				System.out.println("[" + entry.url() + " " + fileName + "]");
+				System.out.println('[' + entry.url() + ' ' + fileName + ']');
 
 				//Print file size.
 				System.out.print("| ");
