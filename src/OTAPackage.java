@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.4.1
+ * OTA Catalog Parser 0.4.2
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -216,16 +216,17 @@ class OTAPackage {
 		return size = NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
 	}
 
-	// sortingBuild and sortingPrerequisiteBuild are used for sorting.
-	// There are extra zeros in the front for both, and an
-	// extra 9 after the first build letter for non-betas.
+	// These "sorting..." methods are used for... Well, sorting.
+	// It adds zeroes to bump things up, and nines to send them downward.
 	public String sortingBuild() {
 		String sortBuild = BUILD;
 
-		//Make 9A### appear before 10A###.
+		// Make 9A### appear before 10A###.
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = '0' + sortBuild;
 
+		// If this is not labeled a beta, add an extra 9 after the letter.
+		// This will cause betas to appear first.
 		if (!isDeclaredBeta()) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			match = betaRegex.matcher(sortBuild);
@@ -238,6 +239,7 @@ class OTAPackage {
 
 			sortBuild = upToLetter + '9' + afterLetter;
 		}
+
 		return sortBuild;
 	}
 
@@ -247,9 +249,15 @@ class OTAPackage {
 
 	public String sortingPrerequisiteBuild() {
 		if (PREREQ_BUILD.equals("N/A"))
-			return "0000000000"; // Bump this to the top.
-		else
-			return (Character.isLetter(PREREQ_BUILD.charAt(1))) ? '0' + PREREQ_BUILD : PREREQ_BUILD;
+			return "0000000000";
+
+		else {
+			if (Character.isLetter(PREREQ_BUILD.charAt(1)))
+				return '0' + PREREQ_BUILD;
+
+			else
+				return PREREQ_BUILD;
+		}
 	}
 
 	public NSObject[] supportedDeviceModels() {

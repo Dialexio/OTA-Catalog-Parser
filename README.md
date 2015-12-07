@@ -4,7 +4,7 @@ This program lets you view an OTA update catalog for [iOS](http://mesu.apple.com
 NOTE: The date is extracted from the file's URL, which may not be the actual release date.
 
 ## Running the Program
-This program requires [Java 8](http://www.java.com/en/download/) or newer to be installed.
+Current releases require [Java 8](http://www.java.com/download/) or newer to be installed. The next release will be compatible with Java 7.
 
 This is a command line program. Open the Command Prompt or Terminal, and run it like any other JAR file, with whatever arguments you find necessary:
 

@@ -1,5 +1,5 @@
 /*
- * OTA Catalog Parser 0.4.1
+ * OTA Catalog Parser 0.4.2
  * Copyright (c) 2015 Dialexio
  * 
  * The MIT License (MIT)
@@ -33,7 +33,7 @@ import java.util.regex.*;
 import org.xml.sax.SAXException;
 
 public class Parser {
-	private final static String PROG_VER = "0.4.1";
+	private final static String PROG_VER = "0.4.2";
 
 	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
 	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
@@ -57,7 +57,7 @@ public class Parser {
 
 		// Look at every item in the array with the key "Assets."
 		for (NSObject item:ASSETS) {
-			entry = new OTAPackage((NSDictionary)item); // Feed it into our own object. This will be used for sorting in the future.
+			entry = new OTAPackage((NSDictionary)item); // Feed the info into a custom object so we can easily pull info and sort.
 			matched = false;
 
 			// Beta check.
@@ -97,6 +97,8 @@ public class Parser {
 			if (matched)
 				ENTRY_LIST.add(entry);
 		}
+
+		entry = null;
 	}
 
 	private static void countRowspan(final ArrayList<OTAPackage> ENTRYLIST) {
@@ -109,7 +111,7 @@ public class Parser {
 			// Build
 			// Increment the count if it exists.
 			if (buildRowspanCount.containsKey(entry.declaredBuild()))
-				buildRowspanCount.replace(entry.declaredBuild(), buildRowspanCount.get(entry.declaredBuild())+1);
+				buildRowspanCount.put(entry.declaredBuild(), buildRowspanCount.get(entry.declaredBuild())+1);
 			// If it hasn't been counted, add the first tally.
 			else
 				buildRowspanCount.put(entry.declaredBuild(), 1);
@@ -117,7 +119,7 @@ public class Parser {
 			// Date (Count actualBuild() and not date() because x.0 GM and x.1 beta can technically be pushed at the same time.)
 			// Increment the count if it exists.
 			if (dateRowspanCount.containsKey(entry.actualBuild()))
-				dateRowspanCount.replace(entry.actualBuild(), dateRowspanCount.get(entry.actualBuild())+1);
+				dateRowspanCount.put(entry.actualBuild(), dateRowspanCount.get(entry.actualBuild())+1);
 			// If it hasn't been counted, add the first tally.
 			else
 				dateRowspanCount.put(entry.actualBuild(), 1);
@@ -125,7 +127,7 @@ public class Parser {
 			// File URL
 			// Increment the count if it exists.
 			if (fileRowspanCount.containsKey(entry.url()))
-				fileRowspanCount.replace(entry.url(), fileRowspanCount.get(entry.url())+1);
+				fileRowspanCount.put(entry.url(), fileRowspanCount.get(entry.url())+1);
 			// If it hasn't been counted, add the first tally.
 			else
 				fileRowspanCount.put(entry.url(), 1);
@@ -133,7 +135,7 @@ public class Parser {
 			// Marketing version
 			// Increment the count if it exists.
 			if (marketingVersionRowspanCount.containsKey(entry.marketingVersion()))
-				marketingVersionRowspanCount.replace(entry.marketingVersion(), marketingVersionRowspanCount.get(entry.marketingVersion())+1);
+				marketingVersionRowspanCount.put(entry.marketingVersion(), marketingVersionRowspanCount.get(entry.marketingVersion())+1);
 			// If it hasn't been counted, add the first tally.
 			else
 				marketingVersionRowspanCount.put(entry.marketingVersion(), 1);
@@ -141,7 +143,7 @@ public class Parser {
 			// OS version
 			// Increment the count if it exists.
 			if (osVersionRowspanCount.containsKey(entry.osVersion()))
-				osVersionRowspanCount.replace(entry.osVersion(), osVersionRowspanCount.get(entry.osVersion())+1);
+				osVersionRowspanCount.put(entry.osVersion(), osVersionRowspanCount.get(entry.osVersion())+1);
 			// If it hasn't been counted, add the first tally.
 			else
 				osVersionRowspanCount.put(entry.osVersion(), 1);
@@ -152,7 +154,7 @@ public class Parser {
 
 			// Increment the count if it exists.
 			if (prereqNestedCount.containsKey(entry.prerequisiteVer()))
-				prereqNestedCount.replace(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
+				prereqNestedCount.put(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
 			// If it hasn't been counted, add the first tally.
 			else
 				prereqNestedCount.put(entry.prerequisiteVer(), 1);
@@ -398,7 +400,7 @@ public class Parser {
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() != 1)
-						System.out.print(' ' + entry.betaNumber());
+						System.out.print(" " + entry.betaNumber());
 				}
 
 				System.out.println();
