@@ -38,10 +38,10 @@ public class Parser {
 	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
 	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
 		dateRowspanCount = new HashMap<String, Integer>(),
-		fileRowspanCount = new HashMap<String, Integer>(),
 		marketingVersionRowspanCount = new HashMap<String, Integer>(),
 		osVersionRowspanCount = new HashMap<String, Integer>();
-	private final static HashMap<String, HashMap<String, Integer>> prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
+	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
+		prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 	private static boolean checkModel, showBeta = false;
 	private static NSDictionary root = null;
@@ -105,10 +105,11 @@ public class Parser {
 	}
 
 	private static void countRowspan(final ArrayList<OTAPackage> ENTRYLIST) {
-		HashMap<String, Integer> prereqNestedCount;
+		HashMap<String, Integer> fileNestedCount, prereqNestedCount;
 
 		// Count the rowspans for wiki markup.
 		for (OTAPackage entry:ENTRYLIST) {
+			fileNestedCount = new HashMap<String, Integer>();
 			prereqNestedCount = new HashMap<String, Integer>();
 
 			// Build
@@ -128,12 +129,17 @@ public class Parser {
 				dateRowspanCount.put(entry.actualBuild(), 1);
 
 			// File URL
+			if (fileRowspanCount.containsKey(entry.url())) // Load nested HashMap into variable temporarily, if it exists.
+				fileNestedCount = fileRowspanCount.get(entry.url());
+
 			// Increment the count if it exists.
-			if (fileRowspanCount.containsKey(entry.url()))
-				fileRowspanCount.put(entry.url(), fileRowspanCount.get(entry.url())+1);
+			if (fileNestedCount.containsKey(entry.prerequisiteVer()))
+				fileNestedCount.put(entry.prerequisiteVer(), fileNestedCount.get(entry.prerequisiteVer())+1);
 			// If it hasn't been counted, add the first tally.
 			else
-				fileRowspanCount.put(entry.url(), 1);
+				fileNestedCount.put(entry.prerequisiteVer(), 1);
+
+			fileRowspanCount.put(entry.url(), fileNestedCount);
 
 			// Marketing version
 			// Increment the count if it exists.
@@ -493,27 +499,26 @@ public class Parser {
 				System.out.println("{{date|" + entry.date('y') + '|' + entry.date('m') + '|' + entry.date('d') + "}}");
 			}
 
-			if (fileRowspanCount.containsKey(entry.url())) {
-				// Print file URL.
+			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.prerequisiteVer())) {
 				System.out.print("| ");
 
-				// Only give rowspan if there is more than one row with the OS version.
-				if (fileRowspanCount.get(entry.url()).intValue() > 1)
-					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()) + "\" | ");
+				// Is there more than one of this prerequisite version tallied?
+				// Also do not use rowspan if the prerequisite build is a beta.
+				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
+					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
 
-				System.out.println('[' + entry.url() + ' ' + fileName + ']');
+				System.out.print('[' + entry.url() + ' ' + fileName + "]\n| ");
 
 				//Print file size.
-				System.out.print("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (fileRowspanCount.get(entry.url()).intValue() > 1)
-					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()) + "\" | ");
+				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
+					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
 
 				System.out.println(entry.size());
 
 				//Remove the count since we're done with it.
-				fileRowspanCount.remove(entry.url());
+				fileRowspanCount.get(entry.url()).remove(entry.prerequisiteVer());
 			}
 		}
 	}
