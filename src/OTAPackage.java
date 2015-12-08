@@ -101,10 +101,12 @@ class OTAPackage {
 			date = date.substring(0, 6) + '0' + date.substring(6);
 	}
 
-	// When a firmware reaches a final release, Apple creates an entry
-	// that is the build number with 5000 added to the end number
-	// in order to push devices with the beta firmware to the final
-	// release. This subtracts the 5000.
+	/**
+	 * Returns the actual build number of the OTA entry.
+	 * Sometimes, Apple likes to add 5000 to the end.
+	 * 
+	 * @return The build number that iOS will report in Settings.
+     **/
 	public String actualBuild() {
 		if (this.isDeclaredBeta() && !BUILD.matches(REGEX_BETA)) {
 			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
@@ -121,15 +123,42 @@ class OTAPackage {
 			return BUILD;
 	}
 
-	// Returns the beta number if possible. Returns 0 if not found.
+	/**
+	 * Returns the beta number of this entry.
+	 * If the entry is not a beta, returns 0.
+	 * 
+	 * @return Whatever number beta this is.
+     **/
 	public int betaNumber() {
-		return (this.isBeta() && !DOC_ID.equals("PreRelease")) ? Integer.parseInt(DOC_ID.substring(DOC_ID.length()-1)) : 0;
+		if (this.isBeta() && !DOC_ID.equals("PreRelease")) {
+			final char digit = DOC_ID.charAt(DOC_ID.length()-1);
+
+			return (Character.isDigit(digit)) ? Integer.parseInt(digit + "") : 1;
+		}
+
+		else
+			return 0;
 	}
 
+	/**
+	 * Returns the timestamp found in the URL.
+	 * Note that this is not always accurate;
+	 * it may be off by a day, or even a week.
+	 * 
+	 * @return The timestamp found in the URL.
+     **/
 	public String date() {
 		return date;
 	}
 
+	/**
+	 * Returns part of the timestamp found in the URL.
+	 * 
+	 * @param dmy	Specifies if you are looking for the <b>d</b>ay, <b>m</b>onth, or <b>y</b>ear.
+	 * If neither 'd', 'm', or 'y' is specified, it will return the entire timestamp.
+	 * 
+	 * @return The day, month, or year found in the URL.
+     **/
 	public String date(final char dmy) {
 		switch (dmy) {
 			// Day
@@ -149,10 +178,20 @@ class OTAPackage {
 		}
 	}
 
+	/**
+	 * @return The build as listed in the OTA update catalog.
+     **/
 	public String declaredBuild() {
 		return BUILD;
 	}
 
+	/**
+	 * Checks if the entry is a beta release or not.
+	 * This method does not care if Apple marked the release
+	 * as a beta or not.
+	 * 
+	 * @return A boolean value of whether the entry is a beta release (true) or not (false).
+     **/
 	public boolean isBeta() {
 		final Pattern DEV_BETA = Pattern.compile("\\d(DevBeta|PublicBeta|Seed)");
 		match = DEV_BETA.matcher(DOC_ID);
@@ -168,10 +207,22 @@ class OTAPackage {
 		}
 	}
 
+	/**
+	 * Checks if Apple marked the release as a beta or not.
+	 * Just because Apple marked the release as a beta does
+	 * not mean that it is a beta release.
+	 * 
+	 * @return A boolean value of whether Apple claims this is a beta release (true) or not (false).
+     **/
 	public boolean isDeclaredBeta() {
 		return ENTRY.containsKey("ReleaseType") && ENTRY.get("ReleaseType").toString().equals("Beta");
 	}
 
+	/**
+	 * Checks if the release is intended for developers.
+	 * 
+	 * @return A boolean value of whether this release is intended for developers to test (true) or not (false).
+     **/
 	public boolean isDevBeta() {
 		if (this.isBeta() && DOC_ID.equals("PreRelease"))
 			return true;
@@ -184,10 +235,22 @@ class OTAPackage {
 		}
 	}
 
+	/**
+	 * Checks if the release is a large, "one size fits all" package.
+	 * 
+	 * @return A boolean value of whether this release is used to cover all scenarios (true) or not (false).
+     **/
 	public boolean isUniversal() {
 		return (PREREQ_VER.equals("N/A") && PREREQ_BUILD.equals("N/A"));
 	}
 
+	/**
+	 * Returns the value of "MarketingVersion" if present.
+	 * "MarketingVersion" is used in some entries to display
+	 * a false version number (e.g. watchOS 2).
+	 * 
+	 * @return A String value of the "MarketingVersion" key, or "OSVersion" key.
+     **/
 	public String marketingVersion() {
 		if (ENTRY.containsKey("MarketingVersion")) {
 			if (!ENTRY.get("MarketingVersion").toString().contains("."))
@@ -200,24 +263,47 @@ class OTAPackage {
 			return ENTRY.get("OSVersion").toString();
 	}
 
+	/**
+	 * @return The "OSVersion" key, as a String.
+     **/
 	public String osVersion() {
 		return ENTRY.get("OSVersion").toString();
 	}
 
+	/**
+	 * "PrerequisiteBuild" states the specific build that
+	 * the OTA package is intended for.
+	 *
+	 * @return The "PrerequisiteBuild" key, as a String.
+     **/
 	public String prerequisiteBuild() {
 		return PREREQ_BUILD;
 	}
 
+	/**
+	 * "PrerequisiteVersion" states the specific version that
+	 * the OTA package is intended for.
+	 *
+	 * @return The "PrerequisiteVersion" key, as a String.
+     **/
 	public String prerequisiteVer() {
 		return PREREQ_VER;
 	}
 
+	/**
+	 * @return The package's file size, as a String.
+     **/
 	public String size() {
 		return size = NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
 	}
 
-	// These "sorting..." methods are used for... Well, sorting.
-	// It adds zeroes to bump things up, and nines to send them downward.
+	/**
+	 * "PrerequisiteVersion" states the specific version that
+	 * the OTA package is intended for.
+	 *
+	 * @return A String with the same value as OTAPackage.build(),
+	 * but with a zero in front so the program knows how to sort it.
+     **/
 	public String sortingBuild() {
 		String sortBuild = BUILD;
 

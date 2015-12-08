@@ -87,15 +87,18 @@ public class Parser {
 				}
 			}
 
-			// OS version check. Move to the next item if it doesn't match.
-			if (matched && !maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.marketingVersion()) < 0))
+			// If it's still a match, check the OS version.
+			// If the OS version doesn't fit what we're
+			// searching for, continue to the next entry.
+			if (matched) {
+				if (!maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.marketingVersion()) < 0))
 					continue;
-			if (matched && !minOSVer.isEmpty() && (minOSVer.compareTo(entry.marketingVersion()) > 0))
+				if (!minOSVer.isEmpty() && (minOSVer.compareTo(entry.marketingVersion()) > 0))
 					continue;
 
-			// Add it after it survives the checks.
-			if (matched)
+				// It survived the checks!
 				ENTRY_LIST.add(entry);
+			}
 		}
 
 		entry = null;
