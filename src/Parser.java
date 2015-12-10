@@ -106,6 +106,7 @@ public class Parser {
 
 	private static void countRowspan(final ArrayList<OTAPackage> ENTRYLIST) {
 		HashMap<String, Integer> fileNestedCount, prereqNestedCount;
+		String pseudoPrerequisite;
 
 		// Count the rowspans for wiki markup.
 		for (OTAPackage entry:ENTRYLIST) {
@@ -129,15 +130,20 @@ public class Parser {
 				dateRowspanCount.put(entry.actualBuild(), 1);
 
 			// File URL
-			if (fileRowspanCount.containsKey(entry.url())) // Load nested HashMap into variable temporarily, if it exists.
+			// If there is no prerequisite, use a fake prerequisite (with the OS version).
+			// This allows us to merge beta entries' URL and universal entries' URL.
+			pseudoPrerequisite = entry.prerequisiteVer().equals("N/A") ? entry.osVersion() : entry.prerequisiteVer();
+
+			// Load nested HashMap into a temporary variable, if it exists.
+			if (fileRowspanCount.containsKey(entry.url()))
 				fileNestedCount = fileRowspanCount.get(entry.url());
 
 			// Increment the count if it exists.
-			if (fileNestedCount.containsKey(entry.prerequisiteVer()))
-				fileNestedCount.put(entry.prerequisiteVer(), fileNestedCount.get(entry.prerequisiteVer())+1);
+			if (fileNestedCount.containsKey(pseudoPrerequisite))
+				fileNestedCount.put(pseudoPrerequisite, fileNestedCount.get(pseudoPrerequisite)+1);
 			// If it hasn't been counted, add the first tally.
 			else
-				fileNestedCount.put(entry.prerequisiteVer(), 1);
+				fileNestedCount.put(pseudoPrerequisite, 1);
 
 			fileRowspanCount.put(entry.url(), fileNestedCount);
 
@@ -170,6 +176,10 @@ public class Parser {
 
 			prereqRowspanCount.put(entry.declaredBuild(), prereqNestedCount);
 		}
+
+		fileNestedCount = null;
+		prereqNestedCount = null;
+		pseudoPrerequisite = null;
 	}
 
 	private static void loadFile(final File PLIST_NAME) {
