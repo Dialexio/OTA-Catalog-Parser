@@ -111,12 +111,8 @@ class OTAPackage {
 		if (this.isDeclaredBeta() && !BUILD.matches(REGEX_BETA)) {
 			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
 			match = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
-			String minusFiveThousand = "";
 
-			if (match.find())
-				minusFiveThousand = match.group();
-
-			return BUILD_LEFT + (Integer.parseInt(minusFiveThousand) - 5000);
+			return (match.find()) ? BUILD_LEFT + (Integer.parseInt(match.group()) - 5000) : BUILD;
 		}
 
 		else

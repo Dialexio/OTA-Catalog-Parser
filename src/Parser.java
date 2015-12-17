@@ -317,16 +317,16 @@ public class Parser {
 
 		for (OTAPackage entry:ENTRYLIST) {
 			if (device.startsWith("Watch"))
-				osName = "watchOS";
+				osName = "watchOS ";
 			else if (device.matches("AppleTV(2,1|3,1|3,2)"))
-				osName = "iOS";
+				osName = "iOS ";
 			else if (device.startsWith("AppleTV"))
-				osName = "tvOS";
+				osName = "tvOS ";
 			else
-				osName = "iOS";
+				osName = "iOS ";
 
 			// Output OS version and build.
-			System.out.print(osName + ' ' + entry.marketingVersion());
+			System.out.print(osName + entry.marketingVersion());
 
 				// Is this a beta?
 				if (entry.isBeta()) {
@@ -358,14 +358,14 @@ public class Parser {
 	}
 
 	private static void printWikiMarkup(final ArrayList<OTAPackage> ENTRYLIST) {
-		final Pattern nameRegex = Pattern.compile("[0-9a-f]{40}\\.zip");
+		final Pattern NAME_REGEX = Pattern.compile("[0-9a-f]{40}\\.zip");
 		Matcher name;
 		String fileName;
 
 		for (OTAPackage entry:ENTRYLIST) {
 			fileName = "";
 
-			name = nameRegex.matcher(entry.url());
+			name = NAME_REGEX.matcher(entry.url());
 			if (name.find())
 				fileName = name.group();
 
