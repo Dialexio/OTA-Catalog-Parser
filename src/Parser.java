@@ -64,6 +64,10 @@ public class Parser {
 			if (!showBeta && entry.isBeta())
 				continue;
 
+			// Only count "Public Beta 1" entries once.
+			if (!entry.isDeclaredBeta() && entry.betaNumber() == 1)
+				continue;
+
 			// Device check.
 			for (NSObject supportedDevice:entry.supportedDevices()) {
 				if (device.equals(supportedDevice.toString())) {
