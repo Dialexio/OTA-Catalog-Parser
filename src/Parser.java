@@ -48,15 +48,15 @@ public class Parser {
 	private static String device, maxOSVer = "", minOSVer = "", model;
 
 
-	private static void addEntries(final NSDictionary PLIST_ROOT) {
+	private static void addEntries(final NSDictionary PLIST_ROOT, final boolean wiki) {
 		// Looking for the array with key "Assets."
-		final NSObject[] ASSETS = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray();
+		NSObject[] assets = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray();
 
 		boolean matched;
 		OTAPackage entry;
 
 		// Look at every item in the array with the key "Assets."
-		for (NSObject item:ASSETS) {
+		for (NSObject item:assets) {
 			entry = new OTAPackage((NSDictionary)item); // Feed the info into a custom object so we can easily pull info and sort.
 			matched = false;
 
@@ -65,7 +65,7 @@ public class Parser {
 				continue;
 
 			// Only count "Public Beta 1" entries once.
-			if (!entry.isDeclaredBeta() && entry.betaNumber() == 1)
+			if (wiki && !entry.isDeclaredBeta() && entry.betaNumber() == 1)
 				continue;
 
 			// Device check.
@@ -105,6 +105,7 @@ public class Parser {
 			}
 		}
 
+		assets = null;
 		entry = null;
 	}
 
@@ -304,7 +305,7 @@ public class Parser {
 
 		loadFile(new File(plistName));
 
-		addEntries(root);
+		addEntries(root, mwMarkup);
 
 		sort();
 
@@ -341,7 +342,10 @@ public class Parser {
 				}
 
 			System.out.println(" (Build " + entry.actualBuild() + ')');
-			System.out.println("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
+			System.out.print("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
+			if (entry.isDeclaredBeta())
+				System.out.print(" (Marked as Beta)");
+			System.out.println();
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
@@ -416,13 +420,13 @@ public class Parser {
 
 				// Give it a beta label (if it is one).
 				if (entry.isBeta()) {
-					if (!entry.isDevBeta())
-						System.out.print(" Public Beta");
-					else
+					if (entry.isDevBeta())
 						System.out.print(" beta");
+					else
+						System.out.print(" Public Beta");
 
 					// Don't print a 1 if this is the first beta.
-					if (entry.betaNumber() != 1)
+					if (entry.betaNumber() > 1)
 						System.out.print(" " + entry.betaNumber());
 				}
 
