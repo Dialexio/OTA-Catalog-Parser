@@ -59,19 +59,11 @@ class OTAPackage {
 		if (ENTRY.containsKey("PrerequisiteBuild")) {
 			PREREQ_BUILD = ENTRY.get("PrerequisiteBuild").toString();
 
-			// Thanks for making these conditionals a thing, 6.0 build 10A444.
-			if (ENTRY.containsKey("PrerequisiteOSVersion"))
-				PREREQ_VER = ENTRY.get("PrerequisiteOSVersion").toString();
-
-			else if (BUILD.equals("10A444"))
-				PREREQ_VER = "6.0";
-
-			else
-				PREREQ_VER = "N/A";
+			PREREQ_VER = (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : this.osVersion();
 		}
 		else {
-			PREREQ_BUILD = "N/A";
-			PREREQ_VER = "N/A";
+			PREREQ_BUILD = this.declaredBuild();
+			PREREQ_VER = this.osVersion();
 		}
 
 		// Retrieve the list of supported models... if it exists.
@@ -237,7 +229,7 @@ class OTAPackage {
 	 * @return A boolean value of whether this release is used to cover all scenarios (true) or not (false).
      **/
 	public boolean isUniversal() {
-		return (PREREQ_VER.equals("N/A") && PREREQ_BUILD.equals("N/A"));
+		return (this.prerequisiteVer().equals(this.osVersion()) && this.prerequisiteBuild().equals(this.declaredBuild()));
 	}
 
 	/**
