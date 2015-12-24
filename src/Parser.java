@@ -43,12 +43,11 @@ public class Parser {
 	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
 		prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
-	private static boolean checkModel, showBeta = false;
+	private static boolean showBeta = false;
 	private static NSDictionary root = null;
 	private static String device, maxOSVer = "", minOSVer = "", model;
 
-
-	private static void addEntries(final NSDictionary PLIST_ROOT, final boolean wiki) {
+	private static void addEntries(final NSDictionary PLIST_ROOT, final boolean CHECK_MODEL, final boolean WIKI) {
 		// Looking for the array with key "Assets."
 		NSObject[] assets = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray();
 
@@ -65,7 +64,7 @@ public class Parser {
 				continue;
 
 			// Only count "Public Beta 1" entries once.
-			if (wiki && !entry.isDeclaredBeta() && entry.betaNumber() == 1)
+			if (WIKI && !entry.isDeclaredBeta() && entry.betaNumber() == 1)
 				continue;
 
 			// Device check.
@@ -77,7 +76,7 @@ public class Parser {
 			}
 
 			// Model check, if needed.
-			if (matched && checkModel) {
+			if (matched && CHECK_MODEL) {
 				matched = false; // Skipping unless we can verify we want it.
 
 				// Make sure "SupportedDeviceModels" exists.
@@ -210,9 +209,27 @@ public class Parser {
 	}
 
 	public static void main(final String[] args) {
-		boolean mwMarkup = false, version = false;
+		boolean mwMarkup = false;
 		int i = 0;
 		String arg = "", plistName = "";
+
+		// No arguments? Don't do anything.
+		if (args.length == 0) {
+			System.out.println("OTA Catalog Parser v" + PROG_VER);
+			System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser-Java");
+
+			System.out.println("\nRequired Arguments:");
+			System.out.println("-d <device>      Choose the device you are searching for. (e.g. iPhone8,1)");
+			System.out.println("-f <file>        Specify the path to the XML file you are searching in.");
+			System.out.println("-m <model>       Choose the model you are searching for. (e.g. N71mAP)\n                 This is only used and required for iPhone 6S or 6S Plus.");
+
+			System.out.println("\nOptional Arguments:");
+			System.out.println("-b               Displays beta firmwares. By default, this is disabled.");
+			System.out.println("-max <version>   Choose the highest firmware version you are searching for. (e.g. 9.0.2)");
+			System.out.println("-min <version>   Choose the lowest firmware version you are searching for. (e.g. 8.4.1)");
+			System.out.println("-w               Formats the output for The iPhone Wiki.");
+			System.exit(0);
+		}
 
 		// Reading arguments (and performing some basic checks).
 		while (i < args.length && args[i].startsWith("-")) {
@@ -283,10 +300,6 @@ public class Parser {
 					}
 				break;
 
-				case "-v":
-					version = true;
-				break;
-
 				case "-w":
 					mwMarkup = true;
 				break;
@@ -296,16 +309,10 @@ public class Parser {
 
 		// Flag whether or not we need to check the model.
 		// Right now, it's just a lazy check for iPhone8,1 or iPhone8,2.
-		checkModel = device.matches("iPhone8,(1|2)");
-
-		if (version) {
-			System.out.println("OTA Catalog Parser v" + PROG_VER);
-			System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser-Java\n");
-		}
 
 		loadFile(new File(plistName));
 
-		addEntries(root, mwMarkup);
+		addEntries(root, device.matches("iPhone8,(1|2)"), mwMarkup);
 
 		sort();
 
@@ -342,10 +349,8 @@ public class Parser {
 				}
 
 			System.out.println(" (Build " + entry.actualBuild() + ')');
-			System.out.print("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
-			if (entry.isDeclaredBeta())
-				System.out.print(" (Marked as Beta)");
-			System.out.println();
+			System.out.println("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
+			System.out.println("Marked as beta: " + entry.isDeclaredBeta());
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
