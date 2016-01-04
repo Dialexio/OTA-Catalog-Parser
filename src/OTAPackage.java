@@ -322,7 +322,7 @@ class OTAPackage {
 	}
 
 	public String sortingPrerequisiteBuild() {
-		if (PREREQ_BUILD.equals("N/A"))
+		if (this.isUniversal())
 			return "0000000000";
 
 		else {
