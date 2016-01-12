@@ -129,6 +129,34 @@ class OTAPackage {
 	}
 
 	/**
+	 * Checks if the release is a developer beta, a public beta, or not a beta.
+	 * 
+	 * @return An integer value of 0 (not a beta), 1 (developer beta), or 2 (public beta).
+     **/
+	public int betaType() {
+		if (this.isBeta() && DOC_ID.equals("PreRelease"))
+			return 1;
+
+		else {
+			Pattern regex = Pattern.compile("\\d(DevBeta|Seed)");
+			match = regex.matcher(DOC_ID);
+
+			if (match.find()) {
+				regex = null;
+				return 1;
+			}
+
+			else {
+				regex = Pattern.compile("Public");
+				match = regex.matcher(DOC_ID);
+
+				return (match.find()) ? 2 : 0;
+			}
+
+		}
+	}
+
+	/**
 	 * Returns the timestamp found in the URL.
 	 * Note that this is not always accurate;
 	 * it may be off by a day, or even a week.
@@ -207,23 +235,6 @@ class OTAPackage {
 	}
 
 	/**
-	 * Checks if the release is intended for developers.
-	 * 
-	 * @return A boolean value of whether this release is intended for developers to test (true) or not (false).
-     **/
-	public boolean isDevBeta() {
-		if (this.isBeta() && DOC_ID.equals("PreRelease"))
-			return true;
-
-		else {
-			final Pattern DEV_BETA = Pattern.compile("\\d(DevBeta|Seed)");
-			match = DEV_BETA.matcher(DOC_ID);
-
-			return match.find();
-		}
-	}
-
-	/**
 	 * Checks if the release is a large, "one size fits all" package.
 	 * 
 	 * @return A boolean value of whether this release is used to cover all scenarios (true) or not (false).
@@ -279,18 +290,19 @@ class OTAPackage {
 	}
 
 	/**
-	 * @return The package's file size, as a String.
+	 * @return The package's file size, as a String. It is formatted with commas.
      **/
 	public String size() {
 		return size = NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
 	}
 
 	/**
-	 * "PrerequisiteVersion" states the specific version that
-	 * the OTA package is intended for.
+	 * "sortingBuild()" is the regular build number, with additional zeroes
+	 * in the beginning to make sure it's arranged on top.
 	 *
 	 * @return A String with the same value as OTAPackage.build(),
-	 * but with a zero in front so the program knows how to sort it.
+	 * but with a number of zeroes in front so the program arranges it above
+	 * newer entries.
      **/
 	public String sortingBuild() {
 		String sortBuild = BUILD;
@@ -301,7 +313,7 @@ class OTAPackage {
 
 		// If this is not labeled a beta, add an extra 9 after the letter.
 		// This will cause betas to appear first.
-		if (!isDeclaredBeta()) {
+		if (!this.isDeclaredBeta()) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			match = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";
@@ -317,10 +329,28 @@ class OTAPackage {
 		return sortBuild;
 	}
 
+	/**
+	 * "sortingMarketingVersion()" is the marketing version,
+	 * with additional zeroes in the beginning to make sure
+	 * it's arranged on top.
+	 *
+	 * @return A String with the same value as OTAPackage.marketingVersion(),
+	 * but with a number of zeroes in front so the program arranges it above
+	 * newer entries.
+     **/
 	public String sortingMarketingVersion() {
 		return (this.marketingVersion().charAt(1) == '.') ? '0' + this.marketingVersion() : this.marketingVersion();
 	}
 
+	/**
+	 * "sortingPrerequisiteBuild()" is the prerequisite build,
+	 * with additional zeroes in the beginning to make sure
+	 * it's arranged on top.
+	 *
+	 * @return A String with the same value as OTAPackage.prerequisiteBuild(),
+	 * but with a number of zeroes in front so the program arranges it above
+	 * newer entries.
+     **/
 	public String sortingPrerequisiteBuild() {
 		if (this.isUniversal())
 			return "0000000000";
@@ -342,6 +372,9 @@ class OTAPackage {
 		return supportedDevices;
 	}
 
+	/**
+	 * @return The package's URL, as a String.
+     **/
 	public String url() {
 		return URL;
 	}

@@ -64,7 +64,7 @@ public class Parser {
 				continue;
 
 			// Only count "Public Beta 1" entries once.
-			if (WIKI && !entry.isDeclaredBeta() && entry.betaNumber() == 1)
+			if (WIKI && entry.betaType() == 2 && entry.betaNumber() == 1)
 				continue;
 
 			// Device check.
@@ -342,7 +342,7 @@ public class Parser {
 
 				// Is this a beta?
 				if (entry.isBeta()) {
-					if (!entry.isDevBeta())
+					if (entry.betaType() == 2)
 						System.out.print(" Public");
 	
 					System.out.print(" Beta " + entry.betaNumber());
@@ -397,13 +397,13 @@ public class Parser {
 
 				// Give it a beta label (if it is one).
 				if (entry.isBeta()) {
-					if (!entry.isDevBeta())
+					if (entry.betaType() == 2)
 						System.out.print(" Public Beta");
 					else
 						System.out.print(" beta");
 
 					// Don't print a 1 if this is the first beta.
-					if (entry.betaNumber() != 1)
+					if (entry.betaNumber() > 1)
 						System.out.print(' ' + entry.betaNumber());
 				}
 
@@ -425,14 +425,14 @@ public class Parser {
 
 				// Give it a beta label (if it is one).
 				if (entry.isBeta()) {
-					if (entry.isDevBeta())
-						System.out.print(" beta");
-					else
+					if (entry.betaType() == 2)
 						System.out.print(" Public Beta");
+					else
+						System.out.print(" beta");
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
-						System.out.print(" " + entry.betaNumber());
+						System.out.print(' ' + entry.betaNumber());
 				}
 
 				System.out.println();
