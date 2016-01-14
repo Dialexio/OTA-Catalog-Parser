@@ -60,11 +60,11 @@ public class Parser {
 			matched = false;
 
 			// Beta check.
-			if (!showBeta && entry.isBeta())
+			if (!showBeta && entry.betaType() > 0)
 				continue;
 
 			// Only count "Public Beta 1" entries once.
-			if (WIKI && entry.betaType() == 2 && entry.betaNumber() == 1)
+			if (WIKI && !entry.isDeclaredBeta() && entry.betaNumber() == 1)
 				continue;
 
 			// Device check.
@@ -341,7 +341,7 @@ public class Parser {
 			System.out.print(osName + entry.marketingVersion());
 
 				// Is this a beta?
-				if (entry.isBeta()) {
+				if (entry.betaType() > 0) {
 					if (entry.betaType() == 2)
 						System.out.print(" Public");
 	
@@ -396,7 +396,7 @@ public class Parser {
 				System.out.print(entry.marketingVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.isBeta()) {
+				if (entry.betaType() > 0) {
 					if (entry.betaType() == 2)
 						System.out.print(" Public Beta");
 					else
@@ -404,7 +404,7 @@ public class Parser {
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
-						System.out.print(' ' + entry.betaNumber());
+						System.out.print(" " + entry.betaNumber());
 				}
 
 				System.out.println();
@@ -424,7 +424,7 @@ public class Parser {
 				System.out.print(entry.osVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.isBeta()) {
+				if (entry.betaType() > 0) {
 					if (entry.betaType() == 2)
 						System.out.print(" Public Beta");
 					else
@@ -432,7 +432,7 @@ public class Parser {
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
-						System.out.print(' ' + entry.betaNumber());
+						System.out.print(" " + entry.betaNumber());
 				}
 
 				System.out.println();
@@ -478,7 +478,7 @@ public class Parser {
 				System.out.print("| colspan=\"2\" {{n/a");
 
 				// Is this "universal" OTA update intended for betas?
-				if (entry.isDeclaredBeta() && !entry.isBeta())
+				if (entry.isDeclaredBeta() && entry.betaType() == 0)
 					System.out.print("|Beta");
 
 				System.out.println("}}");

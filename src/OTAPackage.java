@@ -113,12 +113,12 @@ class OTAPackage {
 
 	/**
 	 * Returns the beta number of this entry.
-	 * If the entry is not a beta, returns 0.
+	 * If a beta number cannot be determined, returns 0.
 	 * 
-	 * @return Whatever number beta this is.
+	 * @return Whatever number beta this is, as an int.
      **/
 	public int betaNumber() {
-		if (this.isBeta() && !DOC_ID.equals("PreRelease")) {
+		if (this.betaType() > 0 && !DOC_ID.equals("PreRelease")) {
 			final char digit = DOC_ID.charAt(DOC_ID.length()-1);
 
 			return (Character.isDigit(digit)) ? Integer.parseInt(digit + "") : 1;
@@ -134,25 +134,53 @@ class OTAPackage {
 	 * @return An integer value of 0 (not a beta), 1 (developer beta), or 2 (public beta).
      **/
 	public int betaType() {
-		if (this.isBeta() && DOC_ID.equals("PreRelease"))
-			return 1;
+		boolean beta = false;
+		Pattern regex = Pattern.compile("\\d(DevBeta|PublicBeta|Seed)");
+		match = regex.matcher(DOC_ID);
+
+		if (match.find())
+			beta = true;
 
 		else {
-			Pattern regex = Pattern.compile("\\d(DevBeta|Seed)");
-			match = regex.matcher(DOC_ID);
+			final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BETA);
+			match = REGEX_BETA_CHECKER.matcher(BUILD);
+	
+			beta = match.find();
+		}
 
-			if (match.find()) {
-				regex = null;
+		if (beta) {
+			if (DOC_ID.equals("PreRelease"))
 				return 1;
-			}
 
 			else {
-				regex = Pattern.compile("Public");
+				regex = Pattern.compile("\\d(DevBeta|Seed)");
 				match = regex.matcher(DOC_ID);
 
-				return (match.find()) ? 2 : 0;
-			}
+				if (match.find()) {
+					regex = null;
+					return 1;
+				}
 
+				else {
+					regex = Pattern.compile("Public");
+					match = regex.matcher(DOC_ID);
+
+					if (match.find()) {
+						regex = null;
+						return 2;
+					}
+
+					else {
+						regex = null;
+						return 0;
+					}
+				}
+			}
+		}
+
+		else {
+			regex = null;
+			return 0;
 		}
 	}
 
@@ -199,28 +227,6 @@ class OTAPackage {
      **/
 	public String declaredBuild() {
 		return BUILD;
-	}
-
-	/**
-	 * Checks if the entry is a beta release or not.
-	 * This method does not care if Apple marked the release
-	 * as a beta or not.
-	 * 
-	 * @return A boolean value of whether the entry is a beta release (true) or not (false).
-     **/
-	public boolean isBeta() {
-		final Pattern DEV_BETA = Pattern.compile("\\d(DevBeta|PublicBeta|Seed)");
-		match = DEV_BETA.matcher(DOC_ID);
-
-		if (match.find())
-			return true;
-
-		else {
-			final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BETA);
-			match = REGEX_BETA_CHECKER.matcher(BUILD);
-	
-			return match.find();
-		}
 	}
 
 	/**
