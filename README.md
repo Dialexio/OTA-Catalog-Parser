@@ -3,16 +3,26 @@ This program lets you view an OTA update catalog for [iOS](http://mesu.apple.com
 
 NOTE: The date is extracted from the file's URL, which may not be the actual release date.
 
+## Compilation
+Apache Ant is used to compile this program. Just cd to the base directory and run
+`ant universal cleanup`
+
+This produces a large (over 8 MB) JAR file that you can run. If you prefer a smaller, less universal JAR, other targets are included in build.xml:
+`ant linux cleanup`
+
+`ant mac cleanup`
+
+`ant windows cleanup`
+
 ## Running the Program
 You must have Java 7 or newer installed on your computer. The newest version of Java is available from [Java.com](http://www.java.com/download/).
 
-This is a command line program. Open the Command Prompt or Terminal, and run it like any other JAR file, with whatever arguments you find necessary:
+You may run this JAR with the following command:
+`java -jar path/to/Parser.jar`
 
-`java -jar path/to/Parser.jar -d DEVICE -f path/to/com_apple_MobileAsset_SoftwareUpdate.xml`
+If there are arguments, the program will operate in the command prompt/terminal. If there are no provided arguments, the program will display a GUI.
 
-The program will output its findings into standard output.
-
-## Arguments
+## Command-Line Arguments
 ### Required Arguments
 * `-d <device>` specifies what device you're looking for. This argument is looking for a value like "iPad2,3" or "iPod7,1." (If you do not know what value to use, you may refer to the identifiers listed on [The iPhone Wiki](https://www.theiphonewiki.com/wiki/Models).)
 * `-f <file>` specifies the location of the OTA update catalog. You must save the file to your computer before running the program.
@@ -27,4 +37,8 @@ The program will output its findings into standard output.
 ## License Information
 This program is distributed under the [MIT License](http://opensource.org/licenses/MIT).
 
-This program makes use of [com.java.dd-plist](https://github.com/3breadt/dd-plist), which is also distributed under the MIT License by its author.
+This program uses [com.java.dd-plist](https://github.com/3breadt/dd-plist). It is distributed under the [MIT License](http://opensource.org/licenses/MIT).
+
+This program uses binaries from [SWT](http://www.eclipse.org/swt/). SWT is distributed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html); source code may be acquired from the SWT website.
+
+This program uses binaries from [SWTJar](http://mchr3k.github.io/swtjar/). SWTJar is distributed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html); source code may be acquired from its [GitHub repo](https://github.com/mchr3k/swtjar).

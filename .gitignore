@@ -1,4 +1,6 @@
 bin/*
+build/*
+dist/*
 XML files/*
 
 # OS generated files #

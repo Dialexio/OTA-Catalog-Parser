@@ -1,0 +1,72 @@
+<project default="universal" basedir=".">
+	<description>A program that parses Apple's OTA catalogs for iOS, tvOS, and watchOS.</description>
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="lib" />
+	<property name="src" location="src" />
+	<taskdef name="swtjar" classname="org.swtjar.ant.SWTJarTask" classpath="${lib}/swtjar.jar" />
+	<path id="swt.classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source">
+		<javac classpathref="swt.classpath" destdir="${build}" srcdir="${src}" />
+	</target>
+
+	<target name="linux" depends="compile" description="for linux">
+		<swtjar jarfile="${dist}/OTA Parser Linux.jar" swtversion="4.5" targetmainclass="Interface">
+			<!-- Application Classes -->
+			<fileset dir="${build}" includes="**/*.class" />
+
+			<!-- SWT Jars -->
+			<fileset dir="${lib}/linux" includes="swt-*-4.5.jar" />
+		</swtjar>
+	</target>
+
+	<target name="mac" depends="compile" description="for macs">
+		<jar destfile="${dist}/OTA Parser Mac.jar">
+			<fileset dir="${build}" includes="**/*.class" />
+			<zipgroupfileset dir="${lib}/mac" includes="swt-osx64-4.5.jar" />
+			<manifest>
+				<attribute name="Class-Path" value="swt-osx64-4.5.jar" />
+				<attribute name="Main-Class" value="Interface" />
+			</manifest>
+		</jar>
+
+		<mkdir dir="${dist}/OTA Parser.app/Contents" />
+	</target>
+
+	<target name="universal" depends="compile" description="generate the distribution">
+		<swtjar jarfile="${dist}/OTA Parser.jar" swtversion="4.5" targetmainclass="Interface">
+			<!-- Application Classes -->
+			<fileset dir="${build}" includes="**/*.class" />
+
+			<!-- SWT Jars -->
+			<fileset dir="${lib}/linux" includes="swt-*-4.5.jar" />
+			<fileset dir="${lib}/mac" includes="swt-*-4.5.jar" />
+			<fileset dir="${lib}/windows" includes="swt-*-4.5.jar" />
+		</swtjar>
+	</target>
+
+	<target name="windows" depends="compile" description="for windows">
+		<swtjar jarfile="${dist}/OTA Parser Windows.jar" swtversion="4.5" targetmainclass="Interface">
+			<!-- Application Classes -->
+			<fileset dir="${build}" includes="**/*.class" />
+
+			<!-- SWT Jars -->
+			<fileset dir="${lib}/windows" includes="swt-*-4.5.jar" />
+		</swtjar>
+	</target>
+
+	<target name="cleanup" description="clean up">
+		<delete dir="${build}" />
+	</target>
+</project>
