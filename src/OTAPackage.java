@@ -299,7 +299,7 @@ class OTAPackage {
 	 * @return The package's file size, as a String. It is formatted with commas.
      **/
 	public String size() {
-		return size = NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
+		return NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
 	}
 
 	/**
