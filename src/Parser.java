@@ -36,6 +36,7 @@ import org.xml.sax.SAXException;
 
 public class Parser {
 	private final static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
+	private static boolean modelCheckRequired;
 	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
 		dateRowspanCount = new HashMap<String, Integer>(),
 		marketingVersionRowspanCount = new HashMap<String, Integer>(),
@@ -49,12 +50,23 @@ public class Parser {
 	private static Text paper;
 
 	// Getter and setter methods.
-	public void device(String value) {
-		if (value.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d"))
-			device = value;
+	public void defineOutput(Text output) {
+		paper = output;
+	}
 
-		else 
-			System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
+	public void device(String value) {
+		if (value.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
+			device = value;
+			modelCheckRequired = device.matches("iPhone8,(1|2)");
+		}
+
+		else {
+			if (paper == null)
+				System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone5,1 or iPad2,7");
+
+			else
+				paper.setText("ERROR: You need to specify a device to search OTA updates for, e.g. iPhone5,1 or iPad2,7");
+		}
 	}
 
 	public void loadFile(String value) {
@@ -79,17 +91,6 @@ public class Parser {
 		}
 	}
 
-	public void min(String value) {
-		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
-			minOSVer = value;
-
-		else if (value.isEmpty())
-			return;
-
-		else
-			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
-	}
-
 	public void max(String value) {
 		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
 			maxOSVer = value;
@@ -98,18 +99,39 @@ public class Parser {
 			return;
 
 		else
-			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
+			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1. Ignoring maximum value.");
 	}
 
-	public void model(String value) {
-		if (value.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP"))
-			model = value;
+	public void min(String value) {
+		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
+			minOSVer = value;
 
 		else if (value.isEmpty())
 			return;
 
 		else
-			System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
+			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1. Ignoring minimum value.");
+	}
+
+	public void model(String value) {
+		if (modelCheckRequired) {
+			if (value.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP"))
+				model = value;
+
+			else {
+				if (paper == null)
+					System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
+
+				else
+					paper.append("ERROR: To find OTA updates for " + device + ", you must specify a model number, e.g. N71AP.");
+			}
+		}
+
+		else if (value.isEmpty())
+			return;
+
+		else
+			System.err.println("NOTE: A model was specified for " + device + ", despite not requiring a check. The model will be ignored.");
 	}
 
 	public void showBeta(boolean value) {
@@ -121,7 +143,7 @@ public class Parser {
 	}
 
 	// Meat and potatoes
-	private static void addEntries(final NSDictionary PLIST_ROOT, final boolean CHECK_MODEL) {
+	private static void addEntries(final NSDictionary PLIST_ROOT) {
 		// Looking for the array with key "Assets."
 		NSObject[] assets = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray();
 
@@ -150,7 +172,7 @@ public class Parser {
 			}
 
 			// Model check, if needed.
-			if (matched && CHECK_MODEL) {
+			if (matched && modelCheckRequired) {
 				matched = false; // Skipping unless we can verify we want it.
 
 				// Make sure "SupportedDeviceModels" exists.
@@ -270,10 +292,9 @@ public class Parser {
 		pseudoPrerequisite = null;
 	}
 
-	public void parse(Text output) {
+	public void parse() {
 		if (root != null) {
-			paper = output;
-			addEntries(root, device.matches("iPhone8,(1|2)"));
+			addEntries(root);
 			sort();
 	
 			if (wiki) {
@@ -289,7 +310,7 @@ public class Parser {
 	}
 
 	private static void printLine(String value) {
-		if(paper == null)
+		if (paper == null)
 			System.out.println(value);
 
 		else
@@ -337,9 +358,7 @@ public class Parser {
 
 			// Print out the URL and file size.
 			printLine("URL: " + entry.url());
-			printLine("File size: " + entry.size());
-
-			printLine("");
+			printLine("File size: " + entry.size() + '\n');
 		}
 	}
 

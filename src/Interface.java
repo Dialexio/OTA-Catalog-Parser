@@ -171,7 +171,7 @@ public class Interface {
 					if (modelText.getText() != null)
 						parser.model(modelText.getText());
 
-					parser.parse(output);
+					parser.parse();
 				}
 			});
 
@@ -183,9 +183,12 @@ public class Interface {
 		gd_output.widthHint = 400;
 		output.setLayoutData(gd_output);
 		output.setSize(1000, 600);
+		parser.defineOutput(output);
+
 		shell.setDefaultButton(parseButton);
 		shell.pack();
 		shell.open();
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
@@ -200,6 +203,7 @@ public class Interface {
 		}
 
 		else {
+			parser.defineOutput(null);
 			int i = 0;
 			String arg = "";
 
@@ -260,7 +264,7 @@ public class Interface {
 				}
 			}
 
-			parser.parse(null);
+			parser.parse();
 		}
 	}
 }
