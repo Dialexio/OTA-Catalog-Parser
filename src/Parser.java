@@ -54,21 +54,6 @@ public class Parser {
 		paper = output;
 	}
 
-	public void device(String value) {
-		if (value.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
-			device = value;
-			modelCheckRequired = device.matches("iPhone8,(1|2)");
-		}
-
-		else {
-			if (paper == null)
-				System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone5,1 or iPad2,7");
-
-			else
-				paper.setText("ERROR: You need to specify a device to search OTA updates for, e.g. iPhone5,1 or iPad2,7");
-		}
-	}
-
 	public void loadFile(String value) {
 		try {
 			root = (NSDictionary)PropertyListParser.parse(new File(value));
@@ -91,7 +76,22 @@ public class Parser {
 		}
 	}
 
-	public void max(String value) {
+	public void setDevice(String value) {
+		if (value.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
+			device = value;
+			modelCheckRequired = device.matches("iPhone8,(1|2)");
+		}
+
+		else {
+			if (paper == null)
+				System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone5,1 or iPad2,7");
+
+			else
+				paper.setText("ERROR: You need to specify a device to search OTA updates for, e.g. iPhone5,1 or iPad2,7");
+		}
+	}
+
+	public void setMax(String value) {
 		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
 			maxOSVer = value;
 
@@ -102,7 +102,7 @@ public class Parser {
 			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1. Ignoring maximum value.");
 	}
 
-	public void min(String value) {
+	public void setMin(String value) {
 		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
 			minOSVer = value;
 
@@ -113,7 +113,7 @@ public class Parser {
 			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1. Ignoring minimum value.");
 	}
 
-	public void model(String value) {
+	public void setModel(String value) {
 		if (modelCheckRequired) {
 			if (value.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP"))
 				model = value;
@@ -142,7 +142,7 @@ public class Parser {
 		wiki = value;
 	}
 
-	// Meat and potatoes
+	// Where the magic happens.
 	private static void addEntries(final NSDictionary PLIST_ROOT) {
 		// Looking for the array with key "Assets."
 		NSObject[] assets = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray();
@@ -566,5 +566,4 @@ public class Parser {
 			}
 		});
 	}
-
 }

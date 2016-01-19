@@ -30,7 +30,7 @@ import org.eclipse.swt.layout.*;
 public class Interface {
 	private static final String VERSION = "1.0";
 
-	private static final Display display = new Display();
+	private static Display display;
 	private static final Parser parser = new Parser();
 	private static Text deviceText, maxText, minText, modelText, output;
 
@@ -42,13 +42,12 @@ public class Interface {
 		dialog.setText("Locate the OTA catalog you wish to parse.");
 		dialog.open();
 
-		if (dialog.getFileName().equals("")) {
+		if (dialog.getFileName().isEmpty())
 			output.setText("Download an OTA catalog and try again.");
-		}
 
 		else {
 			parser.loadFile(dialog.getFilterPath() + '/' + dialog.getFileName());
-			output.setText("File selected!");
+			output.setText('"' + dialog.getFileName() + "\" selected!");
 		}
 	}
 
@@ -160,16 +159,16 @@ public class Interface {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					output.setText("");
-					parser.device(deviceText.getText());
+					parser.setDevice(deviceText.getText());
 
 					if (maxText.getText() != null)
-						parser.max(maxText.getText());
+						parser.setMax(maxText.getText());
 
 					if (minText.getText() != null)
-						parser.min(minText.getText());
+						parser.setMin(minText.getText());
 
 					if (modelText.getText() != null)
-						parser.model(modelText.getText());
+						parser.setModel(modelText.getText());
 
 					parser.parse();
 				}
@@ -177,7 +176,8 @@ public class Interface {
 
 		widgets.setLayout(new GridLayout());
 
-		output = new Text(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		output = new Text(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+		output.setEditable(false);
 		GridData gd_output = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_output.heightHint = 300;
 		gd_output.widthHint = 400;
@@ -198,27 +198,29 @@ public class Interface {
 	public static void main(String[] args) {
 		// No arguments? Launch the GUI.
 		if (args.length == 0) {
+			display = new Display();
+			display.setAppName("OTA Catalog Parser");
+			display.setAppVersion(VERSION);
+
 			displayWindow();
+
 			display.dispose();
 		}
 
 		else {
 			parser.defineOutput(null);
 			int i = 0;
-			String arg = "";
 
 			// Reading arguments (and performing some basic checks).
-			while (i < args.length && args[i].startsWith("-")) {
-				arg = args[i++];
-
-				switch (arg) {
+			while (i < args.length && args[i].charAt(0) == '-') {
+				switch (args[i++]) {
 					case "-b":
 						parser.showBeta(true);
 					break;
 
 					case "-d":
 						if (i < args.length)
-							parser.device(args[i++]);
+							parser.setDevice(args[i++]);
 					break;
 
 					case "-f":
@@ -245,17 +247,17 @@ public class Interface {
 
 					case "-m":
 						if (i < args.length)
-							parser.model(args[i++]);
+							parser.setModel(args[i++]);
 					break;
 
 					case "-max":
 						if (i < args.length)
-							parser.max(args[i++]);
+							parser.setMax(args[i++]);
 					break;
 
 					case "-min":
 						if (i < args.length)
-							parser.min(args[i++]);
+							parser.setMin(args[i++]);
 					break;
 
 					case "-w":
