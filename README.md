@@ -5,20 +5,26 @@ NOTE: The date is extracted from the file's URL, which may not be the actual rel
 
 ## Compilation
 Apache Ant is used to compile this program. Just cd to the base directory and run
-`ant universal cleanup`
+`ant`
 
 This produces a large (over 8 MB) JAR file that you can run. If you prefer a smaller, less universal JAR, other targets are included in build.xml:
-`ant linux cleanup`
+`ant linux`
 
-`ant mac cleanup`
+`ant mac`
 
-`ant windows cleanup`
+`ant windows`
+
+Whichever method you choose, you may want to remove the compiled .class files. (This will not delete the JAR.)
+`ant cleanup`
 
 ## Running the Program
 You must have Java 7 or newer installed on your computer. The newest version of Java is available from [Java.com](http://www.java.com/download/).
 
 You may run this JAR with the following command:
 `java -jar path/to/Parser.jar`
+
+Mac OS X users must open it via the .app (bypassing Gatekeeper if necessary), or add an additional argument:
+`java -XstartOnFirstThread -jar path/to/Parser.jar`
 
 If there are arguments, the program will operate in the command prompt/terminal. If there are no provided arguments, the program will display a GUI.
 

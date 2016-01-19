@@ -32,7 +32,14 @@
 	</target>
 
 	<target name="mac" depends="compile" description="for macs">
-		<jar destfile="${dist}/OTA Parser Mac.jar">
+		<mkdir dir="${dist}/OTA Parser.app/Contents/MacOS" />
+
+		<copy todir="${dist}/OTA Parser.app/Contents">
+		    <fileset dir="mac" />
+		</copy>
+		<chmod file="${dist}/OTA Parser.app/Contents/MacOS/OTA Parser" perm="+x" />
+
+		<jar destfile="${dist}/OTA Parser.app/Contents/MacOS/OTA Parser Mac.jar">
 			<fileset dir="${build}" includes="**/*.class" />
 			<zipgroupfileset dir="${lib}/mac" includes="swt-osx64-4.5.jar" />
 			<manifest>
@@ -40,8 +47,6 @@
 				<attribute name="Main-Class" value="Interface" />
 			</manifest>
 		</jar>
-
-		<mkdir dir="${dist}/OTA Parser.app/Contents" />
 	</target>
 
 	<target name="universal" depends="compile" description="generate the distribution">
