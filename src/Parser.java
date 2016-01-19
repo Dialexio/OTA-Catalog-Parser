@@ -35,18 +35,18 @@ import org.eclipse.swt.widgets.Text;
 import org.xml.sax.SAXException;
 
 public class Parser {
-	private static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
-	private static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
+	private final static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
+	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
 		dateRowspanCount = new HashMap<String, Integer>(),
 		marketingVersionRowspanCount = new HashMap<String, Integer>(),
 		osVersionRowspanCount = new HashMap<String, Integer>();
-	private static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
+	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
 		prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
-	private static Text paper;
 
 	private static boolean showBeta = false, wiki = false;
-	private static NSDictionary root = null;
+	private static NSDictionary root;
 	private static String device, maxOSVer = "", minOSVer = "", model;
+	private static Text paper;
 
 	// Getter and setter methods.
 	public void device(String value) {
@@ -83,6 +83,9 @@ public class Parser {
 		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
 			minOSVer = value;
 
+		else if (value.isEmpty())
+			return;
+
 		else
 			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
 	}
@@ -91,6 +94,9 @@ public class Parser {
 		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
 			maxOSVer = value;
 
+		else if (value.isEmpty())
+			return;
+
 		else
 			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
 	}
@@ -98,6 +104,9 @@ public class Parser {
 	public void model(String value) {
 		if (value.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP"))
 			model = value;
+
+		else if (value.isEmpty())
+			return;
 
 		else
 			System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
@@ -171,6 +180,16 @@ public class Parser {
 
 		assets = null;
 		entry = null;
+	}
+
+	private static void cleanup() {
+		buildRowspanCount.clear();
+		entryList.clear();
+		fileRowspanCount.clear(); 
+		dateRowspanCount.clear();
+		marketingVersionRowspanCount.clear();
+		osVersionRowspanCount.clear();
+		prereqRowspanCount.clear();
 	}
 
 	private static void countRowspan() {
@@ -265,13 +284,7 @@ public class Parser {
 			else
 				printHuman();
 
-			buildRowspanCount = new HashMap<String, Integer>();
-			entryList = new ArrayList<OTAPackage>();
-			fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(); 
-			dateRowspanCount = new HashMap<String, Integer>();
-			marketingVersionRowspanCount = new HashMap<String, Integer>();
-			osVersionRowspanCount = new HashMap<String, Integer>();
-			prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
+			cleanup();
 		}
 	}
 
