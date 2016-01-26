@@ -1,6 +1,6 @@
 /*
- * OTA Catalog Parser 0.4.2
- * Copyright (c) 2015 Dialexio
+ * OTA Catalog Parser
+ * Copyright (c) 2016 Dialexio
  * 
  * The MIT License (MIT)
  * 
@@ -172,16 +172,9 @@ class OTAPackage {
 				else {
 					regex = Pattern.compile("Public");
 					match = regex.matcher(DOC_ID);
+					regex = null;
 
-					if (match.find()) {
-						regex = null;
-						return 2;
-					}
-
-					else {
-						regex = null;
-						return 0;
-					}
+					return (match.find()) ? 2 : 0;
 				}
 			}
 		}

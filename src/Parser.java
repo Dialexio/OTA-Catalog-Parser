@@ -159,8 +159,9 @@ public class Parser {
 			if (!showBeta && entry.betaType() > 0)
 				continue;
 
-			// Only count "Public Beta 1" entries once.
-			if (wiki && !entry.isDeclaredBeta() && entry.betaNumber() == 1)
+			// For wiki markup: If a beta has two entries
+			// (one for betas, one for non-betas), don't count it twice.
+			if (wiki && !entry.isDeclaredBeta() && entry.betaNumber() != 0)
 				continue;
 
 			// Device check.
