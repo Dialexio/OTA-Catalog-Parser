@@ -408,6 +408,18 @@ public class Parser {
 
 			// Output OS version.
 			if (osVersionRowspanCount.containsKey(entry.osVersion())) {
+				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
+				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
+					line = line.concat("| ");
+
+					// Only give rowspan if there is more than one row with the OS version.
+					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
+						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
+
+					printLine(line + "[MARKETING VERSION]");
+					line = "";
+				}
+
 				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
@@ -430,18 +442,6 @@ public class Parser {
 
 				printLine(line);
 				line = "";
-
-				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
-				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
-					line = line.concat("| ");
-
-					// Only give rowspan if there is more than one row with the OS version.
-					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
-						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
-
-					printLine(line + "[MARKETING VERSION]");
-					line = "";
-				}
 
 				//Remove the count since we're done with it.
 				osVersionRowspanCount.remove(entry.osVersion());
