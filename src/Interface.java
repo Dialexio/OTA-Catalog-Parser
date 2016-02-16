@@ -34,7 +34,7 @@ public class Interface {
 	private static final Parser parser = new Parser();
 	private static Text deviceText, maxText, minText, modelText, output;
 
-	private static void browseForFile(Shell shell) {
+	private static boolean browseForFile(Shell shell) {
 		final FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 
 		dialog.setFilterNames(new String[] {"XML file (.xml)", "Apple Property List (.plist)"});
@@ -42,12 +42,15 @@ public class Interface {
 		dialog.setText("Locate the OTA catalog you wish to parse.");
 		dialog.open();
 
-		if (dialog.getFileName().isEmpty())
+		if (dialog.getFileName().isEmpty()) {
 			output.setText("Download an OTA catalog and try again.");
+			return false;
+		}
 
 		else {
 			parser.loadFile(dialog.getFilterPath() + '/' + dialog.getFileName());
 			output.setText('"' + dialog.getFileName() + "\" selected!");
+			return true;
 		}
 	}
 
@@ -70,12 +73,6 @@ public class Interface {
 			fileButton = new Button(widgets, SWT.NONE);
 			fileButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 			fileButton.setText("Browse for File");
-			fileButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					browseForFile(shell);
-				}
-			});
 
 			deviceField = new Composite(widgets, SWT.NONE);
 			deviceField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -153,6 +150,7 @@ public class Interface {
 				maxText = new Text(maxField, SWT.BORDER);
 
 			parseButton = new Button(widgets, SWT.PUSH);
+			parseButton.setEnabled(false);
 			parseButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 			parseButton.setText("Parse!");
 			parseButton.addSelectionListener(new SelectionAdapter() {
@@ -171,6 +169,14 @@ public class Interface {
 						parser.setModel(modelText.getText());
 
 					parser.parse();
+				}
+			});
+
+			// Enable the parse button after a file is selected.
+			fileButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					parseButton.setEnabled(browseForFile(shell));
 				}
 			});
 
