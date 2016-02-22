@@ -323,9 +323,9 @@ class OTAPackage {
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = '0' + sortBuild;
 
-		// If this is not labeled a beta, add an extra 9 after the letter.
+		// If this is not a beta, add an extra 9 after the letter.
 		// This will cause betas to appear first.
-		if (!this.isDeclaredBeta()) {
+		if (this.betaType() == 0) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			match = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";
