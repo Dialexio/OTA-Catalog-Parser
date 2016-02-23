@@ -154,7 +154,7 @@ public class Interface {
 			parseButton = new Button(widgets, SWT.PUSH);
 			parseButton.setEnabled(false);
 			parseButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-			parseButton.setText("Parse!");
+			parseButton.setText("Parse");
 			parseButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -179,7 +179,7 @@ public class Interface {
 				@Override
 				public void focusLost(FocusEvent e) {
 					modelField.setVisible(deviceText.getText().matches("iPhone8,(1|2)"));
-					parseButton.setEnabled(file && deviceText.getText().matches("(AppleTV|iPad|iPhone|iPod)(\\d)?\\d,\\d"));
+					parseButton.setEnabled(parseButtonStatus());
 				}
 			});
 			// Set the parse button's enable status after a file is (not) selected.
@@ -187,7 +187,7 @@ public class Interface {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					browseForFile(shell);
-					parseButton.setEnabled(file && deviceText.getText().matches("(AppleTV|iPad|iPhone|iPod)(\\d)?\\d,\\d"));
+					parseButton.setEnabled(parseButtonStatus());
 				}
 			});
 
@@ -284,5 +284,9 @@ public class Interface {
 
 			parser.parse();
 		}
+	}
+
+	private static boolean parseButtonStatus() {
+		return file && deviceText.getText().matches("(AppleTV|iPad|iPhone|iPod)(\\d)?\\d,\\d");
 	}
 }

@@ -82,13 +82,8 @@ public class Parser {
 			modelCheckRequired = device.matches("iPhone8,(1|2)");
 		}
 
-		else {
-			if (paper == null)
-				System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone5,1 or iPad2,7");
-
-			else
-				paper.setText("ERROR: You need to specify a device to search OTA updates for, e.g. iPhone5,1 or iPad2,7");
-		}
+		else
+			System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone5,1 or iPad2,7");
 	}
 
 	public void setMax(String value) {
@@ -98,8 +93,13 @@ public class Parser {
 		else if (value.isEmpty())
 			return;
 
-		else
-			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1. Ignoring maximum value.");
+		else {
+			if (paper == null)
+				System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1. Ignoring the value.");
+
+			else
+				paper.append("WARNING: The value entered for the maximum version is not valid. Ignoring...");
+		}
 	}
 
 	public void setMin(String value) {
@@ -109,8 +109,13 @@ public class Parser {
 		else if (value.isEmpty())
 			return;
 
-		else
-			System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1. Ignoring minimum value.");
+		else {
+			if (paper == null)
+				System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1. Ignoring the value.");
+
+			else
+				paper.append("WARNING: The value entered for the minimum version is not valid. Ignoring...");
+		}
 	}
 
 	public void setModel(String value) {
@@ -123,7 +128,7 @@ public class Parser {
 					System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
 
 				else
-					paper.append("ERROR: To find OTA updates for " + device + ", you must specify a model number, e.g. N71AP.");
+					paper.append("ERROR: To find OTA updates for " + device + ", you must specify a model number.\nFor example, N71AP is a model number for the iPhone 6S.");
 			}
 		}
 
