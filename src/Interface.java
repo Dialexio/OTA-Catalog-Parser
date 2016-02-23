@@ -98,7 +98,8 @@ public class Interface {
 				GridData gd_modelTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 				gd_modelTextField.widthHint = 70;
 				modelText.setLayoutData(gd_modelTextField);
-				modelText.setToolTipText("This field is only used for the iPhone 6S or 6S Plus.\nYou need to enter a value like \"N71AP.\"");
+				modelText.setToolTipText("This field is required for the iPhone 6S or 6S Plus.\nYou need to enter a value like \"N71AP.\"");
+			modelField.setVisible(false);
 
 			wikiRadio = new Button(widgets, SWT.RADIO);
 			wikiRadio.setText("iPhone Wiki output");
@@ -172,7 +173,14 @@ public class Interface {
 				}
 			});
 
-			// Enable the parse button after a file is selected.
+			// Show the model field only if we're looking for 6S or 6S Plus.
+			deviceText.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					modelField.setVisible(deviceText.getText().matches("iPhone8,(1|2)"));
+				}
+			});
+			// Set the parse button's enable status after a file is (not) selected.
 			fileButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
