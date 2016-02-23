@@ -30,11 +30,12 @@ import org.eclipse.swt.layout.*;
 public class Interface {
 	private static final String VERSION = "1.0";
 
+	private static boolean file = false;
 	private static Display display;
 	private static final Parser parser = new Parser();
 	private static Text deviceText, maxText, minText, modelText, output;
 
-	private static boolean browseForFile(Shell shell) {
+	private static void browseForFile(Shell shell) {
 		final FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 
 		dialog.setFilterNames(new String[] {"XML file (.xml)", "Apple Property List (.plist)"});
@@ -44,13 +45,13 @@ public class Interface {
 
 		if (dialog.getFileName().isEmpty()) {
 			output.setText("Download an OTA catalog and try again.");
-			return false;
+			file = false;
 		}
 
 		else {
 			parser.loadFile(dialog.getFilterPath() + '/' + dialog.getFileName());
 			output.setText('"' + dialog.getFileName() + "\" selected!");
-			return true;
+			file = true;
 		}
 	}
 
@@ -178,13 +179,15 @@ public class Interface {
 				@Override
 				public void focusLost(FocusEvent e) {
 					modelField.setVisible(deviceText.getText().matches("iPhone8,(1|2)"));
+					parseButton.setEnabled(file && deviceText.getText().matches("(AppleTV|iPad|iPhone|iPod)(\\d)?\\d,\\d"));
 				}
 			});
 			// Set the parse button's enable status after a file is (not) selected.
 			fileButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					parseButton.setEnabled(browseForFile(shell));
+					browseForFile(shell);
+					parseButton.setEnabled(file && deviceText.getText().matches("(AppleTV|iPad|iPhone|iPod)(\\d)?\\d,\\d"));
 				}
 			});
 
@@ -193,10 +196,9 @@ public class Interface {
 		output = new Text(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		output.setEditable(false);
 		GridData gd_output = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_output.heightHint = 300;
-		gd_output.widthHint = 400;
+		gd_output.heightHint = 320;
+		gd_output.widthHint = 450;
 		output.setLayoutData(gd_output);
-		output.setSize(1000, 600);
 		parser.defineOutput(output);
 
 		shell.setDefaultButton(parseButton);
