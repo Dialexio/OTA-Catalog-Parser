@@ -36,22 +36,47 @@ public class Interface {
 	private static Text deviceText, maxText, minText, modelText, output;
 
 	private static void browseForFile(Shell shell) {
-		final FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+		final FileDialog filePrompt = new FileDialog(shell, SWT.OPEN);
+		MessageBox error = new MessageBox(shell, SWT.OK);
 
-		dialog.setFilterNames(new String[] {"XML file (.xml)", "Apple Property List (.plist)"});
-		dialog.setFilterExtensions(new String[] {"*.xml", "*.plist"});
-		dialog.setText("Locate the OTA catalog you wish to parse.");
-		dialog.open();
+		error.setText("Error");
 
-		if (dialog.getFileName().isEmpty()) {
-			output.setText("Download an OTA catalog and try again.");
+		filePrompt.setFilterNames(new String[] {"XML file (.xml)", "Apple Property List (.plist)"});
+		filePrompt.setFilterExtensions(new String[] {"*.xml", "*.plist"});
+		filePrompt.setText("Locate the OTA catalog you wish to parse.");
+		filePrompt.open();
+
+		if (filePrompt.getFileName().isEmpty()) {
 			file = false;
 		}
 
 		else {
-			parser.loadFile(dialog.getFilterPath() + '/' + dialog.getFileName());
-			output.setText('"' + dialog.getFileName() + "\" selected!");
-			file = true;
+			switch (parser.loadFile(filePrompt.getFilterPath() + '/' + filePrompt.getFileName())) {
+				case 0:
+					output.setText('"' + filePrompt.getFileName() + "\" selected!");
+					file = true;
+				break;
+				case 2:
+					error.setMessage("Couldn't find that file.");
+					error.open();
+					file = false;
+				break;
+				case 6:
+					error.setMessage("That's not a property list.");
+					error.open();
+					file = false;
+				break;
+				case 7:
+					error.setMessage("That's not even an XML file.");
+					error.open();
+					file = false;
+				break;
+				default:
+					error.setMessage("You done messed up now.");
+					error.open();
+					file = false;
+				break;
+			}
 		}
 	}
 
@@ -174,11 +199,14 @@ public class Interface {
 				}
 			});
 
-			// Show the model field only if we're looking for 6S or 6S Plus.
-			deviceText.addFocusListener(new FocusAdapter() {
+			
+			deviceText.addModifyListener(new ModifyListener() {
 				@Override
-				public void focusLost(FocusEvent e) {
+				public void modifyText(ModifyEvent e) {
+					// Show the model field only if we're looking for 6S or 6S Plus.
 					modelField.setVisible(deviceText.getText().matches("iPhone8,(1|2)"));
+
+					// Set the parse button's enable status after a device is entered.
 					parseButton.setEnabled(parseButtonStatus());
 				}
 			});
@@ -240,8 +268,11 @@ public class Interface {
 					break;
 
 					case "-f":
-						if (i < args.length)
-							parser.loadFile(args[i++]);
+						if (i < args.length) {
+							int errorCode = parser.loadFile(args[i++]);
+							if (errorCode != 0)
+								System.exit(errorCode);
+						}
 					break;
 
 					case "-h":

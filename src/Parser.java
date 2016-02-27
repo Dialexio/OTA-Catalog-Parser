@@ -54,25 +54,26 @@ public class Parser {
 		paper = output;
 	}
 
-	public void loadFile(String value) {
+	public int loadFile(String value) {
 		try {
 			root = (NSDictionary)PropertyListParser.parse(new File(value));
+			return 0;
 		}
 		catch (FileNotFoundException e) {
 			System.err.println("ERROR: The file \"" + value + "\" can't be found.");
-			System.exit(2);
+			return 2;
 		}
 		catch (PropertyListFormatException e) {
 			System.err.println("ERROR: This isn't an Apple property list.");
-			System.exit(6);
+			return 6;
 		}
 		catch (SAXException e) {
 			System.err.println("ERROR: This file doesn't have proper XML syntax.");
-			System.exit(7);
+			return 7;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			System.exit(-1);
+			return -1;
 		}
 	}
 
