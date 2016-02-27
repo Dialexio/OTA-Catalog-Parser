@@ -30,9 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.regex.*;
-
 import org.eclipse.swt.widgets.Text;
-import org.xml.sax.SAXException;
 
 public class Parser {
 	private final static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
@@ -57,20 +55,33 @@ public class Parser {
 	public int loadFile(String value) {
 		try {
 			root = (NSDictionary)PropertyListParser.parse(new File(value));
-			return 0;
+
+			if (root != null && root.containsKey("Assets"))
+				return 0;
+
+			else {
+				System.err.println("ERROR: This is an Apple property list, but it's not one of Apple's OTA update catalogs.");
+				return 7;
+			}
 		}
+
 		catch (FileNotFoundException e) {
-			System.err.println("ERROR: The file \"" + value + "\" can't be found.");
-			return 2;
+			if (e.getMessage().contains("Permission denied")) {
+				System.err.println("ERROR: You don't have permission to read \"" + value + "\".");
+				return 8;
+			}
+
+			else {
+				System.err.println("ERROR: The file \"" + value + "\" can't be found.");
+				return 2;
+			}
 		}
+
 		catch (PropertyListFormatException e) {
 			System.err.println("ERROR: This isn't an Apple property list.");
 			return 6;
 		}
-		catch (SAXException e) {
-			System.err.println("ERROR: This file doesn't have proper XML syntax.");
-			return 7;
-		}
+
 		catch (Exception e) {
 			e.printStackTrace();
 			return -1;

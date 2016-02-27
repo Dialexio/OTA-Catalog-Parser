@@ -23,9 +23,9 @@
  * SOFTWARE.
  */
 import org.eclipse.swt.*;
-import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
 
 public class Interface {
 	private static final String VERSION = "1.0";
@@ -47,6 +47,7 @@ public class Interface {
 		filePrompt.open();
 
 		if (filePrompt.getFileName().isEmpty()) {
+			output.setText("You need to select an OTA catalog to proceed.");
 			file = false;
 		}
 
@@ -55,27 +56,31 @@ public class Interface {
 				case 0:
 					output.setText('"' + filePrompt.getFileName() + "\" selected!");
 					file = true;
-				break;
+					break;
+
 				case 2:
 					error.setMessage("Couldn't find that file.");
 					error.open();
 					file = false;
-				break;
+					break;
+
 				case 6:
-					error.setMessage("That's not a property list.");
+					error.setMessage("This isn't an Apple property list.");
 					error.open();
 					file = false;
-				break;
+					break;
+
 				case 7:
-					error.setMessage("That's not even an XML file.");
+					error.setMessage("This is an Apple property list, but it's not one of Apple's OTA update catalogs.");
 					error.open();
 					file = false;
-				break;
+					break;
+
 				default:
 					error.setMessage("You done messed up now.");
 					error.open();
 					file = false;
-				break;
+					break;
 			}
 		}
 	}
@@ -107,19 +112,19 @@ public class Interface {
 			deviceField.setLayout(gl_deviceField);
 				deviceLabel = new Label(deviceField, SWT.NONE);
 				deviceLabel.setText("Device:");
+				deviceLabel.setToolTipText("Enter a device type, such as iPhone5,1.");
 				deviceText = new Text(deviceField, SWT.BORDER);
 				GridData gd_deviceTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 				gd_deviceTextField.widthHint = 110;
 				deviceText.setLayoutData(gd_deviceTextField);
-				deviceText.setToolTipText("Enter a device type, like iPhone5,1.");
+				deviceText.setToolTipText("Enter a device type, such as iPhone5,1.");
 
 			modelField = new Composite(widgets, SWT.NONE);
+			modelField.setLayout(new GridLayout(2, false));
 			modelField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-			GridLayout gl_modelField = new GridLayout(2, false);
-			gl_modelField.marginHeight = 0;
-			modelField.setLayout(gl_modelField);
 				modelLabel = new Label(modelField, SWT.NONE);
 				modelLabel.setText ("Model:");
+				modelLabel.setToolTipText("This field is required for the iPhone 6S or 6S Plus.\nYou need to enter a value like \"N71AP.\"");
 				modelText = new Text(modelField, SWT.BORDER);
 				GridData gd_modelTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 				gd_modelTextField.widthHint = 70;
@@ -161,7 +166,7 @@ public class Interface {
 				minField = new Composite(optional, SWT.NONE);
 				minField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 				GridLayout gl_minField = new GridLayout(2, false);
-				gl_minField.marginHeight = 0;
+				gl_minField.marginHeight = 1;
 				minField.setLayout(gl_minField);
 				minLabel = new Label(minField, SWT.NONE);
 				minLabel.setText("Minimum version:");
@@ -169,9 +174,7 @@ public class Interface {
 
 				maxField = new Composite(optional, SWT.NONE);
 				maxField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-				GridLayout gl_maxField = new GridLayout(2, false);
-				gl_maxField.marginHeight = 0;
-				maxField.setLayout(gl_maxField);
+				maxField.setLayout(new GridLayout(2, false));
 				maxLabel = new Label(maxField, SWT.NONE);
 				maxLabel.setText("Maximum version:");
 				maxText = new Text(maxField, SWT.BORDER);
@@ -199,7 +202,6 @@ public class Interface {
 				}
 			});
 
-			
 			deviceText.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(ModifyEvent e) {
@@ -260,12 +262,12 @@ public class Interface {
 				switch (args[i++]) {
 					case "-b":
 						parser.showBeta(true);
-					break;
+						break;
 
 					case "-d":
 						if (i < args.length)
 							parser.setDevice(args[i++]);
-					break;
+						break;
 
 					case "-f":
 						if (i < args.length) {
@@ -273,7 +275,7 @@ public class Interface {
 							if (errorCode != 0)
 								System.exit(errorCode);
 						}
-					break;
+						break;
 
 					case "-h":
 						System.out.println("OTA Catalog Parser v" + VERSION);
@@ -290,26 +292,26 @@ public class Interface {
 						System.out.println("-min <version>   Choose the lowest firmware version you are searching for. (e.g. 8.4.1)");
 						System.out.println("-w               Formats the output for The iPhone Wiki.");
 						System.exit(0);
-					break;
+						break;
 
 					case "-m":
 						if (i < args.length)
 							parser.setModel(args[i++]);
-					break;
+						break;
 
 					case "-max":
 						if (i < args.length)
 							parser.setMax(args[i++]);
-					break;
+						break;
 
 					case "-min":
 						if (i < args.length)
 							parser.setMin(args[i++]);
-					break;
+						break;
 
 					case "-w":
 						parser.wikiMarkup(true);
-					break;
+						break;
 				}
 			}
 
