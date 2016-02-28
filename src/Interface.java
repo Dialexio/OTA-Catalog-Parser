@@ -33,11 +33,12 @@ public class Interface {
 	private static boolean file = false;
 	private static Display display;
 	private static final Parser parser = new Parser();
+	private static MessageBox error;
+	private static Shell shell;
 	private static Text deviceText, maxText, minText, modelText, output;
 
-	private static void browseForFile(Shell shell) {
+	private static void browseForFile() {
 		final FileDialog filePrompt = new FileDialog(shell, SWT.OPEN);
-		MessageBox error = new MessageBox(shell, SWT.OK);
 
 		error.setText("Error");
 
@@ -95,7 +96,6 @@ public class Interface {
 		final Group optional;
 		final Label deviceLabel, minLabel, maxLabel, modelLabel;
 
-		final Shell shell = new Shell(display, SWT.CLOSE | SWT.MIN | SWT.TITLE);
 		shell.setText("OTA Catalog Parser v" + VERSION);
 		shell.setLayout(new GridLayout(2, false));
 
@@ -195,10 +195,14 @@ public class Interface {
 					if (minText.getText() != null)
 						parser.setMin(minText.getText());
 
-					if (modelText.getText() != null)
-						parser.setModel(modelText.getText());
-
-					parser.parse();
+					
+					if (parser.setModel(modelText.getText()))
+						parser.parse();
+					
+					else {
+						error.setMessage("To find OTA updates for " + deviceText.getText() + ", you must specify a model number. For example, N71AP is a model number for the iPhone 6S.");
+						error.open();
+					}
 				}
 			});
 
@@ -216,7 +220,7 @@ public class Interface {
 			fileButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					browseForFile(shell);
+					browseForFile();
 					parseButton.setEnabled(parseButtonStatus());
 				}
 			});
@@ -247,6 +251,9 @@ public class Interface {
 			display = new Display();
 			display.setAppName("OTA Catalog Parser");
 			display.setAppVersion(VERSION);
+
+			shell = new Shell(display, SWT.CLOSE | SWT.MIN | SWT.TITLE);
+			error = new MessageBox(shell, SWT.OK);
 
 			displayWindow();
 

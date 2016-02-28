@@ -130,25 +130,26 @@ public class Parser {
 		}
 	}
 
-	public void setModel(String value) {
+	public boolean setModel(String value) {
 		if (modelCheckRequired) {
-			if (value.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP"))
+			if (value.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP")) {
 				model = value;
+				return true;
+			}
 
 			else {
-				if (paper == null)
-					System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
-
-				else
-					paper.append("ERROR: To find OTA updates for " + device + ", you must specify a model number.\nFor example, N71AP is a model number for the iPhone 6S.");
+				System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
+				return false;
 			}
 		}
 
 		else if (value.isEmpty())
-			return;
+			return true;
 
-		else
+		else {
 			System.err.println("NOTE: A model was specified for " + device + ", despite not requiring a check. The model will be ignored.");
+			return true;
+		}
 	}
 
 	public void showBeta(boolean value) {
