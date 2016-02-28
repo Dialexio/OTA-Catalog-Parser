@@ -18,7 +18,7 @@
 	</target>
 
 	<target name="compile" depends="init" description="compile the source">
-		<javac classpathref="swt.classpath" destdir="${build}" srcdir="${src}" />
+		<javac classpathref="swt.classpath" destdir="${build}" source="1.7" srcdir="${src}" target="1.7" />
 	</target>
 
 	<target name="linux" depends="compile" description="for linux">
