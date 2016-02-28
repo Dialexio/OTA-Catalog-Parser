@@ -107,7 +107,7 @@ public class Parser {
 
 		else {
 			if (paper == null)
-				System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1. Ignoring the value.");
+				System.err.println("WARNING: For the \"-max\" argument, you need to specify a version of iOS, e.g. 4.3 or 8.0.1. Ignoring...");
 
 			else
 				paper.append("WARNING: The value entered for the maximum version is not valid. Ignoring...");
@@ -123,7 +123,7 @@ public class Parser {
 
 		else {
 			if (paper == null)
-				System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1. Ignoring the value.");
+				System.err.println("WARNING: For the \"-min\" argument, you need to specify a version of iOS, e.g. 4.3 or 8.0.1. Ignoring...");
 
 			else
 				paper.append("WARNING: The value entered for the minimum version is not valid. Ignoring...");
@@ -143,11 +143,10 @@ public class Parser {
 			}
 		}
 
-		else if (value.isEmpty())
-			return true;
-
 		else {
-			System.err.println("NOTE: A model was specified for " + device + ", despite not requiring a check. The model will be ignored.");
+			if (value.isEmpty() == false)
+				System.err.println("NOTE: A model was specified for " + device + ", despite not requiring a check. The model will be ignored.");
+
 			return true;
 		}
 	}
