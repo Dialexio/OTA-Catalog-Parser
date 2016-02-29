@@ -1,0 +1,3 @@
+#!/bin/bash
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+java -Xdock:name="OTA Parser" -XstartOnFirstThread -jar "$BASEDIR/OTA Parser Mac.jar"

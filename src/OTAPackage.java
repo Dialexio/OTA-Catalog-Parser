@@ -1,6 +1,6 @@
 /*
- * OTA Catalog Parser 0.4.2
- * Copyright (c) 2015 Dialexio
+ * OTA Catalog Parser
+ * Copyright (c) 2016 Dialexio
  * 
  * The MIT License (MIT)
  * 
@@ -139,19 +139,24 @@ class OTAPackage {
 	/**
 	 * Checks if the release is a developer beta, a public beta, or not a beta.
 	 * 
-	 * @return An integer value of 0 (not a beta), 1 (developer beta), or 2 (public beta).
+	 * @return An integer value of 0 (not a beta), 1 (developer beta), 2 (public beta), or 3 (carrier beta).
      **/
 	public int betaType() {
 		boolean beta = false;
 		Pattern regex = Pattern.compile("\\d(DevBeta|PublicBeta|Seed)");
 		match = regex.matcher(DOC_ID);
 
+		if (ENTRY.containsKey("ReleaseType") && ENTRY.get("ReleaseType").toString().equals("Carrier")) {
+			regex = null;
+			return 3;
+		}
+
 		if (match.find())
 			beta = true;
 
 		else {
-			final Pattern REGEX_BETA_CHECKER = Pattern.compile(REGEX_BETA);
-			match = REGEX_BETA_CHECKER.matcher(BUILD);
+			regex = Pattern.compile(REGEX_BETA);
+			match = regex.matcher(BUILD);
 	
 			beta = match.find();
 		}
@@ -172,16 +177,9 @@ class OTAPackage {
 				else {
 					regex = Pattern.compile("Public");
 					match = regex.matcher(DOC_ID);
+					regex = null;
 
-					if (match.find()) {
-						regex = null;
-						return 2;
-					}
-
-					else {
-						regex = null;
-						return 0;
-					}
+					return (match.find()) ? 2 : 0;
 				}
 			}
 		}
@@ -325,9 +323,9 @@ class OTAPackage {
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = '0' + sortBuild;
 
-		// If this is not labeled a beta, add an extra 9 after the letter.
+		// If this is not a beta, add an extra 9 after the letter.
 		// This will cause betas to appear first.
-		if (!this.isDeclaredBeta()) {
+		if (this.betaType() == 0) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			match = betaRegex.matcher(sortBuild);
 			String afterLetter, upToLetter = "";

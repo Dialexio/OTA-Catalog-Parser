@@ -1,6 +1,6 @@
 /*
- * OTA Catalog Parser 0.4.2
- * Copyright (c) 2015 Dialexio
+ * OTA Catalog Parser
+ * Copyright (c) 2016 Dialexio
  * 
  * The MIT License (MIT)
  * 
@@ -30,12 +30,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.regex.*;
-import org.xml.sax.SAXException;
+import org.eclipse.swt.widgets.Text;
 
 public class Parser {
-	private final static String PROG_VER = "0.4.2";
-
-	private final static ArrayList<OTAPackage> ENTRY_LIST = new ArrayList<OTAPackage>();
+	private final static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
+	private static boolean modelCheckRequired;
 	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
 		dateRowspanCount = new HashMap<String, Integer>(),
 		marketingVersionRowspanCount = new HashMap<String, Integer>(),
@@ -43,11 +42,125 @@ public class Parser {
 	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
 		prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
-	private static boolean showBeta = false;
-	private static NSDictionary root = null;
+	private static boolean showBeta = false, wiki = false;
+	private static NSDictionary root;
 	private static String device, maxOSVer = "", minOSVer = "", model;
+	private static Text paper;
 
-	private static void addEntries(final NSDictionary PLIST_ROOT, final boolean CHECK_MODEL, final boolean WIKI) {
+	// Getter and setter methods.
+	public void defineOutput(Text output) {
+		paper = output;
+	}
+
+	public int loadFile(String value) {
+		try {
+			root = (NSDictionary)PropertyListParser.parse(new File(value));
+
+			if (root != null && root.containsKey("Assets"))
+				return 0;
+
+			else {
+				System.err.println("ERROR: This is an Apple property list, but it's not one of Apple's OTA update catalogs.");
+				return 7;
+			}
+		}
+
+		catch (FileNotFoundException e) {
+			if (e.getMessage().contains("Permission denied")) {
+				System.err.println("ERROR: You don't have permission to read \"" + value + "\".");
+				return 8;
+			}
+
+			else {
+				System.err.println("ERROR: The file \"" + value + "\" can't be found.");
+				return 2;
+			}
+		}
+
+		catch (PropertyListFormatException e) {
+			System.err.println("ERROR: This isn't an Apple property list.");
+			return 6;
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+
+	public void setDevice(String value) {
+		if (value.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
+			device = value;
+			modelCheckRequired = device.matches("iPhone8,(1|2)");
+		}
+
+		else
+			System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone5,1 or iPad2,7");
+	}
+
+	public void setMax(String value) {
+		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
+			maxOSVer = value;
+
+		else if (value.isEmpty())
+			return;
+
+		else {
+			if (paper == null)
+				System.err.println("WARNING: For the \"-max\" argument, you need to specify a version of iOS, e.g. 4.3 or 8.0.1. Ignoring...");
+
+			else
+				paper.append("WARNING: The value entered for the maximum version is not valid. Ignoring...");
+		}
+	}
+
+	public void setMin(String value) {
+		if (value.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?"))
+			minOSVer = value;
+
+		else if (value.isEmpty())
+			return;
+
+		else {
+			if (paper == null)
+				System.err.println("WARNING: For the \"-min\" argument, you need to specify a version of iOS, e.g. 4.3 or 8.0.1. Ignoring...");
+
+			else
+				paper.append("WARNING: The value entered for the minimum version is not valid. Ignoring...");
+		}
+	}
+
+	public boolean setModel(String value) {
+		if (modelCheckRequired) {
+			if (value.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP")) {
+				model = value;
+				return true;
+			}
+
+			else {
+				System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
+				return false;
+			}
+		}
+
+		else {
+			if (value.isEmpty() == false)
+				System.err.println("NOTE: A model was specified for " + device + ", despite not requiring a check. The model will be ignored.");
+
+			return true;
+		}
+	}
+
+	public void showBeta(boolean value) {
+		showBeta = value;
+	}
+
+	public void wikiMarkup(boolean value) {
+		wiki = value;
+	}
+
+	// Where the magic happens.
+	private static void addEntries(final NSDictionary PLIST_ROOT) {
 		// Looking for the array with key "Assets."
 		NSObject[] assets = ((NSArray)PLIST_ROOT.objectForKey("Assets")).getArray();
 
@@ -63,8 +176,9 @@ public class Parser {
 			if (!showBeta && entry.betaType() > 0)
 				continue;
 
-			// Only count "Public Beta 1" entries once.
-			if (WIKI && !entry.isDeclaredBeta() && entry.betaNumber() == 1)
+			// For wiki markup: If a beta has two entries
+			// (one for betas, one for non-betas), don't count it twice.
+			if (wiki && !entry.isDeclaredBeta() && entry.betaNumber() != 0)
 				continue;
 
 			// Device check.
@@ -76,7 +190,7 @@ public class Parser {
 			}
 
 			// Model check, if needed.
-			if (matched && CHECK_MODEL) {
+			if (matched && modelCheckRequired) {
 				matched = false; // Skipping unless we can verify we want it.
 
 				// Make sure "SupportedDeviceModels" exists.
@@ -100,7 +214,7 @@ public class Parser {
 					continue;
 
 				// It survived the checks!
-				ENTRY_LIST.add(entry);
+				entryList.add(entry);
 			}
 		}
 
@@ -108,12 +222,22 @@ public class Parser {
 		entry = null;
 	}
 
-	private static void countRowspan(final ArrayList<OTAPackage> ENTRYLIST) {
+	private static void cleanup() {
+		buildRowspanCount.clear();
+		entryList.clear();
+		fileRowspanCount.clear(); 
+		dateRowspanCount.clear();
+		marketingVersionRowspanCount.clear();
+		osVersionRowspanCount.clear();
+		prereqRowspanCount.clear();
+	}
+
+	private static void countRowspan() {
 		HashMap<String, Integer> fileNestedCount, prereqNestedCount;
 		String pseudoPrerequisite;
 
 		// Count the rowspans for wiki markup.
-		for (OTAPackage entry:ENTRYLIST) {
+		for (OTAPackage entry:entryList) {
 			fileNestedCount = new HashMap<String, Integer>();
 			prereqNestedCount = new HashMap<String, Integer>();
 
@@ -185,148 +309,35 @@ public class Parser {
 		pseudoPrerequisite = null;
 	}
 
-	private static void loadFile(final File PLIST_NAME) {
-		try {
-			root = (NSDictionary)PropertyListParser.parse(PLIST_NAME);
-		}
-		catch (FileNotFoundException e) {
-			System.err.println("ERROR: The file \"" + PLIST_NAME + "\" can't be found.");
-			System.exit(2);
-		}
-		catch (PropertyListFormatException e) {
-			System.err.println("ERROR: This isn't an Apple property list.");
-			System.exit(6);
-		}
-		catch (SAXException e) {
-			System.err.println("ERROR: This file doesn't have proper XML syntax.");
-			System.exit(7);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-	}
-
-	public static void main(final String[] args) {
-		boolean mwMarkup = false;
-		int i = 0;
-		String arg = "", plistName = "";
-
-		// No arguments? Don't do anything.
-		if (args.length == 0) {
-			System.out.println("OTA Catalog Parser v" + PROG_VER);
-			System.out.println("https://github.com/Dialexio/OTA-Catalog-Parser-Java");
-
-			System.out.println("\nRequired Arguments:");
-			System.out.println("-d <device>      Choose the device you are searching for. (e.g. iPhone8,1)");
-			System.out.println("-f <file>        Specify the path to the XML file you are searching in.");
-			System.out.println("-m <model>       Choose the model you are searching for. (e.g. N71mAP)\n                 This is only used and required for iPhone 6S or 6S Plus.");
-
-			System.out.println("\nOptional Arguments:");
-			System.out.println("-b               Displays beta firmwares. By default, this is disabled.");
-			System.out.println("-max <version>   Choose the highest firmware version you are searching for. (e.g. 9.0.2)");
-			System.out.println("-min <version>   Choose the lowest firmware version you are searching for. (e.g. 8.4.1)");
-			System.out.println("-w               Formats the output for The iPhone Wiki.");
-			System.exit(0);
-		}
-
-		// Reading arguments (and performing some basic checks).
-		while (i < args.length && args[i].startsWith("-")) {
-			arg = args[i++];
-
-			switch (arg) {
-				case "-b":
-					showBeta = true;
-				break;
-
-				case "-d":
-					device = "";
-
-					if (i < args.length)
-						device = args[i++];
-
-					if (!device.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
-						System.err.println("ERROR: You need to set a device with the \"-d\" argument, e.g. iPhone3,1 or iPad2,7");
-						System.exit(1);
-					}
-				break;
-
-				case "-f":
-					plistName = "";
-
-					if (i < args.length)
-						plistName = args[i++];
-
-					if (plistName.isEmpty()) {
-						System.err.println("ERROR: You need to supply a file name.");
-						System.exit(2);
-					}
-				break;
-
-				case "-m":
-					model = "";
-
-					if (i < args.length)
-						model = args[i++];
-
-					if (!model.matches("[JKMNP]\\d(\\d)?(\\d)?[A-Za-z]?AP")) {
-						System.err.println("ERROR: You need to specify a model with the \"-m\" argument, e.g. N71AP");
-						System.exit(3);
-					}
-				break;
-
-				case "-max":
-					maxOSVer = "";
-
-					if (i < args.length)
-						maxOSVer = args[i++];
-
-					if (!maxOSVer.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?")) {
-						System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-max\" argument, e.g. 4.3 or 8.0.1");
-						System.exit(4);
-					}
-				break;
-
-				case "-min":
-					minOSVer = "";
-
-					if (i < args.length)
-						minOSVer = args[i++];
-
-					if (!minOSVer.matches("(\\d)?\\d\\.\\d(\\.\\d)?(\\d)?")) {
-						System.err.println("ERROR: You need to specify a version of iOS if you are using the \"-min\" argument, e.g. 4.3 or 8.0.1");
-						System.exit(5);
-					}
-				break;
-
-				case "-w":
-					mwMarkup = true;
-				break;
+	public void parse() {
+		if (root != null) {
+			addEntries(root);
+			sort();
+	
+			if (wiki) {
+				countRowspan();
+				printWikiMarkup();
 			}
+	
+			else
+				printHuman();
 
+			cleanup();
 		}
-
-		// Flag whether or not we need to check the model.
-		// Right now, it's just a lazy check for iPhone8,1 or iPhone8,2.
-
-		loadFile(new File(plistName));
-
-		addEntries(root, device.matches("iPhone8,(1|2)"), mwMarkup);
-
-		sort();
-
-		if (mwMarkup) {
-			countRowspan(ENTRY_LIST);
-			printWikiMarkup(ENTRY_LIST);
-		}
-		else
-			printOutput(ENTRY_LIST);
 	}
 
-	private static void printOutput(final ArrayList<OTAPackage> ENTRYLIST) {
-		String osName;
+	private static void printLine(String value) {
+		if (paper == null)
+			System.out.println(value);
 
-		for (OTAPackage entry:ENTRYLIST) {
+		else
+			paper.append(value + "\n");
+	}
+
+	private static void printHuman() {
+		String line = "", osName;
+
+		for (OTAPackage entry:entryList) {
 			if (device.startsWith("Watch"))
 				osName = "watchOS ";
 			else if (device.matches("AppleTV(2,1|3,1|3,2)"))
@@ -337,44 +348,43 @@ public class Parser {
 				osName = "iOS ";
 
 			// Output OS version and build.
-			System.out.print(osName + entry.marketingVersion());
+			line = line.concat(osName + entry.marketingVersion());
 
 				// Is this a beta?
 				if (entry.betaType() > 0) {
 					if (entry.betaType() == 2)
-						System.out.print(" Public");
+						line = line.concat(" Public");
 	
-					System.out.print(" Beta " + entry.betaNumber());
+					line = line.concat(" Beta " + entry.betaNumber());
 				}
 
-			System.out.println(" (Build " + entry.actualBuild() + ')');
-			System.out.println("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
-			System.out.println("Marked as beta: " + entry.isDeclaredBeta());
+			printLine(line + " (Build " + entry.actualBuild() + ')');
+			line = "";
+			printLine("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
+			printLine("Marked as beta: " + entry.isDeclaredBeta());
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
-				System.out.println("Requires: Not specified");
+				printLine("Requires: Not specified");
 
 			else
-				System.out.println("Requires: " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ')');
+				printLine("Requires: " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ')');
 
 			// Date as extracted from the URL.
-			System.out.println("Timestamp: " + entry.date('y') + '/' + entry.date('m') + '/' + entry.date('d'));
+			printLine("Timestamp: " + entry.date('y') + '/' + entry.date('m') + '/' + entry.date('d'));
 
 			// Print out the URL and file size.
-			System.out.println("URL: " + entry.url());
-			System.out.println("File size: " + entry.size());
-
-			System.out.println();
+			printLine("URL: " + entry.url());
+			printLine("File size: " + entry.size() + '\n');
 		}
 	}
 
-	private static void printWikiMarkup(final ArrayList<OTAPackage> ENTRYLIST) {
+	private static void printWikiMarkup() {
 		final Pattern NAME_REGEX = Pattern.compile("[0-9a-f]{40}\\.zip");
 		Matcher name;
-		String fileName;
+		String fileName, line = "";
 
-		for (OTAPackage entry:ENTRYLIST) {
+		for (OTAPackage entry:entryList) {
 			fileName = "";
 
 			name = NAME_REGEX.matcher(entry.url());
@@ -382,31 +392,32 @@ public class Parser {
 				fileName = name.group();
 
 			// Let us begin!
-			System.out.println("|-");
+			printLine("|-");
 
 			//Marketing Version for Apple Watch.
 			if (device.matches("Watch(\\d)?\\d,\\d") && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
-				System.out.print("| ");
+				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (marketingVersionRowspanCount.get(entry.marketingVersion()).intValue() > 1)
-					System.out.print("rowspan=\"" + marketingVersionRowspanCount.get(entry.marketingVersion()) + "\" | ");
+					line = line.concat("rowspan=\"" + marketingVersionRowspanCount.get(entry.marketingVersion()) + "\" | ");
 
-				System.out.print(entry.marketingVersion());
+				line = line.concat(entry.marketingVersion());
 
 				// Give it a beta label (if it is one).
 				if (entry.betaType() > 0) {
 					if (entry.betaType() == 2)
-						System.out.print(" Public Beta");
+						line = line.concat(" Public Beta");
 					else
-						System.out.print(" beta");
+						line = line.concat(" beta");
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
-						System.out.print(" " + entry.betaNumber());
+						line = line.concat(" " + entry.betaNumber());
 				}
 
-				System.out.println();
+				printLine(line);
+				line = "";
 
 				//Remove the count since we're done with it.
 				marketingVersionRowspanCount.remove(entry.marketingVersion());
@@ -414,38 +425,40 @@ public class Parser {
 
 			// Output OS version.
 			if (osVersionRowspanCount.containsKey(entry.osVersion())) {
-				System.out.print("| ");
+				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
+				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
+					line = line.concat("| ");
+
+					// Only give rowspan if there is more than one row with the OS version.
+					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
+						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
+
+					printLine(line + "[MARKETING VERSION]");
+					line = "";
+				}
+
+				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
-					System.out.print("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
+					line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
 
-				System.out.print(entry.osVersion());
+				line = line.concat(entry.osVersion());
 
 				// Give it a beta label (if it is one).
 				if (entry.betaType() > 0) {
 					if (entry.betaType() == 2)
-						System.out.print(" Public Beta");
+						line = line.concat(" Public Beta");
 					else
-						System.out.print(" beta");
+						line = line.concat(" beta");
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
-						System.out.print(" " + entry.betaNumber());
+						line = line.concat(" " + entry.betaNumber());
 				}
 
-				System.out.println();
-
-				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
-				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
-					System.out.print("| ");
-
-					// Only give rowspan if there is more than one row with the OS version.
-					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
-						System.out.print("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
-
-					System.out.println("[MARKETING VERSION]");
-				}
+				printLine(line);
+				line = "";
 
 				//Remove the count since we're done with it.
 				osVersionRowspanCount.remove(entry.osVersion());
@@ -453,91 +466,96 @@ public class Parser {
 
 			// Output build number.
 			if (buildRowspanCount.containsKey(entry.declaredBuild())) {
-				System.out.print("| ");
+				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				// Count declaredBuild() instead of actualBuild() so the entry pointing betas to the final build is treated separately.
 				if (buildRowspanCount.get(entry.declaredBuild()).intValue() > 1)
-					System.out.print("rowspan=\"" + buildRowspanCount.get(entry.declaredBuild()) + "\" | ");
+					line = line.concat("rowspan=\"" + buildRowspanCount.get(entry.declaredBuild()) + "\" | ");
 
 				//Remove the count since we're done with it.
 				buildRowspanCount.remove(entry.declaredBuild());
 
-				System.out.print(entry.actualBuild());
+				line = line.concat(entry.actualBuild());
 
 				// Do we have a false build number?
 				if (!entry.actualBuild().equals(entry.declaredBuild()))
-					System.out.print("<ref name=\"fakefive\" />");
+					line = line.concat("<ref name=\"fakefive\" />");
 
-				System.out.println();
+				printLine(line);
+				line = "";
 			}
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal()) {
-				System.out.print("| colspan=\"2\" {{n/a");
+				line = line.concat("| colspan=\"2\" {{n/a");
 
 				// Is this "universal" OTA update intended for betas?
 				if (entry.isDeclaredBeta() && entry.betaType() == 0)
-					System.out.print("|Beta");
+					line = line.concat("|Beta");
 
-				System.out.println("}}");
+				printLine(line + "}}");
+				line = "";
 			}
 			else {
 				// Prerequisite version
 				if (prereqRowspanCount.containsKey(entry.declaredBuild()) && prereqRowspanCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteVer())) {
-					System.out.print("| ");
+					line = line.concat("| ");
 
 					// Is there more than one of this prerequisite version tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
 					if (!entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]") && prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
-						System.out.print("rowspan=\"" + prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
+						line = line.concat("rowspan=\"" + prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
 						prereqRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
 
-					System.out.print(entry.prerequisiteVer());
+					line = line.concat(entry.prerequisiteVer());
 
 					// Very quick check if prerequisite is a beta. Won't work if close to final release.
 					if (entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]"))
-						System.out.print(" beta #");
+						line = line.concat(" beta #");
 
-					System.out.println();
+					printLine(line);
+					line = "";
 				}
 
 				// Prerequisite build
-				System.out.println("| " + entry.prerequisiteBuild());
+				printLine("| " + entry.prerequisiteBuild());
 			}
 
 			// Date as extracted from the URL. Using the same rowspan count as build.
 			// (3.1.1 had two builds released on different dates for iPod touch 3G.)
 			if (dateRowspanCount.containsKey(entry.actualBuild())) {
-				System.out.print("| ");
+				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (dateRowspanCount.get(entry.actualBuild()).intValue() > 1) {
-					System.out.print("rowspan=\"" + dateRowspanCount.get(entry.actualBuild()) + "\" | ");
+					line = line.concat("rowspan=\"" + dateRowspanCount.get(entry.actualBuild()) + "\" | ");
 					dateRowspanCount.remove(entry.actualBuild()); //Remove the count since we already used it.
 				}
 
-				System.out.println("{{date|" + entry.date('y') + '|' + entry.date('m') + '|' + entry.date('d') + "}}");
+				printLine(line + "{{date|" + entry.date('y') + '|' + entry.date('m') + '|' + entry.date('d') + "}}");
+				line = "";
 			}
 
 			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.prerequisiteVer())) {
-				System.out.print("| ");
+				line = line.concat("| ");
 
 				// Is there more than one of this prerequisite version tallied?
 				// Also do not use rowspan if the prerequisite build is a beta.
 				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
-					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
+					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
 
-				System.out.print('[' + entry.url() + ' ' + fileName + "]\n| ");
+				line = line.concat('[' + entry.url() + ' ' + fileName + "]\n| ");
 
 				//Print file size.
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
-					System.out.print("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
+					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
 
-				System.out.println(entry.size());
+				printLine(line + entry.size());
+				line = "";
 
 				//Remove the count since we're done with it.
 				fileRowspanCount.get(entry.url()).remove(entry.prerequisiteVer());
@@ -546,19 +564,19 @@ public class Parser {
 	}
 
 	private static void sort() {
-		Collections.sort(ENTRY_LIST, new Comparator<OTAPackage>() {
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
 				return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
 			}
 		});
-		Collections.sort(ENTRY_LIST, new Comparator<OTAPackage>() {
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
 				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
 			}
 		});
-		Collections.sort(ENTRY_LIST, new Comparator<OTAPackage>() {
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
 				return ((OTAPackage)package1).sortingMarketingVersion().compareTo(((OTAPackage)package2).sortingMarketingVersion());
