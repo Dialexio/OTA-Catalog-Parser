@@ -139,16 +139,27 @@ class OTAPackage {
 	/**
 	 * Checks if the release is a developer beta, a public beta, or not a beta.
 	 * 
-	 * @return An integer value of 0 (not a beta), 1 (developer beta), 2 (public beta), or 3 (carrier beta).
+	 * @return An integer value of 0 (not a beta), 1 (public beta), 2 (developer beta), 3 (carrier beta), or 4 (internal build).
      **/
 	public int betaType() {
 		boolean beta = false;
 		Pattern regex = Pattern.compile("\\d(DevBeta|PublicBeta|Seed)");
 		match = regex.matcher(DOC_ID);
 
-		if (ENTRY.containsKey("ReleaseType") && ENTRY.get("ReleaseType").toString().equals("Carrier")) {
+		if (ENTRY.containsKey("ReleaseType")) {
 			regex = null;
-			return 3;
+
+			switch (ENTRY.get("ReleaseType").toString()) {
+				case "Carrier":
+					return 3;
+
+				case "Internal":
+					return 4;
+
+				default:
+					System.err.println("Unknown ReleaseType: "+ ENTRY.get("ReleaseType").toString());
+					return -1;
+			}
 		}
 
 		if (match.find())
@@ -163,7 +174,7 @@ class OTAPackage {
 
 		if (beta) {
 			if (DOC_ID.equals("PreRelease"))
-				return 1;
+				return 2;
 
 			else {
 				regex = Pattern.compile("\\d(DevBeta|Seed)");
@@ -171,7 +182,7 @@ class OTAPackage {
 
 				if (match.find()) {
 					regex = null;
-					return 1;
+					return 2;
 				}
 
 				else {
@@ -179,7 +190,7 @@ class OTAPackage {
 					match = regex.matcher(DOC_ID);
 					regex = null;
 
-					return (match.find()) ? 2 : 0;
+					return (match.find()) ? 1 : 0;
 				}
 			}
 		}

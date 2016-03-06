@@ -28,7 +28,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 public class Interface {
-	private static final String VERSION = "1.0.1";
+	private static final String VERSION = "1.0.2";
 
 	private static boolean file = false;
 	private static Display display;

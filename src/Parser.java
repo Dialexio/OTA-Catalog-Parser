@@ -350,13 +350,27 @@ public class Parser {
 			// Output OS version and build.
 			line = line.concat(osName + entry.marketingVersion());
 
-				// Is this a beta?
-				if (entry.betaType() > 0) {
-					if (entry.betaType() == 2)
-						line = line.concat(" Public");
-	
-					line = line.concat(" Beta " + entry.betaNumber());
+			// Give it a beta label (if it is one).
+			if (entry.betaType() > 0) {
+				switch (entry.betaType()) {
+					case 1:
+						line = line.concat(" Public Beta");
+						break;
+					case 2:
+						line = line.concat(" beta");
+						break;
+					case 3:
+						line = line.concat(" Carrier Beta");
+						break;
+					case 4:
+						line = line.concat(" Internal");
+						break;
 				}
+
+				// Don't print a 1 if this is the first beta.
+				if (entry.betaNumber() > 1)
+					line = line.concat(" " + entry.betaNumber());
+			}
 
 			printLine(line + " (Build " + entry.actualBuild() + ')');
 			line = "";
@@ -406,10 +420,20 @@ public class Parser {
 
 				// Give it a beta label (if it is one).
 				if (entry.betaType() > 0) {
-					if (entry.betaType() == 2)
-						line = line.concat(" Public Beta");
-					else
-						line = line.concat(" beta");
+					switch (entry.betaType()) {
+						case 1:
+							line = line.concat(" Public Beta");
+							break;
+						case 2:
+							line = line.concat(" beta");
+							break;
+						case 3:
+							line = line.concat(" Carrier Beta");
+							break;
+						case 4:
+							line = line.concat(" Internal");
+							break;
+					}
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
@@ -447,10 +471,20 @@ public class Parser {
 
 				// Give it a beta label (if it is one).
 				if (entry.betaType() > 0) {
-					if (entry.betaType() == 2)
-						line = line.concat(" Public Beta");
-					else
-						line = line.concat(" beta");
+					switch (entry.betaType()) {
+						case 1:
+							line = line.concat(" Public Beta");
+							break;
+						case 2:
+							line = line.concat(" beta");
+							break;
+						case 3:
+							line = line.concat(" Carrier Beta");
+							break;
+						case 4:
+							line = line.concat(" Internal");
+							break;
+					}
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
