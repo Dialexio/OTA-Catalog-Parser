@@ -213,7 +213,6 @@ public class Interface {
 								else {
 									switch (parser.loadXML(filePrompt.getFilterPath() + '/' + filePrompt.getFileName())) {
 										case 0:
-											output.setText('"' + filePrompt.getFileName() + "\" selected!");
 											break;
 
 										case 2:
