@@ -150,6 +150,10 @@ class OTAPackage {
 			regex = null;
 
 			switch (ENTRY.get("ReleaseType").toString()) {
+				// If the build is labeled "Beta," we still need to check if it's actually a beta. 
+				case "Beta":
+					break;
+
 				case "Carrier":
 					return 3;
 
