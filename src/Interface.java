@@ -213,6 +213,7 @@ public class Interface {
 								else {
 									switch (parser.loadXML(filePrompt.getFilterPath() + '/' + filePrompt.getFileName())) {
 										case 0:
+											output.setText("");
 											break;
 
 										case 2:
