@@ -28,105 +28,89 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 public class Interface {
-	private static final String VERSION = "1.0.2";
+	private static final String VERSION = "1.1";
 
-	private static boolean file = false;
 	private static Display display;
 	private static final Parser parser = new Parser();
 	private static MessageBox error;
 	private static Shell shell;
 	private static Text deviceText, maxText, minText, modelText, output;
 
-	private static void browseForFile() {
-		final FileDialog filePrompt = new FileDialog(shell, SWT.OPEN);
-
-		error.setText("Error");
-
-		filePrompt.setFilterNames(new String[] {"XML file (.xml)", "Apple Property List (.plist)"});
-		filePrompt.setFilterExtensions(new String[] {"*.xml", "*.plist"});
-		filePrompt.setText("Locate the OTA catalog you wish to parse.");
-		filePrompt.open();
-
-		if (filePrompt.getFileName().isEmpty()) {
-			output.setText("You need to select an OTA catalog to proceed.");
-			file = false;
-		}
-
-		else {
-			switch (parser.loadFile(filePrompt.getFilterPath() + '/' + filePrompt.getFileName())) {
-				case 0:
-					output.setText('"' + filePrompt.getFileName() + "\" selected!");
-					file = true;
-					break;
-
-				case 2:
-					error.setMessage("Couldn't find that file.");
-					error.open();
-					file = false;
-					break;
-
-				case 6:
-					error.setMessage("This isn't an Apple property list.");
-					error.open();
-					file = false;
-					break;
-
-				case 7:
-					error.setMessage("This is an Apple property list, but it's not one of Apple's OTA update catalogs.");
-					error.open();
-					file = false;
-					break;
-
-				default:
-					error.setMessage("You done messed up now.");
-					error.open();
-					file = false;
-					break;
-			}
-		}
-	}
-
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	private static void displayWindow() {
+		shell = new Shell(display, SWT.CLOSE | SWT.MIN | SWT.TITLE);
+		error = new MessageBox(shell, SWT.OK);
+
 		Button wikiRadio;
-		final Button betaButton, fileButton, parseButton;
-		final Composite deviceField, maxField, minField, modelField, widgets;
+		final Button betaButton, parseButton;
+		final Combo xmlDropdown;
+		final Composite deviceField, minMaxFields, modelField, urlField, widgets, xmlFields;
 		final Group optional;
-		final Label deviceLabel, minLabel, maxLabel, modelLabel;
+		final Label deviceLabel, minLabel, maxLabel, modelLabel, urlLabel, xmlSelectionLabel;
+		final Text urlText;
 
 		shell.setText("OTA Catalog Parser v" + VERSION);
 		shell.setLayout(new GridLayout(2, false));
 
 		widgets = new Composite(shell, SWT.NONE);
 
-			fileButton = new Button(widgets, SWT.NONE);
-			fileButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-			fileButton.setText("Browse for File");
+		xmlFields = new Composite(widgets, SWT.NONE);
+		xmlFields.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		GridLayout gl_xmlFields = new GridLayout(1, false);
+		xmlFields.setLayout(gl_xmlFields);
 
-			deviceField = new Composite(widgets, SWT.NONE);
-			deviceField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		xmlSelectionLabel = new Label(xmlFields, SWT.NONE);
+		xmlSelectionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		xmlSelectionLabel.setText("Select a catalog to load:");
+		xmlDropdown = new Combo(xmlFields, SWT.READ_ONLY);
+		xmlDropdown.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		xmlDropdown.setItems(new String[]{"iOS (Public)", "tvOS (Public)", "watchOS (Public)", "Custom URL…", "Load File…"});
+
+		urlField = new Composite(xmlFields, SWT.NONE);
+		GridLayout gl_urlField = new GridLayout(2, false);
+		gl_urlField.marginHeight = 0;
+		urlField.setLayout(gl_urlField);
+		urlField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		urlField.setVisible(false);
+		urlLabel = new Label(urlField, SWT.NONE);
+			urlLabel.setText ("URL:");
+			urlLabel.setToolTipText("Enter a mesu.apple.com URL that points to a list of OTA updates.");
+			urlText = new Text(urlField, SWT.BORDER);
+			urlText.setText("http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+			GridData gd_urlText = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+			gd_urlText.widthHint = 150;
+			urlText.setLayoutData(gd_urlText);
+			urlText.setToolTipText("Enter a mesu.apple.com URL that points to a list of OTA updates.");
+
+		Composite deviceFields = new Composite(widgets, SWT.NONE);
+		deviceFields.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		deviceFields.setLayout(new GridLayout(1, false));
+
+			deviceField = new Composite(deviceFields, SWT.NONE);
 			GridLayout gl_deviceField = new GridLayout(2, false);
 			gl_deviceField.marginHeight = 0;
 			deviceField.setLayout(gl_deviceField);
-				deviceLabel = new Label(deviceField, SWT.NONE);
-				deviceLabel.setText("Device:");
-				deviceLabel.setToolTipText("Enter a device type, such as iPhone5,1.");
-				deviceText = new Text(deviceField, SWT.BORDER);
-				GridData gd_deviceTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-				gd_deviceTextField.widthHint = 110;
-				deviceText.setLayoutData(gd_deviceTextField);
-				deviceText.setToolTipText("Enter a device type, such as iPhone5,1.");
+			deviceLabel = new Label(deviceField, SWT.NONE);
+			deviceLabel.setText("Device:");
+			deviceLabel.setToolTipText("Enter a device type, such as iPhone5,1.");
+			deviceText = new Text(deviceField, SWT.BORDER);
+			GridData gd_deviceTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+			gd_deviceTextField.widthHint = 110;
+			deviceText.setLayoutData(gd_deviceTextField);
+			deviceText.setToolTipText("Enter a device type, such as iPhone5,1.");
 
-			modelField = new Composite(widgets, SWT.NONE);
-			modelField.setLayout(new GridLayout(2, false));
+			modelField = new Composite(deviceFields, SWT.NONE);
 			modelField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+			GridLayout gl_modelField = new GridLayout(2, false);
+			gl_modelField.marginHeight = 0;
+			modelField.setLayout(gl_modelField);
 				modelLabel = new Label(modelField, SWT.NONE);
 				modelLabel.setText ("Model:");
 				modelLabel.setToolTipText("This field is required for the iPhone 6S or 6S Plus.\nYou need to enter a value like \"N71AP.\"");
 				modelText = new Text(modelField, SWT.BORDER);
-				GridData gd_modelTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+				GridData gd_modelTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 				gd_modelTextField.widthHint = 70;
 				modelText.setLayoutData(gd_modelTextField);
 				modelText.setToolTipText("This field is required for the iPhone 6S or 6S Plus.\nYou need to enter a value like \"N71AP.\"");
@@ -153,8 +137,8 @@ public class Interface {
 			optional = new Group(widgets, SWT.NONE);
 			optional.setText("Optional");
 			optional.setLayout(new GridLayout(1, false));
-
 				betaButton = new Button(optional, SWT.CHECK);
+				betaButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 				betaButton.setText("Search for betas");
 				betaButton.addSelectionListener(new SelectionAdapter() {
 					@Override
@@ -163,44 +147,96 @@ public class Interface {
 					}
 				});
 
-				minField = new Composite(optional, SWT.NONE);
-				minField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-				GridLayout gl_minField = new GridLayout(2, false);
-				gl_minField.marginHeight = 1;
-				minField.setLayout(gl_minField);
-				minLabel = new Label(minField, SWT.NONE);
-				minLabel.setText("Minimum version:");
-				minText = new Text(minField, SWT.BORDER);
+				minMaxFields = new Composite(optional, SWT.NONE);
+				minMaxFields.setLayout(new GridLayout(2, false));
+					minLabel = new Label(minMaxFields, SWT.NONE);
+					minLabel.setText("Minimum version:");
+					minText = new Text(minMaxFields, SWT.BORDER);
 
-				maxField = new Composite(optional, SWT.NONE);
-				maxField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-				maxField.setLayout(new GridLayout(2, false));
-				maxLabel = new Label(maxField, SWT.NONE);
-				maxLabel.setText("Maximum version:");
-				maxText = new Text(maxField, SWT.BORDER);
+					maxLabel = new Label(minMaxFields, SWT.NONE);
+					maxLabel.setText("Maximum version:");
+					maxText = new Text(minMaxFields, SWT.BORDER);
 
 			parseButton = new Button(widgets, SWT.PUSH);
-			parseButton.setEnabled(false);
 			parseButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 			parseButton.setText("Parse");
 			parseButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					output.setText("");
-					parser.setDevice(deviceText.getText());
+					try {
+						if (deviceText.getText().matches("(AppleTV|iPad|iPhone|iPod|Watch)(\\d)?\\d,\\d") == false)
+							throw new Exception("You did not provide a device to search for.");
 
-					if (maxText.getText() != null)
-						parser.setMax(maxText.getText());
+						parser.setDevice(deviceText.getText());
 
-					if (minText.getText() != null)
-						parser.setMin(minText.getText());
+						if (maxText.getText() != null)
+							parser.setMax(maxText.getText());
 
-					
-					if (parser.setModel(modelText.getText()))
+						if (minText.getText() != null)
+							parser.setMin(minText.getText());
+
+						if (xmlDropdown.getSelectionIndex() < 0)
+							throw new Exception("No property list selected.");
+
+						if (parser.setModel(modelText.getText()) == false)
+							throw new Exception("To find OTA updates for " + deviceText.getText() + ", you must specify a model number. For example, N71AP is a model number for the iPhone 6S.");
+
+						switch (xmlDropdown.getItem(xmlDropdown.getSelectionIndex())) {
+							case "Custom URL":
+								parser.loadXML(urlText.getText());
+								break;
+
+							case "iOS (Public)":
+								parser.loadXML("http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								break;
+
+							case "tvOS (Public)":
+								parser.loadXML("http://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								break;
+
+							case "watchOS (Public)":
+								parser.loadXML("http://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								break;
+
+							default:
+								final FileDialog filePrompt = new FileDialog(shell, SWT.OPEN);
+
+								filePrompt.setFilterNames(new String[] {"XML file (.xml)", "Apple Property List (.plist)"});
+								filePrompt.setFilterExtensions(new String[] {"*.xml", "*.plist"});
+								filePrompt.setText("Locate the OTA catalog you wish to parse.");
+								filePrompt.open();
+
+								if (filePrompt.getFileName().isEmpty()) {
+									throw new Exception("You need to select an OTA catalog to proceed.");
+								}
+
+								else {
+									switch (parser.loadXML(filePrompt.getFilterPath() + '/' + filePrompt.getFileName())) {
+										case 0:
+											output.setText('"' + filePrompt.getFileName() + "\" selected!");
+											break;
+
+										case 2:
+											throw new Exception("The file can't be found.");
+
+										case 6:
+											throw new Exception("This isn't an Apple property list.");
+
+										case 7:
+											throw new Exception("This is an Apple property list, but it's not one of Apple's OTA update catalogs.");
+
+										default:
+											throw new Exception("I'm not sure how, but you screwed up big time.");
+									}
+								}
+								break;
+						}
+
 						parser.parse();
-					
-					else {
-						error.setMessage("To find OTA updates for " + deviceText.getText() + ", you must specify a model number. For example, N71AP is a model number for the iPhone 6S.");
+					}
+
+					catch (Exception objection) {
+						error.setMessage(objection.getMessage());
 						error.open();
 					}
 				}
@@ -211,28 +247,24 @@ public class Interface {
 				public void modifyText(ModifyEvent e) {
 					// Show the model field only if we're looking for 6S or 6S Plus.
 					modelField.setVisible(deviceText.getText().matches("iPhone8,(1|2)"));
-
-					// Set the parse button's enable status after a device is entered.
-					parseButton.setEnabled(parseButtonStatus());
 				}
 			});
-			// Set the parse button's enable status after a file is (not) selected.
-			fileButton.addSelectionListener(new SelectionAdapter() {
+
+			xmlDropdown.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					browseForFile();
-					parseButton.setEnabled(parseButtonStatus());
+					urlField.setVisible(xmlDropdown.getItem(xmlDropdown.getSelectionIndex()).equals("Custom URL"));
 				}
 			});
 
 		widgets.setLayout(new GridLayout());
 
 		output = new Text(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
-		output.setEditable(false);
 		GridData gd_output = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_output.heightHint = 320;
-		gd_output.widthHint = 450;
+		gd_output.heightHint = 400;
+		gd_output.widthHint = 600;
 		output.setLayoutData(gd_output);
+		output.setEditable(false);
 		parser.defineOutput(output);
 
 		shell.setDefaultButton(parseButton);
@@ -251,9 +283,6 @@ public class Interface {
 			display = new Display();
 			display.setAppName("OTA Catalog Parser");
 			display.setAppVersion(VERSION);
-
-			shell = new Shell(display, SWT.CLOSE | SWT.MIN | SWT.TITLE);
-			error = new MessageBox(shell, SWT.OK);
 
 			displayWindow();
 
@@ -278,7 +307,7 @@ public class Interface {
 
 					case "-f":
 						if (i < args.length) {
-							int errorCode = parser.loadFile(args[i++]);
+							int errorCode = parser.loadXML(args[i++]);
 							if (errorCode != 0)
 								System.exit(errorCode);
 						}
@@ -324,9 +353,5 @@ public class Interface {
 
 			parser.parse();
 		}
-	}
-
-	private static boolean parseButtonStatus() {
-		return file && deviceText.getText().matches("(AppleTV|iPad|iPhone|iPod|Watch)(\\d)?\\d,\\d");
 	}
 }

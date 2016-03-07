@@ -25,6 +25,7 @@
 import com.dd.plist.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,9 +53,13 @@ public class Parser {
 		paper = output;
 	}
 
-	public int loadFile(String value) {
+	public int loadXML(String locXML) {
 		try {
-			root = (NSDictionary)PropertyListParser.parse(new File(value));
+			if (locXML.startsWith("http://mesu.apple.com/assets/"))
+				root = (NSDictionary)PropertyListParser.parse(new URL(locXML).openStream());
+
+			else
+				root = (NSDictionary)PropertyListParser.parse(new File(locXML));
 
 			if (root != null && root.containsKey("Assets"))
 				return 0;
@@ -67,12 +72,12 @@ public class Parser {
 
 		catch (FileNotFoundException e) {
 			if (e.getMessage().contains("Permission denied")) {
-				System.err.println("ERROR: You don't have permission to read \"" + value + "\".");
+				System.err.println("ERROR: You don't have permission to read \"" + locXML + "\".");
 				return 8;
 			}
 
 			else {
-				System.err.println("ERROR: The file \"" + value + "\" can't be found.");
+				System.err.println("ERROR: The file \"" + locXML + "\" can't be found.");
 				return 2;
 			}
 		}
