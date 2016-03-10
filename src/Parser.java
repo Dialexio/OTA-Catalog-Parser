@@ -58,9 +58,15 @@ public class Parser {
 			if (locXML.startsWith("http://mesu.apple.com/assets/"))
 				root = (NSDictionary)PropertyListParser.parse(new URL(locXML).openStream());
 
+			else if (locXML.contains("://")) {
+				System.err.println("ERROR: The URL supplied should belong to mesu.apple.com.");
+				return 9;
+			}
+
 			else
 				root = (NSDictionary)PropertyListParser.parse(new File(locXML));
 
+			// Make sure the PLIST is what we want.
 			if (root != null && root.containsKey("Assets"))
 				return 0;
 

@@ -183,7 +183,8 @@ public class Interface {
 
 						switch (xmlDropdown.getItem(xmlDropdown.getSelectionIndex())) {
 							case "Custom URL…":
-								parser.loadXML(urlText.getText());
+								if (parser.loadXML(urlText.getText()) == 9)
+									throw new Exception("The URL supplied should belong to mesu.apple.com.");
 								break;
 
 							case "iOS (Public)":
