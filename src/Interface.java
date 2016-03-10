@@ -182,7 +182,7 @@ public class Interface {
 							throw new Exception("To find OTA updates for " + deviceText.getText() + ", you must specify a model number. For example, N71AP is a model number for the iPhone 6S.");
 
 						switch (xmlDropdown.getItem(xmlDropdown.getSelectionIndex())) {
-							case "Custom URL":
+							case "Custom URL…":
 								parser.loadXML(urlText.getText());
 								break;
 
@@ -253,7 +253,7 @@ public class Interface {
 			xmlDropdown.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					urlField.setVisible(xmlDropdown.getItem(xmlDropdown.getSelectionIndex()).equals("Custom URL"));
+					urlField.setVisible(xmlDropdown.getItem(xmlDropdown.getSelectionIndex()).equals("Custom URL…"));
 				}
 			});
 
