@@ -185,18 +185,22 @@ public class Interface {
 							case "Custom URL…":
 								if (parser.loadXML(urlText.getText()) == 9)
 									throw new Exception("The URL supplied should belong to mesu.apple.com.");
+								output.setText("");
 								break;
 
 							case "iOS (Public)":
 								parser.loadXML("http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								output.setText("");
 								break;
 
 							case "tvOS (Public)":
 								parser.loadXML("http://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								output.setText("");
 								break;
 
 							case "watchOS (Public)":
 								parser.loadXML("http://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								output.setText("");
 								break;
 
 							default:
