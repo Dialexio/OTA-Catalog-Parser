@@ -30,8 +30,8 @@ import java.util.regex.*;
 class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String BUILD, BUILD_LEFT, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
-		REGEX_BETA = "(\\d)?\\d[A-Z][45]\\d{3}[a-z]",
-		REGEX_BUILD_AFTER_LETTER = "[45]\\d{3}",
+		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]",
+		REGEX_BUILD_AFTER_LETTER = "[4-6]\\d{3}",
 		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]";
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
@@ -94,8 +94,7 @@ class OTAPackage {
 		// Extract the date from the URL.
 		// This is not 100% accurate information, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
 		match = timestampRegex.matcher(URL);
-		if (match.find())
-			date = match.group().substring(5);
+		date = (match.find()) ? match.group().substring(5) : "Not Available";
 
 		if (date.length() == 7)
 			date = date.substring(0, 6) + '0' + date.substring(6);
@@ -103,7 +102,7 @@ class OTAPackage {
 
 	/**
 	 * Returns the actual build number of the OTA entry.
-	 * Sometimes, Apple likes to add 5000 to the end.
+	 * Sometimes, Apple likes to add a large number to the end.
 	 * 
 	 * @return The build number that iOS will report in Settings.
      **/
@@ -112,7 +111,16 @@ class OTAPackage {
 			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
 			match = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
 
-			return (match.find()) ? BUILD_LEFT + (Integer.parseInt(match.group()) - 5000) : BUILD;
+			if (match.find()) {
+				if (Integer.parseInt(match.group()) > 6000)
+					return BUILD_LEFT + (Integer.parseInt(match.group()) - 6000);
+
+				else
+					return BUILD_LEFT + (Integer.parseInt(match.group()) - 5000);
+			}
+
+			else
+				return BUILD;
 		}
 
 		else
@@ -338,19 +346,17 @@ class OTAPackage {
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = '0' + sortBuild;
 
-		// If this is not a beta, add an extra 9 after the letter.
+		// If this is not a beta, replace everything after the letter with "9999."
 		// This will cause betas to appear first.
 		if (this.betaType() == 0) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			match = betaRegex.matcher(sortBuild);
-			String afterLetter, upToLetter = "";
+			String upToLetter = "";
 
 			if (match.find())
 				upToLetter = match.group();
 
-			afterLetter = sortBuild.replaceFirst(REGEX_BUILD_UP_TO_LETTER, "");
-
-			sortBuild = upToLetter + '9' + afterLetter;
+			sortBuild = upToLetter + "9999";
 		}
 
 		return sortBuild;
