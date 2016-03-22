@@ -352,7 +352,7 @@ public class Parser {
 			if (device.startsWith("Watch"))
 				osName = "watchOS ";
 			else if (device.matches("AppleTV(2,1|3,1|3,2)"))
-				osName = "iOS ";
+				osName = "Apple TV software ";
 			else if (device.startsWith("AppleTV"))
 				osName = "tvOS ";
 			else
