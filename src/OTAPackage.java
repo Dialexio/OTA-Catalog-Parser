@@ -107,9 +107,9 @@ class OTAPackage {
 	 * @return The build number that iOS will report in Settings.
      **/
 	public String actualBuild() {
-		if (this.isDeclaredBeta() && !BUILD.matches(REGEX_BETA)) {
-			final Pattern FIVE_THOUSAND_BUILDNUM = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
-			match = FIVE_THOUSAND_BUILDNUM.matcher(BUILD);
+		if (!BUILD.matches(REGEX_BETA)) {
+			final Pattern BUILDNUM_AFTER_LETTER = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
+			match = BUILDNUM_AFTER_LETTER.matcher(BUILD);
 
 			if (match.find()) {
 				if (Integer.parseInt(match.group()) > 6000)
@@ -346,9 +346,9 @@ class OTAPackage {
 		if (Character.isLetter(sortBuild.charAt(1)))
 			sortBuild = '0' + sortBuild;
 
-		// If this is not a beta, replace everything after the letter with "9999."
+		// If the build number is false, replace everything after the letter with "0000."
 		// This will cause betas to appear first.
-		if (this.betaType() == 0) {
+		if (!this.actualBuild().equals(this.declaredBuild())) {
 			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
 			match = betaRegex.matcher(sortBuild);
 			String upToLetter = "";
@@ -356,7 +356,7 @@ class OTAPackage {
 			if (match.find())
 				upToLetter = match.group();
 
-			sortBuild = upToLetter + "9999";
+			sortBuild = upToLetter + "0000";
 		}
 
 		return sortBuild;
