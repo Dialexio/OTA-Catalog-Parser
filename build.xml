@@ -70,8 +70,4 @@
 			<fileset dir="${lib}/windows" includes="swt-*-4.5.jar" />
 		</swtjar>
 	</target>
-
-	<target name="cleanup" description="clean up">
-		<delete dir="${build}" />
-	</target>
 </project>
