@@ -245,7 +245,6 @@ public class Parser {
 
 	private static void countRowspan() {
 		HashMap<String, Integer> fileNestedCount, prereqNestedCount;
-		String pseudoPrerequisite;
 
 		// Count the rowspans for wiki markup.
 		for (OTAPackage entry:entryList) {
@@ -317,7 +316,6 @@ public class Parser {
 
 		fileNestedCount = null;
 		prereqNestedCount = null;
-		pseudoPrerequisite = null;
 	}
 
 	public void parse() {
