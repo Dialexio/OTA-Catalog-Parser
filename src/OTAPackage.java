@@ -30,9 +30,9 @@ import java.util.regex.*;
 class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String BUILD, BUILD_LEFT, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
-		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]",
 		REGEX_BUILD_AFTER_LETTER = "[4-6]\\d{3}",
-		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]";
+		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]",
+		REGEX_BETA = REGEX_BUILD_UP_TO_LETTER + REGEX_BUILD_AFTER_LETTER + "[a-z]?";
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 	private String date, size;
@@ -107,22 +107,35 @@ class OTAPackage {
 	 * @return The build number that iOS will report in Settings.
      **/
 	public String actualBuild() {
-		if (!BUILD.matches(REGEX_BETA)) {
+		String actualBuild = "";
+
+		// If it the build number looks like a beta...
+		// And it's labeled as a beta...
+		// But it's not a beta... We need to get the actual build number.
+		if (BUILD.matches(REGEX_BETA) && this.isDeclaredBeta() && this.betaType() == 0) {
 			final Pattern BUILDNUM_AFTER_LETTER = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
 			match = BUILDNUM_AFTER_LETTER.matcher(BUILD);
 
 			if (match.find()) {
+				// Subtract the value that Apple added to the actual build number.
 				if (Integer.parseInt(match.group()) > 6000)
-					return BUILD_LEFT + (Integer.parseInt(match.group()) - 6000);
+					actualBuild = BUILD_LEFT + (Integer.parseInt(match.group()) - 6000);
 
 				else
-					return BUILD_LEFT + (Integer.parseInt(match.group()) - 5000);
+					actualBuild = BUILD_LEFT + (Integer.parseInt(match.group()) - 5000);
+
+				// If there was a letter on the end (usually for Apple TV), put it back.
+				if (Character.isLowerCase(BUILD.charAt(BUILD.length()-1)))
+					actualBuild = actualBuild + BUILD.charAt(BUILD.length()-1);
 			}
 
+			// Not sure how anyone would get to this, but...
 			else
-				return BUILD;
-		}
+				actualBuild = BUILD;
 
+			return actualBuild;
+		}
+		
 		else
 			return BUILD;
 	}
