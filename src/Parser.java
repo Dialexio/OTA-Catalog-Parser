@@ -26,6 +26,7 @@ import com.dd.plist.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -91,6 +92,11 @@ public class Parser {
 		catch (PropertyListFormatException e) {
 			System.err.println("ERROR: This isn't an Apple property list.");
 			return 6;
+		}
+
+		catch (UnknownHostException e) {
+			System.err.println("ERROR: Can't find the host "+ e.getMessage());
+			return 10;
 		}
 
 		catch (Exception e) {

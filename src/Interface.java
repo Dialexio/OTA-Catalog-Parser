@@ -183,23 +183,31 @@ public class Interface {
 
 						switch (xmlDropdown.getItem(xmlDropdown.getSelectionIndex())) {
 							case "Custom URL…":
-								if (parser.loadXML(urlText.getText()) == 9)
-									throw new Exception("The URL supplied should belong to mesu.apple.com.");
+								switch (parser.loadXML(urlText.getText())) {
+									case 9:
+										throw new Exception("The URL supplied should belong to mesu.apple.com.");
+
+									case 10:
+										throw new Exception("mesu.apple.com cannot be resolved.");
+								}
 								output.setText("");
 								break;
 
 							case "iOS (Public)":
-								parser.loadXML("http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								if (parser.loadXML("http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
+									throw new Exception("mesu.apple.com cannot be resolved.");
 								output.setText("");
 								break;
 
 							case "tvOS (Public)":
-								parser.loadXML("http://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								if (parser.loadXML("http://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
+									throw new Exception("mesu.apple.com cannot be resolved.");
 								output.setText("");
 								break;
 
 							case "watchOS (Public)":
-								parser.loadXML("http://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml");
+								if (parser.loadXML("http://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
+									throw new Exception("mesu.apple.com cannot be resolved.");
 								output.setText("");
 								break;
 
