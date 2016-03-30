@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.regex.*;
 
 class OTAPackage {
+	private final int SIZE;
 	private final NSDictionary ENTRY;
 	private final String BUILD, BUILD_LEFT, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
 		REGEX_BUILD_AFTER_LETTER = "[4-6]\\d{3}",
@@ -35,7 +36,7 @@ class OTAPackage {
 		REGEX_BETA = REGEX_BUILD_UP_TO_LETTER + REGEX_BUILD_AFTER_LETTER + "[a-z]?";
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
-	private String date, size;
+	private String date;
 
 	public OTAPackage(NSDictionary otaEntry) {
 		ENTRY = otaEntry;
@@ -83,11 +84,11 @@ class OTAPackage {
 		if (ENTRY.containsKey("RealUpdateAttributes")) {
 			final NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)ENTRY.get("RealUpdateAttributes");
 
-			size = REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize").toString();
+			SIZE = Integer.parseInt(REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize").toString());
 			URL = REAL_UPDATE_ATTRS.get("RealUpdateURL").toString();
 		}
 		else {
-			size = ENTRY.get("_DownloadSize").toString();
+			SIZE = Integer.parseInt(ENTRY.get("_DownloadSize").toString());
 			URL = ((NSString)ENTRY.get("__BaseURL")).getContent() + ((NSString)ENTRY.get("__RelativePath")).getContent();
 		}
 
@@ -203,7 +204,7 @@ class OTAPackage {
 
 			// Hack to force large OTA updates to return 0.
 			// I have never seen a beta OTA update exceed this size.
-			else if (Integer.parseInt(size) > 550000000)
+			else if (SIZE > 550000000)
 				return 0;
 
 			else {
@@ -346,7 +347,7 @@ class OTAPackage {
 	 * @return The package's file size, as a String. It is formatted with commas.
      **/
 	public String size() {
-		return NumberFormat.getNumberInstance(Locale.US).format(Integer.parseInt(size));
+		return NumberFormat.getNumberInstance(Locale.US).format(SIZE);
 	}
 
 	/**
