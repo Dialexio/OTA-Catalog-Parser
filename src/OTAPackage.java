@@ -201,6 +201,11 @@ class OTAPackage {
 			if (DOC_ID.equals("PreRelease"))
 				return 2;
 
+			// Hack to force large OTA updates to return 0.
+			// I have never seen a beta OTA update exceed this size.
+			else if (Integer.parseInt(size) > 550000000)
+				return 0;
+
 			else {
 				regex = Pattern.compile("\\d(DevBeta|Seed)");
 				match = regex.matcher(DOC_ID);
