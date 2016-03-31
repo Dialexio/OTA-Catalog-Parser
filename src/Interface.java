@@ -259,7 +259,7 @@ public class Interface {
 				@Override
 				public void modifyText(ModifyEvent e) {
 					// Show the model field only if we're looking for 6S or 6S Plus.
-					modelField.setVisible(deviceText.getText().matches("iPhone8,(1|2)"));
+					modelField.setVisible(deviceText.getText().matches("iPhone8,(1|2|4)"));
 				}
 			});
 

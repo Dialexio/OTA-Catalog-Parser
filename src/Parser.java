@@ -108,7 +108,7 @@ public class Parser {
 	public void setDevice(String value) {
 		if (value.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
 			device = value;
-			modelCheckRequired = device.matches("iPhone8,(1|2)");
+			modelCheckRequired = device.matches("iPhone8,(1|2|4)");
 		}
 
 		else
