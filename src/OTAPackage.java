@@ -84,11 +84,11 @@ class OTAPackage {
 		if (ENTRY.containsKey("RealUpdateAttributes")) {
 			final NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)ENTRY.get("RealUpdateAttributes");
 
-			SIZE = Integer.parseInt(REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize").toString());
+			SIZE = ((NSNumber)REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize")).intValue();
 			URL = REAL_UPDATE_ATTRS.get("RealUpdateURL").toString();
 		}
 		else {
-			SIZE = Integer.parseInt(ENTRY.get("_DownloadSize").toString());
+			SIZE = ((NSNumber)ENTRY.get("_DownloadSize")).intValue();
 			URL = ((NSString)ENTRY.get("__BaseURL")).getContent() + ((NSString)ENTRY.get("__RelativePath")).getContent();
 		}
 
@@ -200,7 +200,7 @@ class OTAPackage {
 			return 0;
 
 		else {
-			regex = Pattern.compile("\\d(DevBeta|Seed)");
+			regex = Pattern.compile("(DevBeta|Seed)");
 			match = regex.matcher(DOC_ID);
 
 			if (match.find())
