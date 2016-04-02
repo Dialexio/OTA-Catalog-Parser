@@ -527,8 +527,12 @@ public class Parser {
 
 				line = line.concat(entry.actualBuild());
 
-				// Do we have a false build number?
-				if (!entry.actualBuild().equals(entry.declaredBuild()))
+				// Is this a carrier beta? If so, add a footnote reference.
+				if (entry.betaType() == 3)
+					line = line.concat("<ref name=\"carrier\" />");
+
+				// Do we have a false build number? If so, add a footnote reference.
+				if (entry.actualBuild().equals(entry.declaredBuild()) == false)
 					line = line.concat("<ref name=\"fakefive\" />");
 
 				printLine(line);
