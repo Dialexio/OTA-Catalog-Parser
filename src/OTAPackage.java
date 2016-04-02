@@ -164,15 +164,12 @@ class OTAPackage {
 	 * @return An integer value of 0 (not a beta), 1 (public beta), 2 (developer beta), 3 (carrier beta), or 4 (internal build).
      **/
 	public int betaType() {
-		boolean beta = false;
-		Pattern regex = Pattern.compile("\\d(DevBeta|PublicBeta|Seed)");
-		match = regex.matcher(DOC_ID);
+		Pattern regex;
 
+		// Just check ReleaseType and return values based on it.
+		// We do need to dig deeper if it's "Beta" though.
 		if (ENTRY.containsKey("ReleaseType")) {
-			regex = null;
-
 			switch (ENTRY.get("ReleaseType").toString()) {
-				// If the build is labeled "Beta," we still need to check if it's actually a beta. 
 				case "Beta":
 					break;
 
@@ -188,47 +185,29 @@ class OTAPackage {
 			}
 		}
 
-		if (match.find())
-			beta = true;
+		else
+			return 0;
+
+
+		// Further investigations for ReleaseType = "Beta"
+
+		if (DOC_ID.equals("PreRelease"))
+			return 2;
+
+		// Hack to force large OTA updates to return 0.
+		// I have never seen a beta OTA update exceed this size.
+		else if (SIZE > 550000000)
+			return 0;
 
 		else {
-			regex = Pattern.compile(REGEX_BETA);
-			match = regex.matcher(BUILD);
-	
-			beta = match.find();
-		}
+			regex = Pattern.compile("\\d(DevBeta|Seed)");
+			match = regex.matcher(DOC_ID);
 
-		if (beta) {
-			if (DOC_ID.equals("PreRelease"))
+			if (match.find())
 				return 2;
 
-			// Hack to force large OTA updates to return 0.
-			// I have never seen a beta OTA update exceed this size.
-			else if (SIZE > 550000000)
-				return 0;
-
-			else {
-				regex = Pattern.compile("\\d(DevBeta|Seed)");
-				match = regex.matcher(DOC_ID);
-
-				if (match.find()) {
-					regex = null;
-					return 2;
-				}
-
-				else {
-					regex = Pattern.compile("Public");
-					match = regex.matcher(DOC_ID);
-					regex = null;
-
-					return (match.find()) ? 1 : 0;
-				}
-			}
-		}
-
-		else {
-			regex = null;
-			return 0;
+			else
+				return (DOC_ID.contains("Public")) ? 1 : 0;
 		}
 	}
 
