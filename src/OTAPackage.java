@@ -60,10 +60,10 @@ class OTAPackage {
 		if (ENTRY.containsKey("PrerequisiteBuild")) {
 			PREREQ_BUILD = ENTRY.get("PrerequisiteBuild").toString();
 
-			// Thanks for making these conditionals a thing, 6.0 build 10A444.
 			if (ENTRY.containsKey("PrerequisiteOSVersion"))
 				PREREQ_VER = ENTRY.get("PrerequisiteOSVersion").toString();
 
+			// Some XMLs didn't specify a prerequisite version for Trampoline.
 			else if (BUILD.equals("10A444"))
 				PREREQ_VER = "6.0";
 
@@ -87,6 +87,7 @@ class OTAPackage {
 			SIZE = ((NSNumber)REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize")).intValue();
 			URL = REAL_UPDATE_ATTRS.get("RealUpdateURL").toString();
 		}
+
 		else {
 			SIZE = ((NSNumber)ENTRY.get("_DownloadSize")).intValue();
 			URL = ((NSString)ENTRY.get("__BaseURL")).getContent() + ((NSString)ENTRY.get("__RelativePath")).getContent();
@@ -108,33 +109,20 @@ class OTAPackage {
 	 * @return The build number that iOS will report in Settings.
      **/
 	public String actualBuild() {
-		String actualBuild = "";
-
 		// If it the build number looks like a beta...
 		// And it's labeled as a beta...
-		// But it's not a beta... We need to get the actual build number.
+		// But it's not a beta... We need the actual build number.
 		if (BUILD.matches(REGEX_BETA) && this.isDeclaredBeta() && this.betaType() == 0) {
 			final Pattern BUILDNUM_AFTER_LETTER = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
 			match = BUILDNUM_AFTER_LETTER.matcher(BUILD);
 
-			if (match.find()) {
-				// Subtract the value that Apple added to the actual build number.
-				if (Integer.parseInt(match.group()) > 6000)
-					actualBuild = BUILD_LEFT + (Integer.parseInt(match.group()) - 6000);
+			// Rip out whatever value Apple added to the actual build number.
+			if (match.find())
+				return (match.group().charAt(1) == '0') ? BUILD_LEFT + match.group().substring(2) : BUILD_LEFT + match.group().substring(1);
 
-				else
-					actualBuild = BUILD_LEFT + (Integer.parseInt(match.group()) - 5000);
-
-				// If there was a letter on the end (usually for Apple TV), put it back.
-				if (Character.isLowerCase(BUILD.charAt(BUILD.length()-1)))
-					actualBuild = actualBuild + BUILD.charAt(BUILD.length()-1);
-			}
-
-			// Not sure how anyone would get to this, but...
+			// Not sure how this would happen, but...
 			else
-				actualBuild = BUILD;
-
-			return actualBuild;
+				return BUILD;
 		}
 		
 		else
