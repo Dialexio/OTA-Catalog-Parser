@@ -437,10 +437,8 @@ public class Parser {
 							line = line.concat(" Public Beta");
 							break;
 						case 2:
-							line = line.concat(" beta");
-							break;
 						case 3:
-							line = line.concat(" Carrier Beta");
+							line = line.concat(" beta");
 							break;
 						case 4:
 							line = line.concat(" Internal");
@@ -488,10 +486,8 @@ public class Parser {
 							line = line.concat(" Public Beta");
 							break;
 						case 2:
-							line = line.concat(" beta");
-							break;
 						case 3:
-							line = line.concat(" Carrier Beta");
+							line = line.concat(" beta");
 							break;
 						case 4:
 							line = line.concat(" Internal");
@@ -523,10 +519,6 @@ public class Parser {
 				buildRowspanCount.remove(entry.declaredBuild());
 
 				line = line.concat(entry.actualBuild());
-
-				// Is this a carrier beta? If so, add a footnote reference.
-				if (entry.betaType() == 3)
-					line = line.concat("<ref name=\"carrier\" />");
 
 				// Do we have a false build number? If so, add a footnote reference.
 				if (entry.actualBuild().equals(entry.declaredBuild()) == false)
@@ -596,10 +588,16 @@ public class Parser {
 				if (fileRowspanCount.get(entry.url()).get(entry.declaredBuild()).intValue() > 1)
 					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.declaredBuild()) + "\" | ");
 
-				line = line.concat('[' + entry.url() + ' ' + fileName + "]\n| ");
+				line = line.concat('[' + entry.url() + ' ' + fileName + ']');
+
+				// Is this a carrier beta? If so, add a footnote reference.
+				if (entry.betaType() == 3)
+					line = line.concat("<ref name=\"carrier\" />");
+
+				line = line.concat("\n| ");
+
 
 				//Print file size.
-
 				// Only give rowspan if there is more than one row with the OS version.
 				if (fileRowspanCount.get(entry.url()).get(entry.declaredBuild()).intValue() > 1)
 					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.declaredBuild()) + "\" | ");

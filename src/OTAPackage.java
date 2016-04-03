@@ -245,14 +245,14 @@ class OTAPackage {
 	}
 
 	/**
-	 * Checks if Apple marked the release as a beta or not.
-	 * Just because Apple marked the release as a beta does
-	 * not mean that it is a beta release.
+	 * Checks if Apple marked the OTA package with a release type.
+	 * This function only checks for the existence of such a key,
+	 * and not its value.
 	 * 
 	 * @return A boolean value of whether Apple claims this is a beta release (true) or not (false).
      **/
 	public boolean isDeclaredBeta() {
-		return ENTRY.containsKey("ReleaseType") && ENTRY.get("ReleaseType").toString().equals("Beta");
+		return ENTRY.containsKey("ReleaseType");
 	}
 
 	/**
