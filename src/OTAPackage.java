@@ -30,7 +30,7 @@ import java.util.regex.*;
 class OTAPackage {
 	private final int SIZE;
 	private final NSDictionary ENTRY;
-	private final String BUILD, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
+	private final String BUILD, DOC_ID, URL,
 		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
@@ -45,25 +45,6 @@ class OTAPackage {
 		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
 
 		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
-
-		// Obtain the prerequisite build and prerequisite version.
-		if (ENTRY.containsKey("PrerequisiteBuild")) {
-			PREREQ_BUILD = ENTRY.get("PrerequisiteBuild").toString();
-
-			if (ENTRY.containsKey("PrerequisiteOSVersion"))
-				PREREQ_VER = ENTRY.get("PrerequisiteOSVersion").toString();
-
-			// Some XMLs didn't specify a prerequisite version for Trampoline.
-			else if (BUILD.equals("10A444"))
-				PREREQ_VER = "6.0";
-
-			else
-				PREREQ_VER = "N/A";
-		}
-		else {
-			PREREQ_BUILD = "N/A";
-			PREREQ_VER = "N/A";
-		}
 
 		// Retrieve the list of supported models... if it exists.
 		if (ENTRY.containsKey("SupportedDeviceModels"))
@@ -253,7 +234,7 @@ class OTAPackage {
 	 * @return A boolean value of whether this release is used to cover all scenarios (true) or not (false).
      **/
 	public boolean isUniversal() {
-		return (PREREQ_VER.equals("N/A") && PREREQ_BUILD.equals("N/A"));
+		return (this.prerequisiteVer().equals("N/A") && this.prerequisiteBuild().equals("N/A"));
 	}
 
 	/**
@@ -289,7 +270,7 @@ class OTAPackage {
 	 * @return The "PrerequisiteBuild" key, as a String.
      **/
 	public String prerequisiteBuild() {
-		return PREREQ_BUILD;
+		return (ENTRY.containsKey("PrerequisiteBuild")) ? ENTRY.get("PrerequisiteBuild").toString() : "N/A";
 	}
 
 	/**
@@ -299,7 +280,21 @@ class OTAPackage {
 	 * @return The "PrerequisiteVersion" key, as a String.
      **/
 	public String prerequisiteVer() {
-		return PREREQ_VER;
+		if (ENTRY.containsKey("PrerequisiteOSVersion"))
+			return ENTRY.get("PrerequisiteOSVersion").toString();
+
+		else {
+			switch (this.prerequisiteBuild()) {
+			case "10A405":
+				return "6.0";
+
+			case "10B141":
+				return "6.1";
+
+			default:
+				return "N/A";
+			}
+		}
 	}
 
 	/**
@@ -368,11 +363,11 @@ class OTAPackage {
 			return "0000000000";
 
 		else {
-			if (Character.isLetter(PREREQ_BUILD.charAt(1)))
-				return '0' + PREREQ_BUILD;
+			if (Character.isLetter(this.prerequisiteBuild().charAt(1)))
+				return '0' + this.prerequisiteBuild();
 
 			else
-				return PREREQ_BUILD;
+				return this.prerequisiteBuild();
 		}
 	}
 
