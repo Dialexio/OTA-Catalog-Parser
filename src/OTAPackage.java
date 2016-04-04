@@ -152,8 +152,6 @@ class OTAPackage {
 	 * @return An integer value of 0 (not a beta), 1 (public beta), 2 (developer beta), 3 (carrier beta), or 4 (internal build).
      **/
 	public int betaType() {
-		Pattern regex;
-
 		// Just check ReleaseType and return values based on it.
 		// We do need to dig deeper if it's "Beta" though.
 		if (ENTRY.containsKey("ReleaseType")) {
@@ -188,14 +186,14 @@ class OTAPackage {
 			return 0;
 
 		else {
-			regex = Pattern.compile("(DevBeta|Seed)");
-			match = regex.matcher(DOC_ID);
+			if (DOC_ID.contains("Public"))
+				return 1;
 
-			if (match.find())
+			else if (DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
 				return 2;
 
-			else
-				return (DOC_ID.contains("Public")) ? 1 : 0;
+			else 
+				return 0;
 		}
 	}
 
