@@ -120,7 +120,7 @@ public class Parser {
 			maxOSVer = value;
 
 		else if (value.isEmpty())
-			return;
+			maxOSVer = "";
 
 		else {
 			if (paper == null)
@@ -128,6 +128,8 @@ public class Parser {
 
 			else
 				paper.append("WARNING: The value entered for the maximum version is not valid. Ignoring...");
+
+			maxOSVer = "";
 		}
 	}
 
@@ -136,7 +138,7 @@ public class Parser {
 			minOSVer = value;
 
 		else if (value.isEmpty())
-			return;
+			minOSVer = "";
 
 		else {
 			if (paper == null)
@@ -144,6 +146,8 @@ public class Parser {
 
 			else
 				paper.append("WARNING: The value entered for the minimum version is not valid. Ignoring...");
+
+			minOSVer = "";
 		}
 	}
 
