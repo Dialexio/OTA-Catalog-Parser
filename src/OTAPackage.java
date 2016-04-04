@@ -30,10 +30,8 @@ import java.util.regex.*;
 class OTAPackage {
 	private final int SIZE;
 	private final NSDictionary ENTRY;
-	private final String BUILD, BUILD_LEFT, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
-		REGEX_BUILD_AFTER_LETTER = "[4-6]\\d{3}",
-		REGEX_BUILD_UP_TO_LETTER = "(\\d)?\\d[A-Z]",
-		REGEX_BETA = REGEX_BUILD_UP_TO_LETTER + REGEX_BUILD_AFTER_LETTER + "[a-z]?";
+	private final String BUILD, DOC_ID, PREREQ_BUILD, PREREQ_VER, URL,
+		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 	private String date;
@@ -47,14 +45,6 @@ class OTAPackage {
 		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
 
 		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
-
-		// Get the build number up to (and including) the first letter.
-		final Pattern buildToLetterRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
-		match = buildToLetterRegex.matcher(BUILD);
-		if (match.find())
-			BUILD_LEFT = match.group();
-		else
-			BUILD_LEFT = "";
 
 		// Obtain the prerequisite build and prerequisite version.
 		if (ENTRY.containsKey("PrerequisiteBuild")) {
@@ -113,16 +103,20 @@ class OTAPackage {
 		// And it's labeled as a beta...
 		// But it's not a beta... We need the actual build number.
 		if (BUILD.matches(REGEX_BETA) && this.isDeclaredBeta() && this.betaType() == 0) {
-			final Pattern BUILDNUM_AFTER_LETTER = Pattern.compile(REGEX_BUILD_AFTER_LETTER);
-			match = BUILDNUM_AFTER_LETTER.matcher(BUILD);
+			int letterPos, numPos;
 
-			// Rip out whatever value Apple added to the actual build number.
-			if (match.find())
-				return (match.group().charAt(1) == '0') ? BUILD_LEFT + match.group().substring(2) : BUILD_LEFT + match.group().substring(1);
+			for (letterPos = 1; letterPos < BUILD.length(); letterPos++) {
+				if (Character.isUpperCase(BUILD.charAt(letterPos))) {
+					letterPos++;
+					break;
+				}
+			}
 
-			// Not sure how this would happen, but...
-			else
-				return BUILD;
+		    numPos = letterPos + 1;
+			if (BUILD.charAt(numPos) == '0')
+				numPos++;
+
+			return BUILD.substring(0, letterPos) + BUILD.substring(numPos);
 		}
 		
 		else
@@ -324,6 +318,7 @@ class OTAPackage {
 	 * newer entries.
      **/
 	public String sortingBuild() {
+		int letterPos;
 		String sortBuild = BUILD;
 
 		// Make 9A### appear before 10A###.
@@ -332,15 +327,15 @@ class OTAPackage {
 
 		// If the build number is false, replace everything after the letter with "0000."
 		// This will cause betas to appear first.
-		if (!this.actualBuild().equals(this.declaredBuild())) {
-			final Pattern betaRegex = Pattern.compile(REGEX_BUILD_UP_TO_LETTER);
-			match = betaRegex.matcher(sortBuild);
-			String upToLetter = "";
+		if (this.actualBuild().equals(this.declaredBuild()) == false) {
+			for (letterPos = 1; letterPos < sortBuild.length(); letterPos++) {
+				if (Character.isUpperCase(sortBuild.charAt(letterPos))) {
+					letterPos++;
+					break;
+				}
+			}
 
-			if (match.find())
-				upToLetter = match.group();
-
-			sortBuild = upToLetter + "0000";
+			sortBuild = sortBuild.substring(0, letterPos) + "0000";
 		}
 
 		return sortBuild;
