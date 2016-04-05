@@ -41,7 +41,7 @@ public class Parser {
 		dateRowspanCount = new HashMap<String, Integer>(),
 		marketingVersionRowspanCount = new HashMap<String, Integer>(),
 		osVersionRowspanCount = new HashMap<String, Integer>();
-	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <OTAPackage.declaredBuild(), count> 
+	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
 		prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 	private static boolean showBeta = false, wiki = false;
@@ -264,7 +264,7 @@ public class Parser {
 			// Build
 			// Increment the count if it exists.
 			if (buildRowspanCount.containsKey(entry.declaredBuild()))
-				buildRowspanCount.put(entry.declaredBuild(), buildRowspanCount.get(entry.declaredBuild())+1);
+				buildRowspanCount.put(entry.declaredBuild(), buildRowspanCount.get(entry.declaredBuild()) + 1);
 			// If it hasn't been counted, add the first tally.
 			else
 				buildRowspanCount.put(entry.declaredBuild(), 1);
@@ -272,7 +272,7 @@ public class Parser {
 			// Date (Count actualBuild() and not date() because x.0 GM and x.1 beta can technically be pushed at the same time.)
 			// Increment the count if it exists.
 			if (dateRowspanCount.containsKey(entry.actualBuild()))
-				dateRowspanCount.put(entry.actualBuild(), dateRowspanCount.get(entry.actualBuild())+1);
+				dateRowspanCount.put(entry.actualBuild(), dateRowspanCount.get(entry.actualBuild()) + 1);
 			// If it hasn't been counted, add the first tally.
 			else
 				dateRowspanCount.put(entry.actualBuild(), 1);
@@ -283,18 +283,18 @@ public class Parser {
 				fileNestedCount = fileRowspanCount.get(entry.url());
 
 			// Increment the count if it exists.
-			if (fileNestedCount.containsKey(entry.declaredBuild()))
-				fileNestedCount.put(entry.declaredBuild(), fileNestedCount.get(entry.declaredBuild())+1);
+			if (fileNestedCount.containsKey(entry.prerequisiteVer()))
+				fileNestedCount.put(entry.prerequisiteVer(), fileNestedCount.get(entry.prerequisiteVer()) + 1);
 			// If it hasn't been counted, add the first tally.
 			else
-				fileNestedCount.put(entry.declaredBuild(), 1);
+				fileNestedCount.put(entry.prerequisiteVer(), 1);
 
 			fileRowspanCount.put(entry.url(), fileNestedCount);
 
 			// Marketing version
 			// Increment the count if it exists.
 			if (marketingVersionRowspanCount.containsKey(entry.marketingVersion()))
-				marketingVersionRowspanCount.put(entry.marketingVersion(), marketingVersionRowspanCount.get(entry.marketingVersion())+1);
+				marketingVersionRowspanCount.put(entry.marketingVersion(), marketingVersionRowspanCount.get(entry.marketingVersion()) + 1);
 			// If it hasn't been counted, add the first tally.
 			else
 				marketingVersionRowspanCount.put(entry.marketingVersion(), 1);
@@ -302,7 +302,7 @@ public class Parser {
 			// OS version
 			// Increment the count if it exists.
 			if (osVersionRowspanCount.containsKey(entry.osVersion()))
-				osVersionRowspanCount.put(entry.osVersion(), osVersionRowspanCount.get(entry.osVersion())+1);
+				osVersionRowspanCount.put(entry.osVersion(), osVersionRowspanCount.get(entry.osVersion()) + 1);
 			// If it hasn't been counted, add the first tally.
 			else
 				osVersionRowspanCount.put(entry.osVersion(), 1);
@@ -313,7 +313,7 @@ public class Parser {
 
 			// Increment the count if it exists.
 			if (prereqNestedCount.containsKey(entry.prerequisiteVer()))
-				prereqNestedCount.put(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer())+1);
+				prereqNestedCount.put(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer()) + 1);
 			// If it hasn't been counted, add the first tally.
 			else
 				prereqNestedCount.put(entry.prerequisiteVer(), 1);
@@ -584,13 +584,13 @@ public class Parser {
 				line = "";
 			}
 
-			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.declaredBuild())) {
+			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.prerequisiteVer())) {
 				line = line.concat("| ");
 
 				// Is there more than one of this prerequisite version tallied?
 				// Also do not use rowspan if the prerequisite build is a beta.
-				if (fileRowspanCount.get(entry.url()).get(entry.declaredBuild()).intValue() > 1)
-					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.declaredBuild()) + "\" | ");
+				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
+					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
 
 				line = line.concat('[' + entry.url() + ' ' + fileName + ']');
 
@@ -603,14 +603,14 @@ public class Parser {
 
 				//Print file size.
 				// Only give rowspan if there is more than one row with the OS version.
-				if (fileRowspanCount.get(entry.url()).get(entry.declaredBuild()).intValue() > 1)
-					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.declaredBuild()) + "\" | ");
+				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
+					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
 
 				printLine(line + entry.size());
 				line = "";
 
 				//Remove the count since we're done with it.
-				fileRowspanCount.get(entry.url()).remove(entry.declaredBuild());
+				fileRowspanCount.get(entry.url()).remove(entry.prerequisiteVer());
 			}
 		}
 	}

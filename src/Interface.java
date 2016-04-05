@@ -92,14 +92,14 @@ public class Interface {
 			GridLayout gl_deviceField = new GridLayout(2, false);
 			gl_deviceField.marginHeight = 0;
 			deviceField.setLayout(gl_deviceField);
-			deviceLabel = new Label(deviceField, SWT.NONE);
-			deviceLabel.setText("Device:");
-			deviceLabel.setToolTipText("Enter a device type, such as iPhone5,1.");
-			deviceText = new Text(deviceField, SWT.BORDER);
-			GridData gd_deviceTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-			gd_deviceTextField.widthHint = 110;
-			deviceText.setLayoutData(gd_deviceTextField);
-			deviceText.setToolTipText("Enter a device type, such as iPhone5,1.");
+				deviceLabel = new Label(deviceField, SWT.NONE);
+				deviceLabel.setText("Device:");
+				deviceLabel.setToolTipText("Enter a device type, such as iPhone5,1.");
+				deviceText = new Text(deviceField, SWT.BORDER);
+				GridData gd_deviceTextField = new GridData(SWT.LEFT, SWT.CENTER, false, false);
+				gd_deviceTextField.widthHint = 110;
+				deviceText.setLayoutData(gd_deviceTextField);
+				deviceText.setToolTipText("Enter a device type, such as iPhone5,1.");
 
 			modelField = new Composite(deviceFields, SWT.NONE);
 			modelField.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
