@@ -30,7 +30,7 @@ import java.util.regex.*;
 class OTAPackage {
 	private final int SIZE;
 	private final NSDictionary ENTRY;
-	private final String BUILD, DOC_ID, URL,
+	private final String DOC_ID, URL,
 		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
@@ -40,11 +40,10 @@ class OTAPackage {
 		ENTRY = otaEntry;
 		otaEntry = null;
 
-		BUILD = ENTRY.get("Build").toString();
 		DOC_ID = ENTRY.containsKey("SUDocumentationID") ? ENTRY.get("SUDocumentationID").toString() : "0Seed";
 		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
 
-		final Pattern timestampRegex = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
+		final Pattern TIMESTAMP_REGEX = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 
 		// Retrieve the list of supported models... if it exists.
 		if (ENTRY.containsKey("SupportedDeviceModels"))
@@ -53,10 +52,11 @@ class OTAPackage {
 		// Obtaining the size and URL.
 		// First, we need to make sure we don't get info for a dummy update.
 		if (ENTRY.containsKey("RealUpdateAttributes")) {
-			final NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)ENTRY.get("RealUpdateAttributes");
+			NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)ENTRY.get("RealUpdateAttributes");
 
 			SIZE = ((NSNumber)REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize")).intValue();
 			URL = REAL_UPDATE_ATTRS.get("RealUpdateURL").toString();
+			REAL_UPDATE_ATTRS = null;
 		}
 
 		else {
@@ -66,7 +66,7 @@ class OTAPackage {
 
 		// Extract the date from the URL.
 		// This is not 100% accurate information, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
-		match = timestampRegex.matcher(URL);
+		match = TIMESTAMP_REGEX.matcher(URL);
 		date = (match.find()) ? match.group().substring(5) : "Not Available";
 
 		if (date.length() == 7)
@@ -83,25 +83,25 @@ class OTAPackage {
 		// If it the build number looks like a beta...
 		// And it's labeled as a beta...
 		// But it's not a beta... We need the actual build number.
-		if (BUILD.matches(REGEX_BETA) && this.isDeclaredBeta() && this.betaType() == 0) {
+		if (this.declaredBuild().matches(REGEX_BETA) && this.isDeclaredBeta() && this.betaType() == 0) {
 			int letterPos, numPos;
 
-			for (letterPos = 1; letterPos < BUILD.length(); letterPos++) {
-				if (Character.isUpperCase(BUILD.charAt(letterPos))) {
+			for (letterPos = 1; letterPos < this.declaredBuild().length(); letterPos++) {
+				if (Character.isUpperCase(this.declaredBuild().charAt(letterPos))) {
 					letterPos++;
 					break;
 				}
 			}
 
 		    numPos = letterPos + 1;
-			if (BUILD.charAt(numPos) == '0')
+			if (this.declaredBuild().charAt(numPos) == '0')
 				numPos++;
 
-			return BUILD.substring(0, letterPos) + BUILD.substring(numPos);
+			return this.declaredBuild().substring(0, letterPos) + this.declaredBuild().substring(numPos);
 		}
 		
 		else
-			return BUILD;
+			return this.declaredBuild();
 	}
 
 	/**
@@ -214,7 +214,7 @@ class OTAPackage {
 	 * @return The build as listed in the OTA update catalog.
      **/
 	public String declaredBuild() {
-		return BUILD;
+		return ENTRY.get("Build").toString();
 	}
 
 	/**
@@ -314,7 +314,7 @@ class OTAPackage {
      **/
 	public String sortingBuild() {
 		int letterPos;
-		String sortBuild = BUILD;
+		String sortBuild = this.declaredBuild();
 
 		// Make 9A### appear before 10A###.
 		if (Character.isLetter(sortBuild.charAt(1)))
