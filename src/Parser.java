@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Text;
 
 public class Parser {
 	private final static ArrayList<OTAPackage> entryList = new ArrayList<OTAPackage>();
-	private static boolean modelCheckRequired;
 	private final static HashMap<String, Integer> buildRowspanCount = new HashMap<String, Integer>(),
 		dateRowspanCount = new HashMap<String, Integer>(),
 		marketingVersionRowspanCount = new HashMap<String, Integer>(),
@@ -44,7 +43,7 @@ public class Parser {
 	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
 		prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
-	private static boolean showBeta = false, wiki = false;
+	private static boolean isWatch, showBeta = false, modelCheckRequired, wiki = false;
 	private static NSDictionary root;
 	private static String device, maxOSVer = "", minOSVer = "", model;
 	private static Text paper;
@@ -108,6 +107,7 @@ public class Parser {
 	public void setDevice(String value) {
 		if (value.matches("((AppleTV|iP(ad|hone|od))|Watch)(\\d)?\\d,\\d")) {
 			device = value;
+			isWatch = device.matches("Watch(\\d)?\\d,\\d");
 			modelCheckRequired = device.matches("iPhone8,(1|2|4)");
 		}
 
@@ -354,7 +354,7 @@ public class Parser {
 		String line = "", osName;
 
 		for (OTAPackage entry:entryList) {
-			if (device.startsWith("Watch"))
+			if (isWatch)
 				osName = "watchOS ";
 			else if (device.matches("AppleTV(2,1|3,1|3,2)"))
 				osName = "Apple TV software ";
@@ -425,7 +425,7 @@ public class Parser {
 			printLine("|-");
 
 			//Marketing Version for Apple Watch.
-			if (device.matches("Watch(\\d)?\\d,\\d") && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
+			if (isWatch && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
 				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
@@ -478,9 +478,10 @@ public class Parser {
 				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
+				// (And this isn't the universal Apple Watch entry.)
 				if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
-					line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
-
+					if ((isWatch == false) || (isWatch && entry.isUniversal() == false))
+						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
 				line = line.concat(entry.osVersion());
 
 				// Give it a beta label (if it is one).
@@ -506,8 +507,9 @@ public class Parser {
 				printLine(line);
 				line = "";
 
-				//Remove the count since we're done with it.
-				osVersionRowspanCount.remove(entry.osVersion());
+				//Remove the count when we're done with it.
+				if ((isWatch == false) || (isWatch && entry.isUniversal() == false))
+					osVersionRowspanCount.remove(entry.osVersion());
 			}
 
 			// Output build number.
@@ -626,12 +628,6 @@ public class Parser {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
 				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
-			}
-		});
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
-			@Override
-			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).sortingMarketingVersion().compareTo(((OTAPackage)package2).sortingMarketingVersion());
 			}
 		});
 	}

@@ -240,9 +240,9 @@ class OTAPackage {
 	/**
 	 * Returns the value of "MarketingVersion" if present.
 	 * "MarketingVersion" is used in some entries to display
-	 * a false version number (e.g. watchOS 2).
+	 * a false version number.
 	 * 
-	 * @return A String value of the "MarketingVersion" key, or "OSVersion" key.
+	 * @return A String value of the "MarketingVersion" key (if it exists), otherwise returns the "OSVersion" key.
      **/
 	public String marketingVersion() {
 		if (ENTRY.containsKey("MarketingVersion")) {
@@ -253,7 +253,7 @@ class OTAPackage {
 		}
 
 		else
-			return ENTRY.get("OSVersion").toString();
+			return this.osVersion();
 	}
 
 	/**
