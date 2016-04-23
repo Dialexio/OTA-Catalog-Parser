@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.regex.*;
 
 class OTAPackage {
-	private final int SIZE;
+	private final long SIZE;
 	private final NSDictionary ENTRY;
 	private final String DOC_ID, URL,
 		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
@@ -54,13 +54,13 @@ class OTAPackage {
 		if (ENTRY.containsKey("RealUpdateAttributes")) {
 			NSDictionary REAL_UPDATE_ATTRS = (NSDictionary)ENTRY.get("RealUpdateAttributes");
 
-			SIZE = ((NSNumber)REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize")).intValue();
+			SIZE = ((NSNumber)REAL_UPDATE_ATTRS.get("RealUpdateDownloadSize")).longValue();
 			URL = REAL_UPDATE_ATTRS.get("RealUpdateURL").toString();
 			REAL_UPDATE_ATTRS = null;
 		}
 
 		else {
-			SIZE = ((NSNumber)ENTRY.get("_DownloadSize")).intValue();
+			SIZE = ((NSNumber)ENTRY.get("_DownloadSize")).longValue();
 			URL = ((NSString)ENTRY.get("__BaseURL")).getContent() + ((NSString)ENTRY.get("__RelativePath")).getContent();
 		}
 
