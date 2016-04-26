@@ -111,8 +111,8 @@ class OTAPackage {
 	 * @return Whatever number beta this is, as an int.
      **/
 	public int betaNumber() {
-		if (this.betaType() > 0 && !DOC_ID.equals("PreRelease")) {
-			final char digit = DOC_ID.charAt(DOC_ID.length()-1);
+		if (!DOC_ID.equals("PreRelease")) {
+			final char digit = DOC_ID.charAt(DOC_ID.length() - 1);
 
 			return (Character.isDigit(digit)) ? Integer.parseInt(digit + "") : 1;
 		}
@@ -124,12 +124,12 @@ class OTAPackage {
 	/**
 	 * Checks if the release is a developer beta, a public beta, or not a beta.
 	 * 
-	 * @return An integer value of 0 (not a beta), 1 (public beta), 2 (developer beta), 3 (carrier beta), or 4 (internal build).
+	 * @return An integer value of 0 (not a beta), 1 (public beta), 2 (developer beta), 3 (carrier beta), or 4 (internal build). -1 may be returned if the type is unknown.
      **/
 	public int betaType() {
 		// Just check ReleaseType and return values based on it.
 		// We do need to dig deeper if it's "Beta" though.
-		if (ENTRY.containsKey("ReleaseType")) {
+		if (this.isDeclaredBeta()) {
 			switch (ENTRY.get("ReleaseType").toString()) {
 				case "Beta":
 					break;
@@ -146,30 +146,24 @@ class OTAPackage {
 			}
 		}
 
-		else
-			return 0;
-
 
 		// Further investigations for ReleaseType = "Beta"
-
 		if (DOC_ID.equals("PreRelease"))
 			return 2;
 
-		// Hack to force large OTA updates to return 0.
-		// I have never seen a beta OTA update exceed this size.
-		else if (SIZE > 550000000)
-			return 0;
-
-		else {
+		else if (this.betaNumber() > 0) {
 			if (DOC_ID.contains("Public"))
 				return 1;
 
 			else if (DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
 				return 2;
 
-			else 
+			else
 				return 0;
 		}
+
+		else
+			return 0;
 	}
 
 	/**

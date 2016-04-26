@@ -199,7 +199,7 @@ public class Parser {
 
 			// For wiki markup: If a beta has two entries
 			// (one for betas, one for non-betas), don't count it twice.
-			if (wiki && !entry.isDeclaredBeta() && entry.betaNumber() != 0)
+			if (wiki && entry.isDeclaredBeta() == false && entry.betaNumber() > 0)
 				continue;
 
 			// Device check.
