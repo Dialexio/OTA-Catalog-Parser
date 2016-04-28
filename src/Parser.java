@@ -194,11 +194,12 @@ public class Parser {
 			matched = false;
 
 			// Beta check.
-			if (!showBeta && entry.betaType() > 0)
+			if (showBeta == false && entry.betaType() > 0)
 				continue;
 
 			// For wiki markup: If a beta has two entries
 			// (one for betas, one for non-betas), don't count it twice.
+			System.out.println(entry.betaNumber());
 			if (wiki && entry.isDeclaredBeta() == false && entry.betaNumber() > 0)
 				continue;
 
@@ -229,9 +230,9 @@ public class Parser {
 			// If the OS version doesn't fit what we're
 			// searching for, continue to the next entry.
 			if (matched) {
-				if (!maxOSVer.isEmpty() && (maxOSVer.compareTo(entry.marketingVersion()) < 0))
+				if (maxOSVer.isEmpty() == false && (maxOSVer.compareTo(entry.marketingVersion()) < 0))
 					continue;
-				if (!minOSVer.isEmpty() && (minOSVer.compareTo(entry.marketingVersion()) > 0))
+				if (minOSVer.isEmpty() == false && (minOSVer.compareTo(entry.marketingVersion()) > 0))
 					continue;
 
 				// It survived the checks!
@@ -552,7 +553,7 @@ public class Parser {
 
 					// Is there more than one of this prerequisite version tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
-					if (!entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]") && prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
+					if (entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]") == false && prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
 						line = line.concat("rowspan=\"" + prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
 						prereqRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}

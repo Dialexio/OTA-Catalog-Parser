@@ -284,8 +284,8 @@ public class Interface {
 		shell.pack();
 		shell.open();
 
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
+		while (shell.isDisposed() == false) {
+			if (display.readAndDispatch() == false)
 				display.sleep();
 		}
 	}

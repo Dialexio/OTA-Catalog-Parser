@@ -111,11 +111,11 @@ class OTAPackage {
 	 * @return Whatever number beta this is, as an int.
      **/
 	public int betaNumber() {
-		if (!DOC_ID.equals("PreRelease")) {
-			final char digit = DOC_ID.charAt(DOC_ID.length() - 1);
+		final char digit = DOC_ID.charAt(DOC_ID.length() - 1);
 
+
+		if (DOC_ID.contains("Public") || DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
 			return (Character.isDigit(digit)) ? Integer.parseInt(digit + "") : 1;
-		}
 
 		else
 			return 0;
@@ -240,7 +240,7 @@ class OTAPackage {
      **/
 	public String marketingVersion() {
 		if (ENTRY.containsKey("MarketingVersion")) {
-			if (!ENTRY.get("MarketingVersion").toString().contains("."))
+			if (ENTRY.get("MarketingVersion").toString().contains(".") == false)
 				return ENTRY.get("MarketingVersion").toString() + ".0";
 			else
 				return ENTRY.get("MarketingVersion").toString();
