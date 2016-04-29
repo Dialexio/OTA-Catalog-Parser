@@ -586,6 +586,22 @@ public class Parser {
 				line = "";
 			}
 
+			switch (entry.betaType()) {
+				case 1:
+				case 2:
+					printLine("| Beta");
+					break;
+				case 3:
+					printLine("| Carrier");
+					break;
+				case 4:
+					printLine("| Internal");
+					break;
+				default:
+					printLine("| {{n/a}}");
+					break;
+			}
+
 			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.prerequisiteVer())) {
 				line = line.concat("| ");
 
@@ -594,14 +610,7 @@ public class Parser {
 				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
 					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
 
-				line = line.concat('[' + entry.url() + ' ' + fileName + ']');
-
-				// Is this a carrier beta? If so, add a footnote reference.
-				if (entry.betaType() == 3)
-					line = line.concat("<ref name=\"carrier\" />");
-
-				line = line.concat("\n| ");
-
+				line = line.concat('[' + entry.url() + ' ' + fileName + "]\n| ");
 
 				//Print file size.
 				// Only give rowspan if there is more than one row with the OS version.
@@ -618,6 +627,12 @@ public class Parser {
 	}
 
 	private static void sort() {
+		Collections.sort(entryList, new Comparator<OTAPackage>() {
+			@Override
+			public int compare(OTAPackage package1, OTAPackage package2) {
+				return (((OTAPackage)package1).betaType() + "").compareTo(((OTAPackage)package2).betaType() + "");
+			}
+		});
 		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
