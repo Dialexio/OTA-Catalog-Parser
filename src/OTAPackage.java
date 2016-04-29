@@ -83,7 +83,7 @@ class OTAPackage {
 		// If it the build number looks like a beta...
 		// And it's labeled as a beta...
 		// But it's not a beta... We need the actual build number.
-		if (this.declaredBuild().matches(REGEX_BETA) && this.isDeclaredBeta() && this.betaType() == 0) {
+		if (this.declaredBuild().matches(REGEX_BETA) && this.isReleaseTypeDeclared() && this.betaType() == 0) {
 			int letterPos, numPos;
 
 			for (letterPos = 1; letterPos < this.declaredBuild().length(); letterPos++) {
@@ -129,7 +129,7 @@ class OTAPackage {
 	public int betaType() {
 		// Just check ReleaseType and return values based on it.
 		// We do need to dig deeper if it's "Beta" though.
-		if (this.isDeclaredBeta()) {
+		if (this.isReleaseTypeDeclared()) {
 			switch (ENTRY.get("ReleaseType").toString()) {
 				case "Beta":
 					break;
@@ -207,17 +207,6 @@ class OTAPackage {
 	}
 
 	/**
-	 * Checks if Apple marked the OTA package with a release type.
-	 * This function only checks for the existence of such a key,
-	 * and not its value.
-	 * 
-	 * @return A boolean value of whether Apple claims this is a beta release (true) or not (false).
-     **/
-	public boolean isDeclaredBeta() {
-		return ENTRY.containsKey("ReleaseType");
-	}
-
-	/**
 	 * Checks if the release has an inflated build number.
 	 * Apple does this to push devices on beta builds to stable builds.
 	 * 
@@ -225,6 +214,17 @@ class OTAPackage {
      **/
 	public boolean isHonestBuild() {
 		return this.actualBuild().equals(this.declaredBuild());
+	}
+
+	/**
+	 * Checks if Apple marked the OTA package with a release type.
+	 * This function only checks for the existence of such a key,
+	 * and not its value. For its value, use the betaType() method.
+	 * 
+	 * @return A boolean value of whether Apple provided a release type (true) or not (false).
+	 **/
+	public boolean isReleaseTypeDeclared() {
+		return ENTRY.containsKey("ReleaseType");
 	}
 
 	/**

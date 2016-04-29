@@ -199,7 +199,7 @@ public class Parser {
 
 			// For wiki markup: If a beta has two entries
 			// (one for betas, one for non-betas), don't count it twice.
-			if (wiki && entry.isDeclaredBeta() == false && entry.betaNumber() > 0)
+			if (wiki && entry.isReleaseTypeDeclared() == false && entry.betaNumber() > 0)
 				continue;
 
 			// Device check.
@@ -391,7 +391,7 @@ public class Parser {
 			printLine(line + " (Build " + entry.actualBuild() + ')');
 			line = "";
 			printLine("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
-			printLine("Marked as beta: " + entry.isDeclaredBeta());
+			printLine("Marked as beta: " + entry.isReleaseTypeDeclared());
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
@@ -591,7 +591,7 @@ public class Parser {
 					printLine("| Internal");
 					break;
 				default:
-					if (entry.isDeclaredBeta())
+					if (entry.isReleaseTypeDeclared())
 						printLine("| Beta");
 
 					else
