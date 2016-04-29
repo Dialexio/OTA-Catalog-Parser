@@ -199,7 +199,6 @@ public class Parser {
 
 			// For wiki markup: If a beta has two entries
 			// (one for betas, one for non-betas), don't count it twice.
-			System.out.println(entry.betaNumber());
 			if (wiki && entry.isDeclaredBeta() == false && entry.betaNumber() > 0)
 				continue;
 
