@@ -34,7 +34,6 @@ class OTAPackage {
 		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
-	private String date;
 
 	public OTAPackage(NSDictionary otaEntry) {
 		ENTRY = otaEntry;
@@ -42,8 +41,6 @@ class OTAPackage {
 
 		DOC_ID = ENTRY.containsKey("SUDocumentationID") ? ENTRY.get("SUDocumentationID").toString() : "N/A";
 		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
-
-		final Pattern TIMESTAMP_REGEX = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
 
 		// Retrieve the list of supported models... if it exists.
 		if (ENTRY.containsKey("SupportedDeviceModels"))
@@ -63,14 +60,6 @@ class OTAPackage {
 			SIZE = ((NSNumber)ENTRY.get("_DownloadSize")).longValue();
 			URL = ((NSString)ENTRY.get("__BaseURL")).getContent() + ((NSString)ENTRY.get("__RelativePath")).getContent();
 		}
-
-		// Extract the date from the URL.
-		// This is not 100% accurate information, especially with releases like 8.0, 8.1, 8.2, etc., but better than nothing.
-		match = TIMESTAMP_REGEX.matcher(URL);
-		date = (match.find()) ? match.group().substring(5) : "Not Available";
-
-		if (date.length() == 7)
-			date = date.substring(0, 6) + '0' + date.substring(6);
 	}
 
 	/**
@@ -169,7 +158,19 @@ class OTAPackage {
 	 * @return The timestamp found in the URL.
      **/
 	public String date() {
-		return date;
+		final Pattern TIMESTAMP_REGEX = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
+
+		// Hard coded values.
+		if (URL.contains(".201218."))
+			return "20120307";
+
+		else if (URL.contains("2015106"))
+			return "20151006";
+
+		// Extract the date from the URL.
+		// This is not 100% accurate information, but it's better than nothing.
+		match = TIMESTAMP_REGEX.matcher(URL);
+		return (match.find()) ? match.group().substring(5) : "00000000";
 	}
 
 	/**
@@ -184,18 +185,18 @@ class OTAPackage {
 		switch (dmy) {
 			// Day
 			case 'd':
-				return date.substring(6);
+				return this.date().substring(6);
 
 			// Month
 			case 'm':
-				return date.substring(4, 6);
+				return this.date().substring(4, 6);
 
 			// Year
 			case 'y':
-				return date.substring(0, 4);
+				return this.date().substring(0, 4);
 
 			default:
-				return date;
+				return this.date();
 		}
 	}
 
