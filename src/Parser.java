@@ -535,16 +535,9 @@ public class Parser {
 			}
 
 			// Print prerequisites if there are any.
-			if (entry.isUniversal()) {
-				line = line.concat("| colspan=\"2\" {{n/a");
+			if (entry.isUniversal())
+				printLine("| colspan=\"2\" {{n/a}}");
 
-				// Is this "universal" OTA update intended for betas?
-				if (entry.isDeclaredBeta() && entry.betaType() == 0)
-					line = line.concat("|Beta");
-
-				printLine(line + "}}");
-				line = "";
-			}
 			else {
 				// Prerequisite version
 				if (prereqRowspanCount.containsKey(entry.declaredBuild()) && prereqRowspanCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteVer())) {
@@ -598,7 +591,12 @@ public class Parser {
 					printLine("| Internal");
 					break;
 				default:
-					printLine("| {{n/a}}");
+					if (entry.isDeclaredBeta())
+						printLine("| Beta");
+
+					else
+						printLine("| {{n/a}}");
+
 					break;
 			}
 
