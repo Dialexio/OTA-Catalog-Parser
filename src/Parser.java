@@ -527,7 +527,7 @@ public class Parser {
 				line = line.concat(entry.actualBuild());
 
 				// Do we have a false build number? If so, add a footnote reference.
-				if (entry.actualBuild().equals(entry.declaredBuild()) == false)
+				if (entry.isHonestBuild() == false)
 					line = line.concat("<ref name=\"fakefive\" />");
 
 				printLine(line);

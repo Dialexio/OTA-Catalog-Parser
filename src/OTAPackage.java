@@ -40,7 +40,7 @@ class OTAPackage {
 		ENTRY = otaEntry;
 		otaEntry = null;
 
-		DOC_ID = ENTRY.containsKey("SUDocumentationID") ? ENTRY.get("SUDocumentationID").toString() : "0Seed";
+		DOC_ID = ENTRY.containsKey("SUDocumentationID") ? ENTRY.get("SUDocumentationID").toString() : "N/A";
 		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
 
 		final Pattern TIMESTAMP_REGEX = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
@@ -114,7 +114,7 @@ class OTAPackage {
 		final char digit = DOC_ID.charAt(DOC_ID.length() - 1);
 
 
-		if (DOC_ID.contains("Public") || DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
+		if (this.isHonestBuild() && (DOC_ID.contains("Public") || DOC_ID.contains("Beta") || DOC_ID.contains("Seed")))
 			return (Character.isDigit(digit)) ? Integer.parseInt(digit + "") : 1;
 
 		else
@@ -151,16 +151,11 @@ class OTAPackage {
 		if (DOC_ID.equals("PreRelease"))
 			return 2;
 
-		else if (this.betaNumber() > 0) {
-			if (DOC_ID.contains("Public"))
+		else if (DOC_ID.contains("Public"))
 				return 1;
 
-			else if (DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
-				return 2;
-
-			else
-				return 0;
-		}
+		else if (DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
+			return 2;
 
 		else
 			return 0;
@@ -220,6 +215,16 @@ class OTAPackage {
      **/
 	public boolean isDeclaredBeta() {
 		return ENTRY.containsKey("ReleaseType");
+	}
+
+	/**
+	 * Checks if the release has an inflated build number.
+	 * Apple does this to push devices on beta builds to stable builds.
+	 * 
+	 * @return A boolean value of whether this release has a false build number (true) or not (false).
+     **/
+	public boolean isHonestBuild() {
+		return this.actualBuild().equals(this.declaredBuild());
 	}
 
 	/**
@@ -316,7 +321,7 @@ class OTAPackage {
 
 		// If the build number is false, replace everything after the letter with "0000."
 		// This will cause betas to appear first.
-		if (this.actualBuild().equals(this.declaredBuild()) == false) {
+		if (this.isHonestBuild() == false) {
 			for (letterPos = 1; letterPos < sortBuild.length(); letterPos++) {
 				if (Character.isUpperCase(sortBuild.charAt(letterPos))) {
 					letterPos++;
