@@ -121,7 +121,17 @@ class OTAPackage {
 		if (this.isReleaseTypeDeclared()) {
 			switch (ENTRY.get("ReleaseType").toString()) {
 				case "Beta":
-					break;
+					if (DOC_ID.equals("N/A") || DOC_ID.equals("PreRelease"))
+						return 2;
+
+					else if (DOC_ID.contains("Public"))
+						return 1;
+
+					else if (DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
+						return 2;
+
+					else
+						return 0;
 
 				case "Carrier":
 					return 3;
@@ -134,17 +144,6 @@ class OTAPackage {
 					return -1;
 			}
 		}
-
-
-		// Further investigations for ReleaseType = "Beta"
-		if (DOC_ID.equals("PreRelease"))
-			return 2;
-
-		else if (DOC_ID.contains("Public"))
-				return 1;
-
-		else if (DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
-			return 2;
 
 		else
 			return 0;
