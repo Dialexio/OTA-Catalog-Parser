@@ -41,7 +41,8 @@ public class Parser {
 		marketingVersionRowspanCount = new HashMap<String, Integer>(),
 		osVersionRowspanCount = new HashMap<String, Integer>();
 	private final static HashMap<String, HashMap<String, Integer>> fileRowspanCount = new HashMap<String, HashMap<String, Integer>>(),// URL, <PrereqOS, count> 
-		prereqRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
+		prereqBuildRowspanCount = new HashMap<String, HashMap<String, Integer>>(), // Build, <PrereqBuild, count>
+		prereqOSRowspanCount = new HashMap<String, HashMap<String, Integer>>(); // Build, <PrereqOS, count>
 
 	private static boolean isWatch, showBeta = false, modelCheckRequired, wiki = false;
 	private static NSDictionary root;
@@ -250,16 +251,19 @@ public class Parser {
 		dateRowspanCount.clear();
 		marketingVersionRowspanCount.clear();
 		osVersionRowspanCount.clear();
-		prereqRowspanCount.clear();
+		prereqBuildRowspanCount.clear();
+		prereqOSRowspanCount.clear();
 	}
 
 	private static void countRowspan() {
-		HashMap<String, Integer> fileNestedCount, prereqNestedCount;
+		HashMap<String, Integer> fileNestedCount, prereqBuildNestedCount, prereqOSNestedCount;
 
 		// Count the rowspans for wiki markup.
 		for (OTAPackage entry:entryList) {
 			fileNestedCount = new HashMap<String, Integer>();
-			prereqNestedCount = new HashMap<String, Integer>();
+			prereqBuildNestedCount = new HashMap<String, Integer>();
+			prereqOSNestedCount = new HashMap<String, Integer>();
+
 
 			// Build
 			// Increment the count if it exists.
@@ -269,6 +273,7 @@ public class Parser {
 			else
 				buildRowspanCount.put(entry.declaredBuild(), 1);
 
+
 			// Date (Count actualBuild() and not date() because x.0 GM and x.1 beta can technically be pushed at the same time.)
 			// Increment the count if it exists.
 			if (dateRowspanCount.containsKey(entry.actualBuild()))
@@ -277,10 +282,12 @@ public class Parser {
 			else
 				dateRowspanCount.put(entry.actualBuild(), 1);
 
+
 			// File URL
 			// Load nested HashMap into a temporary variable, if it exists.
 			if (fileRowspanCount.containsKey(entry.url()))
 				fileNestedCount = fileRowspanCount.get(entry.url());
+
 
 			// Increment the count if it exists.
 			if (fileNestedCount.containsKey(entry.prerequisiteVer()))
@@ -291,6 +298,7 @@ public class Parser {
 
 			fileRowspanCount.put(entry.url(), fileNestedCount);
 
+
 			// Marketing version
 			// Increment the count if it exists.
 			if (marketingVersionRowspanCount.containsKey(entry.marketingVersion()))
@@ -298,6 +306,7 @@ public class Parser {
 			// If it hasn't been counted, add the first tally.
 			else
 				marketingVersionRowspanCount.put(entry.marketingVersion(), 1);
+
 
 			// OS version
 			// Increment the count if it exists.
@@ -307,22 +316,38 @@ public class Parser {
 			else
 				osVersionRowspanCount.put(entry.osVersion(), 1);
 
-			// Prerequisite version
-			if (prereqRowspanCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
-				prereqNestedCount = prereqRowspanCount.get(entry.declaredBuild());
+
+			// Prerequisite OS version
+			if (prereqOSRowspanCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
+				prereqOSNestedCount = prereqOSRowspanCount.get(entry.declaredBuild());
 
 			// Increment the count if it exists.
-			if (prereqNestedCount.containsKey(entry.prerequisiteVer()))
-				prereqNestedCount.put(entry.prerequisiteVer(), prereqNestedCount.get(entry.prerequisiteVer()) + 1);
+			if (prereqOSNestedCount.containsKey(entry.prerequisiteVer()))
+				prereqOSNestedCount.put(entry.prerequisiteVer(), prereqOSNestedCount.get(entry.prerequisiteVer()) + 1);
 			// If it hasn't been counted, add the first tally.
 			else
-				prereqNestedCount.put(entry.prerequisiteVer(), 1);
+				prereqOSNestedCount.put(entry.prerequisiteVer(), 1);
 
-			prereqRowspanCount.put(entry.declaredBuild(), prereqNestedCount);
+			prereqOSRowspanCount.put(entry.declaredBuild(), prereqOSNestedCount);
+
+
+			// Prerequisite Build version
+			if (prereqBuildRowspanCount.containsKey(entry.declaredBuild())) // Load nested HashMap into variable temporarily, if it exists.
+				prereqBuildNestedCount = prereqBuildRowspanCount.get(entry.declaredBuild());
+
+			// Increment the count if it exists.
+			if (prereqBuildNestedCount.containsKey(entry.prerequisiteBuild()))
+				prereqBuildNestedCount.put(entry.prerequisiteBuild(), prereqBuildNestedCount.get(entry.prerequisiteBuild()) + 1);
+			// If it hasn't been counted, add the first tally.
+			else
+				prereqBuildNestedCount.put(entry.prerequisiteBuild(), 1);
+
+			prereqBuildRowspanCount.put(entry.declaredBuild(), prereqBuildNestedCount);
 		}
 
 		fileNestedCount = null;
-		prereqNestedCount = null;
+		prereqBuildNestedCount = null;
+		prereqOSNestedCount = null;
 	}
 
 	public void parse() {
@@ -540,20 +565,20 @@ public class Parser {
 
 			else {
 				// Prerequisite version
-				if (prereqRowspanCount.containsKey(entry.declaredBuild()) && prereqRowspanCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteVer())) {
-					line = line.concat("| ");
+				if (prereqOSRowspanCount.containsKey(entry.declaredBuild()) && prereqOSRowspanCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteVer())) {
+					line = "| ";
 
 					// Is there more than one of this prerequisite version tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
-					if (entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]") == false && prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
-						line = line.concat("rowspan=\"" + prereqRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
-						prereqRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
+					if (entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA) == false && prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
+						line = line.concat("rowspan=\"" + prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
+						prereqOSRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
 
 					line = line.concat(entry.prerequisiteVer());
 
 					// Very quick check if prerequisite is a beta. Won't work if close to final release.
-					if (entry.prerequisiteBuild().matches("(\\d)?\\d[A-Z][45]\\d{3}[a-z]"))
+					if (entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA))
 						line = line.concat(" beta #");
 
 					printLine(line);
@@ -561,7 +586,19 @@ public class Parser {
 				}
 
 				// Prerequisite build
-				printLine("| " + entry.prerequisiteBuild());
+				if (prereqBuildRowspanCount.containsKey(entry.declaredBuild()) && prereqBuildRowspanCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteBuild())) {
+					line = "| ";
+
+					// Is there more than one of this prerequisite build tallied?
+					// Also do not use rowspan if the prerequisite build is a beta.
+					if (prereqBuildRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteBuild()).intValue() > 1) {
+						line = line.concat("rowspan=\"" + prereqBuildRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteBuild()) + "\" | ");
+						prereqOSRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteBuild());
+					}
+
+					printLine(line + entry.prerequisiteBuild());
+					line = "";
+				}
 			}
 
 			// Date as extracted from the URL. Using the same rowspan count as build.
