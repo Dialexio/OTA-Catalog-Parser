@@ -30,10 +30,11 @@ import java.util.regex.*;
 class OTAPackage {
 	private final long SIZE;
 	private final NSDictionary ENTRY;
-	private final String DOC_ID, URL,
-		REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
+	private final String DOC_ID, URL;
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
+
+	public final static String REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 
 	public OTAPackage(NSDictionary otaEntry) {
 		ENTRY = otaEntry;
