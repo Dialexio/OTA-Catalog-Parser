@@ -591,7 +591,7 @@ public class Parser {
 					// Also do not use rowspan if the prerequisite build is a beta.
 					if (prereqBuildRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteBuild()).intValue() > 1) {
 						line = line.concat("rowspan=\"" + prereqBuildRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteBuild()) + "\" | ");
-						prereqOSRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteBuild());
+						prereqBuildRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteBuild());
 					}
 
 					printLine(line + entry.prerequisiteBuild());
