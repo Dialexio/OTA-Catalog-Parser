@@ -451,7 +451,7 @@ public class Parser {
 
 			//Marketing Version for Apple Watch.
 			if (isWatch && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
-				line = line.concat("| ");
+				line = "| ";
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (marketingVersionRowspanCount.get(entry.marketingVersion()).intValue() > 1)
@@ -488,19 +488,17 @@ public class Parser {
 
 			// Output OS version.
 			if (osVersionRowspanCount.containsKey(entry.osVersion())) {
+				line = "| ";
+
 				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
 				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
-					line = line.concat("| ");
-
 					// Only give rowspan if there is more than one row with the OS version.
 					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
 						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
 
 					printLine(line + "[MARKETING VERSION]");
-					line = "";
+					line = "| ";
 				}
-
-				line = line.concat("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				// (And this isn't the universal Apple Watch entry.)
@@ -539,7 +537,7 @@ public class Parser {
 
 			// Output build number.
 			if (buildRowspanCount.containsKey(entry.declaredBuild())) {
-				line = line.concat("| ");
+				line = "| ";
 
 				// Only give rowspan if there is more than one row with the OS version.
 				// Count declaredBuild() instead of actualBuild() so the entry pointing betas to the final build is treated separately.
@@ -604,7 +602,7 @@ public class Parser {
 			// Date as extracted from the URL. Using the same rowspan count as build.
 			// (3.1.1 had two builds released on different dates for iPod touch 3G.)
 			if (dateRowspanCount.containsKey(entry.actualBuild())) {
-				line = line.concat("| ");
+				line = "| ";
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (dateRowspanCount.get(entry.actualBuild()).intValue() > 1) {
@@ -616,6 +614,7 @@ public class Parser {
 				line = "";
 			}
 
+			// Release Type.
 			switch (entry.betaType()) {
 				case 1:
 				case 2:
@@ -638,7 +637,7 @@ public class Parser {
 			}
 
 			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.prerequisiteVer())) {
-				line = line.concat("| ");
+				line = "| ";
 
 				// Is there more than one of this prerequisite version tallied?
 				// Also do not use rowspan if the prerequisite build is a beta.
