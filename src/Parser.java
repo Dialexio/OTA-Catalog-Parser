@@ -615,25 +615,27 @@ public class Parser {
 			}
 
 			// Release Type.
-			switch (entry.betaType()) {
-				case 1:
-				case 2:
-					printLine("| Beta");
-					break;
-				case 3:
-					printLine("| Carrier");
-					break;
-				case 4:
-					printLine("| Internal");
-					break;
-				default:
-					if (entry.isReleaseTypeDeclared())
+			if (isWatch == false) {
+				switch (entry.betaType()) {
+					case 1:
+					case 2:
 						printLine("| Beta");
-
-					else
-						printLine("| {{n/a}}");
-
-					break;
+						break;
+					case 3:
+						printLine("| Carrier");
+						break;
+					case 4:
+						printLine("| Internal");
+						break;
+					default:
+						if (entry.isReleaseTypeDeclared())
+							printLine("| Beta");
+	
+						else
+							printLine("| {{n/a}}");
+	
+						break;
+				}
 			}
 
 			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.prerequisiteVer())) {

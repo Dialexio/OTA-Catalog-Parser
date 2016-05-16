@@ -141,7 +141,7 @@ class OTAPackage {
 					return 4;
 
 				default:
-					System.err.println("Unknown ReleaseType: "+ ENTRY.get("ReleaseType").toString());
+					System.err.println("Unknown ReleaseType: " + ENTRY.get("ReleaseType").toString());
 					return -1;
 			}
 		}
