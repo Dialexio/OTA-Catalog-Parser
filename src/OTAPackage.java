@@ -280,20 +280,19 @@ class OTAPackage {
 	 * @return The "PrerequisiteVersion" key, as a String.
      **/
 	public String prerequisiteVer() {
-		if (ENTRY.containsKey("PrerequisiteOSVersion"))
-			return ENTRY.get("PrerequisiteOSVersion").toString();
-
-		else {
-			switch (this.prerequisiteBuild()) {
+		switch (this.prerequisiteBuild()) {
 			case "10A405":
 				return "6.0";
-
+	
 			case "10B141":
 				return "6.1";
-
+	
+			case "13A340":
+			case "13A341":
+				return "9.0 GM";
+	
 			default:
-				return "N/A";
-			}
+				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
 		}
 	}
 

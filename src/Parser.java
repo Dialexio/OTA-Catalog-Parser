@@ -573,7 +573,12 @@ public class Parser {
 						prereqOSRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
 
-					line = line.concat(entry.prerequisiteVer());
+					// If this is a GM, print the link to Golden Master.
+					if (entry.prerequisiteVer().contains(" GM"))
+						line = line.concat(entry.prerequisiteVer().replace("GM", "[[Golden Master|GM]]"));
+
+					else
+						line = line.concat(entry.prerequisiteVer());
 
 					// Very quick check if prerequisite is a beta. Won't work if close to final release.
 					if (entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA))
