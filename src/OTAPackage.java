@@ -30,7 +30,7 @@ import java.util.regex.*;
 class OTAPackage {
 	private final long SIZE;
 	private final NSDictionary ENTRY;
-	private final String DOC_ID, URL;
+	private final String URL;
 	private Matcher match;
 	private NSObject[] supportedDeviceModels = null, supportedDevices;
 
@@ -40,7 +40,6 @@ class OTAPackage {
 		ENTRY = otaEntry;
 		otaEntry = null;
 
-		DOC_ID = ENTRY.containsKey("SUDocumentationID") ? ENTRY.get("SUDocumentationID").toString() : "N/A";
 		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
 
 		// Retrieve the list of supported models... if it exists.
@@ -101,10 +100,10 @@ class OTAPackage {
 	 * @return Whatever number beta this is, as an int.
      **/
 	public int betaNumber() {
-		final char digit = DOC_ID.charAt(DOC_ID.length() - 1);
+		final char digit = this.documentationID().charAt(this.documentationID().length() - 1);
 
 
-		if (this.isHonestBuild() && (DOC_ID.contains("Public") || DOC_ID.contains("Beta") || DOC_ID.contains("Seed")))
+		if (this.isHonestBuild() && (this.documentationID().contains("Public") || this.documentationID().contains("Beta") || this.documentationID().contains("Seed")))
 			return (Character.isDigit(digit)) ? Integer.parseInt(digit + "") : 1;
 
 		else
@@ -122,13 +121,13 @@ class OTAPackage {
 		if (this.isReleaseTypeDeclared()) {
 			switch (ENTRY.get("ReleaseType").toString()) {
 				case "Beta":
-					if (DOC_ID.equals("N/A") || DOC_ID.equals("PreRelease"))
+					if (this.documentationID().equals("N/A") || this.documentationID().equals("PreRelease"))
 						return 2;
 
-					else if (DOC_ID.contains("Public"))
+					else if (this.documentationID().contains("Public"))
 						return 1;
 
-					else if (DOC_ID.contains("Beta") || DOC_ID.contains("Seed"))
+					else if (this.documentationID().contains("Beta") || this.documentationID().contains("Seed"))
 						return 2;
 
 					else
@@ -205,6 +204,16 @@ class OTAPackage {
      **/
 	public String declaredBuild() {
 		return ENTRY.get("Build").toString();
+	}
+
+	/**
+	 * Reports the documentation ID that Apple assigned.
+	 * This tells iOS which documentation file to load, since multiple ones may be listed.
+	 * 
+	 * @return The documentation ID that corresponds to the OTA update. If one is not specified, returns "N/A."
+     **/
+	public String documentationID() {
+		return ENTRY.containsKey("SUDocumentationID") ? ENTRY.get("SUDocumentationID").toString() : "N/A";
 	}
 
 	/**
