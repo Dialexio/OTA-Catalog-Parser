@@ -488,17 +488,16 @@ public class Parser {
 
 			// Output OS version.
 			if (osVersionRowspanCount.containsKey(entry.osVersion())) {
-				line = "| ";
-
 				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
 				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
 					// Only give rowspan if there is more than one row with the OS version.
 					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
-						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
+						line = "| rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ";
 
 					printLine(line + "[MARKETING VERSION]");
-					line = "| ";
 				}
+
+				line = "| ";
 
 				// Only give rowspan if there is more than one row with the OS version.
 				// (And this isn't the universal Apple Watch entry.)
@@ -533,6 +532,9 @@ public class Parser {
 				//Remove the count when we're done with it.
 				if ((isWatch == false) || (isWatch && entry.isUniversal() == false))
 					osVersionRowspanCount.remove(entry.osVersion());
+
+				else
+					osVersionRowspanCount.put(entry.osVersion(), osVersionRowspanCount.get(entry.osVersion()).intValue() - 1);
 			}
 
 			// Output build number.
