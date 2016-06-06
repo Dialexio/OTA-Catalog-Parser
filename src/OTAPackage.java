@@ -32,19 +32,12 @@ class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String URL;
 	private Matcher match;
-	private NSObject[] supportedDeviceModels = null, supportedDevices;
 
 	public final static String REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 
 	public OTAPackage(NSDictionary otaEntry) {
 		ENTRY = otaEntry;
 		otaEntry = null;
-
-		supportedDevices = ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
-
-		// Retrieve the list of supported models... if it exists.
-		if (ENTRY.containsKey("SupportedDeviceModels"))
-			supportedDeviceModels = ((NSArray)ENTRY.objectForKey("SupportedDeviceModels")).getArray();
 
 		// Obtaining the size and URL.
 		// First, we need to make sure we don't get info for a dummy update.
@@ -379,12 +372,18 @@ class OTAPackage {
 		}
 	}
 
+	/**
+	 * This method provides the models that this OTA update supports.
+	 *
+	 * @return An array of NSObjects (which should be NSStrings).
+     **/
 	public NSObject[] supportedDeviceModels() {
-		return supportedDeviceModels;
+		// Retrieve the list of supported models... if it exists.
+		return (ENTRY.containsKey("SupportedDeviceModels")) ? ((NSArray)ENTRY.objectForKey("SupportedDeviceModels")).getArray() : null;
 	}
 
 	public NSObject[] supportedDevices() {
-		return supportedDevices;
+		return ((NSArray)ENTRY.objectForKey("SupportedDevices")).getArray();
 	}
 
 	/**
