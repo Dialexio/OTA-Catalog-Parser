@@ -314,6 +314,7 @@ class OTAPackage {
 	 * newer entries.
      **/
 	public String sortingBuild() {
+		boolean isWatch = false;
 		int letterPos;
 		String sortBuild = this.declaredBuild();
 
@@ -332,6 +333,21 @@ class OTAPackage {
 			}
 
 			sortBuild = sortBuild.substring(0, letterPos) + "0000";
+		}
+
+		// Apple Watch betas go on the bottom.
+		// As dumb as this is, it's a pain because of the OS version.
+		// Hopefully this gets changed for consistency in the future...
+		else if (this.declaredBuild().matches(REGEX_BETA)) {
+			for (NSObject supportedDevice:this.supportedDevices()) {
+				if (supportedDevice.toString().contains("Watch")) {
+					isWatch = true;
+					break;
+				}
+			}
+
+			if (isWatch)
+				sortBuild = sortBuild.substring(0, 3) + '9' + sortBuild.substring(4);
 		}
 
 		return sortBuild;
