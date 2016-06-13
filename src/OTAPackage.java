@@ -262,7 +262,11 @@ class OTAPackage {
 	 * @return The "OSVersion" key, as a String.
      **/
 	public String osVersion() {
-		return ENTRY.get("OSVersion").toString();
+		if (ENTRY.get("OSVersion").toString().substring(0, 3).equals("9.9"))
+			return ENTRY.get("OSVersion").toString().substring(4);
+
+		else
+			return ENTRY.get("OSVersion").toString();
 	}
 
 	/**
