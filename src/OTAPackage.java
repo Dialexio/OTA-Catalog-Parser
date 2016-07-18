@@ -143,6 +143,16 @@ class OTAPackage {
 	}
 
 	/**
+	 * Returns the value in the entry's CompatibilityVersion key.
+	 * If the compatibility version cannot be determined, this returns 0.
+	 * 
+	 * @return Whatever is in the key CompatibilityVersion, as an int.
+     **/
+	public int compatibilityVersion() {
+		return (int)(ENTRY.get("CompatibilityVersion").toJavaObject());
+	}
+
+	/**
 	 * Returns the timestamp found in the URL.
 	 * Note that this is not always accurate;
 	 * it may be off by a day, or even a week.

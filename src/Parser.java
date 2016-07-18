@@ -359,7 +359,7 @@ public class Parser {
 				countRowspan();
 				printWikiMarkup();
 			}
-	
+
 			else
 				printHuman();
 
@@ -372,7 +372,7 @@ public class Parser {
 			System.out.println(value);
 
 		else
-			paper.append(value + "\n");
+			paper.append(value + '\n');
 	}
 
 	private static void printHuman() {
@@ -428,6 +428,9 @@ public class Parser {
 			// Date as extracted from the URL.
 			printLine("Timestamp: " + entry.date('y') + '/' + entry.date('m') + '/' + entry.date('d'));
 
+			// Compatibility Version.
+			printLine("Compatibility Version: " + entry.compatibilityVersion());
+
 			// Print out the URL and file size.
 			printLine("URL: " + entry.url());
 			printLine("File size: " + entry.size() + '\n');
@@ -449,12 +452,12 @@ public class Parser {
 			// Let us begin!
 			printLine("|-");
 
-			//Marketing Version for Apple Watch.
+			// Marketing Version for Apple Watch.
 			if (isWatch && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
 				line = "| ";
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (marketingVersionRowspanCount.get(entry.marketingVersion()).intValue() > 1)
+				if (marketingVersionRowspanCount.get(entry.marketingVersion()) > 1)
 					line = line.concat("rowspan=\"" + marketingVersionRowspanCount.get(entry.marketingVersion()) + "\" | ");
 
 				line = line.concat(entry.marketingVersion());
@@ -491,7 +494,7 @@ public class Parser {
 				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
 				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
 					// Only give rowspan if there is more than one row with the OS version.
-					if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
+					if (osVersionRowspanCount.get(entry.osVersion()) > 1)
 						line = "| rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ";
 
 					printLine(line + "[MARKETING VERSION]");
@@ -605,6 +608,9 @@ public class Parser {
 					line = "";
 				}
 			}
+
+			if (entry.compatibilityVersion() > 0)
+				printLine("| " + entry.compatibilityVersion());
 
 			// Date as extracted from the URL. Using the same rowspan count as build.
 			// (3.1.1 had two builds released on different dates for iPod touch 3G.)
