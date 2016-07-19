@@ -306,6 +306,12 @@ class OTAPackage {
 			case "13A340":
 			case "13A341":
 				return "9.0 GM";
+				
+			case "13V413":
+				return "2.2.1 beta";
+				
+			case "13V601":
+				return "2.2.2 beta";
 	
 			default:
 				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
