@@ -267,18 +267,20 @@ public class Parser {
 
 			// Build
 			// Increment the count if it exists.
+			// If not, add the first tally.
 			if (buildRowspanCount.containsKey(entry.declaredBuild()))
 				buildRowspanCount.put(entry.declaredBuild(), buildRowspanCount.get(entry.declaredBuild()) + 1);
-			// If it hasn't been counted, add the first tally.
+
 			else
 				buildRowspanCount.put(entry.declaredBuild(), 1);
 
 
 			// Date (Count actualBuild() and not date() because x.0 GM and x.1 beta can technically be pushed at the same time.)
 			// Increment the count if it exists.
+			// If not, add the first tally.
 			if (dateRowspanCount.containsKey(entry.actualBuild()))
 				dateRowspanCount.put(entry.actualBuild(), dateRowspanCount.get(entry.actualBuild()) + 1);
-			// If it hasn't been counted, add the first tally.
+
 			else
 				dateRowspanCount.put(entry.actualBuild(), 1);
 
@@ -290,9 +292,10 @@ public class Parser {
 
 
 			// Increment the count if it exists.
+			// If not, add the first tally.
 			if (fileNestedCount.containsKey(entry.prerequisiteVer()))
 				fileNestedCount.put(entry.prerequisiteVer(), fileNestedCount.get(entry.prerequisiteVer()) + 1);
-			// If it hasn't been counted, add the first tally.
+
 			else
 				fileNestedCount.put(entry.prerequisiteVer(), 1);
 
@@ -301,18 +304,20 @@ public class Parser {
 
 			// Marketing version
 			// Increment the count if it exists.
+			// If not, add the first tally.
 			if (marketingVersionRowspanCount.containsKey(entry.marketingVersion()))
 				marketingVersionRowspanCount.put(entry.marketingVersion(), marketingVersionRowspanCount.get(entry.marketingVersion()) + 1);
-			// If it hasn't been counted, add the first tally.
+
 			else
 				marketingVersionRowspanCount.put(entry.marketingVersion(), 1);
 
 
 			// OS version
 			// Increment the count if it exists.
+			// If not, add the first tally.
 			if (osVersionRowspanCount.containsKey(entry.osVersion()))
 				osVersionRowspanCount.put(entry.osVersion(), osVersionRowspanCount.get(entry.osVersion()) + 1);
-			// If it hasn't been counted, add the first tally.
+
 			else
 				osVersionRowspanCount.put(entry.osVersion(), 1);
 
@@ -322,9 +327,10 @@ public class Parser {
 				prereqOSNestedCount = prereqOSRowspanCount.get(entry.declaredBuild());
 
 			// Increment the count if it exists.
+			// If not, add the first tally.
 			if (prereqOSNestedCount.containsKey(entry.prerequisiteVer()))
 				prereqOSNestedCount.put(entry.prerequisiteVer(), prereqOSNestedCount.get(entry.prerequisiteVer()) + 1);
-			// If it hasn't been counted, add the first tally.
+
 			else
 				prereqOSNestedCount.put(entry.prerequisiteVer(), 1);
 
@@ -336,9 +342,10 @@ public class Parser {
 				prereqBuildNestedCount = prereqBuildRowspanCount.get(entry.declaredBuild());
 
 			// Increment the count if it exists.
+			// If not, add the first tally.
 			if (prereqBuildNestedCount.containsKey(entry.prerequisiteBuild()))
 				prereqBuildNestedCount.put(entry.prerequisiteBuild(), prereqBuildNestedCount.get(entry.prerequisiteBuild()) + 1);
-			// If it hasn't been counted, add the first tally.
+
 			else
 				prereqBuildNestedCount.put(entry.prerequisiteBuild(), 1);
 

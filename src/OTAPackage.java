@@ -32,6 +32,7 @@ class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String URL;
 	private Matcher match;
+	private String temp;
 
 	public final static String REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 
@@ -97,7 +98,7 @@ class OTAPackage {
 
 
 		if (this.isHonestBuild() && (this.documentationID().contains("Public") || this.documentationID().contains("Beta") || this.documentationID().contains("Seed")))
-			return (Character.isDigit(digit)) ? Integer.parseInt(digit + "") : 1;
+			return (Character.isDigit(digit)) ? Character.getNumericValue(digit) : 1;
 
 		else
 			return 0;
@@ -272,11 +273,12 @@ class OTAPackage {
 	 * @return The "OSVersion" key, as a String.
      **/
 	public String osVersion() {
-		if (ENTRY.get("OSVersion").toString().substring(0, 3).equals("9.9"))
-			return ENTRY.get("OSVersion").toString().substring(4);
+		temp = ENTRY.get("OSVersion").toString();
+		if (temp.substring(0, 3).equals("9.9"))
+			return temp.substring(4);
 
 		else
-			return ENTRY.get("OSVersion").toString();
+			return temp;
 	}
 
 	/**
@@ -355,7 +357,7 @@ class OTAPackage {
 			sortBuild = sortBuild.substring(0, letterPos) + "0000";
 		}
 
-		// Apple Watch betas go on the bottom.
+		// Apple Watch betas go on the bottom in wiki markup.
 		// As dumb as this is, it's a pain because of the OS version.
 		// Hopefully this gets changed for consistency in the future...
 		else if (this.declaredBuild().matches(REGEX_BETA)) {
