@@ -298,23 +298,45 @@ class OTAPackage {
 	 * @return The "PrerequisiteVersion" key, as a String.
      **/
 	public String prerequisiteVer() {
+		// Using a switch/case since exceptions must be made.
+		// (I do not intend to address all exceptions.)
 		switch (this.prerequisiteBuild()) {
+			// iOS exceptions
 			case "10A405":
 				return "6.0";
-	
+
 			case "10B141":
 				return "6.1";
-	
+
 			case "13A340":
 			case "13A341":
 				return "9.0 GM";
-				
+
+			// watchOS exceptions
+			case "13V5098e":
+				return "2.2 beta";
+
+			case "13V5108c":
+				return "2.2 beta 2";
+
+			case "13V5117c":
+				return "2.2 beta 3";
+
+			case "13V5129c":
+				return "2.2 beta 4";
+
+			case "13V5141a":
+				return "2.2 beta 5";
+
+			case "13V5143a":
+				return "2.2 beta 6";
+
 			case "13V413":
 				return "2.2.1 beta";
-				
+
 			case "13V601":
 				return "2.2.2 beta";
-	
+
 			default:
 				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
 		}

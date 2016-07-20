@@ -580,7 +580,7 @@ public class Parser {
 
 					// Is there more than one of this prerequisite version tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
-					if (entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA) == false && prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
+					if ((entry.prerequisiteVer().contains("beta") || entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA) == false) && prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
 						line = line.concat("rowspan=\"" + prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
 						prereqOSRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
@@ -589,12 +589,12 @@ public class Parser {
 					if (entry.prerequisiteVer().contains(" GM"))
 						line = line.concat(entry.prerequisiteVer().replace("GM", "[[Golden Master|GM]]"));
 
+					// Very quick check if prerequisite is a beta. This is not bulletproof.
+					else if (entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA) && entry.prerequisiteVer().contains("beta") == false)
+						line = line.concat(entry.prerequisiteVer() + " beta #");
+
 					else
 						line = line.concat(entry.prerequisiteVer());
-
-					// Very quick check if prerequisite is a beta. Won't work if close to final release.
-					if (entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA))
-						line = line.concat(" beta #");
 
 					printLine(line);
 					line = "";
