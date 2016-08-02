@@ -150,7 +150,7 @@ class OTAPackage {
 	 * @return Whatever is in the key CompatibilityVersion, as an int.
      **/
 	public int compatibilityVersion() {
-		return (int)(ENTRY.get("CompatibilityVersion").toJavaObject());
+		return (ENTRY.containsKey("CompatibilityVersion")) ? (int)(ENTRY.get("CompatibilityVersion").toJavaObject()) : 0;
 	}
 
 	/**
