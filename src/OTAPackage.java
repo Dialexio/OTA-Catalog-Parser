@@ -158,22 +158,31 @@ class OTAPackage {
 	 * Note that this is not always accurate;
 	 * it may be off by a day, or even a week.
 	 * 
-	 * @return The timestamp found in the URL.
+	 * @return The timestamp found in the URL, which may not be accurate.
      **/
 	public String date() {
-		final Pattern TIMESTAMP_REGEX = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?");
+		match = Pattern.compile("\\d{4}(\\-|\\.)\\d{7}(\\d)?").matcher(URL);
 
-		// Hard coded values.
-		if (URL.contains(".201218."))
-			return "20120307";
+		if (match.find()) {
+			switch (match.group().substring(5, 13)) {
+				case "201218.D":
+					return "20120307";
+	
+				case "2015106-":
+					return "20151006";
+	
+				case "20160080":
+					return "20160804";
+	
+				// Extract the date from the URL.
+				// This is not 100% accurate information, but it's better than nothing.
+				default:
+					return match.group().substring(5);
+			}
+		}
 
-		else if (URL.contains("2015106"))
-			return "20151006";
-
-		// Extract the date from the URL.
-		// This is not 100% accurate information, but it's better than nothing.
-		match = TIMESTAMP_REGEX.matcher(URL);
-		return (match.find()) ? match.group().substring(5) : "00000000";
+		else
+			return "00000000";
 	}
 
 	/**
