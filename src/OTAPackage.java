@@ -32,7 +32,6 @@ class OTAPackage {
 	private final NSDictionary ENTRY;
 	private final String URL;
 	private Matcher match;
-	private String temp;
 
 	public final static String REGEX_BETA = "(\\d)?\\d[A-Z][4-6]\\d{3}[a-z]?";
 
@@ -66,7 +65,9 @@ class OTAPackage {
 		// If it the build number looks like a beta...
 		// And it's labeled as a beta...
 		// But it's not a beta... We need the actual build number.
-		if (this.declaredBuild().matches(REGEX_BETA) && this.isReleaseTypeDeclared() && this.betaType() == 0) {
+		if (this.declaredBuild().matches(REGEX_BETA) &&
+			this.releaseType().equals("Public") == false &&
+			this.actualReleaseType() == 0) {
 			int letterPos, numPos;
 
 			for (letterPos = 1; letterPos < this.declaredBuild().length(); letterPos++) {
@@ -88,31 +89,14 @@ class OTAPackage {
 	}
 
 	/**
-	 * Returns the beta number of this entry.
-	 * If a beta number cannot be determined, returns 0.
-	 * 
-	 * @return Whatever number beta this is, as an int.
-     **/
-	public int betaNumber() {
-		final char digit = this.documentationID().charAt(this.documentationID().length() - 1);
-
-
-		if (this.isHonestBuild() && (this.documentationID().contains("Public") || this.documentationID().contains("Beta") || this.documentationID().contains("Seed")))
-			return (Character.isDigit(digit)) ? Character.getNumericValue(digit) : 1;
-
-		else
-			return 0;
-	}
-
-	/**
-	 * Checks if the release is a developer beta, a public beta, or not a beta.
+	 * Returns the package's actual release type in the form of an integer.
 	 * 
 	 * @return An integer value of 0 (not a beta), 1 (public beta), 2 (developer beta), 3 (carrier beta), or 4 (internal build). -1 may be returned if the type is unknown.
      **/
-	public int betaType() {
+	public int actualReleaseType() {
 		// Just check ReleaseType and return values based on it.
 		// We do need to dig deeper if it's "Beta" though.
-		if (this.isReleaseTypeDeclared()) {
+		if (this.releaseType().equals("Public") == false) {
 			switch (ENTRY.get("ReleaseType").toString()) {
 				case "Beta":
 					if (this.documentationID().equals("N/A") || this.documentationID().equals("PreRelease"))
@@ -138,6 +122,23 @@ class OTAPackage {
 					return -1;
 			}
 		}
+
+		else
+			return 0;
+	}
+
+	/**
+	 * Returns the beta number of this entry.
+	 * If a beta number cannot be determined, returns 0.
+	 * 
+	 * @return Whatever number beta this is, as an int.
+     **/
+	public int betaNumber() {
+		final char digit = this.documentationID().charAt(this.documentationID().length() - 1);
+
+
+		if (this.isHonestBuild() && (this.documentationID().contains("Public") || this.documentationID().contains("Beta") || this.documentationID().contains("Seed")))
+			return (Character.isDigit(digit)) ? Character.getNumericValue(digit) : 1;
 
 		else
 			return 0;
@@ -242,17 +243,6 @@ class OTAPackage {
 	}
 
 	/**
-	 * Checks if Apple marked the OTA package with a release type.
-	 * This function only checks for the existence of such a key,
-	 * and not its value. For its value, use the betaType() method.
-	 * 
-	 * @return A boolean value of whether Apple provided a release type (true) or not (false).
-	 **/
-	public boolean isReleaseTypeDeclared() {
-		return ENTRY.containsKey("ReleaseType");
-	}
-
-	/**
 	 * Checks if the release is a large, "one size fits all" package.
 	 * 
 	 * @return A boolean value of whether this release is used to cover all scenarios (true) or not (false).
@@ -284,12 +274,9 @@ class OTAPackage {
 	 * @return The "OSVersion" key, as a String.
      **/
 	public String osVersion() {
-		temp = ENTRY.get("OSVersion").toString();
-		if (temp.substring(0, 3).equals("9.9"))
-			return temp.substring(4);
+		String version = ENTRY.get("OSVersion").toString();
 
-		else
-			return temp;
+		return (version.substring(0, 3).equals("9.9")) ? version.substring(4) : version;
 	}
 
 	/**
@@ -351,6 +338,17 @@ class OTAPackage {
 			default:
 				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
 		}
+	}
+
+	/**
+	 * Checks if Apple marked the OTA package with a release type.
+	 * This function only checks for the existence of such a key,
+	 * and not its value. For its value, use the betaType() method.
+	 * 
+	 * @return A boolean value of whether Apple provided a release type (true) or not (false).
+	 **/
+	public String releaseType() {
+		return (ENTRY.containsKey("ReleaseType")) ? ENTRY.get("ReleaseType").toString() : "Public";
 	}
 
 	/**
@@ -424,7 +422,7 @@ class OTAPackage {
 	 *
 	 * @return A String with the same value as OTAPackage.prerequisiteBuild(),
 	 * but with a number of zeroes in front so the program arranges it above
-	 * newer entries.
+	 * newer entries, and OTAPackage.releaseType() at the end.
      **/
 	public String sortingPrerequisiteBuild() {
 		if (this.isUniversal())
@@ -432,10 +430,10 @@ class OTAPackage {
 
 		else {
 			if (Character.isLetter(this.prerequisiteBuild().charAt(1)))
-				return '0' + this.prerequisiteBuild();
+				return '0' + this.prerequisiteBuild() + this.actualReleaseType();
 
 			else
-				return this.prerequisiteBuild();
+				return this.prerequisiteBuild() + this.actualReleaseType();
 		}
 	}
 

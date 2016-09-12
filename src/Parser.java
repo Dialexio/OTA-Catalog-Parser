@@ -195,13 +195,16 @@ public class Parser {
 			matched = false;
 
 			// Beta check.
-			if (showBeta == false && entry.betaType() > 0)
+			if (showBeta == false && entry.actualReleaseType() > 0)
 				continue;
 
 			// For wiki markup: If a beta has two entries
 			// (one for betas, one for non-betas), don't count it twice.
-			if (wiki && entry.isReleaseTypeDeclared() == false && entry.betaNumber() > 0 && entry.documentationID().equals("iOS7Seed6") == false)
-				continue;
+			if (wiki &&
+				entry.releaseType().equals("Public") == false &&
+				entry.betaNumber() > 0 &&
+				entry.documentationID().equals("iOS7Seed6") == false)
+					continue;
 
 			// Device check.
 			for (NSObject supportedDevice:entry.supportedDevices()) {
@@ -399,8 +402,8 @@ public class Parser {
 			line = line.concat(osName + entry.marketingVersion());
 
 			// Give it a beta label (if it is one).
-			if (entry.betaType() > 0) {
-				switch (entry.betaType()) {
+			if (entry.actualReleaseType() > 0) {
+				switch (entry.actualReleaseType()) {
 					case 1:
 						line = line.concat(" Public Beta");
 						break;
@@ -423,7 +426,7 @@ public class Parser {
 			printLine(line + " (Build " + entry.actualBuild() + ')');
 			line = "";
 			printLine("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
-			printLine("Marked as beta: " + entry.isReleaseTypeDeclared());
+			printLine("Release Type: " + entry.actualReleaseType());
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
@@ -470,8 +473,8 @@ public class Parser {
 				line = line.concat(entry.marketingVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.betaType() > 0) {
-					switch (entry.betaType()) {
+				if (entry.actualReleaseType() > 0) {
+					switch (entry.actualReleaseType()) {
 						case 1:
 							line = line.concat(" Public Beta");
 							break;
@@ -517,8 +520,8 @@ public class Parser {
 				line = line.concat(entry.osVersion());
 
 				// Give it a beta label (if it is one).
-				if (entry.betaType() > 0) {
-					switch (entry.betaType()) {
+				if (entry.actualReleaseType() > 0) {
+					switch (entry.actualReleaseType()) {
 						case 1:
 							line = line.concat(" Public Beta");
 							break;
@@ -533,7 +536,7 @@ public class Parser {
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
-						line = line.concat(" " + entry.betaNumber());
+						line = line.concat(Integer.toString(entry.betaNumber()));
 				}
 
 				printLine(line);
@@ -636,7 +639,7 @@ public class Parser {
 
 			// Release Type.
 			if (isWatch == false) {
-				switch (entry.betaType()) {
+				switch (entry.actualReleaseType()) {
 					case 1:
 					case 2:
 						printLine("| Beta");
@@ -648,7 +651,7 @@ public class Parser {
 						printLine("| Internal");
 						break;
 					default:
-						if (entry.isReleaseTypeDeclared())
+						if (entry.releaseType().equals("Public") == false)
 							printLine("| Beta");
 	
 						else
@@ -686,7 +689,7 @@ public class Parser {
 		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
-				return (((OTAPackage)package1).betaType() + "").compareTo(((OTAPackage)package2).betaType() + "");
+				return (Integer.toString(((OTAPackage)package1).actualReleaseType()).compareTo(Integer.toString(((OTAPackage)package2).actualReleaseType())));
 			}
 		});
 		Collections.sort(entryList, new Comparator<OTAPackage>() {
