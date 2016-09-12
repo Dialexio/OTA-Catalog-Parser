@@ -168,16 +168,15 @@ class OTAPackage {
 
 		else {
 			match = Pattern.compile("\\d{4}(\\-|\\.)20\\d{4}(\\d|\\.)(\\w|\\-)").matcher(URL);
+
 			if (match.find()) {
 				switch (match.group().substring(5)) {
 					case "201218.D22":
 						return "20120307";
-	
+
 					case "2015106-DC":
 						return "20151006";
-	
-					// Extract the date from the URL.
-					// This is not 100% accurate information, but it's better than nothing.
+
 					default:
 						return match.group().substring(5);
 				}
@@ -370,7 +369,6 @@ class OTAPackage {
 	 * newer entries.
      **/
 	public String sortingBuild() {
-		boolean isWatch = false;
 		int letterPos;
 		String sortBuild = this.declaredBuild();
 
@@ -397,13 +395,10 @@ class OTAPackage {
 		else if (this.declaredBuild().matches(REGEX_BETA)) {
 			for (NSObject supportedDevice:this.supportedDevices()) {
 				if (supportedDevice.toString().contains("Watch")) {
-					isWatch = true;
+					sortBuild = sortBuild.substring(0, 3) + '9' + sortBuild.substring(4);
 					break;
 				}
 			}
-
-			if (isWatch)
-				sortBuild = sortBuild.substring(0, 3) + '9' + sortBuild.substring(4);
 		}
 
 		return sortBuild;
