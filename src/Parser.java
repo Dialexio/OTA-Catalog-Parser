@@ -426,7 +426,7 @@ public class Parser {
 			printLine(line + " (Build " + entry.actualBuild() + ')');
 			line = "";
 			printLine("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
-			printLine("Release Type: " + entry.actualReleaseType());
+			printLine("Reported Release Type: " + entry.releaseType());
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())

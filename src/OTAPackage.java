@@ -68,20 +68,20 @@ class OTAPackage {
 		if (this.declaredBuild().matches(REGEX_BETA) &&
 			this.releaseType().equals("Public") == false &&
 			this.actualReleaseType() == 0) {
-			int letterPos, numPos;
+				int letterPos, numPos;
 
-			for (letterPos = 1; letterPos < this.declaredBuild().length(); letterPos++) {
-				if (Character.isUpperCase(this.declaredBuild().charAt(letterPos))) {
-					letterPos++;
-					break;
+				for (letterPos = 1; letterPos < this.declaredBuild().length(); letterPos++) {
+					if (Character.isUpperCase(this.declaredBuild().charAt(letterPos))) {
+						letterPos++;
+						break;
+					}
 				}
-			}
 
-		    numPos = letterPos + 1;
-			if (this.declaredBuild().charAt(numPos) == '0')
-				numPos++;
+			    numPos = letterPos + 1;
+				if (this.declaredBuild().charAt(numPos) == '0')
+					numPos++;
 
-			return this.declaredBuild().substring(0, letterPos) + this.declaredBuild().substring(numPos);
+				return this.declaredBuild().substring(0, letterPos) + this.declaredBuild().substring(numPos);
 		}
 		
 		else
@@ -96,7 +96,10 @@ class OTAPackage {
 	public int actualReleaseType() {
 		// Just check ReleaseType and return values based on it.
 		// We do need to dig deeper if it's "Beta" though.
-		if (this.releaseType().equals("Public") == false) {
+		if (this.releaseType().equals("Public"))
+			return 0;
+
+		else {
 			switch (ENTRY.get("ReleaseType").toString()) {
 				case "Beta":
 					if (this.documentationID().equals("N/A") || this.documentationID().equals("PreRelease"))
@@ -122,9 +125,6 @@ class OTAPackage {
 					return -1;
 			}
 		}
-
-		else
-			return 0;
 	}
 
 	/**
@@ -406,21 +406,40 @@ class OTAPackage {
 	 * "sortingPrerequisiteBuild()" is the prerequisite build,
 	 * with additional zeroes in the beginning to make sure
 	 * it's arranged on top.
+	 * 
+	 * This also appends with an integer that represents the release type.
 	 *
 	 * @return A String with the same value as OTAPackage.prerequisiteBuild(),
 	 * but with a number of zeroes in front so the program arranges it above
-	 * newer entries, and OTAPackage.releaseType() at the end.
+	 * newer entries, and an integer at the end specifying the release type.
      **/
 	public String sortingPrerequisiteBuild() {
+		// Sort by release type.
+		int relType = 0;
+
+		switch (this.releaseType()) {
+			case "Beta":
+				relType = 1;
+				break;
+
+			case "Carrier":
+				relType = 2;
+				break;
+
+			case "Internal":
+				relType = 3;
+				break;
+		}
+
 		if (this.isUniversal())
-			return "0000000000";
+			return "000000000" + relType;
 
 		else {
 			if (Character.isLetter(this.prerequisiteBuild().charAt(1)))
-				return '0' + this.prerequisiteBuild() + this.actualReleaseType();
+				return '0' + this.prerequisiteBuild();
 
 			else
-				return this.prerequisiteBuild() + this.actualReleaseType();
+				return this.prerequisiteBuild();
 		}
 	}
 
