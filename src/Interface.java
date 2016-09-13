@@ -121,7 +121,7 @@ public class Interface {
 			wikiRadio.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					parser.wikiMarkup(true);
+					parser.setWikiMarkup(true);
 				}
 			});
 			wikiRadio = new Button(widgets, SWT.RADIO);
@@ -129,7 +129,7 @@ public class Interface {
 			wikiRadio.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					parser.wikiMarkup(false);
+					parser.setWikiMarkup(false);
 				}
 			});
 			wikiRadio.setSelection(true);
@@ -359,7 +359,7 @@ public class Interface {
 						break;
 
 					case "-w":
-						parser.wikiMarkup(true);
+						parser.setWikiMarkup(true);
 						break;
 				}
 			}

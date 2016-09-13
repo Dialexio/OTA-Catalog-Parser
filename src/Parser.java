@@ -173,12 +173,12 @@ public class Parser {
 		}
 	}
 
-	public void showBeta(boolean value) {
-		showBeta = value;
+	public void setWikiMarkup(boolean value) {
+		wiki = value;
 	}
 
-	public void wikiMarkup(boolean value) {
-		wiki = value;
+	public void showBeta(boolean value) {
+		showBeta = value;
 	}
 
 	// Where the magic happens.
