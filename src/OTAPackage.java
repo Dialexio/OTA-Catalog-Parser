@@ -403,19 +403,6 @@ class OTAPackage {
 	}
 
 	/**
-	 * "sortingMarketingVersion()" is the marketing version,
-	 * with additional zeroes in the beginning to make sure
-	 * it's arranged on top.
-	 *
-	 * @return A String with the same value as OTAPackage.marketingVersion(),
-	 * but with a number of zeroes in front so the program arranges it above
-	 * newer entries.
-     **/
-	public String sortingMarketingVersion() {
-		return (this.marketingVersion().charAt(1) == '.') ? '0' + this.marketingVersion() : this.marketingVersion();
-	}
-
-	/**
 	 * "sortingPrerequisiteBuild()" is the prerequisite build,
 	 * with additional zeroes in the beginning to make sure
 	 * it's arranged on top.
