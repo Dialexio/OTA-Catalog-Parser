@@ -248,7 +248,7 @@ class OTAPackage {
 	 * @return A boolean value of whether this release is used to cover all scenarios (true) or not (false).
      **/
 	public boolean isUniversal() {
-		return (this.prerequisiteVer().equals("N/A") && this.prerequisiteBuild().equals("N/A"));
+		return (this.prerequisiteBuild().equals("N/A"));
 	}
 
 	/**
