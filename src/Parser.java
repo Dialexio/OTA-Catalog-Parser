@@ -233,9 +233,9 @@ public class Parser {
 			// If the OS version doesn't fit what we're
 			// searching for, continue to the next entry.
 			if (matched) {
-				if (maxOSVer.isEmpty() == false && (maxOSVer.compareTo(entry.marketingVersion()) < 0))
+				if (maxOSVer.isEmpty() == false && compareVersionNumbers(maxOSVer, entry.marketingVersion()) < 0)
 					continue;
-				if (minOSVer.isEmpty() == false && (minOSVer.compareTo(entry.marketingVersion()) > 0))
+				if (minOSVer.isEmpty() == false && compareVersionNumbers(minOSVer, entry.marketingVersion()) < 0)
 					continue;
 
 				// It survived the checks!
@@ -256,6 +256,39 @@ public class Parser {
 		osVersionRowspanCount.clear();
 		prereqBuildRowspanCount.clear();
 		prereqOSRowspanCount.clear();
+	}
+
+	private static int compareVersionNumbers (String ver1, String ver2) {
+		// Array index.
+		int i = 0;
+		// Two integers to compare.
+		int comp1, comp2;
+		// Split version number by the period.
+		String[] split1 = ver1.split("\\."),
+		         split2 = ver2.split("\\.");
+	
+		while (i < split1.length && i < split2.length) {
+	        comp1 = Integer.parseInt(split1[i]);
+	        comp2 = Integer.parseInt(split2[i]);
+	
+	        if (comp1 == comp2) {
+	            i++;
+	            continue;
+	        }
+	
+	        else
+	            return (comp1 > comp2) ? -1 : 1;
+		}
+	
+		// Whoever has the larger version string is "larger." (8.0.0 > 8.0)
+	    if (split1.length < split2.length)
+	        return 1;
+	
+	    else if (split1.length > split2.length)
+	        return -1;
+	
+	    else
+	        return 0;
 	}
 
 	private static void countRowspan() {
@@ -689,7 +722,7 @@ public class Parser {
 		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
-				return (Integer.toString(((OTAPackage)package1).actualReleaseType()).compareTo(Integer.toString(((OTAPackage)package2).actualReleaseType())));
+				return (Integer.valueOf(package1.actualReleaseType()).compareTo(Integer.valueOf(package2.actualReleaseType())));
 			}
 		});
 		Collections.sort(entryList, new Comparator<OTAPackage>() {
