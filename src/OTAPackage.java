@@ -178,6 +178,9 @@ class OTAPackage {
 					case "2015106-DC":
 						return "20151006";
 
+					case "20160009/1":
+						return "20160913";
+
 					default:
 						return match.group().substring(5);
 				}
