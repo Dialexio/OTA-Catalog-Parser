@@ -328,12 +328,31 @@ class OTAPackage {
 
 			case "13V5143a":
 				return "2.2 beta 6";
+			
 
 			case "13V413":
 				return "2.2.1 beta";
 
 			case "13V601":
 				return "2.2.2 beta";
+		
+			case "14S5247t":
+				return "3.0 beta";
+
+			case "14S5278d":
+				return "3.0 beta 2";
+
+			case "14S5290d":
+				return "3.0 beta 3";
+
+			case "14S5302d":
+				return "3.0 beta 4";
+
+			case "14S5315a":
+				return "3.0 beta 5";
+
+			case "14S5321a":
+				return "3.0 beta 6";
 
 			default:
 				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
