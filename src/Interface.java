@@ -194,21 +194,37 @@ public class Interface {
 								break;
 
 							case "iOS (Public)":
-								if (parser.loadXML("http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
-									throw new Exception("mesu.apple.com cannot be resolved.");
-								output.setText("");
+								if (deviceText.getText().startsWith("Watch")) {
+									throw new Exception("This location does not serve OTA packages for Apple Watch devices.");
+								}
+
+								else {
+									if (parser.loadXML("http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
+										throw new Exception("mesu.apple.com cannot be resolved.");
+									output.setText("");
+								}
 								break;
 
 							case "tvOS (Public)":
-								if (parser.loadXML("http://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
-									throw new Exception("mesu.apple.com cannot be resolved.");
-								output.setText("");
+								if (deviceText.getText().startsWith("AppleTV")) {
+									if (parser.loadXML("http://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
+										throw new Exception("mesu.apple.com cannot be resolved.");
+									output.setText("");
+								}
+
+								else
+									throw new Exception("This location only serves OTA packages for Apple TV devices.");
 								break;
 
 							case "watchOS (Public)":
-								if (parser.loadXML("http://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
-									throw new Exception("mesu.apple.com cannot be resolved.");
-								output.setText("");
+								if (deviceText.getText().startsWith("Watch")) {
+									if (parser.loadXML("http://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml") == 10)
+										throw new Exception("mesu.apple.com cannot be resolved.");
+									output.setText("");
+								}
+
+								else
+									throw new Exception("This location only serves OTA packages for Apple Watch devices.");
 								break;
 
 							default:
