@@ -357,6 +357,13 @@ class OTAPackage {
 			case "14S5321a":
 				return "3.0 beta 6";
 
+			// tvOS exceptions
+			case "14U54"
+				return "10.0.1 beta";
+				
+			case "14U66"
+				return "10.0.1 beta 2";
+		
 			default:
 				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
 		}
