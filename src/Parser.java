@@ -495,8 +495,8 @@ public class Parser {
 			// Let us begin!
 			printLine("|-");
 
-			// Marketing Version for Apple Watch.
-			if (isWatch && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
+			// Marketing Version for Apple Watch (1st generation)
+			if (device.matches("Watch1,\\d") && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
 				line = "| ";
 
 				// Only give rowspan if there is more than one row with the OS version.
@@ -534,22 +534,20 @@ public class Parser {
 
 			// Output OS version.
 			if (osVersionRowspanCount.containsKey(entry.osVersion())) {
-				// Output a filler for Marketing Version, if this is a 32-bit Apple TV.
-				if (device.matches("AppleTV(2,1|3,1|3,2)")) {
-					// Only give rowspan if there is more than one row with the OS version.
-					if (osVersionRowspanCount.get(entry.osVersion()) > 1)
-						line = "| rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ";
-
-					printLine(line + "[MARKETING VERSION]");
-				}
-
 				line = "| ";
 
-				// Only give rowspan if there is more than one row with the OS version.
-				// (And this isn't the universal Apple Watch entry.)
-				if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1)
+				// Create a filler for Marketing Version, if this is a 32-bit Apple TV.
+				if (device.matches("AppleTV(2,1|3,1|3,2)") && osVersionRowspanCount.get(entry.osVersion()) > 1)
+						printLine("| rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | [MARKETING VERSION]");
+
+				// Creating the rowspan attribute, provided:
+				// - there is more than one entry for the version
+				// - this isn't a universal Apple Watch entry
+				if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1) {
 					if ((isWatch == false) || (isWatch && entry.isUniversal() == false))
 						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
+				}
+
 				line = line.concat(entry.osVersion());
 
 				// Give it a beta label (if it is one).
