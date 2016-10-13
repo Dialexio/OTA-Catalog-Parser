@@ -44,4 +44,4 @@ This program uses [com.java.dd-plist](https://github.com/3breadt/dd-plist). It i
 
 This program uses binaries from [SWT](http://www.eclipse.org/swt/). SWT is distributed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html); source code may be acquired from the SWT website.
 
-This program uses binaries from [SWTJar](http://mchr3k.github.io/swtjar/). SWTJar is distributed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html); source code may be acquired from its [GitHub repo](https://github.com/mchr3k/swtjar).
+This program makes use of a modified version of [SWTJar](http://mchr3k.github.io/swtjar/). SWTJar is distributed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html); the modified source code may be acquired from [its GitHub repo](https://github.com/Dialexio/swtjar).

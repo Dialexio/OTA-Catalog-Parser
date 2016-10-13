@@ -331,7 +331,6 @@ class OTAPackage {
 
 			case "13V5143a":
 				return "2.2 beta 6";
-			
 
 			case "13V413":
 				return "2.2.1 beta";
