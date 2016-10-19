@@ -210,6 +210,7 @@ public class Parser {
 			for (NSObject supportedDevice:entry.supportedDevices()) {
 				if (device.equals(supportedDevice.toString())) {
 					matched = true;
+					System.out.print(""); // 10.1 beta 5 is broken without this for some reason.
 					break;
 				}
 			}
