@@ -355,6 +355,9 @@ class OTAPackage {
 
 			case "14S5321a":
 				return "3.0 beta 6";
+
+			case "14S443":
+				return "3.1 beta Pre-release";
 				
 			case "14S452":
 				return "3.1 beta";
@@ -470,6 +473,15 @@ class OTAPackage {
 		else {
 			if (Character.isLetter(this.prerequisiteBuild().charAt(1)))
 				return '0' + this.prerequisiteBuild();
+
+			else if (this.prerequisiteVer().contains("beta")) {
+				for (NSObject supportedDevice:this.supportedDevices()) {
+					if (supportedDevice.toString().contains("Watch"))
+						return this.prerequisiteBuild().substring(0, 3) + "5" + this.prerequisiteBuild().substring(4);
+				}
+
+				return this.prerequisiteBuild();
+			}
 
 			else
 				return this.prerequisiteBuild();
