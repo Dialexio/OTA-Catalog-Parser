@@ -368,8 +368,23 @@ class OTAPackage {
 			case "14S466":
 				return "3.1 beta 3";
 
+			case "14S468":
+				return "3.1 beta 4 Pre-release";
+
 			case "14S471":
 				return "3.1 beta 4";
+
+			case "14S5862d":
+				return "3.1.1 beta";
+
+			case "14S5869b":
+				return "3.1.1 beta 2";
+
+			case "14S5875b":
+				return "3.1.1 beta 3";
+
+			case "14S6879":
+				return "3.1.1 beta 4";
 
 			default:
 				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
@@ -473,15 +488,6 @@ class OTAPackage {
 		else {
 			if (Character.isLetter(this.prerequisiteBuild().charAt(1)))
 				return '0' + this.prerequisiteBuild();
-
-			else if (this.prerequisiteVer().contains("beta")) {
-				for (NSObject supportedDevice:this.supportedDevices()) {
-					if (supportedDevice.toString().contains("Watch"))
-						return this.prerequisiteBuild().substring(0, 3) + "5" + this.prerequisiteBuild().substring(4);
-				}
-
-				return this.prerequisiteBuild();
-			}
 
 			else
 				return this.prerequisiteBuild();
