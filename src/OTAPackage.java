@@ -23,6 +23,8 @@
  * SOFTWARE.
  */
 import com.dd.plist.*;
+import javax.json.*;
+import javax.json.JsonReader;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.regex.*;
@@ -299,96 +301,17 @@ class OTAPackage {
 	 * @return The "PrerequisiteVersion" key, as a String.
      **/
 	public String prerequisiteVer() {
-		// Using a switch/case since exceptions must be made.
-		// (I do not intend to address all exceptions.)
-		switch (this.prerequisiteBuild()) {
-			// iOS exceptions
-			case "10A405":
-				return "6.0";
+		JsonReader osNameJson = Json.createReader(ClassLoader.getSystemResourceAsStream("OS names.json"));
+		JsonObject osNameList = (JsonObject)osNameJson.read();
 
-			case "10B141":
-				return "6.1";
+		if (osNameList.containsKey(this.prerequisiteBuild()))
+			return osNameList.get(this.prerequisiteBuild()).toString();
 
-			case "13A340":
-			case "13A341":
-				return "9.0 GM";
+		else if (ENTRY.containsKey("PrerequisiteOSVersion"))
+			return ENTRY.get("PrerequisiteOSVersion").toString();
 
-			// watchOS exceptions
-			case "13V5098e":
-				return "2.2 beta";
-
-			case "13V5108c":
-				return "2.2 beta 2";
-
-			case "13V5117c":
-				return "2.2 beta 3";
-
-			case "13V5129c":
-				return "2.2 beta 4";
-
-			case "13V5141a":
-				return "2.2 beta 5";
-
-			case "13V5143a":
-				return "2.2 beta 6";
-
-			case "13V413":
-				return "2.2.1 beta";
-
-			case "13V601":
-				return "2.2.2 beta";
-		
-			case "14S5247t":
-				return "3.0 beta";
-
-			case "14S5278d":
-				return "3.0 beta 2";
-
-			case "14S5290d":
-				return "3.0 beta 3";
-
-			case "14S5302d":
-				return "3.0 beta 4";
-
-			case "14S5315a":
-				return "3.0 beta 5";
-
-			case "14S5321a":
-				return "3.0 beta 6";
-
-			case "14S443":
-				return "3.1 beta Pre-release";
-				
-			case "14S452":
-				return "3.1 beta";
-
-			case "14S464":
-				return "3.1 beta 2";
-
-			case "14S466":
-				return "3.1 beta 3";
-
-			case "14S468":
-				return "3.1 beta 4 Pre-release";
-
-			case "14S471":
-				return "3.1 beta 4";
-
-			case "14S5862d":
-				return "3.1.1 beta";
-
-			case "14S5869b":
-				return "3.1.1 beta 2";
-
-			case "14S5875b":
-				return "3.1.1 beta 3";
-
-			case "14S6879":
-				return "3.1.1 beta 4";
-
-			default:
-				return (ENTRY.containsKey("PrerequisiteOSVersion")) ? ENTRY.get("PrerequisiteOSVersion").toString() : "N/A";
-		}
+		else
+			return "N/A";
 	}
 
 	/**
