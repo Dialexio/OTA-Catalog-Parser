@@ -301,11 +301,11 @@ class OTAPackage {
 	 * @return The "PrerequisiteVersion" key, as a String.
      **/
 	public String prerequisiteVer() {
-		JsonReader osNameJson = Json.createReader(ClassLoader.getSystemResourceAsStream("OS names.json"));
+		JsonReader osNameJson = Json.createReader(getClass().getResourceAsStream("OS names.json"));
 		JsonObject osNameList = (JsonObject)osNameJson.read();
 
 		if (osNameList.containsKey(this.prerequisiteBuild()))
-			return osNameList.get(this.prerequisiteBuild()).toString();
+			return osNameList.get(this.prerequisiteBuild()).toString().replace("\"", "");
 
 		else if (ENTRY.containsKey("PrerequisiteOSVersion"))
 			return ENTRY.get("PrerequisiteOSVersion").toString();

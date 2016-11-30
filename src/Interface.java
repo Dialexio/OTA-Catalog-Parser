@@ -28,7 +28,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 public class Interface {
-	private static final String VERSION = "1.1.4";
+	private static final String VERSION = "1.2";
 
 	private static Display display;
 	private static final Parser parser = new Parser();
