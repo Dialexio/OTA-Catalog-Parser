@@ -461,12 +461,13 @@ class OTAPackage {
 	 * This also appends with an integer that represents the release type.
 	 *
 	 * @return A String with the same value as OTAPackage.prerequisiteBuild(),
-	 * but with a number of zeroes in front so the program arranges it above
-	 * newer entries, and an integer at the end specifying the release type.
+	 * but with additional zeroes so the program will order it correctly,
+	 * and an integer at the end specifying the release type.
      **/
 	public String sortingPrerequisiteBuild() {
 		// Sort by release type.
 		int relType = 0;
+		String build = this.prerequisiteBuild();
 
 		switch (this.releaseType()) {
 			case "Beta":
@@ -486,11 +487,15 @@ class OTAPackage {
 			return "000000000" + relType;
 
 		else {
-			if (Character.isLetter(this.prerequisiteBuild().charAt(1)))
-				return '0' + this.prerequisiteBuild();
-
-			else
-				return this.prerequisiteBuild();
+			if (Character.isLetter(build.charAt(1)))
+				build = '0' + build;
+			
+			match = Pattern.compile("\\d?\\d[A-Z]").matcher(build);
+			
+			if (build.replaceFirst("\\d?\\d[A-Z]", "").length() < 3 && match.find())
+				build = match.group() + '0' + build.replaceFirst("\\d?\\d[A-Z]", "");
+			
+			return build;
 		}
 	}
 
