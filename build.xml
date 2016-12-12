@@ -23,10 +23,13 @@
 
 	<target name="linux" depends="compile" description="for linux">
 		<swtjar jarfile="${dist}/OTA Parser Linux.jar" swtversion="4.6" targetmainclass="Interface">
+			<fileset dir="JSON" includes="**/*.json" />
+
 			<!-- Application Classes -->
 			<fileset dir="${build}" includes="**/*.class" />
 
-			<!-- SWT Jars -->
+			<!-- Libraries -->
+			<fileset dir="${lib}" includes="javax.json-1.0.4.jar" />
 			<fileset dir="${lib}/linux" includes="swt-*-4.6.jar" />
 		</swtjar>
 	</target>
@@ -40,10 +43,18 @@
 		<chmod file="${dist}/OTA Parser.app/Contents/MacOS/OTA Parser" perm="+x" />
 
 		<jar destfile="${dist}/OTA Parser.app/Contents/MacOS/OTA Parser Mac.jar">
+			<fileset dir="JSON" includes="**/*.json" />
+			
+			<!-- Application Classes -->
 			<fileset dir="${build}" includes="**/*.class" />
+
+			<!-- Libraries -->
+			<zipgroupfileset dir="${lib}" includes="javax.json-1.0.4.jar" />
 			<zipgroupfileset dir="${lib}/mac" includes="swt-mac-x86_64-4.6.jar" />
+
+			<!-- Manifest -->
 			<manifest>
-				<attribute name="Class-Path" value="swt-mac-x86_64-4.6.jar" />
+				<attribute name="Class-Path" value="javax.json-1.0.4.jar swt-mac-x86_64-4.6.jar" />
 				<attribute name="Main-Class" value="Interface" />
 			</manifest>
 		</jar>
@@ -51,10 +62,13 @@
 
 	<target name="universal" depends="compile" description="generate the distribution">
 		<swtjar jarfile="${dist}/OTA Parser.jar" swtversion="4.6" targetmainclass="Interface">
+			<fileset dir="JSON" includes="**/*.json" />
+
 			<!-- Application Classes -->
 			<fileset dir="${build}" includes="**/*.class" />
 
-			<!-- SWT Jars -->
+			<!-- Libraries -->
+			<fileset dir="${lib}" includes="javax.json-1.0.4.jar" />
 			<fileset dir="${lib}/linux" includes="swt-*-4.6.jar" />
 			<fileset dir="${lib}/mac" includes="swt-mac-x86_64-4.6.jar" />
 			<fileset dir="${lib}/windows" includes="swt-*-4.6.jar" />
@@ -63,10 +77,13 @@
 
 	<target name="windows" depends="compile" description="for windows">
 		<swtjar jarfile="${dist}/OTA Parser Windows.jar" swtversion="4.6" targetmainclass="Interface">
+			<fileset dir="JSON" includes="**/*.json" />
+				
 			<!-- Application Classes -->
 			<fileset dir="${build}" includes="**/*.class" />
 
-			<!-- SWT Jars -->
+			<!-- Libraries -->
+			<fileset dir="${lib}" includes="javax.json-1.0.4.jar" />
 			<fileset dir="${lib}/windows" includes="swt-*-4.6.jar" />
 		</swtjar>
 	</target>
