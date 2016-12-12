@@ -492,7 +492,7 @@ class OTAPackage {
 			
 			match = Pattern.compile("\\d?\\d[A-Z]").matcher(build);
 			
-			if (build.replaceFirst("\\d?\\d[A-Z]", "").length() < 3 && match.find())
+			if (build.split("[A-z]")[1].length() < 3 && match.find())
 				build = match.group() + '0' + build.replaceFirst("\\d?\\d[A-Z]", "");
 			
 			return build;
