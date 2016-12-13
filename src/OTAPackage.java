@@ -390,6 +390,7 @@ class OTAPackage {
 	public String sortingPrerequisiteBuild() {
 		// Sort by release type.
 		int relType = 0;
+		String build = this.prerequisiteBuild();
 
 		switch (this.releaseType()) {
 			case "Beta":
@@ -408,13 +409,30 @@ class OTAPackage {
 		if (this.isUniversal())
 			return "000000000" + relType;
 
-		else {
-			if (Character.isLetter(this.prerequisiteBuild().charAt(1)))
-				return '0' + this.prerequisiteBuild();
-
-			else
-				return this.prerequisiteBuild();
+		// We need to take care of Apple Watch betas differently.
+		if (this.prerequisiteVer().contains("beta")) {
+			for (NSObject supportedDevice:this.supportedDevices()) {
+				if (supportedDevice.toString().contains("Watch")) {
+					match = Pattern.compile("\\d?\\d[A-Z]").matcher(build);
+					
+					if (match.find())
+						return match.group() + build.replaceFirst("\\d?\\d[A-Z]", "").substring(1);
+					
+					else
+						return build;
+				}
+			}
 		}
+
+		if (Character.isLetter(build.charAt(1)))
+			build = '0' + build;
+		
+		match = Pattern.compile("\\d?\\d[A-Z]").matcher(build);
+		
+		if (build.split("[A-z]")[1].length() < 3 && match.find())
+			build = match.group() + '0' + build.replaceFirst("\\d?\\d[A-Z]", "");
+		
+		return build;
 	}
 
 	/**
