@@ -721,19 +721,7 @@ public class Parser {
 		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
-				return (Integer.valueOf(package1.actualReleaseType()).compareTo(Integer.valueOf(package2.actualReleaseType())));
-			}
-		});
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
-			@Override
-			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
-			}
-		});
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
-			@Override
-			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
+				return package1.sortingString().compareTo(package2.sortingString());
 			}
 		});
 	}

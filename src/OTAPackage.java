@@ -331,6 +331,10 @@ class OTAPackage {
 	public String size() {
 		return NumberFormat.getNumberInstance(Locale.US).format(SIZE);
 	}
+	
+    public String sortingString() {
+        return this.actualReleaseType() + this.sortingBuild() + this.sortingPrerequisiteBuild();
+    }
 
 	/**
 	 * "sortingBuild()" is the regular build number, with additional zeroes
@@ -340,7 +344,7 @@ class OTAPackage {
 	 * but with a number of zeroes in front so the program arranges it above
 	 * newer entries.
      **/
-	public String sortingBuild() {
+	private String sortingBuild() {
 		int letterPos;
 		String sortBuild = this.declaredBuild();
 
@@ -387,7 +391,7 @@ class OTAPackage {
 	 * but with a number of zeroes in front so the program arranges it above
 	 * newer entries, and an integer at the end specifying the release type.
      **/
-	public String sortingPrerequisiteBuild() {
+	private String sortingPrerequisiteBuild() {
 		// Sort by release type.
 		int relType = 0;
 		String build = this.prerequisiteBuild();
