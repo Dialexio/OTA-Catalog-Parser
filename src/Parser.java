@@ -411,80 +411,112 @@ public class Parser {
 		}
 	}
 
-	private static void printLine(String value) {
+	private static void printOut(String value) {
 		if (paper == null)
 			System.out.println(value);
 
 		else
-			paper.append(value + '\n');
+			paper.setText(value);
 	}
 
 	private static void printHuman() {
-		String line = "", osName;
+		StringBuilder line = new StringBuilder();
 
 		for (OTAPackage entry:entryList) {
 			if (isWatch)
-				osName = "watchOS ";
+				line.append("watchOS ");
 			else if (device.matches("AppleTV(2,1|3,1|3,2)"))
-				osName = "Apple TV software ";
+				line.append("Apple TV software ");
 			else if (device.startsWith("AppleTV"))
-				osName = "tvOS ";
+				line.append("tvOS ");
 			else
-				osName = "iOS ";
+				line.append("iOS ");
 
 			// Output OS version and build.
-			line = line.concat(osName + entry.marketingVersion());
+			line.append(entry.marketingVersion());
 
 			// Give it a beta label (if it is one).
 			if (entry.actualReleaseType() > 0) {
 				switch (entry.actualReleaseType()) {
 					case 1:
-						line = line.concat(" Public Beta");
+						line.append(" Public Beta");
 						break;
 					case 2:
-						line = line.concat(" beta");
+						line.append(" beta");
 						break;
 					case 3:
-						line = line.concat(" Carrier Beta");
+						line.append(" Carrier Beta");
 						break;
 					case 4:
-						line = line.concat(" Internal");
+						line.append(" Internal");
 						break;
 				}
 
 				// Don't print a 1 if this is the first beta.
-				if (entry.betaNumber() > 1)
-					line = line.concat(" " + entry.betaNumber());
+				if (entry.betaNumber() > 1) {
+					line.append(' ');
+					line.append(entry.betaNumber());
+				}
 			}
+			
+			line.append(" (Build ");
+			line.append(entry.actualBuild());
+			line.append(")\n");
 
-			printLine(line + " (Build " + entry.actualBuild() + ')');
-			line = "";
-			printLine("Listed as: "+ entry.osVersion() + " (Build " + entry.declaredBuild() + ')');
-			printLine("Reported Release Type: " + entry.releaseType());
+			line.append("Listed as: ");
+			line.append(entry.osVersion());
+			line.append(" (Build ");
+			line.append(entry.declaredBuild());
+			line.append(")\n");
+
+			line.append("Reported Release Type: ");
+			line.append(entry.releaseType());
+			line.append('\n');
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
-				printLine("Requires: Not specified");
+				line.append("Requires: Not specified\n");
 
-			else
-				printLine("Requires: " + entry.prerequisiteVer() + " (Build " + entry.prerequisiteBuild() + ')');
+			else {
+				line.append("Requires: ");
+				line.append(entry.prerequisiteVer());
+				line.append(" (Build ");
+				line.append(entry.prerequisiteBuild());
+				line.append(")\n");
+			}
 
 			// Date as extracted from the URL.
-			printLine("Timestamp: " + entry.date('y') + '/' + entry.date('m') + '/' + entry.date('d'));
+			line.append("Timestamp: ");
+			line.append(entry.date('y'));
+			line.append('/');
+			line.append(entry.date('m'));
+			line.append('/');
+			line.append(entry.date('d'));
+			line.append('\n');
 
 			// Compatibility Version.
-			printLine("Compatibility Version: " + entry.compatibilityVersion());
+			line.append("Compatibility Version: ");
+			line.append(entry.compatibilityVersion());
+			line.append('\n');
 
 			// Print out the URL and file size.
-			printLine("URL: " + entry.url());
-			printLine("File size: " + entry.size() + '\n');
+			line.append("URL: ");
+			line.append(entry.url());
+			line.append('\n');
+
+			line.append("File size: ");
+			line.append(entry.size());
+			line.append("\n\n");
 		}
+
+		printOut(line.toString());
 	}
 
 	private static void printWikiMarkup() {
 		final Pattern NAME_REGEX = Pattern.compile("[0-9a-f]{40}\\.zip");
 		Matcher name;
-		String fileName, line = "";
+		String fileName;
+		StringBuilder line = new StringBuilder();
 
 		for (OTAPackage entry:entryList) {
 			fileName = "";
@@ -494,40 +526,44 @@ public class Parser {
 				fileName = name.group();
 
 			// Let us begin!
-			printLine("|-");
+			line.append("|-\n");
 
 			// Marketing Version for Apple Watch (1st generation)
 			if (device.matches("Watch1,\\d") && marketingVersionRowspanCount.containsKey(entry.marketingVersion())) {
-				line = "| ";
+				line.append("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
-				if (marketingVersionRowspanCount.get(entry.marketingVersion()) > 1)
-					line = line.concat("rowspan=\"" + marketingVersionRowspanCount.get(entry.marketingVersion()) + "\" | ");
+				if (marketingVersionRowspanCount.get(entry.marketingVersion()) > 1) {
+					line.append("rowspan=\"");
+					line.append(marketingVersionRowspanCount.get(entry.marketingVersion()));
+					line.append("\" | ");
+				}
 
-				line = line.concat(entry.marketingVersion());
+				line.append(entry.marketingVersion());
 
 				// Give it a beta label (if it is one).
 				if (entry.actualReleaseType() > 0) {
 					switch (entry.actualReleaseType()) {
 						case 1:
-							line = line.concat(" Public Beta");
+							line.append(" Public Beta");
 							break;
 						case 2:
 						case 3:
-							line = line.concat(" beta");
+							line.append(" beta");
 							break;
 						case 4:
-							line = line.concat(" Internal");
+							line.append(" Internal");
 							break;
 					}
 
 					// Don't print a 1 if this is the first beta.
-					if (entry.betaNumber() > 1)
-						line = line.concat(" " + entry.betaNumber());
+					if (entry.betaNumber() > 1) {
+						line.append(' ');
+						line.append(entry.betaNumber());
+					}
 				}
 
-				printLine(line);
-				line = "";
+				line.append('\n');
 
 				//Remove the count since we're done with it.
 				marketingVersionRowspanCount.remove(entry.marketingVersion());
@@ -535,44 +571,49 @@ public class Parser {
 
 			// Output OS version.
 			if (osVersionRowspanCount.containsKey(entry.osVersion())) {
-				line = "| ";
+				line.append("| ");
 
 				// Create a filler for Marketing Version, if this is a 32-bit Apple TV.
-				if (device.matches("AppleTV(2,1|3,1|3,2)") && osVersionRowspanCount.get(entry.osVersion()) > 1)
-						printLine("| rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | [MARKETING VERSION]");
+				if (device.matches("AppleTV(2,1|3,1|3,2)") && osVersionRowspanCount.get(entry.osVersion()) > 1) {
+					line.append("| rowspan=\"");
+					line.append(osVersionRowspanCount.get(entry.osVersion()));
+					line.append("\" | [MARKETING VERSION]");
+				}
 
 				// Creating the rowspan attribute, provided:
 				// - there is more than one entry for the version
 				// - this isn't a universal Apple Watch entry
 				if (osVersionRowspanCount.get(entry.osVersion()).intValue() > 1) {
-					if ((isWatch == false) || (isWatch && entry.isUniversal() == false))
-						line = line.concat("rowspan=\"" + osVersionRowspanCount.get(entry.osVersion()) + "\" | ");
+					if ((isWatch == false) || (isWatch && entry.isUniversal() == false)) {
+						line.append("rowspan=\"");
+						line.append(osVersionRowspanCount.get(entry.osVersion()));
+						line.append("\" | ");
+					}
 				}
 
-				line = line.concat(entry.osVersion());
+				line.append(entry.osVersion());
 
 				// Give it a beta label (if it is one).
 				if (entry.actualReleaseType() > 0) {
 					switch (entry.actualReleaseType()) {
 						case 1:
-							line = line.concat(" Public Beta");
+							line.append(" Public Beta");
 							break;
 						case 2:
 						case 3:
-							line = line.concat(" beta");
+							line.append(" beta");
 							break;
 						case 4:
-							line = line.concat(" Internal");
+							line.append(" Internal");
 							break;
 					}
 
 					// Don't print a 1 if this is the first beta.
 					if (entry.betaNumber() > 1)
-						line = line.concat(Integer.toString(entry.betaNumber()));
+						line.append(entry.betaNumber());
 				}
 
-				printLine(line);
-				line = "";
+				line.append('\n');
 
 				//Remove the count when we're done with it.
 				if ((isWatch == false) || (isWatch && entry.isUniversal() == false))
@@ -584,89 +625,105 @@ public class Parser {
 
 			// Output build number.
 			if (buildRowspanCount.containsKey(entry.declaredBuild())) {
-				line = "| ";
+				line.append("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				// Count declaredBuild() instead of actualBuild() so the entry pointing betas to the final build is treated separately.
-				if (buildRowspanCount.get(entry.declaredBuild()).intValue() > 1)
-					line = line.concat("rowspan=\"" + buildRowspanCount.get(entry.declaredBuild()) + "\" | ");
+				if (buildRowspanCount.get(entry.declaredBuild()).intValue() > 1) {
+					line.append("rowspan=\"");
+					line.append(buildRowspanCount.get(entry.declaredBuild()));
+					line.append("\" | ");
+				}
 
 				//Remove the count since we're done with it.
 				buildRowspanCount.remove(entry.declaredBuild());
 
-				line = line.concat(entry.actualBuild());
+				line.append(entry.actualBuild());
 
 				// Do we have a false build number? If so, add a footnote reference.
 				if (entry.isHonestBuild() == false)
-					line = line.concat("<ref name=\"fakefive\" />");
+					line.append("<ref name=\"fakefive\" />");
 
-				printLine(line);
-				line = "";
+				line.append('\n');
 			}
 
 			// Print prerequisites if there are any.
 			if (entry.isUniversal())
-				printLine("| colspan=\"2\" {{n/a}}");
+				line.append("| colspan=\"2\" {{n/a}}\n");
 
 			else {
 				// Prerequisite version
 				if (prereqOSRowspanCount.containsKey(entry.declaredBuild()) && prereqOSRowspanCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteVer())) {
-					line = "| ";
+					line.append("| ");
 
 					// Is there more than one of this prerequisite version tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
 					if ((entry.prerequisiteVer().contains("beta") || entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA) == false) && prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()).intValue() > 1) {
-						line = line.concat("rowspan=\"" + prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()) + "\" | ");
+						line.append("rowspan=\"");
+						line.append(prereqOSRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteVer()));
+						line.append("\" | ");
 						prereqOSRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteVer());
 					}
 
 					// If this is a GM, print the link to Golden Master.
 					if (entry.prerequisiteVer().contains(" GM"))
-						line = line.concat(entry.prerequisiteVer().replace("GM", "[[Golden Master|GM]]"));
+						line.append(entry.prerequisiteVer().replace("GM", "[[Golden Master|GM]]"));
 
 					// Very quick check if prerequisite is a beta. This is not bulletproof.
 					else if (entry.prerequisiteBuild().matches(OTAPackage.REGEX_BETA) && entry.prerequisiteVer().contains("beta") == false)
-						line = line.concat(entry.prerequisiteVer() + " beta #");
+						line.append(entry.prerequisiteVer() + " beta #");
 
 					else
-						line = line.concat(entry.prerequisiteVer());
+						line.append(entry.prerequisiteVer());
 
-					printLine(line);
-					line = "";
+					line.append('\n');
 				}
 
 				// Prerequisite build
 				if (prereqBuildRowspanCount.containsKey(entry.declaredBuild()) && prereqBuildRowspanCount.get(entry.declaredBuild()).containsKey(entry.prerequisiteBuild())) {
-					line = "| ";
+					line.append("| ");
 
 					// Is there more than one of this prerequisite build tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
 					if (prereqBuildRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteBuild()).intValue() > 1) {
-						line = line.concat("rowspan=\"" + prereqBuildRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteBuild()) + "\" | ");
+						line.append("rowspan=\"");
+						line.append(prereqBuildRowspanCount.get(entry.declaredBuild()).get(entry.prerequisiteBuild()));
+						line.append("\" | ");
 						prereqBuildRowspanCount.get(entry.declaredBuild()).remove(entry.prerequisiteBuild());
 					}
+					
+					line.append(entry.prerequisiteBuild());
 
-					printLine(line + entry.prerequisiteBuild());
-					line = "";
+					line.append('\n');
 				}
 			}
 
-			if (entry.compatibilityVersion() > 0)
-				printLine("| " + entry.compatibilityVersion());
+			if (entry.compatibilityVersion() > 0) {
+				line.append("| ");
+				line.append(entry.compatibilityVersion());
+				line.append('\n');
+			}
 
 			// Date as extracted from the URL. Using the same rowspan count as build.
 			// (3.1.1 had two builds released on different dates for iPod touch 3G.)
 			if (dateRowspanCount.containsKey(entry.actualBuild())) {
-				line = "| ";
+				line.append("| ");
 
 				// Only give rowspan if there is more than one row with the OS version.
 				if (dateRowspanCount.get(entry.actualBuild()).intValue() > 1) {
-					line = line.concat("rowspan=\"" + dateRowspanCount.get(entry.actualBuild()) + "\" | ");
+					line.append("rowspan=\"");
+					line.append(dateRowspanCount.get(entry.actualBuild()));
+					line.append("\" | ");
 					dateRowspanCount.remove(entry.actualBuild()); //Remove the count since we already used it.
 				}
 
-				printLine(line + "{{date|" + entry.date('y') + '|' + entry.date('m') + '|' + entry.date('d') + "}}");
-				line = "";
+				line.append("{{date|");
+				line.append(entry.date('y'));
+				line.append('|');
+				line.append(entry.date('m'));
+				line.append('|');
+				line.append(entry.date('d'));
+				line.append("}}\n");
 			}
 
 			// Release Type.
@@ -674,46 +731,58 @@ public class Parser {
 				switch (entry.actualReleaseType()) {
 					case 1:
 					case 2:
-						printLine("| Beta");
+						line.append("| Beta\n");
 						break;
 					case 3:
-						printLine("| Carrier");
+						line.append("| Carrier\n");
 						break;
 					case 4:
-						printLine("| Internal");
+						line.append("| Internal\n");
 						break;
 					default:
-						if (entry.releaseType().equals("Public") == false)
-							printLine("| Beta");
-	
+						if (entry.releaseType().equals("Public"))
+							line.append("| {{n/a}}\n");
+
 						else
-							printLine("| {{n/a}}");
-	
+							line.append("| Beta\n");
+
 						break;
 				}
 			}
 
 			if (fileRowspanCount.containsKey(entry.url()) && fileRowspanCount.get(entry.url()).containsKey(entry.prerequisiteVer())) {
-				line = "| ";
+				line.append("| ");
 
 				// Is there more than one of this prerequisite version tallied?
 				// Also do not use rowspan if the prerequisite build is a beta.
-				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
-					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
+				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1) {
+					line.append("rowspan=\"");
+					line.append(fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()));
+					line.append("\" | ");
+				}
 
-				line = line.concat('[' + entry.url() + ' ' + fileName + "]\n| ");
+				line.append('[');
+				line.append(entry.url());
+				line.append(' ');
+				line.append(fileName);
+				line.append("]\n| ");
 
 				//Print file size.
 				// Only give rowspan if there is more than one row with the OS version.
-				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1)
-					line = line.concat("rowspan=\"" + fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()) + "\" | ");
+				if (fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()).intValue() > 1) {
+					line.append("rowspan=\"");
+					line.append(fileRowspanCount.get(entry.url()).get(entry.prerequisiteVer()));
+					line.append("\" | ");
+				}
 
-				printLine(line + entry.size());
-				line = "";
+				line.append(entry.size());
+				line.append('\n');
 
 				//Remove the count since we're done with it.
 				fileRowspanCount.get(entry.url()).remove(entry.prerequisiteVer());
 			}
+
+			printOut(line.toString());
 		}
 	}
 
@@ -721,19 +790,7 @@ public class Parser {
 		Collections.sort(entryList, new Comparator<OTAPackage>() {
 			@Override
 			public int compare(OTAPackage package1, OTAPackage package2) {
-				return (Integer.valueOf(package1.actualReleaseType()).compareTo(Integer.valueOf(package2.actualReleaseType())));
-			}
-		});
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
-			@Override
-			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).sortingPrerequisiteBuild().compareTo(((OTAPackage)package2).sortingPrerequisiteBuild());
-			}
-		});
-		Collections.sort(entryList, new Comparator<OTAPackage>() {
-			@Override
-			public int compare(OTAPackage package1, OTAPackage package2) {
-				return ((OTAPackage)package1).sortingBuild().compareTo(((OTAPackage)package2).sortingBuild());
+				return package1.sortingString().compareTo(package2.sortingString());
 			}
 		});
 	}
