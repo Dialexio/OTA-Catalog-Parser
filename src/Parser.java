@@ -1,6 +1,6 @@
 /*
  * OTA Catalog Parser
- * Copyright (c) 2016 Dialexio
+ * Copyright (c) 2017 Dialexio
  * 
  * The MIT License (MIT)
  * 
