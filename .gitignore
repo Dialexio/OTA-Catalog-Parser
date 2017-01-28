@@ -1,6 +1,5 @@
-bin/*
-build/*
-dist/*
+Octothorpe.*/bin
+Octothorpe.*/obj
 XML files*
 
 # OS generated files #

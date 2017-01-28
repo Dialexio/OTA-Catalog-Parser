@@ -3,27 +3,12 @@ This program lets you view an OTA update catalog for [iOS](http://mesu.apple.com
 
 __NOTE:__ Dates are extracted from the file URL, which may not be the actual release date.
 
-## Compilation
-Apache Ant is used to compile this program. Just cd to the base directory and run ant.
-`ant`
-
-This produces a large (over 8 MB) JAR file that you can run on any desktop operating system. If you want a smaller JAR file that doesn't run everywhere, other targets are included in _build.xml_:
-* `ant linux`
-* `ant mac` (NOTE: The JAR file will automatically be added to the .app bundle.)
-* `ant windows`
-
-If you wish to recompile the program, you may delete the "build" and "dist" directories.
-
 ## Running the Program
-This program requires Java 7 or newer. The newest version of Java is available from [Java.com](http://www.java.com/download/).
+The Mac OS X version requires Mac OS X v10.7 (Lion) or newer. It is built with Xamarin.Mac, so no other software is required.
 
-You may run this JAR with the following command:
-`java -jar path/to/Parser.jar`
+The Windows version requires .NET Framework 4.x ([link to .NET Framework 4.6.2](https://www.microsoft.com/en-us/download/details.aspx?id=53345)).
 
-Mac OS X users must open it via the .app (bypassing Gatekeeper if necessary), or add an additional argument:
-`java -XstartOnFirstThread -jar path/to/Parser.jar`
-
-If there are arguments appended to the command, the program will operate in the command prompt/terminal. If there are no provided arguments, the program will display a GUI where you may configure its options.
+The command-line version requires either [Mono](http://www.mono-project.com/) or .NET Framework 4.x ([link to .NET Framework 4.6.2](https://www.microsoft.com/en-us/download/details.aspx?id=53345)) to be installed.
 
 ### Command-Line Arguments
 #### Required Arguments
@@ -37,11 +22,5 @@ If there are arguments appended to the command, the program will operate in the 
 * `-min <OS version>` _(renamed from_ `-o` _as of version 0.3)_ specifies the _lowest_ version of iOS you're looking for. This argument is looking for a value like "4.3" or "8.0.1."
 * `-w` allows you to see the results formatted more appropriately for [The iPhone Wiki](https://www.theiphonewiki.com/wiki/OTA_Updates). Manual editing may still be required (e.g. for "marketing version"), but this will make the burden more bearable.
 
-## License Information
-I'm making the source code of this program available under the [MIT License](http://opensource.org/licenses/MIT).
-
-This program uses [com.java.dd-plist](https://github.com/3breadt/dd-plist). It is distributed under the [MIT License](http://opensource.org/licenses/MIT).
-
-This program uses binaries from [SWT](http://www.eclipse.org/swt/). SWT is distributed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html); source code may be acquired from the SWT website.
-
-This program makes use of a modified version of [SWTJar](http://mchr3k.github.io/swtjar/). SWTJar is distributed under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html); the modified source code may be acquired from [its GitHub repo](https://github.com/Dialexio/swtjar).
+## Third-Party Libraries
+This program utilizes [Json.NET](http://www.newtonsoft.com/json) and [plist-cil](https://github.com/claunia/plist-cil), both of which are included.
