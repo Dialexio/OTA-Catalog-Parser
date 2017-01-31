@@ -35,13 +35,13 @@ namespace Octothorpe
 			showBeta = false,
 			ModelNeedsChecking = false,
 			wikiMarkup = false;
-		private static Dictionary<string, uint> BuildNumberRowspanCount = new Dictionary<string, uint>(),
-			DateRowspanCount = new Dictionary<string, uint>(),
-			MarketingVersionRowspanCount = new Dictionary<string, uint>(),
-			OSVersionRowspanCount = new Dictionary<string, uint>();
-		private static Dictionary<string, Dictionary<string, uint>> FileRowspanCount = new Dictionary<string, Dictionary<string, uint>>(),// url, <PrereqOS, count> 
-			PrereqBuildRowspanCount = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
-			PrereqOSRowspanCount = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
+		private static Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
+			DateRowspan = new Dictionary<string, uint>(),
+			MarketingVersionRowspan = new Dictionary<string, uint>(),
+			OSVersionRowspan = new Dictionary<string, uint>();
+		private static Dictionary<string, Dictionary<string, uint>> FileRowspan = new Dictionary<string, Dictionary<string, uint>>(),// url, <PrereqOS, count> 
+			PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
+			PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
 		private static NSObject[] assets;
 		private static List<OTAPackage> Packages = new List<OTAPackage>();
 		private static string device, model, plist;
@@ -160,14 +160,14 @@ namespace Octothorpe
 
 		private static void Cleanup()
 		{
-			BuildNumberRowspanCount.Clear();
-			DateRowspanCount.Clear();
-			FileRowspanCount.Clear();
-			MarketingVersionRowspanCount.Clear();
-			OSVersionRowspanCount.Clear();
+			BuildNumberRowspan.Clear();
+			DateRowspan.Clear();
+			FileRowspan.Clear();
+			MarketingVersionRowspan.Clear();
+			OSVersionRowspan.Clear();
 			Packages.Clear();
-			PrereqBuildRowspanCount.Clear();
-			PrereqOSRowspanCount.Clear();
+			PrereqBuildRowspan.Clear();
+			PrereqOSRowspan.Clear();
 		}
 
 		private static void CountRowspan()
@@ -184,87 +184,87 @@ namespace Octothorpe
 				// Build
 				// Increment the count if it exists.
 				// If not, add the first tally.
-				if (BuildNumberRowspanCount.ContainsKey(entry.DeclaredBuild))
-					BuildNumberRowspanCount[entry.DeclaredBuild] = BuildNumberRowspanCount[entry.DeclaredBuild] + 1;
+				if (BuildNumberRowspan.ContainsKey(entry.DeclaredBuild))
+					BuildNumberRowspan[entry.DeclaredBuild]++;
 
 				else
-					BuildNumberRowspanCount.Add(entry.DeclaredBuild, 1);
+					BuildNumberRowspan.Add(entry.DeclaredBuild, 1);
 
 
 				// Date (Count ActualBuild() and not Date() because x.0 GM and x.1 beta can technically be pushed at the same time.)
 				// Increment the count if it exists.
 				// If not, add the first tally.
-				if (DateRowspanCount.ContainsKey(entry.ActualBuild))
-					DateRowspanCount[entry.ActualBuild] = DateRowspanCount[entry.ActualBuild] + 1;
+				if (DateRowspan.ContainsKey(entry.ActualBuild))
+					DateRowspan[entry.ActualBuild]++;
 
 				else
-					DateRowspanCount.Add(entry.ActualBuild, 1);
+					DateRowspan.Add(entry.ActualBuild, 1);
 
 
 				// File URL
 				// Load nested HashMap into a temporary variable, if it exists.
-				if (FileRowspanCount.ContainsKey(entry.URL))
-					fileNestedCount = FileRowspanCount[entry.URL];
+				if (FileRowspan.ContainsKey(entry.URL))
+					fileNestedCount = FileRowspan[entry.URL];
 
 				// Increment the count if it exists.
 				// If not, add the first tally.
 				if (fileNestedCount.ContainsKey(entry.PrerequisiteVer))
-					fileNestedCount[entry.PrerequisiteVer] = fileNestedCount[entry.PrerequisiteVer] + 1;
+					fileNestedCount[entry.PrerequisiteVer]++;
 
 				else
 					fileNestedCount.Add(entry.PrerequisiteVer, 1);
 
-				FileRowspanCount[entry.URL] = fileNestedCount;
+				FileRowspan[entry.URL] = fileNestedCount;
 
 
 				// Marketing version
 				// Increment the count if it exists.
 				// If not, add the first tally.
-				if (MarketingVersionRowspanCount.ContainsKey(entry.MarketingVersion))
-					MarketingVersionRowspanCount[entry.MarketingVersion] = MarketingVersionRowspanCount[entry.MarketingVersion] + 1;
+				if (MarketingVersionRowspan.ContainsKey(entry.MarketingVersion))
+					MarketingVersionRowspan[entry.MarketingVersion]++;
 
 				else
-					MarketingVersionRowspanCount.Add(entry.MarketingVersion, 1);
+					MarketingVersionRowspan.Add(entry.MarketingVersion, 1);
 
 
 				// OS version
 				// Increment the count if it exists.
 				// If not, add the first tally.
-				if (OSVersionRowspanCount.ContainsKey(entry.OSVersion))
-					OSVersionRowspanCount[entry.OSVersion] = OSVersionRowspanCount[entry.OSVersion] + 1;
+				if (OSVersionRowspan.ContainsKey(entry.OSVersion))
+					OSVersionRowspan[entry.OSVersion]++;
 
 				else
-					OSVersionRowspanCount.Add(entry.OSVersion, 1);
+					OSVersionRowspan.Add(entry.OSVersion, 1);
 
 
 				// Prerequisite OS version
-				if (PrereqOSRowspanCount.ContainsKey(entry.DeclaredBuild))
-					prereqOSNestedCount = PrereqOSRowspanCount[entry.DeclaredBuild];
+				if (PrereqOSRowspan.ContainsKey(entry.DeclaredBuild))
+					prereqOSNestedCount = PrereqOSRowspan[entry.DeclaredBuild];
 
 				// Increment the count if it exists.
 				// If not, add the first tally.
 				if (prereqOSNestedCount.ContainsKey(entry.PrerequisiteVer))
-					prereqOSNestedCount[entry.PrerequisiteVer] = prereqOSNestedCount[entry.PrerequisiteVer] + 1;
+					prereqOSNestedCount[entry.PrerequisiteVer]++;
 
 				else
 					prereqOSNestedCount.Add(entry.PrerequisiteVer, 1);
 
-				PrereqOSRowspanCount[entry.DeclaredBuild] = prereqOSNestedCount;
+				PrereqOSRowspan[entry.DeclaredBuild] = prereqOSNestedCount;
 
 
 				// Prerequisite Build version
-				if (PrereqBuildRowspanCount.ContainsKey(entry.DeclaredBuild))
-					prereqBuildNestedCount = PrereqBuildRowspanCount[entry.DeclaredBuild];
+				if (PrereqBuildRowspan.ContainsKey(entry.DeclaredBuild))
+					prereqBuildNestedCount = PrereqBuildRowspan[entry.DeclaredBuild];
 
 				// Increment the count if it exists.
 				// If not, add the first tally.
 				if (prereqBuildNestedCount.ContainsKey(entry.PrerequisiteBuild))
-					prereqBuildNestedCount[entry.PrerequisiteBuild] = prereqBuildNestedCount[entry.PrerequisiteBuild] + 1;
+					prereqBuildNestedCount[entry.PrerequisiteBuild]++;
 
 				else
 					prereqBuildNestedCount.Add(entry.PrerequisiteBuild, 1);
 
-				PrereqBuildRowspanCount[entry.DeclaredBuild] = prereqBuildNestedCount;
+				PrereqBuildRowspan[entry.DeclaredBuild] = prereqBuildNestedCount;
 			}
 
 			fileNestedCount = null;
@@ -398,12 +398,12 @@ namespace Octothorpe
 				Output.AppendLine("|-");
 
 				// Marketing Version for Apple Watch (1st generation)
-				if (Regex.Match(device, @"Watch1,\d").Success && MarketingVersionRowspanCount.ContainsKey(package.MarketingVersion)) {
+				if (Regex.Match(device, @"Watch1,\d").Success && MarketingVersionRowspan.ContainsKey(package.MarketingVersion)) {
 					Output.Append(NewTableCell);
 
 					// Only give rowspan if there is more than one row with the OS version.
-					if (MarketingVersionRowspanCount[package.MarketingVersion] > 1)
-						Output.Append("rowspan=\"" + MarketingVersionRowspanCount[package.MarketingVersion] + "\" | ");
+					if (MarketingVersionRowspan[package.MarketingVersion] > 1)
+						Output.Append("rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | ");
 
 					Output.Append(package.MarketingVersion);
 
@@ -432,25 +432,25 @@ namespace Octothorpe
 					Output.AppendLine();
 
 					//Remove the count since we're done with it.
-					MarketingVersionRowspanCount.Remove(package.MarketingVersion);
+					MarketingVersionRowspan.Remove(package.MarketingVersion);
 				}
 
 				// Output OS version.
-				if (OSVersionRowspanCount.ContainsKey(package.OSVersion))
+				if (OSVersionRowspan.ContainsKey(package.OSVersion))
 				{
 					Output.Append(NewTableCell);
 
 					// Create a filler for Marketing Version, if this is a 32-bit Apple TV.
-					if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success && OSVersionRowspanCount[package.OSVersion] > 1)
-						Output.AppendLine("| rowspan=\"" + OSVersionRowspanCount[package.OSVersion] + "\" | [MARKETING VERSION]");
+					if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success && OSVersionRowspan[package.OSVersion] > 1)
+						Output.AppendLine("| rowspan=\"" + OSVersionRowspan[package.OSVersion] + "\" | [MARKETING VERSION]");
 
 					// Creating the rowspan attribute, provided:
 					// - there is more than one entry for the version
 					// - this isn't a universal Apple Watch entry
-					if (OSVersionRowspanCount[package.OSVersion] > 1)
+					if (OSVersionRowspan[package.OSVersion] > 1)
 					{
 						if (DeviceIsWatch == false || package.IsUniversal == false)
-							Output.Append("rowspan=\"" + OSVersionRowspanCount[package.OSVersion] + "\" | ");
+							Output.Append("rowspan=\"" + OSVersionRowspan[package.OSVersion] + "\" | ");
 					}
 
 					Output.Append(package.OSVersion);
@@ -481,24 +481,24 @@ namespace Octothorpe
 
 					//Remove the count when we're done with it.
 					if (DeviceIsWatch == false || package.IsUniversal == false)
-						OSVersionRowspanCount.Remove(package.OSVersion);
+						OSVersionRowspan.Remove(package.OSVersion);
 
 					else
-						OSVersionRowspanCount[package.OSVersion] = OSVersionRowspanCount[package.OSVersion] - 1;
+						OSVersionRowspan[package.OSVersion]--;
 				}
 
 				// Output build number.
-				if (BuildNumberRowspanCount.ContainsKey(package.DeclaredBuild))
+				if (BuildNumberRowspan.ContainsKey(package.DeclaredBuild))
 				{
 					Output.Append(NewTableCell);
 
 					// Only give rowspan if there is more than one row with the OS version.
 					// Count DeclaredBuild() instead of ActualBuild() so the entry pointing betas to the final build is treated separately.
-					if (BuildNumberRowspanCount[package.DeclaredBuild] > 1)
-						Output.Append("rowspan=\"" + BuildNumberRowspanCount[package.DeclaredBuild] + "\" | ");
+					if (BuildNumberRowspan[package.DeclaredBuild] > 1)
+						Output.Append("rowspan=\"" + BuildNumberRowspan[package.DeclaredBuild] + "\" | ");
 
 					//Remove the count since we're done with it.
-					BuildNumberRowspanCount.Remove(package.DeclaredBuild);
+					BuildNumberRowspan.Remove(package.DeclaredBuild);
 
 					Output.Append(package.ActualBuild);
 
@@ -510,15 +510,15 @@ namespace Octothorpe
 				}
 
 				// Printing prerequisite version
-				if (PrereqOSRowspanCount.ContainsKey(package.DeclaredBuild) && PrereqOSRowspanCount[package.DeclaredBuild].ContainsKey(package.PrerequisiteVer))
+				if (PrereqOSRowspan.ContainsKey(package.DeclaredBuild) && PrereqOSRowspan[package.DeclaredBuild].ContainsKey(package.PrerequisiteVer))
 				{
 					Output.Append(NewTableCell);
 
 					// Is there more than one of this prerequisite version tallied?
-					if (PrereqOSRowspanCount[package.DeclaredBuild][package.PrerequisiteVer] > 1)
+					if (PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer] > 1)
 					{
-						Output.Append("rowspan=\"" + PrereqOSRowspanCount[package.DeclaredBuild][package.PrerequisiteVer] + "\" ");
-						PrereqOSRowspanCount[package.DeclaredBuild].Remove(package.PrerequisiteVer);
+						Output.Append("rowspan=\"" + PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer] + "\" ");
+						PrereqOSRowspan[package.DeclaredBuild].Remove(package.PrerequisiteVer);
 
 						if (package.IsUniversal == false)
 							Output.Append(NewTableCell);
@@ -545,17 +545,17 @@ namespace Octothorpe
 
 				// Printing prerequisite build
 				if (package.IsUniversal == false
-					&& PrereqBuildRowspanCount.ContainsKey(package.DeclaredBuild)
-					&& PrereqBuildRowspanCount[package.DeclaredBuild].ContainsKey(package.PrerequisiteBuild))
+					&& PrereqBuildRowspan.ContainsKey(package.DeclaredBuild)
+					&& PrereqBuildRowspan[package.DeclaredBuild].ContainsKey(package.PrerequisiteBuild))
 				{
 					Output.Append(NewTableCell);
 
 					// Is there more than one of this prerequisite build tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
-					if (PrereqBuildRowspanCount[package.DeclaredBuild][package.PrerequisiteBuild] > 1)
+					if (PrereqBuildRowspan[package.DeclaredBuild][package.PrerequisiteBuild] > 1)
 					{
-						Output.Append("rowspan=\"" + PrereqBuildRowspanCount[package.DeclaredBuild][package.PrerequisiteBuild] + "\" | ");
-						PrereqBuildRowspanCount[package.DeclaredBuild].Remove(package.PrerequisiteBuild);
+						Output.Append("rowspan=\"" + PrereqBuildRowspan[package.DeclaredBuild][package.PrerequisiteBuild] + "\" | ");
+						PrereqBuildRowspan[package.DeclaredBuild].Remove(package.PrerequisiteBuild);
 					}
 
 					Output.AppendLine(package.PrerequisiteBuild);
@@ -566,15 +566,15 @@ namespace Octothorpe
 
 				// Date as extracted from the url. Using the same rowspan count as build.
 				// (3.1.1 had two builds released on different dates for iPod touch 3G.)
-				if (DateRowspanCount.ContainsKey(package.ActualBuild))
+				if (DateRowspan.ContainsKey(package.ActualBuild))
 				{
 					Output.Append(NewTableCell);
 
 					// Only give rowspan if there is more than one row with the OS version.
-					if (DateRowspanCount[package.ActualBuild] > 1)
+					if (DateRowspan[package.ActualBuild] > 1)
 					{
-						Output.Append("rowspan=\"" + DateRowspanCount[package.ActualBuild] + "\" | ");
-						DateRowspanCount.Remove(package.ActualBuild); //Remove the count since we already used it.
+						Output.Append("rowspan=\"" + DateRowspan[package.ActualBuild] + "\" | ");
+						DateRowspan.Remove(package.ActualBuild); //Remove the count since we already used it.
 					}
 
 					Output.AppendLine("{{date|" + package.Date('y') + '|' + package.Date('m') + '|' + package.Date('d') + "}}");
@@ -605,26 +605,26 @@ namespace Octothorpe
 					}
 				}
 
-				if (FileRowspanCount.ContainsKey(package.URL) && FileRowspanCount[package.URL].ContainsKey(package.PrerequisiteVer))
+				if (FileRowspan.ContainsKey(package.URL) && FileRowspan[package.URL].ContainsKey(package.PrerequisiteVer))
 				{
 					Output.Append(NewTableCell);
 
 					// Is there more than one of this prerequisite version tallied?
 					// Also do not use rowspan if the prerequisite build is a beta.
-					if (FileRowspanCount[package.URL][package.PrerequisiteVer] > 1)
-						Output.Append("rowspan=\"" + FileRowspanCount[package.URL][package.PrerequisiteVer] + "\" | ");
+					if (FileRowspan[package.URL][package.PrerequisiteVer] > 1)
+						Output.Append("rowspan=\"" + FileRowspan[package.URL][package.PrerequisiteVer] + "\" | ");
 
 					Output.Append('[' + package.URL + ' ' + fileName + ']' + Environment.NewLine + NewTableCell);
 
 					//Print file Size.
 					// Only give rowspan if there is more than one row with the OS version.
-					if (FileRowspanCount[package.URL][package.PrerequisiteVer] > 1)
-						Output.Append("rowspan=\"" + FileRowspanCount[package.URL][package.PrerequisiteVer] + "\" | ");
+					if (FileRowspan[package.URL][package.PrerequisiteVer] > 1)
+						Output.Append("rowspan=\"" + FileRowspan[package.URL][package.PrerequisiteVer] + "\" | ");
 
 					Output.AppendLine(package.Size);
 
 					//Remove the count since we're done with it.
-					FileRowspanCount[package.URL].Remove(package.PrerequisiteVer);
+					FileRowspan[package.URL].Remove(package.PrerequisiteVer);
 				}
 			}
 
