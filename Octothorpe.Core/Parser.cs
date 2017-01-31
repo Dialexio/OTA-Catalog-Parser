@@ -42,8 +42,7 @@ namespace Octothorpe
 		private static Dictionary<string, Dictionary<string, uint>> FileRowspan = new Dictionary<string, Dictionary<string, uint>>(),// url, <PrereqOS, count> 
 			PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
 			PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
-		private static NSObject[] assets;
-		private static List<OTAPackage> Packages = new List<OTAPackage>();
+		private static readonly List<OTAPackage> Packages = new List<OTAPackage>();
 		private static string device, model, plist;
 		private static Version max, minimum;
 
@@ -107,10 +106,25 @@ namespace Octothorpe
 		private static void AddEntries()
 		{
 			bool matched;
+			NSDictionary root;
 			OTAPackage package;
 
-			// Look at every item in the array with the key "Assets."
-			foreach (NSObject entry in assets)
+			// Load the PLIST.
+			if (plist.StartsWith("http://mesu.apple.com/assets/"))
+			{
+				WebClient Fido = new WebClient();
+				root = (NSDictionary)PropertyListParser.Parse(Fido.DownloadData(plist));
+				Fido.Dispose();
+			}
+
+			else if (plist.Contains("://"))
+				throw new ArgumentException("notmesu");
+
+			else
+				root = (NSDictionary)PropertyListParser.Parse(plist);
+
+			// Look at every item in the NSArray named "Assets."
+			foreach (NSObject entry in ((NSArray)root.ObjectForKey("Assets")).GetArray())
 			{
 				matched = false;
 				package = new OTAPackage((NSDictionary)entry); // Feed the info into a custom object so we can easily pull info and sort.
@@ -128,7 +142,7 @@ namespace Octothorpe
 						continue;
 
 				// Device check.
-				matched = (package.SupportedDevices.Contains(device));
+				matched = package.SupportedDevices.Contains(device);
 
 				// Model check, if needed.
 				if (matched && ModelNeedsChecking)
@@ -154,8 +168,6 @@ namespace Octothorpe
 					Packages.Add(package);
 				}
 			}
-
-			assets = null;
 		}
 
 		private static void Cleanup()
@@ -274,25 +286,6 @@ namespace Octothorpe
 
 		private static void ErrorCheck()
 		{
-			// Error checking for plist catalog.
-			NSDictionary root;
-
-			if (plist.StartsWith("http://mesu.apple.com/assets/"))
-			{
-				WebClient Fido = new WebClient();
-				root = (NSDictionary)PropertyListParser.Parse(Fido.DownloadData(plist));
-				Fido.Dispose();
-			}
-
-			else if (plist.Contains("://"))
-				throw new ArgumentException("notmesu");
-
-			else
-				root = (NSDictionary)PropertyListParser.Parse(plist);
-
-			// Make sure the PLIST is what we want.
-			assets = ((NSArray)root.ObjectForKey("Assets")).GetArray();
-
 			// Device check.
 			if (device == null || Regex.IsMatch(device, @"(AppleTV|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
 				throw new ArgumentException("device");
