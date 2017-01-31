@@ -40,8 +40,8 @@ namespace Octothorpe
             MarketingVersionRowspanCount = new Dictionary<string, uint>(),
             OSVersionRowspanCount = new Dictionary<string, uint>();
         private static Dictionary<string, Dictionary<string, uint>> FileRowspanCount = new Dictionary<string, Dictionary<string, uint>>(),// url, <PrereqOS, count> 
-            PrereqBuildRowspanCount = new Dictionary<string, Dictionary<string, uint>>(), // Build, <PrereqBuild, count>
-            PrereqOSRowspanCount = new Dictionary<string, Dictionary<string, uint>>(); // Build, <PrereqOS, count>
+            PrereqBuildRowspanCount = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
+            PrereqOSRowspanCount = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
         private static NSObject[] assets;
         private static List<OTAPackage> Packages = new List<OTAPackage>();
         private static string device, model, plist;
@@ -73,8 +73,8 @@ namespace Octothorpe
 
         public string Plist
         {
-            get { return plist; }
-            set { plist = value; }
+			get { return plist; }
+			set { plist = value; }
         }
 
         public bool ShowBeta
@@ -509,53 +509,56 @@ namespace Octothorpe
                     Output.AppendLine();
 			    }
 
-			    // Print prerequisites if there are any.
-			    if (package.IsUniversal)
-                    Output.AppendLine("| colspan=\"2\" {{n/a}}");
+			    // Printing prerequisite version
+			    if (PrereqOSRowspanCount.ContainsKey(package.DeclaredBuild) && PrereqOSRowspanCount[package.DeclaredBuild].ContainsKey(package.PrerequisiteVer))
+                {
+                    Output.Append(NewTableCell);
 
-			    else {
-				    // Prerequisite version
-				    if (PrereqOSRowspanCount.ContainsKey(package.DeclaredBuild) && PrereqOSRowspanCount[package.DeclaredBuild].ContainsKey(package.PrerequisiteVer))
+					// Is there more than one of this prerequisite version tallied?
+					if (PrereqOSRowspanCount[package.DeclaredBuild][package.PrerequisiteVer] > 1)
+					{
+						Output.Append("rowspan=\"" + PrereqOSRowspanCount[package.DeclaredBuild][package.PrerequisiteVer] + "\" ");
+						PrereqOSRowspanCount[package.DeclaredBuild].Remove(package.PrerequisiteVer);
+
+						if (package.IsUniversal == false)
+                    		Output.Append(NewTableCell);
+					}
+
+					// Print out the cell text
+					if (package.IsUniversal)
+						Output.AppendLine("colspan=\"2\" {{n/a}}");
+
+					else
+					{
+						// If this is a GM, print the link to Golden Master.
+						if (package.PrerequisiteVer.Contains(" GM"))
+							Output.AppendLine(package.PrerequisiteVer.Replace("GM", "[[Golden Master|GM]]"));
+
+						// Very quick check if prerequisite is a beta. This is not bulletproof.
+						else if (Regex.Match(package.PrerequisiteBuild, OTAPackage.REGEX_BETA).Success && package.PrerequisiteVer.Contains("beta") == false)
+							Output.AppendLine(package.PrerequisiteVer + " beta #");
+
+						else
+							Output.AppendLine(package.PrerequisiteVer);
+					}
+			    }
+
+			    // Printing prerequisite build
+				if (package.IsUniversal == false
+				    && PrereqBuildRowspanCount.ContainsKey(package.DeclaredBuild)
+				    && PrereqBuildRowspanCount[package.DeclaredBuild].ContainsKey(package.PrerequisiteBuild))
+                {
+                    Output.Append(NewTableCell);
+
+				    // Is there more than one of this prerequisite build tallied?
+				    // Also do not use rowspan if the prerequisite build is a beta.
+				    if (PrereqBuildRowspanCount[package.DeclaredBuild][package.PrerequisiteBuild] > 1)
                     {
-                        Output.Append(NewTableCell);
-
-					    // Is there more than one of this prerequisite version tallied?
-					    // Also do not use rowspan if the prerequisite build is a beta.
-                        if ((package.PrerequisiteVer.Contains("beta") || Regex.Match(package.PrerequisiteBuild, OTAPackage.REGEX_BETA).Success == false) && PrereqOSRowspanCount[package.DeclaredBuild][package.PrerequisiteVer] > 1)
-                        {
-						    Output.Append("rowspan=\"" + PrereqOSRowspanCount[package.DeclaredBuild][package.PrerequisiteVer] + "\" | ");
-						    PrereqOSRowspanCount[package.DeclaredBuild].Remove(package.PrerequisiteVer);
-					    }
-
-					    // If this is a GM, print the link to Golden Master.
-					    if (package.PrerequisiteVer.Contains(" GM"))
-                            Output.Append(package.PrerequisiteVer.Replace("GM", "[[Golden Master|GM]]"));
-
-					    // Very quick check if prerequisite is a beta. This is not bulletproof.
-					    else if (Regex.Match(package.PrerequisiteBuild, OTAPackage.REGEX_BETA).Success && package.PrerequisiteVer.Contains("beta") == false)
-                            Output.Append(package.PrerequisiteVer + " beta #");
-
-					    else
-                            Output.Append(package.PrerequisiteVer);
-
-                        Output.AppendLine();
+					    Output.Append("rowspan=\"" + PrereqBuildRowspanCount[package.DeclaredBuild][package.PrerequisiteBuild] + "\" | ");
+					    PrereqBuildRowspanCount[package.DeclaredBuild].Remove(package.PrerequisiteBuild);
 				    }
 
-				    // Prerequisite build
-				    if (PrereqBuildRowspanCount.ContainsKey(package.DeclaredBuild) && PrereqBuildRowspanCount[package.DeclaredBuild].ContainsKey(package.PrerequisiteBuild))
-                    {
-                        Output.Append(NewTableCell);
-
-					    // Is there more than one of this prerequisite build tallied?
-					    // Also do not use rowspan if the prerequisite build is a beta.
-					    if (PrereqBuildRowspanCount[package.DeclaredBuild][package.PrerequisiteBuild] > 1)
-                        {
-						    Output.Append("rowspan=\"" + PrereqBuildRowspanCount[package.DeclaredBuild][package.PrerequisiteBuild] + "\" | ");
-						    PrereqBuildRowspanCount[package.DeclaredBuild].Remove(package.PrerequisiteBuild);
-					    }
-
-                        Output.AppendLine(package.PrerequisiteBuild);
-				    }
+                    Output.AppendLine(package.PrerequisiteBuild);
 			    }
 
 			    if (package.CompatibilityVersion > 0)
