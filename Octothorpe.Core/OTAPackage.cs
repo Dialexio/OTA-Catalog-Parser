@@ -135,7 +135,7 @@ namespace Octothorpe
 				char digit = this.DocumentationID[this.DocumentationID.Length - 1];
 
 				if (this.IsHonestBuild && Regex.IsMatch(this.DocumentationID, "(Public|Beta|Seed)"))
-					return (Char.IsDigit(digit)) ? (int)Char.GetNumericValue(digit) : 1;
+					return (char.IsDigit(digit)) ? (int)char.GetNumericValue(digit) : 1;
 
 				else
 					return 0;
@@ -276,7 +276,10 @@ namespace Octothorpe
 				if (ENTRY.ContainsKey("MarketingVersion"))
 				{
 					string mv = ENTRY["MarketingVersion"].ToString();
-					return (mv.Contains(".") == false) ? mv + ".0" : mv;
+
+					return (mv.Contains(".") == false) ?
+						mv + ".0" :
+						mv;
 				}
 
 				else
@@ -330,19 +333,16 @@ namespace Octothorpe
 					using (StreamReader Json = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "OS versions.json"))
 					{
 						VersionStrings = JsonConvert.DeserializeObject<Dictionary<string, string>>(Json.ReadToEnd());
+						return VersionStrings[this.PrerequisiteBuild];
 					}
 				}
 
-				catch (Exception) { }
-
-				if (VersionStrings != null && VersionStrings.ContainsKey(this.PrerequisiteBuild))
-					return VersionStrings[this.PrerequisiteBuild];
-
-				else if (ENTRY.ContainsKey("PrerequisiteOSVersion"))
-					return ENTRY["PrerequisiteOSVersion"].ToString();
-
-				else
-					return "N/A";
+				catch (KeyNotFoundException)
+				{
+					return (ENTRY.ContainsKey("PrerequisiteOSVersion")) ?
+						ENTRY["PrerequisiteOSVersion"].ToString() :
+						"N/A";
+				}
 			}
 		}
 
@@ -367,7 +367,9 @@ namespace Octothorpe
 		{
 			get
 			{
-				return (ENTRY.ContainsKey("ReleaseType")) ? ENTRY["ReleaseType"].ToString() : "Public";
+				return (ENTRY.ContainsKey("ReleaseType")) ?
+					ENTRY["ReleaseType"].ToString() :
+                    "Public";
 			}
 		}
 
@@ -388,9 +390,7 @@ namespace Octothorpe
 				}
 
 				else
-				{
 					return string.Format("{0:n0}", long.Parse(ENTRY["_DownloadSize"].ToString()));
-				}
 			}
 		}
 
@@ -517,9 +517,7 @@ namespace Octothorpe
 				try
 				{
 					foreach (NSObject Model in ((NSArray)ENTRY["SupportedDeviceModels"]).GetArray())
-					{
 						Models.Add(Model.ToString());
-					}
 				}
 
 				// No models specified. (Older PLISTs do this.)
@@ -543,9 +541,7 @@ namespace Octothorpe
 				List<string> Devices = new List<string>();
 
 				foreach (NSObject Device in ((NSArray)ENTRY["SupportedDevices"]).GetArray())
-				{
 					Devices.Add(Device.ToString());
-				}
 
 				return Devices;
 			}
@@ -565,9 +561,7 @@ namespace Octothorpe
 				}
 
 				else
-				{
 					return ENTRY["__BaseURL"].ToString() + ENTRY["__RelativePath"].ToString();
-				}
 			}
 		}
 	}
