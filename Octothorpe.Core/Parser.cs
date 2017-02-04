@@ -184,14 +184,9 @@ namespace Octothorpe
 
 		private static void CountRowspan()
 		{
-			Dictionary<string, uint> prereqBuildNestedCount, prereqOSNestedCount;
-
 			// Count the rowspans for wikiMarkup markup.
 			foreach (OTAPackage entry in Packages)
 			{
-				prereqBuildNestedCount = new Dictionary<string, uint>();
-				prereqOSNestedCount = new Dictionary<string, uint>();
-
 				// Build
 				// Increment the count if it exists.
 				// If not, add the first tally.
@@ -246,37 +241,38 @@ namespace Octothorpe
 
 
 				// Prerequisite OS version
-				if (PrereqOSRowspan.ContainsKey(entry.DeclaredBuild))
-					prereqOSNestedCount = PrereqOSRowspan[entry.DeclaredBuild];
-
 				// Increment the count if it exists.
 				// If not, add the first tally.
-				if (prereqOSNestedCount.ContainsKey(entry.PrerequisiteVer))
-					prereqOSNestedCount[entry.PrerequisiteVer]++;
+				try
+				{
+					PrereqOSRowspan[entry.DeclaredBuild][entry.PrerequisiteVer]++;
+				}
 
-				else
-					prereqOSNestedCount.Add(entry.PrerequisiteVer, 1);
+				catch (KeyNotFoundException)
+				{
+					if (PrereqOSRowspan.ContainsKey(entry.DeclaredBuild) == false)
+						PrereqOSRowspan.Add(entry.DeclaredBuild, new Dictionary<string, uint>());
 
-				PrereqOSRowspan[entry.DeclaredBuild] = prereqOSNestedCount;
+					PrereqOSRowspan[entry.DeclaredBuild].Add(entry.PrerequisiteVer, 1);
+				}
 
 
 				// Prerequisite Build version
-				if (PrereqBuildRowspan.ContainsKey(entry.DeclaredBuild))
-					prereqBuildNestedCount = PrereqBuildRowspan[entry.DeclaredBuild];
-
 				// Increment the count if it exists.
 				// If not, add the first tally.
-				if (prereqBuildNestedCount.ContainsKey(entry.PrerequisiteBuild))
-					prereqBuildNestedCount[entry.PrerequisiteBuild]++;
+				try
+				{
+					PrereqBuildRowspan[entry.DeclaredBuild][entry.PrerequisiteBuild]++;
+				}
 
-				else
-					prereqBuildNestedCount.Add(entry.PrerequisiteBuild, 1);
+				catch (KeyNotFoundException)
+				{
+					if (PrereqBuildRowspan.ContainsKey(entry.DeclaredBuild) == false)
+						PrereqBuildRowspan.Add(entry.DeclaredBuild, new Dictionary<string, uint>());
 
-				PrereqBuildRowspan[entry.DeclaredBuild] = prereqBuildNestedCount;
+					PrereqBuildRowspan[entry.DeclaredBuild].Add(entry.PrerequisiteBuild, 1);
+				}
 			}
-
-			prereqBuildNestedCount = null;
-			prereqOSNestedCount = null;
 		}
 
 		private static void ErrorCheck()
