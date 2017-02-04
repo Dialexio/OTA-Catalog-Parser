@@ -37,10 +37,10 @@ namespace Octothorpe
 			wikiMarkup = false;
 		private static Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
 			DateRowspan = new Dictionary<string, uint>(),
+			FileRowspan = new Dictionary<string, uint>(),
 			MarketingVersionRowspan = new Dictionary<string, uint>(),
 			OSVersionRowspan = new Dictionary<string, uint>();
-		private static Dictionary<string, Dictionary<string, uint>> FileRowspan = new Dictionary<string, Dictionary<string, uint>>(),// url, <PrereqOS, count> 
-			PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
+		private static Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
 			PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
 		private static readonly List<OTAPackage> Packages = new List<OTAPackage>();
 		private static string device, model, plist;
@@ -184,12 +184,11 @@ namespace Octothorpe
 
 		private static void CountRowspan()
 		{
-			Dictionary<string, uint> fileNestedCount, prereqBuildNestedCount, prereqOSNestedCount;
+			Dictionary<string, uint> prereqBuildNestedCount, prereqOSNestedCount;
 
 			// Count the rowspans for wikiMarkup markup.
 			foreach (OTAPackage entry in Packages)
 			{
-				fileNestedCount = new Dictionary<string, uint>();
 				prereqBuildNestedCount = new Dictionary<string, uint>();
 				prereqOSNestedCount = new Dictionary<string, uint>();
 
@@ -214,19 +213,16 @@ namespace Octothorpe
 
 
 				// File URL
-				// Load nested HashMap into a temporary variable, if it exists.
-				if (FileRowspan.ContainsKey(entry.URL))
-					fileNestedCount = FileRowspan[entry.URL];
+				// Increment the count if it exists (e.g. universal).
+				// Kill rowspan for iPod5,1 10B141 (public releases used the universal entry).
+				if ((entry.SupportedDevices.Contains("iPod5,1") && entry.OSVersion == "8.4.1" && entry.PrerequisiteBuild == "10B141") == false)
+				{
+					if (FileRowspan.ContainsKey(entry.URL))
+						FileRowspan[entry.URL]++;
 
-				// Increment the count if it exists.
-				// If not, add the first tally.
-				if (fileNestedCount.ContainsKey(entry.PrerequisiteVer))
-					fileNestedCount[entry.PrerequisiteVer]++;
-
-				else
-					fileNestedCount.Add(entry.PrerequisiteVer, 1);
-
-				FileRowspan[entry.URL] = fileNestedCount;
+					else
+						FileRowspan.Add(entry.URL, 1);
+				}
 
 
 				// Marketing version
@@ -279,7 +275,6 @@ namespace Octothorpe
 				PrereqBuildRowspan[entry.DeclaredBuild] = prereqBuildNestedCount;
 			}
 
-			fileNestedCount = null;
 			prereqBuildNestedCount = null;
 			prereqOSNestedCount = null;
 		}
@@ -371,6 +366,7 @@ namespace Octothorpe
 
 		private static string OutputWikiMarkup()
 		{
+			bool BorkedDelta;
 			Match name;
 			string fileName, NewTableCell = "| ";
 			StringBuilder Output = new StringBuilder();
@@ -380,6 +376,8 @@ namespace Octothorpe
 
 			foreach (OTAPackage package in Packages)
 			{
+				BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
+
 				// Obtain the file name.
 				fileName = string.Empty;
 				name = Regex.Match(package.URL, @"[0-9a-f]{40}\.zip");
@@ -598,26 +596,33 @@ namespace Octothorpe
 					}
 				}
 
-				if (FileRowspan.ContainsKey(package.URL) && FileRowspan[package.URL].ContainsKey(package.PrerequisiteVer))
+				// Is there more than one of this prerequisite version tallied?
+				if (FileRowspan.ContainsKey(package.URL) || (BorkedDelta && package.OSVersion != "8.4.1"))
 				{
 					Output.Append(NewTableCell);
 
-					// Is there more than one of this prerequisite version tallied?
-					// Also do not use rowspan if the prerequisite build is a beta.
-					if (FileRowspan[package.URL][package.PrerequisiteVer] > 1)
-						Output.Append("rowspan=\"" + FileRowspan[package.URL][package.PrerequisiteVer] + "\" | ");
+					if (BorkedDelta == false
+					    && FileRowspan.ContainsKey(package.URL)
+					    && FileRowspan[package.URL] > 1)
+					{
+						Output.Append("rowspan=\"" + FileRowspan[package.URL] + "\" | ");
+					}
 
 					Output.Append('[' + package.URL + ' ' + fileName + ']' + Environment.NewLine + NewTableCell);
 
-					//Print file Size.
+					//Print file size.
 					// Only give rowspan if there is more than one row with the OS version.
-					if (FileRowspan[package.URL][package.PrerequisiteVer] > 1)
-						Output.Append("rowspan=\"" + FileRowspan[package.URL][package.PrerequisiteVer] + "\" | ");
+					if (BorkedDelta == false
+						&& FileRowspan.ContainsKey(package.URL)
+					    && FileRowspan[package.URL] > 1)
+					{
+						Output.Append("rowspan=\"" + FileRowspan[package.URL] + "\" | ");
+					}
 
 					Output.AppendLine(package.Size);
 
 					//Remove the count since we're done with it.
-					FileRowspan[package.URL].Remove(package.PrerequisiteVer);
+					FileRowspan.Remove(package.URL);
 				}
 			}
 
