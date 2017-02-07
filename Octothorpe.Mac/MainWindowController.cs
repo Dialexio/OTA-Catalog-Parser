@@ -29,9 +29,9 @@ namespace Octothorpe.Mac
 {
 	public partial class MainWindowController : NSWindowController
 	{
-		static bool DisplayWikiMarkup = true;
-		static NSAlert alert;
-		static Parser parser;
+		private bool DisplayWikiMarkup = true;
+		private NSAlert alert;
+		private Parser parser;
 
 		public MainWindowController(IntPtr handle) : base(handle)
 		{
@@ -78,7 +78,7 @@ namespace Octothorpe.Mac
                 if (String.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
                     parser.Maximum = new Version(NSTextFieldMax.StringValue);
 
-                // Set maximum version if one was specified
+                // Set minimum version if one was specified
                 if (String.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
                     parser.Minimum = new Version(NSTextFieldMin.StringValue);
 
