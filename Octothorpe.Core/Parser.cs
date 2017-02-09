@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Octothorpe
 {
@@ -105,9 +106,7 @@ namespace Octothorpe
 
 		private static void AddEntries()
 		{
-			bool matched;
 			NSDictionary root;
-			OTAPackage package;
 
 			// Load the PLIST.
 			if (plist.StartsWith("http://mesu.apple.com/assets/"))
@@ -124,50 +123,50 @@ namespace Octothorpe
 				root = (NSDictionary)PropertyListParser.Parse(plist);
 
 			// Look at every item in the NSArray named "Assets."
-			foreach (NSObject entry in ((NSArray)root.ObjectForKey("Assets")).GetArray())
-			{
-				matched = false;
-				package = new OTAPackage((NSDictionary)entry); // Feed the info into a custom object so we can easily pull info and sort.
-				
-				// Beta check.
-				if (showBeta == false && package.ActualReleaseType > 0)
-					continue;
-
-				// For wikiMarkup markup: If a beta has two entries
-				// (one for betas, one for non-betas), don't count it twice.
-				if (wikiMarkup &&
-					package.ReleaseType != "Public" &&
-					package.BetaNumber > 0 &&
-					package.DocumentationID != "iOS7Seed6")
-						continue;
-
-				// Device check.
-				matched = package.SupportedDevices.Contains(device);
-
-				// Model check, if needed.
-				if (matched && ModelNeedsChecking)
+			Parallel.ForEach(((NSArray)root.ObjectForKey("Assets")).GetArray(), entry => 
 				{
-					matched = false; // Skipping unless we can verify we want it.
-
-					// Make sure "SupportedDeviceModels" exists before checking it.
-					if (package.SupportedDeviceModels.Count > 0)
-						matched = (package.SupportedDeviceModels.Contains(model));
-				}
-
-				// If it's still a match, check the OS version.
-				// If the OS version doesn't fit what we're
-				// searching for, continue to the next entry.
-				if (matched)
-				{
-					if (max != null && max.CompareTo(new Version(package.MarketingVersion)) < 0)
-						continue;
-					if (minimum != null && minimum.CompareTo(new Version(package.MarketingVersion)) > 0)
-						continue;
-
-					// It survived the checks!
-					Packages.Add(package);
-				}
-			}
+					bool matched = false;
+					OTAPackage package = new OTAPackage((NSDictionary)entry); // Feed the info into a custom object so we can easily pull info and sort.
+					
+					// Beta check.
+					if (showBeta == false && package.ActualReleaseType > 0)
+						return;
+	
+					// For wikiMarkup markup: If a beta has two entries
+					// (one for betas, one for non-betas), don't count it twice.
+					if (wikiMarkup &&
+						package.ReleaseType != "Public" &&
+						package.BetaNumber > 0 &&
+						package.DocumentationID != "iOS7Seed6")
+							return;
+	
+					// Device check.
+					matched = package.SupportedDevices.Contains(device);
+	
+					// Model check, if needed.
+					if (matched && ModelNeedsChecking)
+					{
+						matched = false; // Skipping unless we can verify we want it.
+	
+						// Make sure "SupportedDeviceModels" exists before checking it.
+						if (package.SupportedDeviceModels.Count > 0)
+							matched = (package.SupportedDeviceModels.Contains(model));
+					}
+	
+					// If it's still a match, check the OS version.
+					// If the OS version doesn't fit what we're
+					// searching for, continue to the next entry.
+					if (matched)
+					{
+						if (max != null && max.CompareTo(new Version(package.MarketingVersion)) < 0)
+							return;
+						if (minimum != null && minimum.CompareTo(new Version(package.MarketingVersion)) > 0)
+							return;
+	
+						// It survived the checks!
+						Packages.Add(package);
+					}
+				});
 		}
 
 		private static void Cleanup()
