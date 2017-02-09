@@ -32,20 +32,20 @@ namespace Octothorpe
 {
 	public class Parser
 	{
-		private static bool DeviceIsWatch = false,
-			showBeta = false,
-			ModelNeedsChecking = false,
-			wikiMarkup = false;
-		private static Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
+		private bool showBeta = false,
+			wikiMarkup = false,
+			DeviceIsWatch = false,
+			ModelNeedsChecking = false;
+		private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
 			DateRowspan = new Dictionary<string, uint>(),
 			FileRowspan = new Dictionary<string, uint>(),
 			MarketingVersionRowspan = new Dictionary<string, uint>(),
 			OSVersionRowspan = new Dictionary<string, uint>();
-		private static Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
+		private Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
 			PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
-		private static readonly List<OTAPackage> Packages = new List<OTAPackage>();
-		private static string device, model, plist;
-		private static Version max, minimum;
+		private readonly List<OTAPackage> Packages = new List<OTAPackage>();
+		private string device, model, plist;
+		private Version max, minimum;
 
 		public string Device
 		{
@@ -104,7 +104,7 @@ namespace Octothorpe
 				return OutputHumanFormat();
 		}
 
-		private static void AddEntries()
+		private void AddEntries()
 		{
 			NSDictionary root;
 
@@ -169,7 +169,7 @@ namespace Octothorpe
 				});
 		}
 
-		private static void Cleanup()
+		private void Cleanup()
 		{
 			BuildNumberRowspan.Clear();
 			DateRowspan.Clear();
@@ -181,7 +181,7 @@ namespace Octothorpe
 			PrereqOSRowspan.Clear();
 		}
 
-		private static void CountRowspan()
+		private void CountRowspan()
 		{
 			// Count the rowspans for wikiMarkup markup.
 			foreach (OTAPackage entry in Packages)
@@ -274,7 +274,7 @@ namespace Octothorpe
 			}
 		}
 
-		private static void ErrorCheck()
+		private void ErrorCheck()
 		{
 			// Device check.
 			if (device == null || Regex.IsMatch(device, @"(AppleTV|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
@@ -288,7 +288,7 @@ namespace Octothorpe
 				throw new ArgumentException("model");
 		}
 
-		private static string OutputHumanFormat()
+		private string OutputHumanFormat()
 		{
 			StringBuilder Output = new StringBuilder();
 			string osName;
@@ -359,7 +359,7 @@ namespace Octothorpe
 			return Output.ToString();
 		}
 
-		private static string OutputWikiMarkup()
+		private string OutputWikiMarkup()
 		{
 			bool BorkedDelta;
 			Match name;
@@ -550,8 +550,8 @@ namespace Octothorpe
 				if (package.CompatibilityVersion > 0)
 					Output.AppendLine(NewTableCell + package.CompatibilityVersion);
 
-				// Date as extracted from the url. Using the same rowspan count as build.
-				// (3.1.1 had two builds released on different dates for iPod touch 3G.)
+				// Date as extracted from the URL. Using the same rowspan count as build.
+				// (Apple occasionally releases updates with the same version, but different build number, silently.)
 				if (DateRowspan.ContainsKey(package.ActualBuild))
 				{
 					Output.Append(NewTableCell);
@@ -626,7 +626,7 @@ namespace Octothorpe
 			return Output.ToString();
 		}
 
-		private static void SortEntries()
+		private void SortEntries()
 		{
 			Packages.Sort
 			(
