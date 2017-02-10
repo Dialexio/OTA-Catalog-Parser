@@ -183,34 +183,29 @@ namespace Octothorpe
 
 		private void CountRowspan()
 		{
-			// Count the rowspans for wikiMarkup markup.
 			foreach (OTAPackage entry in Packages)
 			{
-				// Build
-				// Increment the count if it exists.
-				// If not, add the first tally.
+				// Increment the count if the build exists.
 				if (BuildNumberRowspan.ContainsKey(entry.DeclaredBuild))
 					BuildNumberRowspan[entry.DeclaredBuild]++;
-
+				// If not, add the first tally.
 				else
 					BuildNumberRowspan.Add(entry.DeclaredBuild, 1);
 
 
-				// Date (Count ActualBuild() and not Date() because x.0 GM and x.1 beta can technically be pushed at the same time.)
+				// Count OTAPackage.ActualBuild and not OTAPackage.Date because x.0 GM and x.1 beta can technically be pushed at the same time.
 				// Increment the count if it exists.
-				// If not, add the first tally.
 				if (DateRowspan.ContainsKey(entry.ActualBuild))
 					DateRowspan[entry.ActualBuild]++;
-
+				// If not, add the first tally.
 				else
 					DateRowspan.Add(entry.ActualBuild, 1);
 
 
-				// File URL
-				// Increment the count if it exists (e.g. universal).
 				// Kill rowspan for iPod5,1 10B141 (public releases used the universal entry).
 				if ((entry.SupportedDevices.Contains("iPod5,1") && entry.OSVersion == "8.4.1" && entry.PrerequisiteBuild == "10B141") == false)
 				{
+					// Increment the count if file URL exists (this can be the case for universal entries).
 					if (FileRowspan.ContainsKey(entry.URL))
 						FileRowspan[entry.URL]++;
 
@@ -219,34 +214,29 @@ namespace Octothorpe
 				}
 
 
-				// Marketing version
-				// Increment the count if it exists.
-				// If not, add the first tally.
+				// Increment the count if marketing version already exists.
+				// (This can happen for silent build updates, e.g. 10.1.1.)
 				if (MarketingVersionRowspan.ContainsKey(entry.MarketingVersion))
 					MarketingVersionRowspan[entry.MarketingVersion]++;
-
+				// If not, add the first tally.
 				else
 					MarketingVersionRowspan.Add(entry.MarketingVersion, 1);
 
 
-				// OS version
-				// Increment the count if it exists.
-				// If not, add the first tally.
+				// Increment the count if OS version already exists.
 				if (OSVersionRowspan.ContainsKey(entry.OSVersion))
 					OSVersionRowspan[entry.OSVersion]++;
-
+				// If not, add the first tally.
 				else
 					OSVersionRowspan.Add(entry.OSVersion, 1);
 
 
-				// Prerequisite OS version
-				// Increment the count if it exists.
-				// If not, add the first tally.
+				// Increment the count if Prerequisite OS version exists.
 				try
 				{
 					PrereqOSRowspan[entry.DeclaredBuild][entry.PrerequisiteVer]++;
 				}
-
+				// If not, add the first tally.
 				catch (KeyNotFoundException)
 				{
 					if (PrereqOSRowspan.ContainsKey(entry.DeclaredBuild) == false)
@@ -384,7 +374,8 @@ namespace Octothorpe
 				Output.AppendLine("|-");
 
 				// Marketing Version for Apple Watch (1st generation)
-				if (Regex.Match(device, @"Watch1,\d").Success && MarketingVersionRowspan.ContainsKey(package.MarketingVersion)) {
+				if (Regex.Match(device, @"Watch1,\d").Success)
+				{
 					Output.Append(NewTableCell);
 
 					// Only give rowspan if there is more than one row with the OS version.
