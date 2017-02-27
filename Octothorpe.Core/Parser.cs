@@ -379,7 +379,7 @@ namespace Octothorpe
 					Output.Append(NewTableCell);
 
 					// Only give rowspan if there is more than one row with the OS version.
-					if (MarketingVersionRowspan[package.MarketingVersion] > 1)
+					if (MarketingVersionRowspan.ContainsKey(package.MarketingVersion) && MarketingVersionRowspan[package.MarketingVersion] > 1)
 						Output.Append("rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | ");
 
 					Output.Append(package.MarketingVersion);
