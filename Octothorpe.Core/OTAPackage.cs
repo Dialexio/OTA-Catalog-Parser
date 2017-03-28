@@ -20,7 +20,6 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-using Claunia.PropertyList;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -32,9 +31,9 @@ namespace Octothorpe
 	class OTAPackage
 	{
 		private Match match;
-		private readonly NSDictionary ENTRY;
+		private readonly Dictionary<string, object> ENTRY;
 
-		public OTAPackage(NSDictionary package)
+		public OTAPackage(Dictionary<string, object> package)
 		{
 			ENTRY = package;
 		}
@@ -116,7 +115,7 @@ namespace Octothorpe
 						return 0;
 
 					default:
-						Console.WriteLine("Unknown ReleaseType: " + ENTRY["ReleaseType"].ToString());
+						Console.WriteLine("Unknown ReleaseType: " + ENTRY["ReleaseType"]);
 						return -1;
 				}
 			}
@@ -153,7 +152,7 @@ namespace Octothorpe
 			get
 			{
 				return (ENTRY.ContainsKey("CompatibilityVersion")) ?
-					(int)ENTRY["CompatibilityVersion"].ToObject() :
+					(int)ENTRY["CompatibilityVersion"] :
 					0;
 			}
 		}
@@ -171,7 +170,8 @@ namespace Octothorpe
 			if (match.Success)
 				return match.ToString().Substring(5, 9) + match.ToString().Substring(10, 12) + match.ToString().Substring(13, 15);
 
-			else {
+			else
+			{
 				match = Regex.Match(this.URL, @"\d{4}(\-|\.)20\d{4}(\d|\.)(\w|\-)");
 
 				if (match.Success)
@@ -238,7 +238,12 @@ namespace Octothorpe
 		/// </returns>
 		public string DocumentationID
 		{
-			get { return ENTRY.ContainsKey("SUDocumentationID") ? ENTRY["SUDocumentationID"].ToString() : "N/A"; }
+			get
+			{
+				return ENTRY.ContainsKey("SUDocumentationID") ?
+					(string)ENTRY["SUDocumentationID"] :
+					"N/A";
+			}
 		}
 
 		/// <summary>
@@ -247,7 +252,7 @@ namespace Octothorpe
 		/// <returns>
 		/// A boolean value of whether this release has a false build number (true) or not (false).
 		/// </returns>
-		public Boolean IsHonestBuild
+		public bool IsHonestBuild
 		{
 			get { return this.ActualBuild == this.DeclaredBuild; }
 		}
@@ -258,7 +263,7 @@ namespace Octothorpe
 		/// <returns>
 		/// A boolean value of whether this release is used to cover all scenarios (true) or not (false).
 		/// </returns>
-		public Boolean IsUniversal
+		public bool IsUniversal
 		{
 			get { return this.PrerequisiteBuild == "N/A"; }
 		}
@@ -275,7 +280,7 @@ namespace Octothorpe
 			{
 				if (ENTRY.ContainsKey("MarketingVersion"))
 				{
-					string mv = ENTRY["MarketingVersion"].ToString();
+					string mv = (string)ENTRY["MarketingVersion"];
 
 					return (mv.Contains(".") == false) ?
 						mv + ".0" :
@@ -294,7 +299,7 @@ namespace Octothorpe
 		{
 			get
 			{
-				string version = ENTRY["OSVersion"].ToString();
+				string version = (string)ENTRY["OSVersion"];
 				return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
 			}
 		}
@@ -310,7 +315,7 @@ namespace Octothorpe
 			get
 			{
 				return (ENTRY.ContainsKey("PrerequisiteBuild")) ?
-					ENTRY["PrerequisiteBuild"].ToString() :
+					(string)ENTRY["PrerequisiteBuild"] :
 					"N/A";
 			}
 		}
@@ -340,7 +345,7 @@ namespace Octothorpe
 				catch (KeyNotFoundException)
 				{
 					return (ENTRY.ContainsKey("PrerequisiteOSVersion")) ?
-						ENTRY["PrerequisiteOSVersion"].ToString() :
+						(string)ENTRY["PrerequisiteOSVersion"] :
 						"N/A";
 				}
 			}
@@ -368,8 +373,8 @@ namespace Octothorpe
 			get
 			{
 				return (ENTRY.ContainsKey("ReleaseType")) ?
-					ENTRY["ReleaseType"].ToString() :
-                    "Public";
+					(string)ENTRY["ReleaseType"] :
+					"Public";
 			}
 		}
 
@@ -385,12 +390,12 @@ namespace Octothorpe
 			{
 				if (ENTRY.ContainsKey("RealUpdateAttributes"))
 				{
-					NSDictionary RealUpdateAttrs = (NSDictionary)ENTRY["RealUpdateAttributes"];
-					return string.Format("{0:n0}", long.Parse(RealUpdateAttrs["RealUpdateDownloadSize"].ToString()));
+					var RealUpdateAttrs = (Dictionary<string, object>)ENTRY["RealUpdateAttributes"];
+					return string.Format("{0:n0}", RealUpdateAttrs["RealUpdateDownloadSize"]);
 				}
 
 				else
-					return string.Format("{0:n0}", long.Parse(ENTRY["_DownloadSize"].ToString()));
+					return string.Format("{0:n0}", ENTRY["_DownloadSize"]);
 			}
 		}
 
@@ -516,11 +521,11 @@ namespace Octothorpe
 
 				try
 				{
-					foreach (NSObject Model in ((NSArray)ENTRY["SupportedDeviceModels"]).GetArray())
-						Models.Add(Model.ToString());
+					foreach (object Model in (object[])ENTRY["SupportedDeviceModels"])
+						Models.Add((string)Model);
 				}
 
-				// No models specified. (Older PLISTs do this.)
+				// No models specified. (Older PLISTs do this.))
 				catch (KeyNotFoundException)
 				{ }
 
@@ -540,8 +545,8 @@ namespace Octothorpe
 			{
 				List<string> Devices = new List<string>();
 
-				foreach (NSObject Device in ((NSArray)ENTRY["SupportedDevices"]).GetArray())
-					Devices.Add(Device.ToString());
+				foreach (object Device in (object[])ENTRY["SupportedDevices"])
+					Devices.Add((string)Device);
 
 				return Devices;
 			}
@@ -556,12 +561,12 @@ namespace Octothorpe
 			{
 				if (ENTRY.ContainsKey("RealUpdateAttributes"))
 				{
-					NSDictionary RealUpdateAttrs = (NSDictionary)ENTRY["RealUpdateAttributes"];
-					return RealUpdateAttrs["RealUpdateURL"].ToString();
+					var RealUpdateAttrs = (Dictionary<string, object>)ENTRY["RealUpdateAttributes"];
+					return (string)RealUpdateAttrs["RealUpdateURL"];
 				}
 
 				else
-					return ENTRY["__BaseURL"].ToString() + ENTRY["__RelativePath"].ToString();
+					return (string)ENTRY["__BaseURL"] + (string)ENTRY["__RelativePath"];
 			}
 		}
 	}

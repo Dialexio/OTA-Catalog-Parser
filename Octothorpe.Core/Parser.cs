@@ -123,10 +123,10 @@ namespace Octothorpe
 				root = (NSDictionary)PropertyListParser.Parse(plist);
 
 			// Look at every item in the NSArray named "Assets."
-			Parallel.ForEach(((NSArray)root.ObjectForKey("Assets")).GetArray(), entry => 
+			Parallel.ForEach((object[])(root.Get("Assets").ToObject()), entry => 
 				{
 					bool matched = false;
-					OTAPackage package = new OTAPackage((NSDictionary)entry); // Feed the info into a custom object so we can easily pull info and sort.
+					OTAPackage package = new OTAPackage((Dictionary<string, object>)entry); // Feed the info into a custom object so we can easily pull info and sort.
 					
 					// Beta check.
 					if (showBeta == false && package.ActualReleaseType > 0)
