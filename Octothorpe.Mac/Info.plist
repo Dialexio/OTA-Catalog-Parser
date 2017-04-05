@@ -8,8 +8,6 @@
 	<string>io.dialex.ota-catalog-parser</string>
 	<key>CFBundleShortVersionString</key>
 	<string>2.0</string>
-	<key>CFBundleVersion</key>
-	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.7</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -30,5 +28,7 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
+	<key>CFBundleVersion</key>
+	<string>2</string>
 </dict>
 </plist>
