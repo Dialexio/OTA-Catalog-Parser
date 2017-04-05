@@ -39,8 +39,7 @@ namespace Octothorpe
 		private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
 			DateRowspan = new Dictionary<string, uint>(),
 			FileRowspan = new Dictionary<string, uint>(),
-			MarketingVersionRowspan = new Dictionary<string, uint>(),
-			OSVersionRowspan = new Dictionary<string, uint>();
+			MarketingVersionRowspan = new Dictionary<string, uint>();
 		private Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
 			PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
 		private readonly List<OTAPackage> Packages = new List<OTAPackage>();
@@ -175,7 +174,6 @@ namespace Octothorpe
 			DateRowspan.Clear();
 			FileRowspan.Clear();
 			MarketingVersionRowspan.Clear();
-			OSVersionRowspan.Clear();
 			Packages.Clear();
 			PrereqBuildRowspan.Clear();
 			PrereqOSRowspan.Clear();
@@ -221,14 +219,6 @@ namespace Octothorpe
 				// If not, add the first tally.
 				else
 					MarketingVersionRowspan.Add(entry.MarketingVersion, 1);
-
-
-				// Increment the count if OS version already exists.
-				if (OSVersionRowspan.ContainsKey(entry.OSVersion))
-					OSVersionRowspan[entry.OSVersion]++;
-				// If not, add the first tally.
-				else
-					OSVersionRowspan.Add(entry.OSVersion, 1);
 
 
 				// Increment the count if Prerequisite OS version exists.
@@ -372,17 +362,20 @@ namespace Octothorpe
 
 				// Let us begin!
 				Output.AppendLine("|-");
+				Output.Append(NewTableCell);
 
-				// Marketing Version for Apple Watch (1st generation)
-				if (Regex.Match(device, @"Watch1,\d").Success)
+				// Output the Marketing Version.
+				// Apple Watch (1st generation) uses a fake OS version, so we use marketing instead.
+				if (MarketingVersionRowspan.ContainsKey(package.MarketingVersion) && MarketingVersionRowspan[package.MarketingVersion] > 1)
 				{
-					Output.Append(NewTableCell);
-
-					// Only give rowspan if there is more than one row with the OS version.
-					if (MarketingVersionRowspan.ContainsKey(package.MarketingVersion) && MarketingVersionRowspan[package.MarketingVersion] > 1)
-						Output.Append("rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | ");
-
-					Output.Append(package.MarketingVersion);
+					// Create a filler for Marketing Version, if this is a 32-bit Apple TV.
+					if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success && MarketingVersionRowspan[package.OSVersion] > 1)
+					{
+						Output.AppendLine("| rowspan=\"" + MarketingVersionRowspan[package.OSVersion] + "\" | [MARKETING VERSION]");
+						Output.Append(NewTableCell);
+					}
+					
+					Output.Append("rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | " + package.MarketingVersion);
 
 					// Give it a beta label (if it is one).
 					if (package.ActualReleaseType > 0)
@@ -410,58 +403,6 @@ namespace Octothorpe
 
 					//Remove the count since we're done with it.
 					MarketingVersionRowspan.Remove(package.MarketingVersion);
-				}
-
-				// Output OS version.
-				if (OSVersionRowspan.ContainsKey(package.OSVersion))
-				{
-					Output.Append(NewTableCell);
-
-					// Create a filler for Marketing Version, if this is a 32-bit Apple TV.
-					if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success && OSVersionRowspan[package.OSVersion] > 1)
-						Output.AppendLine("| rowspan=\"" + OSVersionRowspan[package.OSVersion] + "\" | [MARKETING VERSION]");
-
-					// Creating the rowspan attribute, provided:
-					// - there is more than one entry for the version
-					// - this isn't a universal Apple Watch entry
-					if (OSVersionRowspan[package.OSVersion] > 1)
-					{
-						if (DeviceIsWatch == false || package.IsUniversal == false)
-							Output.Append("rowspan=\"" + OSVersionRowspan[package.OSVersion] + "\" | ");
-					}
-
-					Output.Append(package.OSVersion);
-
-					// Give it a beta label (if it is one).
-					if (package.ActualReleaseType > 0)
-					{
-						switch (package.ActualReleaseType)
-						{
-							case 1:
-								Output.Append(" Public Beta");
-								break;
-							case 2:
-							case 3:
-								Output.Append(" beta");
-								break;
-							case 4:
-								Output.Append(" Internal");
-								break;
-						}
-
-						// Don't print a 1 if this is the first beta.
-						if (package.BetaNumber > 1)
-							Output.Append(package.BetaNumber);
-					}
-
-					Output.AppendLine();
-
-					//Remove the count when we're done with it.
-					if (DeviceIsWatch == false || package.IsUniversal == false)
-						OSVersionRowspan.Remove(package.OSVersion);
-
-					else
-						OSVersionRowspan[package.OSVersion]--;
 				}
 
 				// Output build number.
