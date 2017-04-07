@@ -42,7 +42,7 @@ namespace Octothorpe
 		/// Returns the package's actual build number. (i.e. Without any of Apple's padding.)
 		/// </summary>
 		/// <returns>
-		/// An String value of the package's actual build number. (e.g. 10A550 will be 10A550, 12F5061 will be 12F61)
+		/// A string value of the package's actual build number. (e.g. 10A550 will be 10A550, 12F5061 will be 12F61)
 		/// </returns>
 		public string ActualBuild
 		{
@@ -227,7 +227,7 @@ namespace Octothorpe
 
 		public string DeclaredBuild
 		{
-			get { return ENTRY["Build"].ToString(); }
+			get { return (string)ENTRY["Build"]; }
 		}
 
 		/// <summary>
@@ -272,7 +272,7 @@ namespace Octothorpe
 		/// Returns the value of "MarketingVersion" if present. "MarketingVersion" is used in some entries to display a false version number.
 		/// </summary>
 		/// <returns>
-		/// A String value of the "MarketingVersion" key (if it exists), otherwise returns the "OSVersion" key.
+		/// A string value of the "MarketingVersion" key (if it exists), otherwise returns the "OSVersion" key.
 		/// </returns>
 		public string MarketingVersion
 		{
@@ -293,14 +293,28 @@ namespace Octothorpe
 		}
 
 		/// <returns>
-		/// The "OSVersion" key, as a String. For iOS 10 and newer, this will also strip "9.9." from the version.
+		/// The "OSVersion" key, as a string. For iOS 10 and newer, this will also strip "9.9." from the version.
 		/// </returns>
 		public string OSVersion
 		{
 			get
 			{
-				string version = (string)ENTRY["OSVersion"];
-				return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
+				Dictionary<string, string> VersionStrings = null;
+
+				try
+				{
+					using (StreamReader Json = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "OS versions.json"))
+					{
+						VersionStrings = JsonConvert.DeserializeObject<Dictionary<string, string>>(Json.ReadToEnd());
+						return VersionStrings[this.ActualBuild];
+					}
+				}
+
+				catch (KeyNotFoundException)
+				{
+					string version = (string)ENTRY["OSVersion"];
+					return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
+				}
 			}
 		}
 
@@ -308,7 +322,7 @@ namespace Octothorpe
 		/// "PrerequisiteBuild" states the specific build that the OTA package is intended for, since most OTA packages are deltas.
 		/// </summary>
 		/// <returns>
-		/// The "PrerequisiteBuild" key, as a String.
+		/// The "PrerequisiteBuild" key, as a string.
 		/// </returns>
 		public string PrerequisiteBuild
 		{
@@ -324,7 +338,7 @@ namespace Octothorpe
 		/// "PrerequisiteVersion()" states the specific version that the OTA package is intended for, since most OTA packages are deltas.
 		/// </summary>
 		/// <returns>
-		/// The "PrerequisiteVersion" key, as a String.
+		/// The "PrerequisiteVersion" key, as a string.
 		/// </returns>
 
 		public string PrerequisiteVer
@@ -355,7 +369,7 @@ namespace Octothorpe
 		/// This provides an easily accessible regular expression to detect build numbers that are (likely to be) beta versions.
 		/// </summary>
 		/// <returns>
-		/// A regular expression, as a String, that can be used to detect build numbers belonging to beta versions.
+		/// A regular expression, as a string, that can be used to detect build numbers belonging to beta versions.
 		/// </returns>
 		public static string REGEX_BETA
 		{
@@ -366,7 +380,7 @@ namespace Octothorpe
 		/// Checks if Apple marked the OTA package with a release type. This function returns its value, but it may not be accurate. If accuracy is needed, use the ActualReleaseType() method.
 		/// </summary>
 		/// <returns>
-		/// The "ReleaseType" key, as a String. If the key is not present, returns "Public."
+		/// The "ReleaseType" key, as a string. If the key is not present, returns "Public."
 		/// </returns>
 		public string ReleaseType
 		{
@@ -511,7 +525,7 @@ namespace Octothorpe
 		/// Contains a list of all supported models.
 		/// </summary>
 		/// <returns>
-		/// A List of Objects (which should be Strings specifying what models are supported).
+		/// A List of strings specifying what models are supported.
 		/// </returns>
 		public List<string> SupportedDeviceModels
 		{
@@ -525,7 +539,7 @@ namespace Octothorpe
 						Models.Add((string)Model);
 				}
 
-				// No models specified. (Older PLISTs do this.))
+				// No models specified. (Older PLISTs do this.)
 				catch (KeyNotFoundException)
 				{ }
 
@@ -537,7 +551,7 @@ namespace Octothorpe
 		/// Contains a list of all supported devices.
 		/// </summary>
 		/// <returns>
-		/// A List of Objects (which should be Strings specifying what devices are supported).
+		/// A List of objects (which should be strings specifying what devices are supported).
 		/// </returns>
 		public List<string> SupportedDevices
 		{
@@ -553,7 +567,7 @@ namespace Octothorpe
 		}
 
 		/// <returns>
-		/// The package's URL, as a String.
+		/// The package URL, as a string.
 		/// </returns>
 		public string URL
 		{

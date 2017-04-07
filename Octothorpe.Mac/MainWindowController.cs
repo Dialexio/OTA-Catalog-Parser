@@ -75,11 +75,11 @@ namespace Octothorpe.Mac
                 parser.ShowBeta = (((NSButton)sender).State == NSCellStateValue.On);
 
                 // Set maximum version if one was specified
-                if (String.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
+                if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
                     parser.Maximum = new Version(NSTextFieldMax.StringValue);
 
                 // Set minimum version if one was specified
-                if (String.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
+                if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
                     parser.Minimum = new Version(NSTextFieldMin.StringValue);
 
                 switch (FileSelection.SelectedItem.Title)
