@@ -362,7 +362,6 @@ namespace Octothorpe
 
 				// Let us begin!
 				Output.AppendLine("|-");
-				Output.Append(NewTableCell);
 
 				// Output the Marketing Version.
 				// Apple Watch (1st generation) uses a fake OS version, so we use marketing instead.
@@ -370,12 +369,9 @@ namespace Octothorpe
 				{
 					// Create a filler for Marketing Version, if this is a 32-bit Apple TV.
 					if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success && MarketingVersionRowspan[package.OSVersion] > 1)
-					{
 						Output.AppendLine("| rowspan=\"" + MarketingVersionRowspan[package.OSVersion] + "\" | [MARKETING VERSION]");
-						Output.Append(NewTableCell);
-					}
 					
-					Output.Append("rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | " + package.MarketingVersion);
+					Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | " + package.MarketingVersion);
 
 					// Give it a beta label (if it is one).
 					if (package.ActualReleaseType > 0)
