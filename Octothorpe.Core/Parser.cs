@@ -42,7 +42,7 @@ namespace Octothorpe
 			MarketingVersionRowspan = new Dictionary<string, uint>();
 		private Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
 			PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
-		private readonly List<OTAPackage> Packages = new List<OTAPackage>();
+		private readonly SortedList<string, OTAPackage> Packages = new SortedList<string, OTAPackage>();
 		private string device, model, plist;
 		private Version max, minimum;
 
@@ -91,7 +91,6 @@ namespace Octothorpe
 			ErrorCheck();
 
 			AddEntries();
-			SortEntries();
 
 			if (wikiMarkup)
 			{
@@ -151,7 +150,7 @@ namespace Octothorpe
 						if (package.SupportedDeviceModels.Count > 0)
 							matched = (package.SupportedDeviceModels.Contains(model));
 					}
-	
+
 					// If it's still a match, check the OS version.
 					// If the OS version doesn't fit what we're
 					// searching for, continue to the next entry.
@@ -161,9 +160,12 @@ namespace Octothorpe
 							return;
 						if (minimum != null && minimum.CompareTo(new Version(package.MarketingVersion)) > 0)
 							return;
-	
+
 						// It survived the checks!
-						Packages.Add(package);
+						if (Packages.ContainsKey(package.SortingString))
+							return;
+					
+						Packages.Add(package.SortingString, package);
 					}
 				});
 		}
@@ -181,7 +183,7 @@ namespace Octothorpe
 
 		private void CountRowspan()
 		{
-			foreach (OTAPackage entry in Packages)
+			foreach (OTAPackage entry in Packages.Values)
 			{
 				// Increment the count if the build exists.
 				if (BuildNumberRowspan.ContainsKey(entry.DeclaredBuild))
@@ -276,7 +278,7 @@ namespace Octothorpe
 			// So we don't add on to a previous run.
 			Output.Length = 0;
 
-			foreach (OTAPackage package in Packages)
+			foreach (OTAPackage package in Packages.Values)
 			{
 				if (DeviceIsWatch)
 					osName = "watchOS ";
@@ -349,7 +351,7 @@ namespace Octothorpe
 			// So we don't add on to a previous run.
 			Output.Length = 0;
 
-			foreach (OTAPackage package in Packages)
+			foreach (OTAPackage package in Packages.Values)
 			{
 				BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
 
@@ -397,7 +399,14 @@ namespace Octothorpe
 
 					Output.AppendLine();
 
-					//Remove the count since we're done with it.
+					// ...Okay, we output the purported version for watchOS 1.0.x.
+					if (package.MarketingVersion.Contains("1.0") && package.OSVersion.Contains("8.2"))
+					{
+						Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | " + package.OSVersion);
+						Output.AppendLine();
+					}
+
+					// Remove the count since we're done with it.
 					MarketingVersionRowspan.Remove(package.MarketingVersion);
 				}
 
@@ -552,17 +561,6 @@ namespace Octothorpe
 			Cleanup();
 
 			return Output.ToString();
-		}
-
-		private void SortEntries()
-		{
-			Packages.Sort
-			(
-				delegate(OTAPackage one, OTAPackage two)
-				{
-					return one.SortingString.CompareTo(two.SortingString);
-				}
-			);
 		}
 	}
 }
