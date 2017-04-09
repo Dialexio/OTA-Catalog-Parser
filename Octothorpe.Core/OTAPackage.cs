@@ -421,7 +421,7 @@ namespace Octothorpe
 		/// </returns>
 		public string SortingString
 		{
-			get { return this.ActualReleaseType + this.SortingBuild() + this.SortingPrerequisiteBuild() + this.CompatibilityVersion; }
+			get { return this.SortingBuild() + this.SortingPrerequisiteBuild() + this.CompatibilityVersion + this.ActualReleaseType; }
 		}
 
 		private string SortingBuild()

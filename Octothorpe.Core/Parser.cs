@@ -42,7 +42,7 @@ namespace Octothorpe
 			MarketingVersionRowspan = new Dictionary<string, uint>();
 		private Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
 			PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
-		private readonly SortedList<string, OTAPackage> Packages = new SortedList<string, OTAPackage>();
+		private readonly List<OTAPackage> Packages = new List<OTAPackage>();
 		private string device, model, plist;
 		private Version max, minimum;
 
@@ -91,6 +91,7 @@ namespace Octothorpe
 			ErrorCheck();
 
 			AddEntries();
+			SortEntries();
 
 			if (wikiMarkup)
 			{
@@ -162,10 +163,7 @@ namespace Octothorpe
 							return;
 
 						// It survived the checks!
-						if (Packages.ContainsKey(package.SortingString))
-							return;
-					
-						Packages.Add(package.SortingString, package);
+						Packages.Add(package);
 					}
 				});
 		}
@@ -183,7 +181,7 @@ namespace Octothorpe
 
 		private void CountRowspan()
 		{
-			foreach (OTAPackage entry in Packages.Values)
+			foreach (OTAPackage entry in Packages)
 			{
 				// Increment the count if the build exists.
 				if (BuildNumberRowspan.ContainsKey(entry.DeclaredBuild))
@@ -278,7 +276,7 @@ namespace Octothorpe
 			// So we don't add on to a previous run.
 			Output.Length = 0;
 
-			foreach (OTAPackage package in Packages.Values)
+			foreach (OTAPackage package in Packages)
 			{
 				if (DeviceIsWatch)
 					osName = "watchOS ";
@@ -351,7 +349,7 @@ namespace Octothorpe
 			// So we don't add on to a previous run.
 			Output.Length = 0;
 
-			foreach (OTAPackage package in Packages.Values)
+			foreach (OTAPackage package in Packages)
 			{
 				BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
 
@@ -504,28 +502,25 @@ namespace Octothorpe
 				}
 
 				// Release Type.
-				if (DeviceIsWatch == false)
+				switch (package.ActualReleaseType)
 				{
-					switch (package.ActualReleaseType)
-					{
-						case 1:
-						case 2:
+					case 1:
+					case 2:
+						Output.AppendLine("| Beta");
+						break;
+					case 3:
+						Output.AppendLine("| Carrier");
+						break;
+					case 4:
+						Output.AppendLine("| Internal");
+						break;
+					default:
+						if (package.ReleaseType != "Public")
 							Output.AppendLine("| Beta");
-							break;
-						case 3:
-							Output.AppendLine("| Carrier");
-							break;
-						case 4:
-							Output.AppendLine("| Internal");
-							break;
-						default:
-							if (package.ReleaseType != "Public")
-								Output.AppendLine("| Beta");
-	
-							else
-								Output.AppendLine("| {{n/a}}");
-							break;
-					}
+
+						else
+							Output.AppendLine("| {{n/a}}");
+						break;
 				}
 
 				// Is there more than one of this prerequisite version tallied?
@@ -561,6 +556,17 @@ namespace Octothorpe
 			Cleanup();
 
 			return Output.ToString();
+		}
+
+		private void SortEntries()
+		{
+			Packages.Sort
+			(
+				delegate(OTAPackage one, OTAPackage two)
+				{
+					return one.SortingString.CompareTo(two.SortingString);
+				}
+			);
 		}
 	}
 }
