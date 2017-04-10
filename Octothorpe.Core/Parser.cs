@@ -364,39 +364,45 @@ namespace Octothorpe
 				Output.AppendLine("|-");
 
 				// Output the Marketing Version.
-				// Apple Watch (1st generation) uses a fake OS version, so we use marketing instead.
+				// Apple Watch (1st generation) uses a fake OS version, so we output the marketing version instead..
 				if (MarketingVersionRowspan.ContainsKey(package.MarketingVersion) && MarketingVersionRowspan[package.MarketingVersion] > 1)
 				{
 					// Create a filler for Marketing Version, if this is a 32-bit Apple TV.
+					// (OTAPackage.MarketingVersion for 32-bit Apple TVs will return the OS version, because the Marketing Version isn't specified in the XML... Confusing, I know.)
 					if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success && MarketingVersionRowspan[package.OSVersion] > 1)
 						Output.AppendLine("| rowspan=\"" + MarketingVersionRowspan[package.OSVersion] + "\" | [MARKETING VERSION]");
-					
-					Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | " + package.MarketingVersion);
 
-					// Give it a beta label (if it is one).
-					if (package.ActualReleaseType > 0)
+					Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" ");
+				}
+
+				Output.Append(NewTableCell + package.MarketingVersion);
+
+				// Give it a beta label (if it is one).
+				if (package.ActualReleaseType > 0)
+				{
+					switch (package.ActualReleaseType)
 					{
-						switch (package.ActualReleaseType)
-						{
-							case 1:
-								Output.Append(" Public Beta");
-								break;
-							case 2:
-							case 3:
-								Output.Append(" beta");
-								break;
-							case 4:
-								Output.Append(" Internal");
-								break;
-						}
-
-						// Don't print a 1 if this is the first beta.
-						if (package.BetaNumber > 1)
-							Output.Append(" " + package.BetaNumber);
+						case 1:
+							Output.Append(" Public Beta");
+							break;
+						case 2:
+						case 3:
+							Output.Append(" beta");
+							break;
+						case 4:
+							Output.Append(" Internal");
+							break;
 					}
 
-					Output.AppendLine();
+					// Don't print a 1 if this is the first beta.
+					if (package.BetaNumber > 1)
+						Output.Append(" " + package.BetaNumber);
+				}
 
+				Output.AppendLine();
+
+				if (MarketingVersionRowspan.ContainsKey(package.MarketingVersion) && MarketingVersionRowspan[package.MarketingVersion] > 1)
+				{
 					// ...Okay, we output the purported version for watchOS 1.0.x.
 					if (package.MarketingVersion.Contains("1.0") && package.OSVersion.Contains("8.2"))
 					{
