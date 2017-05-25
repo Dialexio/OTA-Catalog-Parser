@@ -27,10 +27,20 @@ If no arguments are specified, the program will return the following information
 ## Source Code Information
 When opening the solution in Visual Studio, one project will be incompatible, depending on your platform.
 
-* Visual Studio will not open Octothorpe.Mac because it is a Xamarin.Mac project.
-* Xamarin Studio/Visual Studio for Mac will not open Octothorpe.WPF because it uses WPF.
+* Visual Studio for Windows may not open Octothorpe.Mac because it is a Xamarin.Mac project.
+* Xamarin Studio/Visual Studio for Mac will not open Octothorpe.WPF because WPF is exclusive to Windows.
 
-### Licensing Information
+## Broken Output
+Apple may make changes to their property lists that break this program. Apple's ability to do so is limited since they need to ensure compatibility with older firmwares, but nevertheless remains a possibility.
+
+### OS versions.json
+Broken output most commonly happens with watchOS updates— specifically, beta updates. The parser needs to know what is and isn't a beta in order to format it correctly, but Apple hasn't made that easy in the past.
+
+This program utilizes a JSON file, named "OS versions.json," to override the OS version that Apple lists. Its format is simple: the name of each field is a build number, and the value is what the OS version should be reported as.
+
+Please ensure that the "OS versions.json" contains up-to-date information before reporting a problem. For the Mac version, it can be found at `OTA Parser.app/Contents/MonoBundle/OTA versions.json`.
+
+## Licensing Information
 This program is distributed under the MIT License.
 
 This program utilizes code from [Json.NET](http://www.newtonsoft.com/json) and [plist-cil](https://github.com/claunia/plist-cil).
