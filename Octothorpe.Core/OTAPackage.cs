@@ -303,7 +303,7 @@ namespace Octothorpe
 
 				try
 				{
-					using (StreamReader Json = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "OS versions.json"))
+                    using (StreamReader Json = File.OpenText(AppDomain.CurrentDomain.BaseDirectory + "OS versions.json"))
 					{
 						VersionStrings = JsonConvert.DeserializeObject<Dictionary<string, string>>(Json.ReadToEnd());
 						return VersionStrings[this.ActualBuild];
@@ -349,7 +349,7 @@ namespace Octothorpe
 
 				try
 				{
-					using (StreamReader Json = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "OS versions.json"))
+					using (StreamReader Json = File.OpenText(AppDomain.CurrentDomain.BaseDirectory + "OS versions.json"))
 					{
 						VersionStrings = JsonConvert.DeserializeObject<Dictionary<string, string>>(Json.ReadToEnd());
 						return VersionStrings[this.PrerequisiteBuild];
