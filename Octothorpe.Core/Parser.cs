@@ -108,7 +108,7 @@ namespace Octothorpe
 			NSDictionary root;
 
 			// Load the PLIST.
-			if (plist.StartsWith("http://mesu.apple.com/assets/"))
+			if (Regex.IsMatch(plist, @"://mesu.apple.com/assets/"))
 			{
 				WebClient Fido = new WebClient();
 				root = (NSDictionary)PropertyListParser.Parse(Fido.DownloadData(plist));
