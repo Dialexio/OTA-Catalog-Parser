@@ -261,7 +261,7 @@ namespace Octothorpe
 				throw new ArgumentException("device");
 
 			DeviceIsWatch = Regex.IsMatch(device, @"Watch\d,\d");
-			ModelNeedsChecking = Regex.IsMatch(device, "iPhone8,(1|2|4)");
+			ModelNeedsChecking = Regex.IsMatch(device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
 
 			// Model check.
 			if (ModelNeedsChecking && (model == null || Regex.IsMatch(model, @"[JKMNP]\d((\d)?){2}[A-Za-z]?AP") == false))

@@ -157,7 +157,7 @@ namespace Octothorpe
 
         private void ToggleModelField(object sender, TextChangedEventArgs e)
         {
-            GridModel.Visibility = (((TextBox)sender).Text == "iPhone8,1" || ((TextBox)sender).Text == "iPhone8,2" || ((TextBox)sender).Text == "iPhone8,4") ? Visibility.Visible : Visibility.Collapsed;
+            GridModel.Visibility = (((TextBox)sender).Text == "iPad6,11" || ((TextBox)sender).Text == "iPad6,12" || ((TextBox)sender).Text == "iPhone8,1" || ((TextBox)sender).Text == "iPhone8,2" || ((TextBox)sender).Text == "iPhone8,4") ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

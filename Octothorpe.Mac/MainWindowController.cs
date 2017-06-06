@@ -220,6 +220,8 @@ namespace Octothorpe.Mac
 		{
             switch (sender.StringValue)
             {
+                case "iPad6,11":
+                case "iPad6,12":
                 case "iPhone8,1":
                 case "iPhone8,2":
                 case "iPhone8,4":
