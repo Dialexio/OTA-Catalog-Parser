@@ -90,6 +90,10 @@ namespace Octothorpe.Mac
                         parser.Plist = NSTextFieldURL.StringValue;
                         break;
 
+                    case "audioOS (Public)":
+                        parser.Plist = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        break;
+
                     case "iOS (Public)":
                         parser.Plist = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         break;

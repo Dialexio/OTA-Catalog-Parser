@@ -257,14 +257,14 @@ namespace Octothorpe
 		private void ErrorCheck()
 		{
 			// Device check.
-			if (device == null || Regex.IsMatch(device, @"(AppleTV|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
+			if (device == null || Regex.IsMatch(device, @"(AppleTV|AudioAccessory|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
 				throw new ArgumentException("device");
 
 			DeviceIsWatch = Regex.IsMatch(device, @"Watch\d,\d");
 			ModelNeedsChecking = Regex.IsMatch(device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
 
 			// Model check.
-			if (ModelNeedsChecking && (model == null || Regex.IsMatch(model, @"[JKMNP]\d((\d)?){2}[A-Za-z]?AP") == false))
+			if (ModelNeedsChecking && (model == null || Regex.IsMatch(model, @"[BJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false))
 				throw new ArgumentException("model");
 		}
 
