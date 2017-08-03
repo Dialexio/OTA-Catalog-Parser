@@ -264,7 +264,7 @@ namespace Octothorpe
 			ModelNeedsChecking = Regex.IsMatch(device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
 
 			// Model check.
-			if (ModelNeedsChecking && (model == null || Regex.IsMatch(model, @"[BJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false))
+			if (ModelNeedsChecking && (model == null || Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false))
 				throw new ArgumentException("model");
 		}
 
@@ -278,14 +278,24 @@ namespace Octothorpe
 
 			foreach (OTAPackage package in Packages)
 			{
-				if (DeviceIsWatch)
-					osName = "watchOS ";
+                switch (device.Substring(0, 4))
+                {
+                    case "Appl":
+                        osName = (Regex.Match(device, @"AppleTV(2,1|3,1|3,2)").Success) ? "Apple TV software " : "tvOS ";
+                        break;
 
-				else if (device.StartsWith("AppleTV"))
-					osName = (Regex.Match(device, @"AppleTV(2,1|3,1|3,2)").Success) ? "Apple TV software " : "tvOS ";
-				
-				else
-					osName = "iOS ";
+                    case "Audi":
+                        osName = "audioOS ";
+                        break;
+
+                    case "Watc":
+                        osName = "watchOS ";
+                        break;
+
+                    default:
+                        osName = "iOS ";
+                        break;
+                }
 
 				// Output OS version and build.
 				Output.Append(osName + package.MarketingVersion);
