@@ -32,10 +32,7 @@ namespace Octothorpe
 {
 	public class Parser
 	{
-		private bool showBeta = false,
-			wikiMarkup = false,
-			DeviceIsWatch = false,
-			ModelNeedsChecking = false;
+        private bool showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
 		private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
 			DateRowspan = new Dictionary<string, uint>(),
 			FileRowspan = new Dictionary<string, uint>(),
@@ -66,7 +63,7 @@ namespace Octothorpe
 			set
 			{
 				model = value;
-				ModelNeedsChecking = Regex.IsMatch(model, @"iPhone8,(1|2|4)");
+                ModelNeedsChecking = Regex.IsMatch(device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
 			}
 		}
 

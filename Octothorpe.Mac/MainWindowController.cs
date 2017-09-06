@@ -72,7 +72,7 @@ namespace Octothorpe.Mac
                 parser.Model = NSTextFieldModel.StringValue;
                 parser.WikiMarkup = DisplayWikiMarkup;
 
-                parser.ShowBeta = (((NSButton)sender).State == NSCellStateValue.On);
+                parser.ShowBeta = (NSButtonCheckBeta.State == NSCellStateValue.On);
 
                 // Set maximum version if one was specified
                 if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
@@ -180,6 +180,8 @@ namespace Octothorpe.Mac
                     MessageText = "File Not Found",
                     InformativeText = "The program was unable to load the specified file."
                 };
+
+                alert.RunModal();
             }
 
             // No file selected.
@@ -190,6 +192,7 @@ namespace Octothorpe.Mac
                     MessageText = "No Catalog Selected",
                     InformativeText = "You need to select an OTA catalog to search through."
                 };
+
                 alert.RunModal();
             }
 
