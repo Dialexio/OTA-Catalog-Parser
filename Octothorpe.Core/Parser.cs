@@ -379,8 +379,10 @@ namespace Octothorpe
 	                    // (OTAPackage.MarketingVersion for 32-bit Apple TVs returns the OS version because the Marketing Version isn't specified in the XML... Confusing, I know.)
 	                    if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success)
 	                        Output.AppendLine("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | [MARKETING VERSION]");
-	
-	                    Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" ");
+
+                        Output.Append("| rowspan=\"");
+                        Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
+                        Output.Append("\" ");
                     }
 
                     // 32-bit Apple TV receives a filler for Marketing Version.
@@ -388,7 +390,8 @@ namespace Octothorpe
                     else if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success)
 	                    Output.AppendLine("| [MARKETING VERSION]");
 
-	                Output.Append(NewTableCell + package.MarketingVersion);
+                    Output.Append(NewTableCell);
+                    Output.Append(package.MarketingVersion);
 
 	                // Give it a beta label (if it is one).
 	                if (package.ActualReleaseType > 0)
@@ -407,9 +410,12 @@ namespace Octothorpe
 	                            break;
 	                    }
 
-	                    // Don't print a 1 if this is the first beta.
-	                    if (package.BetaNumber > 1)
-	                        Output.Append(" " + package.BetaNumber);
+                        // Don't print a 1 if this is the first beta.
+                        if (package.BetaNumber > 1)
+                        {
+                            Output.Append(' ');
+                            Output.Append(package.BetaNumber);
+                        }
 	                }
 
                     Output.AppendLine();
@@ -417,7 +423,10 @@ namespace Octothorpe
 					// Output the purported version for watchOS 1.0.x.
 					if (package.MarketingVersion.Contains("1.0") && package.OSVersion.Contains("8.2"))
 					{
-						Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | " + package.OSVersion);
+                        Output.Append("| rowspan=\"");
+                        Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
+                        Output.Append("\" | ");
+                        Output.Append(package.OSVersion);
 						Output.AppendLine();
 					}
 

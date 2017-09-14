@@ -32,10 +32,7 @@ namespace Octothorpe.Lib
 {
     public class Parser
     {
-        private bool showBeta = false,
-            wikiMarkup = false,
-            DeviceIsWatch = false,
-            ModelNeedsChecking = false;
+        private bool showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
         private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
             DateRowspan = new Dictionary<string, uint>(),
             FileRowspan = new Dictionary<string, uint>(),
@@ -390,7 +387,9 @@ namespace Octothorpe.Lib
                         if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success)
                             Output.AppendLine("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | [MARKETING VERSION]");
     
-                        Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" ");
+                        Output.Append("| rowspan=\"");
+                        Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
+                        Output.Append("\" ");
                     }
 
                     // 32-bit Apple TV receives a filler for Marketing Version.
@@ -398,7 +397,13 @@ namespace Octothorpe.Lib
                     else if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success)
                         Output.AppendLine("| [MARKETING VERSION]");
 
-                    Output.Append(NewTableCell + package.MarketingVersion);
+                    // Don't let entries for watchOS 1.0(.1) spit out an OS version of 9.0.
+                    // This was necessitated by the watchOS 4 GM.
+                    if (package.PrerequisiteBuild != "12S507" && package.PrerequisiteBuild != "12S632")
+                    {
+                        Output.Append(NewTableCell);
+                        Output.Append(package.MarketingVersion);
+                    }
 
                     // Give it a beta label (if it is one).
                     if (package.ActualReleaseType > 0)
@@ -419,7 +424,10 @@ namespace Octothorpe.Lib
 
                         // Don't print a 1 if this is the first beta.
                         if (package.BetaNumber > 1)
-                            Output.Append(" " + package.BetaNumber);
+                        {
+                            Output.Append(' ');
+                            Output.Append(package.BetaNumber);
+                        }
                     }
 
                     Output.AppendLine();
@@ -427,7 +435,10 @@ namespace Octothorpe.Lib
                     // Output the purported version for watchOS 1.0.x.
                     if (package.MarketingVersion.Contains("1.0") && package.OSVersion.Contains("8.2"))
                     {
-                        Output.Append("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | " + package.OSVersion);
+                        Output.Append("| rowspan=\"");
+                        Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
+                        Output.Append("\" | ");
+                        Output.Append(package.OSVersion);
                         Output.AppendLine();
                     }
 
@@ -452,7 +463,7 @@ namespace Octothorpe.Lib
 
                     // Do we have a false build number? If so, add a footnote reference.
                     if (package.IsHonestBuild == false)
-                        Output.Append("<ref name=\"fakefive\" />");
+                        Output.Append("<ref name=\"inflated\" />");
 
                     Output.AppendLine();
                 }
