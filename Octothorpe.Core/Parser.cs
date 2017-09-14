@@ -442,7 +442,7 @@ namespace Octothorpe
 
 					// Do we have a false build number? If so, add a footnote reference.
 					if (package.IsHonestBuild == false)
-						Output.Append("<ref name=\"fakefive\" />");
+						Output.Append("<ref name=\"inflated\" />");
 
 					Output.AppendLine();
 				}
