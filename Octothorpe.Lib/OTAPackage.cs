@@ -393,6 +393,34 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
+        /// Removes padding from a build number, supplied as a string argument.
+        /// </summary>
+        /// <returns>
+        /// The build number, minus the padding for a beta.
+        /// </returns>
+        private string RemoveBetaPadding(string BuildNum)
+        {
+            if (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success)
+            {
+                int LetterPos;
+
+                for (LetterPos = 1; LetterPos < BuildNum.Length; LetterPos++)
+                {
+                    if (char.IsUpper(BuildNum[LetterPos]))
+                    {
+                        LetterPos++;
+                        break;
+                    }
+                }
+
+                return BuildNum.Substring(0, LetterPos) + BuildNum.Substring(LetterPos + 1);
+            }
+
+            else
+                return BuildNum;
+        }
+
+        /// <summary>
         /// This is the size of the ZIP file.
         /// </summary>
         /// <returns>
@@ -449,20 +477,8 @@ namespace Octothorpe.Lib
                 SortBuild = SortBuild.Substring(0, LetterPos) + "0000";
             }
 
-            // Apple Watch betas go on the bottom in wikiMarkup markup.
-            // As dumb as this is, it's a pain because of the OS version.
-            // Hopefully this gets changed for consistency in the future...
             else if (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success)
-            {
-                foreach (string SupportedDevice in this.SupportedDevices)
-                {
-                    if (SupportedDevice.Contains("Watch"))
-                    {
-                        SortBuild = SortBuild.Substring(0, 3) + '9' + SortBuild.Substring(4);
-                        break;
-                    }
-                }
-            }
+                SortBuild = RemoveBetaPadding(SortBuild);
 
             return SortBuild;
         }
@@ -472,6 +488,9 @@ namespace Octothorpe.Lib
             // Sort by release type.
             int ReleaseTypeInt = 0;
             string build = this.PrerequisiteBuild;
+
+            // Get up to (and including) the first letter. We'll get to this in a bit.
+            match = Regex.Match(build, @"\d?\d[A-Z]");
 
             switch (this.ReleaseType)
             {
@@ -491,28 +510,12 @@ namespace Octothorpe.Lib
             if (this.IsUniversal)
                 return "000000000" + ReleaseTypeInt;
 
-            // Get up to (and including) the first letter. We'll get to this in a bit.
-            match = Regex.Match(build, @"\d?\d[A-Z]");
-
-            // We need to take care of Apple Watch betas differently.
-            if (this.PrerequisiteVer.Contains("beta"))
-            {
-                foreach (string SupportedDevice in this.SupportedDevices)
-                {
-                    if (SupportedDevice.Contains("Watch"))
-                    {
-                        // Non-betas typically have a build number length of 5 or less. Pad it.
-                        while (build.Length < 6)
-                            build = match.Value + '0' + new Regex(@"\d?\d[A-Z]").Replace(build, "", 1).Substring(1);
-
-                        return build;
-                    }
-                }
-            }
-
             // If the build is old (i.e. before iOS 7), pad it.
             if (char.IsLetter(build[1]))
                 return '0' + build;
+                
+            if (this.PrerequisiteVer.Contains("beta"))
+                build = RemoveBetaPadding(build);
 
             // If the number after the capital letter is too small, pad it.
             if (new Regex("[A-z]").Split(build)[1].Length < 3 && match.Success)

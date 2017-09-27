@@ -11,6 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="OS versions.json" />
+    <None Remove="OS Versions.json" />
   </ItemGroup>
   <ItemGroup>
     <None Update="OS versions.json">
