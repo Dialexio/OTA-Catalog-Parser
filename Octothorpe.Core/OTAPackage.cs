@@ -477,9 +477,6 @@ namespace Octothorpe
                 SortBuild = SortBuild.Substring(0, LetterPos) + "0000";
             }
 
-            else if (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success)
-                SortBuild = RemoveBetaPadding(SortBuild);
-
             return SortBuild;
         }
 
@@ -522,7 +519,7 @@ namespace Octothorpe
                 build = match.Value + '0' + new Regex(@"\d?\d[A-Z]").Replace(build, "", 1);
 
             // If the build does not have a letter, add a fake one to push it below similarly-numbered betas.
-            if (char.IsLetter(build[build.Length-1]))
+            if (char.IsDigit(build[build.Length - 1]))
                 build = build + 'z';
 
             return build;
