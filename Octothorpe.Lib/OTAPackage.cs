@@ -521,6 +521,10 @@ namespace Octothorpe.Lib
             if (new Regex("[A-z]").Split(build)[1].Length < 3 && match.Success)
                 build = match.Value + '0' + new Regex(@"\d?\d[A-Z]").Replace(build, "", 1);
 
+            // If the build does not have a letter, add a fake one to push it below similarly-numbered betas.
+            if (char.IsLetter(build[build.Length-1]))
+                build = build + 'z';
+
             return build;
         }
 
