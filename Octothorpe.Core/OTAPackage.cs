@@ -400,7 +400,7 @@ namespace Octothorpe
         /// </returns>
         private string RemoveBetaPadding(string BuildNum)
         {
-            if (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success)
+            if (Regex.Match(BuildNum, REGEX_BETA).Success)
             {
                 int LetterPos;
 
@@ -515,8 +515,9 @@ namespace Octothorpe
                 build = RemoveBetaPadding(build);
 
             // If the number after the capital letter is too small, pad it.
+            // (Note [A-Z] vs. [A-z]. The latter may chop off a lower case letter at the end.)
             if (new Regex("[A-z]").Split(build)[1].Length < 3 && match.Success)
-                build = match.Value + '0' + new Regex(@"\d?\d[A-Z]").Replace(build, "", 1);
+                build = match.Value + '0' + new Regex("[A-Z]").Split(build)[1];
 
             // If the build does not have a letter, add a fake one to push it below similarly-numbered betas.
             if (char.IsDigit(build[build.Length - 1]))
