@@ -51,30 +51,9 @@ namespace Octothorpe
                 // If it the build number looks like a beta...
                 // And it's labeled as a beta...
                 // But it's not a beta... We need the actual build number.
-                if (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success &&
-                    this.ReleaseType != "Public" &&
-                    this.ActualReleaseType == 0)
-                {
-                    int letterPos, numPos;
-
-                    for (letterPos = 1; letterPos < this.DeclaredBuild.Length; letterPos++)
-                    {
-                        if (char.IsUpper(this.DeclaredBuild[letterPos]))
-                        {
-                            letterPos++;
-                            break;
-                        }
-                    }
-
-                    numPos = letterPos + 1;
-                    if (this.DeclaredBuild[numPos] == '0')
-                        numPos++;
-
-                    return this.DeclaredBuild.Substring(0, letterPos) + this.DeclaredBuild.Substring(numPos);
-                }
-
-                else
-                    return this.DeclaredBuild;
+                return (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success && this.ReleaseType != "Public" && this.ActualReleaseType == 0) ?
+                    RemoveBetaPadding(this.DeclaredBuild) :
+                    this.DeclaredBuild;
             }
         }
 
@@ -402,7 +381,7 @@ namespace Octothorpe
         {
             if (Regex.Match(BuildNum, REGEX_BETA).Success)
             {
-                int LetterPos;
+                int LetterPos, NumPos;
 
                 for (LetterPos = 1; LetterPos < BuildNum.Length; LetterPos++)
                 {
@@ -413,7 +392,11 @@ namespace Octothorpe
                     }
                 }
 
-                return BuildNum.Substring(0, LetterPos) + BuildNum.Substring(LetterPos + 1);
+                NumPos = LetterPos + 1;
+                if (this.DeclaredBuild[NumPos] == '0')
+                    NumPos++;
+
+                return BuildNum.Substring(0, LetterPos) + BuildNum.Substring(NumPos);
             }
 
             else
