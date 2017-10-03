@@ -65,8 +65,13 @@
 		    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="Xamarin.Mac" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="plist-cil">
+      <HintPath>..\packages\plist-cil.1.16.0\lib\netstandard1.6\plist-cil.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
@@ -84,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -102,9 +108,9 @@
     <InterfaceDefinition Include="MainWindow.xib" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Octothorpe.Core\Octothorpe.Core.csproj">
-      <Project>{86E41965-029F-49A2-A19B-3ACABC22B686}</Project>
-      <Name>Octothorpe.Core</Name>
+    <ProjectReference Include="..\Octothorpe.Lib\Octothorpe.Lib.csproj">
+      <Project>{FB7CEF7B-928B-44B3-AE8A-D6367B439021}</Project>
+      <Name>Octothorpe.Lib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />

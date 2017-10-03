@@ -22,6 +22,7 @@
  */
 using AppKit;
 using Foundation;
+using Octothorpe.Lib;
 using System;
 using System.IO;
 
