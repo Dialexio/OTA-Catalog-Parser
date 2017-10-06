@@ -117,10 +117,7 @@ namespace Octothorpe.Lib
                 throw new ArgumentException("notmesu");
 
             else
-            {
-                Console.WriteLine("u wot m8");
                 root = (NSDictionary)PropertyListParser.Parse(plist);
-            }
 
             // Look at every item in the NSArray named "Assets."
             foreach (object entry in (object[])(root.Get("Assets").ToObject()))
