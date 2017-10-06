@@ -75,13 +75,21 @@ namespace Octothorpe.Mac
 
                 parser.ShowBeta = (NSButtonCheckBeta.State == NSCellStateValue.On);
 
-                // Set maximum version if one was specified
-                if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
-                    parser.Maximum = new Version(NSTextFieldMax.StringValue);
+                try
+                {
+                    // Set maximum version if one was specified
+                    if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
+                        parser.Maximum = new Version(NSTextFieldMax.StringValue);
 
-                // Set minimum version if one was specified
-                if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
-                    parser.Minimum = new Version(NSTextFieldMin.StringValue);
+                    // Set minimum version if one was specified
+                    if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
+                        parser.Minimum = new Version(NSTextFieldMin.StringValue);
+                }
+                
+                catch (ArgumentException)
+                {
+                    throw new ArgumentException("badvalue");
+                }
 
                 switch (FileSelection.SelectedItem.Title)
                 {
@@ -130,6 +138,14 @@ namespace Octothorpe.Mac
             {
                 switch (message.Message)
                 {
+                    case "badvalue":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "Not A Version Number",
+                            InformativeText = "You need to specify a version number for the minimum and maximum fields, or leave the field blank."
+                        };
+                        break;
+
                     case "device":
                         alert = new NSAlert()
                         {
