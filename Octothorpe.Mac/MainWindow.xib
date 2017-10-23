@@ -9,13 +9,16 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController">
             <connections>
+                <outlet property="FileSelection" destination="fme-i2-nGb" id="MfI-ee-sqU"/>
                 <outlet property="NSBoxModel" destination="bUE-T3-DMb" id="aTZ-Sk-QWr"/>
                 <outlet property="NSBoxURL" destination="s7n-r6-laY" id="jLe-j5-VQH"/>
                 <outlet property="NSButtonCheckBeta" destination="3JW-3T-LWc" id="Dww-yS-sWx"/>
                 <outlet property="NSButtonParse" destination="mqQ-XF-KBT" id="DBh-WK-Kdu"/>
+                <outlet property="NSTextFieldDevice" destination="dY4-Y3-cdF" id="RHS-mr-QIR"/>
                 <outlet property="NSTextFieldMax" destination="CpE-z8-1ue" id="cIF-xY-eNL"/>
                 <outlet property="NSTextFieldMin" destination="VX3-E8-91R" id="urS-Sv-GtF"/>
                 <outlet property="NSTextFieldModel" destination="pWT-22-ZzG" id="9wH-N6-s9e"/>
+                <outlet property="NSTextFieldURL" destination="5C6-t3-lJu" id="yga-V2-vi8"/>
                 <outlet property="NSTextViewOutput" destination="6FB-F6-C5V" id="ZfX-EA-15v"/>
                 <outlet property="window" destination="2" id="6"/>
             </connections>
