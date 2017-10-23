@@ -34,6 +34,15 @@
     <LinkMode>None</LinkMode>
     <XamMacArch></XamMacArch>
     <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>AfterBuild</type>
+          <command>mv "OS versions.json" "OTA Parser.app/Contents/MonoBundle/OS versions.json"</command>
+          <workingdir>${ProjectDir}/bin/Debug</workingdir>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType></DebugType>

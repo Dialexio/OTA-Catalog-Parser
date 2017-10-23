@@ -427,6 +427,13 @@ namespace Octothorpe.Lib
                         }
                     }
 
+                    // Add the suffix (if appropriate).
+                    if (string.IsNullOrEmpty(package.Suffix) == false)
+                    {
+                        Output.Append(' ');
+                        Output.Append(package.Suffix);
+                    }
+
                     Output.AppendLine();
 
                     // Output the purported version for watchOS 1.0.x.

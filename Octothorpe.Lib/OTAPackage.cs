@@ -21,6 +21,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -110,13 +111,27 @@ namespace Octothorpe.Lib
         {
             get
             {
-                char digit = this.DocumentationID[this.DocumentationID.Length - 1];
+                try
+                {
+                    Dictionary<string, JObject> Json;
 
-                if (this.IsHonestBuild && Regex.IsMatch(this.DocumentationID, "(Public|Beta|Seed)"))
-                    return (char.IsDigit(digit)) ? (int)char.GetNumericValue(digit) : 1;
+                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+                    {
+                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
+                        return (int)Json[this.PrerequisiteBuild].SelectToken("Beta");
+                    }
+                }
 
-                else
-                    return 0;
+                catch (KeyNotFoundException)
+                {
+                    char digit = this.DocumentationID[this.DocumentationID.Length - 1];
+
+                    if (this.IsHonestBuild && Regex.IsMatch(this.DocumentationID, "(Public|Beta|Seed)"))
+                        return (char.IsDigit(digit)) ? (int)char.GetNumericValue(digit) : 1;
+                        
+                    else
+                        return 0;
+                }
             }
         }
 
@@ -278,22 +293,8 @@ namespace Octothorpe.Lib
         {
             get
             {
-                Dictionary<string, string> VersionStrings = null;
-
-                try
-                {
-                    using (StreamReader Json = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
-                    {
-                        VersionStrings = JsonConvert.DeserializeObject<Dictionary<string, string>>(Json.ReadToEnd());
-                        return VersionStrings[this.ActualBuild];
-                    }
-                }
-
-                catch (KeyNotFoundException)
-                {
-                    string version = (string)ENTRY["OSVersion"];
-                    return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
-                }
+                string version = (string)ENTRY["OSVersion"];
+                return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
             }
         }
 
@@ -319,19 +320,32 @@ namespace Octothorpe.Lib
         /// <returns>
         /// The "PrerequisiteVersion" key, as a string.
         /// </returns>
-
         public string PrerequisiteVer
         {
             get
             {
-                Dictionary<string, string> VersionStrings = null;
-
+                string version;
+                int beta;
                 try
                 {
-                    using (StreamReader Json = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+                    Dictionary<string, JObject> Json;
+
+                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                     {
-                        VersionStrings = JsonConvert.DeserializeObject<Dictionary<string, string>>(Json.ReadToEnd());
-                        return VersionStrings[this.PrerequisiteBuild];
+                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
+                        beta = (int)Json[this.PrerequisiteBuild].SelectToken("Beta");
+                        version = (string)Json[this.PrerequisiteBuild].SelectToken("Version");
+
+                        if (beta == 1)
+                            version += " beta";
+
+                        else if (beta > 1)
+                            version += " beta " + Json[this.PrerequisiteBuild].SelectToken("Beta");
+
+                        if (string.IsNullOrEmpty((string)Json[this.PrerequisiteBuild].SelectToken("Suffix")) == false)
+                            return version + ' ' + (string)Json[this.PrerequisiteBuild].SelectToken("Suffix");
+
+                        return version;
                     }
                 }
 
@@ -424,17 +438,6 @@ namespace Octothorpe.Lib
             }
         }
 
-        /// <summary>
-        /// This string is used for sorting purposes.
-        /// </summary>
-        /// <returns>
-        /// Returns the values of ActualReleaseType(), a padded build, and a padded prerequisite build number in that order.
-        /// </returns>
-        public string SortingString
-        {
-            get { return this.SortingBuild() + this.SortingPrerequisiteBuild() + this.CompatibilityVersion + this.ActualReleaseType; }
-        }
-
         private string SortingBuild()
         {
             int LetterPos;
@@ -507,6 +510,45 @@ namespace Octothorpe.Lib
                 build = build + 'z';
 
             return build;
+        }
+
+        /// <summary>
+        /// This string is used for sorting purposes.
+        /// </summary>
+        /// <returns>
+        /// Returns the values of ActualReleaseType(), a padded build, and a padded prerequisite build number in that order.
+        /// </returns>
+        public string SortingString
+        {
+            get { return this.SortingBuild() + this.SortingPrerequisiteBuild() + this.CompatibilityVersion + this.ActualReleaseType; }
+        }
+
+        /// <summary>
+        /// The suffix for certain firmwares. If a firmware is a pre-release or a GM, it's suffixed appropriately.
+        /// </summary>
+        /// <returns>
+        /// Returns a string defining the suffix for firmwares.
+        /// </returns>
+        public string Suffix
+        {
+            get
+            {
+                try
+                {
+                    Dictionary<string, JObject> Json;
+
+                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+                    {
+                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
+                        return (string)Json[this.ActualBuild].SelectToken("Suffix");
+                    }
+                }
+
+                catch (KeyNotFoundException)
+                {
+                    return null;
+                }
+            }
         }
 
         /// <summary>
