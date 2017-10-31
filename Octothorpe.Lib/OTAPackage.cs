@@ -407,7 +407,7 @@ namespace Octothorpe.Lib
                 }
 
                 NumPos = LetterPos + 1;
-                if (this.DeclaredBuild[NumPos] == '0')
+                if (BuildNum[NumPos] == '0')
                     NumPos++;
 
                 return BuildNum.Substring(0, LetterPos) + BuildNum.Substring(NumPos);

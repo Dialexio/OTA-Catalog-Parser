@@ -85,6 +85,7 @@ namespace Octothorpe.Lib
 
         public string ParsePlist()
         {
+            Cleanup();
             ErrorCheck();
 
             AddEntries();

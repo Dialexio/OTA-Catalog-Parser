@@ -426,5 +426,23 @@
 		"Version": "4.1",
 		"Beta":    1,
 		"Suffix":  null
+	},
+	"15R5835d": {
+		"Product": "watchOS",
+		"Version": "4.1",
+		"Beta":    2,
+		"Suffix":  null
+	},
+	"15R5843a": {
+		"Product": "watchOS",
+		"Version": "4.1",
+		"Beta":    3,
+		"Suffix":  null
+	},
+	"15R846": {
+		"Product": "watchOS",
+		"Version": "4.1",
+		"Beta":    4,
+		"Suffix":  null
 	}
 }
