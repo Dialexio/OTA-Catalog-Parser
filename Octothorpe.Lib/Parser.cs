@@ -133,11 +133,11 @@ namespace Octothorpe.Lib
     
                     // For wikiMarkup markup: If a beta has two entries
                     // (one for betas, one for non-betas), don't count it twice.
-                    if (wikiMarkup &&
+/*                    if (wikiMarkup &&
                         package.ReleaseType != "Public" &&
                         package.BetaNumber > 0 &&
                         package.DocumentationID != "iOS7Seed6")
-                            return;
+                            return;*/
     
                     // Device check.
                     matched = package.SupportedDevices.Contains(device);
