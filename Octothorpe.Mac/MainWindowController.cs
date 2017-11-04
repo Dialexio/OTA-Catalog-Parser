@@ -79,11 +79,21 @@ namespace Octothorpe.Mac
                 {
                     // Set maximum version if one was specified
                     if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
-                        parser.Maximum = new Version(NSTextFieldMax.StringValue);
+                    {
+                        // Doing it like this converts an integer, e.g. "11" into "11.0"
+                        parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring)) ?
+                            new Version(NSTextFieldMax.StringValue + ".0") :
+                            new Version(NSTextFieldMax.StringValue);
+                    }
 
                     // Set minimum version if one was specified
                     if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
-                        parser.Minimum = new Version(NSTextFieldMin.StringValue);
+                    {
+                        // Doing it like this converts an integer, e.g. "11" into "11.0"
+                        parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring)) ?
+                            new Version(NSTextFieldMin.StringValue + ".0") :
+                            new Version(NSTextFieldMin.StringValue);
+                    }
                 }
                 
                 catch (ArgumentException)
