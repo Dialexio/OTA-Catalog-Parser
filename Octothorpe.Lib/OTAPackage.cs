@@ -71,8 +71,9 @@ namespace Octothorpe.Lib
                 // Just check ReleaseType and return values based on it.
                 switch (this.ReleaseType)
                 {
-                    // We do need to dig deeper if it's "Beta" though.
+                    // We do need to dig deeper for betas though.
                     case "Beta":
+                    case "Public":
                         if (this.DocumentationID == "N/A" || this.DocumentationID == "PreRelease")
                             return 2;
 
@@ -90,9 +91,6 @@ namespace Octothorpe.Lib
 
                     case "Internal":
                         return 4;
-
-                    case "Public":
-                        return 0;
 
                     default:
                         Console.WriteLine("Unknown ReleaseType: " + ENTRY["ReleaseType"]);
