@@ -4,11 +4,11 @@ This program lets you view an OTA update catalog for [iOS](http://mesu.apple.com
 __NOTE:__ Dates are extracted from the file URL, which may not be the actual release date.
 
 ## Program Requirements
-The Mac OS X version requires Mac OS X v10.7 (Lion) or newer. It is built with Xamarin.Mac, so no other software is required.
+The Mac version requires macOS v10.8 (Mountain Lion) or newer. It is built with Xamarin.Mac, so no other software is required.
 
-The Windows version requires .NET Framework 4.x ([4.0 for Windows XP](https://www.microsoft.com/en-us/download/details.aspx?id=17851), [4.6.2 for Windows 7 and newer](https://www.microsoft.com/en-us/download/details.aspx?id=53345)).
+The Windows version requires .NET Framework 4.6.1 or newer. ([Link to .NET Framework 4.7.1 for Windows 7 and newer.](https://support.microsoft.com/kb/4033344))
 
-The command-line version is cross-platform and requires either [Mono](http://www.mono-project.com/) or .NET Framework 4.x ([4.0 for Windows XP](https://www.microsoft.com/en-us/download/details.aspx?id=17851), [4.6.2 for Windows 7 and newer](https://www.microsoft.com/en-us/download/details.aspx?id=53345)) to be installed.
+The command-line version is cross-platform and requires either [Mono](http://www.mono-project.com/) or .NET Framework 4.6.1 or newer ([link to .NET Framework 4.7.1 for Windows 7 and newer](https://support.microsoft.com/kb/4033344)) to be installed.
 
 ## Command-Line Arguments (CLI version only)
 If no arguments are specified, the program will return the following information about the arguments that it uses.
