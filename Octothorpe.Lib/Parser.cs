@@ -131,14 +131,6 @@ namespace Octothorpe.Lib
                     if (showBeta == false && package.ActualReleaseType > 0)
                         return;
     
-                    // For wikiMarkup markup: If a beta has two entries
-                    // (one for betas, one for non-betas), don't count it twice.
-/*                    if (wikiMarkup &&
-                        package.ReleaseType != "Public" &&
-                        package.BetaNumber > 0 &&
-                        package.DocumentationID != "iOS7Seed6")
-                            return;*/
-    
                     // Device check.
                     matched = package.SupportedDevices.Contains(device);
     
@@ -266,7 +258,7 @@ namespace Octothorpe.Lib
             ModelNeedsChecking = Regex.IsMatch(device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
 
             // Model check.
-            if (ModelNeedsChecking && (model == null || Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false))
+            if (ModelNeedsChecking && Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false)
                 throw new ArgumentException("model");
         }
 
