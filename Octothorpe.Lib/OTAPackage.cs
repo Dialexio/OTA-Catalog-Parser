@@ -49,10 +49,8 @@ namespace Octothorpe.Lib
         {
             get
             {
-                // If it the build number looks like a beta...
-                // And it's labeled as a beta...
-                // But it's not a beta... We need the actual build number.
-                return (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success && this.ReleaseType != "Public" && this.ActualReleaseType == 0) ?
+                // If the build is not any sort of beta, make sure Apple's padding is removed.
+                return (this.ActualReleaseType == 0) ?
                     RemoveBetaPadding(this.DeclaredBuild) :
                     this.DeclaredBuild;
             }
