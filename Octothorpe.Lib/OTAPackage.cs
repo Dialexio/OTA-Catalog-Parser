@@ -122,10 +122,19 @@ namespace Octothorpe.Lib
 
                 catch (KeyNotFoundException)
                 {
-                    char digit = this.DocumentationID[this.DocumentationID.Length - 1];
+                    string number = DocumentationID.Substring(DocumentationID.Length - 2);
 
                     if (this.IsHonestBuild && Regex.IsMatch(this.DocumentationID, "(Public|Beta|Seed)"))
-                        return (char.IsDigit(digit)) ? (int)char.GetNumericValue(digit) : 1;
+                    {
+                        if (char.IsDigit(number[0]))
+                            return int.Parse(number);
+
+                        else if (char.IsDigit(number[1]))
+                            return (int)char.GetNumericValue(number[1]);
+                        
+                        else
+                            return 1;
+                    }
                         
                     else
                         return 0;
