@@ -537,24 +537,16 @@ namespace Octothorpe.Lib
                 }
 
                 // Release Type.
-                switch (package.ActualReleaseType)
-                {
-                    case 1:
-                    case 2:
-                        Output.AppendLine("| Beta");
-                        break;
-                    case 3:
-                        Output.AppendLine("| Carrier");
-                        break;
-                    case 4:
-                        Output.AppendLine("| Internal");
-                        break;
-                    default:
-                        if (package.ReleaseType != "Public")
-                            Output.AppendLine("| Beta");
+                Output.Append("| ");
 
-                        else
-                            Output.AppendLine("| {{n/a}}");
+                switch (package.ReleaseType)
+                {
+                    case "Public":
+                        Output.AppendLine("{{n/a}}");
+                        break;
+
+                    default:
+                        Output.AppendLine(package.ReleaseType);
                         break;
                 }
 
