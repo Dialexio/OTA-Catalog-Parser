@@ -49,8 +49,10 @@ namespace Octothorpe.Lib
         {
             get
             {
-                // If the build is not any sort of beta, make sure Apple's padding is removed.
-                return (this.ActualReleaseType == 0) ?
+                // If it the build number looks like a beta...
+                // And it's labeled as a beta...
+                // But it's not a beta... We need the actual build number.
+                return (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success && this.ReleaseType != "Public" && this.ActualReleaseType == 0) ?
                     RemoveBetaPadding(this.DeclaredBuild) :
                     this.DeclaredBuild;
             }
@@ -66,7 +68,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                // Just check ReleaseType and return values based on it.
+                // Check ReleaseType and return values based on it.
                 switch (this.ReleaseType)
                 {
                     // We do need to dig deeper for betas though.
@@ -78,7 +80,7 @@ namespace Octothorpe.Lib
                         else if (this.DocumentationID.Contains("Public"))
                             return 1;
 
-                        else if (this.DocumentationID.Contains("Beta") || this.DocumentationID.Contains("Seed"))
+                        else if (this.DocumentationID.ToLower().Contains("beta") || this.DocumentationID.Contains("Seed"))
                             return 2;
 
                         else
@@ -122,7 +124,7 @@ namespace Octothorpe.Lib
                 {
                     string number = DocumentationID.Substring(DocumentationID.Length - 2);
 
-                    if (this.IsHonestBuild && Regex.IsMatch(this.DocumentationID, "(Public|Beta|Seed)"))
+                    if (this.IsHonestBuild && Regex.IsMatch(this.DocumentationID.ToLower(), "(public|beta|seed)"))
                     {
                         if (char.IsDigit(number[0]))
                             return int.Parse(number);
