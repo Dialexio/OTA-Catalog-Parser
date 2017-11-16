@@ -322,37 +322,56 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
-        /// "PrerequisiteVersion()" states the specific version that the OTA package is intended for, since most OTA packages are deltas.
+        /// "PrerequisiteVer" states the specific version that the OTA package is intended for, since most OTA packages are deltas.
         /// </summary>
         /// <returns>
-        /// The "PrerequisiteVersion" key, as a string.
+        /// If an entry is in the JSON, that will be used to create a human-friendly string (e.g. "7.0 beta 5"). If not, returns the "PrerequisiteVersion" key as a string.
         /// </returns>
         public string PrerequisiteVer
         {
             get
             {
-                string version;
-                int beta;
+                string VersionNum;
+                int Beta;
+                List<string> Devices = new List<string>();
+                Dictionary<string, JObject> Json;
+                bool fuhgeddaboudit = false;
+
                 try
                 {
-                    Dictionary<string, JObject> Json;
-
                     using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                     {
                         Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        beta = (int)Json[this.PrerequisiteBuild].SelectToken("Beta");
-                        version = (string)Json[this.PrerequisiteBuild].SelectToken("Version");
+                        Beta = (int)Json[this.PrerequisiteBuild].SelectToken("Beta");
+                        VersionNum = (string)Json[this.PrerequisiteBuild].SelectToken("Version");
 
-                        if (beta == 1)
-                            version += " beta";
+                        if (Json[this.PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))
+                        {
+                            fuhgeddaboudit = true;
 
-                        else if (beta > 1)
-                            version += " beta " + Json[this.PrerequisiteBuild].SelectToken("Beta");
+                            foreach (JToken Token in ((JArray)Tokens).Children())
+                            {
+                                if (SupportedDevices.Contains((string)Token))
+                                {
+                                    fuhgeddaboudit = false;
+                                    break;
+                                }
+                            }
 
-                        if (string.IsNullOrEmpty((string)Json[this.PrerequisiteBuild].SelectToken("Suffix")) == false)
-                            return version + ' ' + (string)Json[this.PrerequisiteBuild].SelectToken("Suffix");
+                            if (fuhgeddaboudit)
+                                throw new KeyNotFoundException();
+                        }
 
-                        return version;
+                        if (Beta == 1)
+                            VersionNum += " beta";
+
+                        else if (Beta > 1)
+                            VersionNum += " beta " + Beta;
+
+                        if (Json[this.PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix) && Suffix != null)
+                            return VersionNum + ' ' + (string)Suffix;
+
+                        return VersionNum;
                     }
                 }
 
