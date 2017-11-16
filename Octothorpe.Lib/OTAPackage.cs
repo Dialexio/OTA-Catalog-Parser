@@ -259,17 +259,6 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
-        /// A simple check if the release is a large, "one Size fits all" package.
-        /// </summary>
-        /// <returns>
-        /// A boolean value of whether this release is used to cover all scenarios (true) or not (false).
-        /// </returns>
-        public bool IsUniversal
-        {
-            get { return this.PrerequisiteBuild == "N/A"; }
-        }
-
-        /// <summary>
         /// Returns the value of "MarketingVersion" if present. "MarketingVersion" is used in some entries to display a false version number.
         /// </summary>
         /// <returns>
@@ -516,7 +505,7 @@ namespace Octothorpe.Lib
                     break;
             }
 
-            if (this.IsUniversal)
+            if (this.PrerequisiteBuild == "N/A")
                 return "000000000" + ReleaseTypeInt;
 
             // If the build is old (i.e. before iOS 7), pad it.

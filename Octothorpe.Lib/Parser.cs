@@ -321,7 +321,7 @@ namespace Octothorpe.Lib
                 Output.AppendLine("Reported Release Type: " + package.ReleaseType);
 
                 // Print prerequisites if there are any.
-                if (package.IsUniversal)
+                if (package.PrerequisiteBuild == "N/A")
                     Output.AppendLine("Requires: Not specified");
 
                 else
@@ -476,12 +476,12 @@ namespace Octothorpe.Lib
                         Output.Append("rowspan=\"" + PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer] + "\" ");
                         PrereqOSRowspan[package.DeclaredBuild].Remove(package.PrerequisiteVer);
 
-                        if (package.IsUniversal == false)
+                        if (package.PrerequisiteBuild != "N/A")
                             Output.Append(NewTableCell);
                     }
 
                     // Print out the cell text
-                    if (package.IsUniversal)
+                    if (package.PrerequisiteBuild == "N/A")
                         Output.AppendLine("colspan=\"2\" {{n/a}}");
 
                     else
@@ -500,7 +500,7 @@ namespace Octothorpe.Lib
                 }
 
                 // Printing prerequisite build
-                if (package.IsUniversal == false
+                if (package.PrerequisiteBuild != "N/A"
                     && PrereqBuildRowspan.ContainsKey(package.DeclaredBuild)
                     && PrereqBuildRowspan[package.DeclaredBuild].ContainsKey(package.PrerequisiteBuild))
                 {
