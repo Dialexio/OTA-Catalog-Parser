@@ -49,12 +49,12 @@ namespace Octothorpe.Lib
         {
             get
             {
-                // If it the build number looks like a beta...
-                // And it's labeled as a beta...
-                // But it's not a beta... We need the actual build number.
-                return (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success && this.ReleaseType != "Public" && this.ActualReleaseType == 0) ?
-                    RemoveBetaPadding(this.DeclaredBuild) :
-                    this.DeclaredBuild;
+                // If it's labeled as a beta when it's not one... We need the actual build number.
+                if (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]) == false)
+                    return RemoveBetaPadding(this.DeclaredBuild);
+
+                else
+                    return this.DeclaredBuild;
             }
         }
 
@@ -124,7 +124,7 @@ namespace Octothorpe.Lib
                 {
                     string number = DocumentationID.Substring(DocumentationID.Length - 2);
 
-                    if (this.IsHonestBuild && Regex.IsMatch(this.DocumentationID.ToLower(), "(public|beta|seed)"))
+                    if (Regex.IsMatch(this.DocumentationID.ToLower(), "(public|beta|seed)"))
                     {
                         if (char.IsDigit(number[0]))
                             return int.Parse(number);
@@ -421,7 +421,15 @@ namespace Octothorpe.Lib
                     }
                 }
 
+                // If the device is on its own branch, but is not a beta, there's no padding to strip. (e.g. 11.0.1 build 15A8391)
+                if (BuildNum[LetterPos] == '8')
+                    return BuildNum;
+
+                // NumPos will be the first actual digit that comes after the letter.
                 NumPos = LetterPos + 1;
+                
+                // Checking on the number after the beta padding.
+                // This handles padded numbers like 15B6092.
                 if (BuildNum[NumPos] == '0')
                     NumPos++;
 
