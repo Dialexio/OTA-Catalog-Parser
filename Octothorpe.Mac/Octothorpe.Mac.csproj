@@ -30,7 +30,7 @@
     <UseRefCounting>true</UseRefCounting>
     <Profiling>true</Profiling>
     <PlatformTarget>x86</PlatformTarget>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+    <HttpClientHandler>NSUrlSessionHandler</HttpClientHandler>
     <LinkMode>None</LinkMode>
     <XamMacArch></XamMacArch>
     <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
@@ -57,9 +57,9 @@
     <IncludeMonoRuntime>true</IncludeMonoRuntime>
     <UseSGen>true</UseSGen>
     <UseRefCounting>true</UseRefCounting>
-    <LinkMode>None</LinkMode>
+    <LinkMode>Full</LinkMode>
     <PlatformTarget>x86</PlatformTarget>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+    <HttpClientHandler>NSUrlSessionHandler</HttpClientHandler>
     <XamMacArch></XamMacArch>
 		    <CustomCommands>
 		      <CustomCommands>
