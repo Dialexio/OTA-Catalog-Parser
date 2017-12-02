@@ -50,11 +50,11 @@ namespace Octothorpe.Lib
             get
             {
                 // If it's labeled as a beta when it's not one... We need the actual build number.
-                if (Regex.Match(this.DeclaredBuild, REGEX_BETA).Success && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]) == false)
-                    return RemoveBetaPadding(this.DeclaredBuild);
+                if (Regex.Match(DeclaredBuild, REGEX_BETA).Success && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]) == false)
+                    return RemoveBetaPadding(DeclaredBuild);
 
                 else
-                    return this.DeclaredBuild;
+                    return DeclaredBuild;
             }
         }
 
@@ -69,18 +69,18 @@ namespace Octothorpe.Lib
             get
             {
                 // Check ReleaseType and return values based on it.
-                switch (this.ReleaseType)
+                switch (ReleaseType)
                 {
                     // We do need to dig deeper for betas though.
                     case "Beta":
                     case "Public":
-                        if (this.DocumentationID == "N/A" || this.DocumentationID == "PreRelease")
+                        if (DocumentationID == "N/A" || DocumentationID == "PreRelease")
                             return 2;
 
-                        else if (this.DocumentationID.Contains("Public"))
+                        else if (DocumentationID.Contains("Public"))
                             return 1;
 
-                        else if (this.DocumentationID.ToLower().Contains("beta") || this.DocumentationID.Contains("Seed"))
+                        else if (DocumentationID.ToLower().Contains("beta") || DocumentationID.Contains("Seed"))
                             return 2;
 
                         else
@@ -116,7 +116,7 @@ namespace Octothorpe.Lib
                     using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                     {
                         Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        return (int)Json[this.PrerequisiteBuild].SelectToken("Beta");
+                        return (int)Json[PrerequisiteBuild].SelectToken("Beta");
                     }
                 }
 
@@ -124,7 +124,7 @@ namespace Octothorpe.Lib
                 {
                     string number = DocumentationID.Substring(DocumentationID.Length - 2);
 
-                    if (Regex.IsMatch(this.DocumentationID.ToLower(), "(public|beta|seed)"))
+                    if (Regex.IsMatch(DocumentationID.ToLower(), "(public|beta|seed)"))
                     {
                         if (char.IsDigit(number[0]))
                             return int.Parse(number);
@@ -166,14 +166,14 @@ namespace Octothorpe.Lib
         /// </returns>
         public string Date()
         {
-            match = Regex.Match(this.URL, @"\d{4}(\-|\.)20\d{8}\-");
+            match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
 
             if (match.Success)
                 return match.ToString().Substring(5, 9) + match.ToString().Substring(10, 12) + match.ToString().Substring(13, 15);
 
             else
             {
-                match = Regex.Match(this.URL, @"\d{4}(\-|\.)20\d{4}(\d|\.)(\w|\-)");
+                match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{4}(\d|\.)(\w|\-)");
 
                 if (match.Success)
                 {
@@ -211,18 +211,18 @@ namespace Octothorpe.Lib
             {
                 // Day
                 case 'd':
-                    return this.Date().Substring(6);
+                    return Date().Substring(6);
 
                 // Month
                 case 'm':
-                    return this.Date().Substring(4, 2);
+                    return Date().Substring(4, 2);
 
                 // Year
                 case 'y':
-                    return this.Date().Substring(0, 4);
+                    return Date().Substring(0, 4);
 
                 default:
-                    return this.Date();
+                    return Date();
             }
         }
 
@@ -255,7 +255,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public bool IsHonestBuild
         {
-            get { return this.ActualBuild == this.DeclaredBuild; }
+            get { return ActualBuild == DeclaredBuild; }
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace Octothorpe.Lib
                 }
 
                 else
-                    return this.OSVersion;
+                    return OSVersion;
             }
         }
 
@@ -331,10 +331,10 @@ namespace Octothorpe.Lib
                     using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                     {
                         Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        Beta = (int)Json[this.PrerequisiteBuild].SelectToken("Beta");
-                        VersionNum = (string)Json[this.PrerequisiteBuild].SelectToken("Version");
+                        Beta = (int)Json[PrerequisiteBuild].SelectToken("Beta");
+                        VersionNum = (string)Json[PrerequisiteBuild].SelectToken("Version");
 
-                        if (Json[this.PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))
+                        if (Json[PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))
                         {
                             fuhgeddaboudit = true;
 
@@ -357,7 +357,7 @@ namespace Octothorpe.Lib
                         else if (Beta > 1)
                             VersionNum += " beta " + Beta;
 
-                        if (Json[this.PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix) && Suffix != null)
+                        if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix) && Suffix != null)
                             return VersionNum + ' ' + (string)Suffix;
 
                         return VersionNum;
@@ -464,7 +464,7 @@ namespace Octothorpe.Lib
         private string SortingBuild()
         {
             int LetterPos;
-            string SortBuild = this.DeclaredBuild;
+            string SortBuild = DeclaredBuild;
 
             // Make 9A### appear before 10A###.
             if (char.IsLetter(SortBuild[1]))
@@ -472,7 +472,7 @@ namespace Octothorpe.Lib
 
             // If the build number is false, replace everything after the letter with "0000."
             // This will cause betas to appear first.
-            if (this.IsHonestBuild == false)
+            if (IsHonestBuild == false)
             {
                 for (LetterPos = 1; LetterPos < SortBuild.Length; LetterPos++)
                 {
@@ -493,12 +493,12 @@ namespace Octothorpe.Lib
         {
             // Sort by release type.
             int ReleaseTypeInt = 0;
-            string build = this.PrerequisiteBuild;
+            string build = PrerequisiteBuild;
 
             // Get up to (and including) the first letter. We'll get to this in a bit.
             match = Regex.Match(build, @"\d?\d[A-Z]");
 
-            switch (this.ReleaseType)
+            switch (ReleaseType)
             {
                 case "Beta":
                     ReleaseTypeInt = 1;
@@ -513,14 +513,14 @@ namespace Octothorpe.Lib
                     break;
             }
 
-            if (this.PrerequisiteBuild == "N/A")
+            if (PrerequisiteBuild == "N/A")
                 return "000000000" + ReleaseTypeInt;
 
             // If the build is old (i.e. before iOS 7), pad it.
             if (char.IsLetter(build[1]))
                 return '0' + build;
                 
-            if (this.PrerequisiteVer.Contains("beta"))
+            if (PrerequisiteVer.Contains("beta"))
                 build = RemoveBetaPadding(build);
 
             // If the number after the capital letter is too small, pad it.
@@ -543,7 +543,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public string SortingString
         {
-            get { return this.SortingBuild() + this.SortingPrerequisiteBuild() + this.CompatibilityVersion + this.ActualReleaseType; }
+            get { return SortingBuild() + SortingPrerequisiteBuild() + CompatibilityVersion + ActualReleaseType; }
         }
 
         /// <summary>
@@ -563,7 +563,7 @@ namespace Octothorpe.Lib
                     using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                     {
                         Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        return (string)Json[this.ActualBuild].SelectToken("Suffix");
+                        return (string)Json[ActualBuild].SelectToken("Suffix");
                     }
                 }
 
@@ -592,7 +592,7 @@ namespace Octothorpe.Lib
                         Models.Add((string)Model);
                 }
 
-                // No models specified. (Older PLISTs do this.)
+                // No models specified. (Older PLISTs do )
                 catch (KeyNotFoundException)
                 { }
 
