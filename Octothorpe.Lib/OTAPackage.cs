@@ -72,15 +72,18 @@ namespace Octothorpe.Lib
                 switch (ReleaseType)
                 {
                     // We do need to dig deeper for betas though.
+                    // We check if OTAPackage.DocumentationID says something.
+                    // If that returns nothing, we check if the OTAPackage.DeclaredBuild
+                    // looks like a beta build.
                     case "Beta":
                     case "Public":
-                        if (DocumentationID == "N/A" || DocumentationID == "PreRelease")
-                            return 2;
-
-                        else if (DocumentationID.Contains("Public"))
+                        if (DocumentationID.Contains("Public"))
                             return 1;
 
-                        else if (DocumentationID.ToLower().Contains("beta") || DocumentationID.Contains("Seed"))
+                        else if (Regex.IsMatch(DocumentationID.ToLower(), "(public|beta|seed)"))
+                            return 2;
+
+                        else if (Regex.IsMatch(DeclaredBuild, REGEX_BETA))
                             return 2;
 
                         else
