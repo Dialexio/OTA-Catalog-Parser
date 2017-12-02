@@ -33,9 +33,9 @@ namespace Octothorpe.Lib
     public class Parser
     {
         private bool showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
+        private Dictionary<string, List<string>> FileRowspan = new Dictionary<string, List<string>>();
         private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
             DateRowspan = new Dictionary<string, uint>(),
-            FileRowspan = new Dictionary<string, uint>(),
             MarketingVersionRowspan = new Dictionary<string, uint>();
         private Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
@@ -157,7 +157,7 @@ namespace Octothorpe.Lib
                         // It survived the checks!
                         Packages.Add(package);
                     }
-                })); 
+                }));
             }
             Task.WaitAll(AssetTasks.ToArray());
         }
@@ -199,10 +199,10 @@ namespace Octothorpe.Lib
                 {
                     // Increment the count if file URL exists (this can be the case for universal entries).
                     if (FileRowspan.ContainsKey(entry.URL))
-                        FileRowspan[entry.URL]++;
+                        FileRowspan[entry.URL].Add(entry.PrerequisiteBuild);
 
                     else
-                        FileRowspan.Add(entry.URL, 1);
+                        FileRowspan.Add(entry.URL, new List<string>(new string[] { entry.PrerequisiteBuild }));
                 }
 
 
@@ -345,7 +345,7 @@ namespace Octothorpe.Lib
 
         private string OutputWikiMarkup()
         {
-            bool BorkedDelta;
+            bool BorkedDelta, Handle10_3_3BetaSix;
             Match name;
             string fileName, NewTableCell = "| ";
             StringBuilder Output = new StringBuilder();
@@ -356,6 +356,7 @@ namespace Octothorpe.Lib
             foreach (OTAPackage package in Packages)
             {
                 BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
+                Handle10_3_3BetaSix = (package.PrerequisiteBuild == "14C92" && Version.Parse(package.OSVersion).CompareTo(Version.Parse("11.2")) >= 0);
 
                 // Obtain the file name.
                 fileName = string.Empty;
@@ -551,32 +552,45 @@ namespace Octothorpe.Lib
                 }
 
                 // Is there more than one of this prerequisite version tallied?
-                if (FileRowspan.ContainsKey(package.URL) || (BorkedDelta && package.OSVersion != "8.4.1"))
+                if ((FileRowspan.ContainsKey(package.URL) && FileRowspan[package.URL].Contains(package.PrerequisiteBuild)) || (BorkedDelta && package.OSVersion != "8.4.1"))
                 {
                     Output.Append(NewTableCell);
 
-                    if (BorkedDelta == false
-                        && FileRowspan.ContainsKey(package.URL)
-                        && FileRowspan[package.URL] > 1)
+                    if (BorkedDelta == false && FileRowspan[package.URL].Count > 1)
                     {
-                        Output.Append("rowspan=\"" + FileRowspan[package.URL] + "\" | ");
+                        if (Handle10_3_3BetaSix)
+                            Output.Append("rowspan=\"" + (FileRowspan[package.URL].Count - 1) + "\" | ");
+
+                        else
+                            Output.Append("rowspan=\"" + FileRowspan[package.URL].Count + "\" | ");
                     }
 
                     Output.Append('[' + package.URL + ' ' + fileName + ']' + Environment.NewLine + NewTableCell);
 
-                    //Print file size.
+                    // Print file size.
                     // Only give rowspan if there is more than one row with the OS version.
-                    if (BorkedDelta == false
-                        && FileRowspan.ContainsKey(package.URL)
-                        && FileRowspan[package.URL] > 1)
+                    if (BorkedDelta == false && FileRowspan[package.URL].Count > 1)
                     {
-                        Output.Append("rowspan=\"" + FileRowspan[package.URL] + "\" | ");
+                        if (Handle10_3_3BetaSix)
+                            Output.Append("rowspan=\"" + (FileRowspan[package.URL].Count - 1) + "\" | ");
+
+                        else
+                            Output.Append("rowspan=\"" + FileRowspan[package.URL].Count + "\" | ");
                     }
 
                     Output.AppendLine(package.Size);
 
-                    //Remove the count since we're done with it.
-                    FileRowspan.Remove(package.URL);
+                    // Remove the count since we're done with it.
+                    // Because iOS 10.3.3 beta 6 is notincluded in the 10.2-10.3.3 ZIPs,
+                    // we need to reset things for 10.3.3.
+                    if (Handle10_3_3BetaSix)
+                    {
+                        FileRowspan[package.URL].Clear();
+                        FileRowspan[package.URL].Add("14G60");
+                    }
+
+                    else
+                        FileRowspan.Remove(package.URL);
                 }
             }
 
