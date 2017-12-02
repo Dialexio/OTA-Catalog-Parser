@@ -384,7 +384,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public static string REGEX_BETA
         {
-            get { return @"(\d)?\d[A-Z][4-6]\d{3}[a-z]?"; }
+            get { return @"(\d)?\d[A-Z][4-6]\d{3}[a-z]"; }
         }
 
         /// <summary>
