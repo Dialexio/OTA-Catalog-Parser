@@ -376,7 +376,11 @@ namespace Octothorpe.Lib
                         // 32-bit Apple TV receives a filler for Marketing Version.
                         // (OTAPackage.MarketingVersion for 32-bit Apple TVs returns the OS version because the Marketing Version isn't specified in the XML... Confusing, I know.)
                         if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success)
-                            Output.AppendLine("| rowspan=\"" + MarketingVersionRowspan[package.MarketingVersion] + "\" | [MARKETING VERSION]");
+                        {
+                            Output.Append("| rowspan=\"");
+                            Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
+                            Output.AppendLine("\" | [MARKETING VERSION]");
+                        }
     
                         Output.Append("| rowspan=\"");
                         Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
@@ -452,7 +456,11 @@ namespace Octothorpe.Lib
                     // Only give rowspan if there is more than one row with the OS version.
                     // Count DeclaredBuild() instead of ActualBuild() so the entry pointing betas to the final build is treated separately.
                     if (BuildNumberRowspan[package.DeclaredBuild] > 1)
-                        Output.Append("rowspan=\"" + BuildNumberRowspan[package.DeclaredBuild] + "\" | ");
+                    {
+                        Output.Append("rowspan=\"");
+                        Output.Append(BuildNumberRowspan[package.DeclaredBuild]);
+                        Output.Append("\" | ");
+                    }
 
                     //Remove the count since we're done with it.
                     BuildNumberRowspan.Remove(package.DeclaredBuild);
@@ -474,7 +482,10 @@ namespace Octothorpe.Lib
                     // Is there more than one of this prerequisite version tallied?
                     if (PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer] > 1)
                     {
-                        Output.Append("rowspan=\"" + PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer] + "\" ");
+                        Output.Append("rowspan=\"");
+                        Output.Append(PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer]);
+                        Output.Append("\" ");
+
                         PrereqOSRowspan[package.DeclaredBuild].Remove(package.PrerequisiteVer);
 
                         if (package.PrerequisiteBuild != "N/A")
@@ -493,7 +504,10 @@ namespace Octothorpe.Lib
 
                         // Very quick check if prerequisite is a beta. This is not bulletproof.
                         else if (Regex.Match(package.PrerequisiteBuild, OTAPackage.REGEX_BETA).Success && package.PrerequisiteVer.Contains("beta") == false)
-                            Output.AppendLine(package.PrerequisiteVer + " beta #");
+                        {
+                            Output.Append(package.PrerequisiteVer);
+                            Output.AppendLine(" beta #");
+                        }
 
                         else
                             Output.AppendLine(package.PrerequisiteVer);
@@ -511,7 +525,10 @@ namespace Octothorpe.Lib
                     // Also do not use rowspan if the prerequisite build is a beta.
                     if (PrereqBuildRowspan[package.DeclaredBuild][package.PrerequisiteBuild] > 1)
                     {
-                        Output.Append("rowspan=\"" + PrereqBuildRowspan[package.DeclaredBuild][package.PrerequisiteBuild] + "\" | ");
+                        Output.Append("rowspan=\"");
+                        Output.Append(PrereqBuildRowspan[package.DeclaredBuild][package.PrerequisiteBuild]);
+                        Output.Append("\" | ");
+
                         PrereqBuildRowspan[package.DeclaredBuild].Remove(package.PrerequisiteBuild);
                     }
 
@@ -519,7 +536,10 @@ namespace Octothorpe.Lib
                 }
 
                 if (package.CompatibilityVersion > 0)
-                    Output.AppendLine(NewTableCell + package.CompatibilityVersion);
+                {
+                    Output.Append(NewTableCell);
+                    Output.AppendLine(package.CompatibilityVersion.ToString());
+                }
 
                 // Date as extracted from the URL. Using the same rowspan count as build.
                 // (Apple occasionally releases updates with the same version, but different build number, silently.)
@@ -530,11 +550,20 @@ namespace Octothorpe.Lib
                     // Only give rowspan if there is more than one row with the OS version.
                     if (DateRowspan[package.ActualBuild] > 1)
                     {
-                        Output.Append("rowspan=\"" + DateRowspan[package.ActualBuild] + "\" | ");
+                        Output.Append("rowspan=\"");
+                        Output.Append(DateRowspan[package.ActualBuild]);
+                        Output.Append("\" | ");
+
                         DateRowspan.Remove(package.ActualBuild); //Remove the count since we already used it.
                     }
 
-                    Output.AppendLine("{{date|" + package.Date('y') + '|' + package.Date('m') + '|' + package.Date('d') + "}}");
+                    Output.Append("{{date|");
+                    Output.Append(package.Date('y'));
+                    Output.Append('|');
+                    Output.Append(package.Date('m'));
+                    Output.Append('|');
+                    Output.Append(package.Date('d'));
+                    Output.AppendLine("}}");
                 }
 
                 // Release Type.
@@ -558,24 +587,37 @@ namespace Octothorpe.Lib
 
                     if (BorkedDelta == false && FileRowspan[package.URL].Count > 1)
                     {
+                        Output.Append("rowspan=\"");
+
                         if (Handle10_3_3BetaSix)
-                            Output.Append("rowspan=\"" + (FileRowspan[package.URL].Count - 1) + "\" | ");
+                            Output.Append(FileRowspan[package.URL].Count - 1);
 
                         else
-                            Output.Append("rowspan=\"" + FileRowspan[package.URL].Count + "\" | ");
+                            Output.Append(FileRowspan[package.URL].Count);
+
+                        Output.Append("\" | ");
                     }
 
-                    Output.Append('[' + package.URL + ' ' + fileName + ']' + Environment.NewLine + NewTableCell);
+                    Output.Append('[');
+                    Output.Append(package.URL);
+                    Output.Append(' ');
+                    Output.Append(fileName);
+                    Output.AppendLine("]");
+                    Output.Append(NewTableCell);
 
                     // Print file size.
                     // Only give rowspan if there is more than one row with the OS version.
                     if (BorkedDelta == false && FileRowspan[package.URL].Count > 1)
                     {
+                        Output.Append("rowspan=\"");
+
                         if (Handle10_3_3BetaSix)
-                            Output.Append("rowspan=\"" + (FileRowspan[package.URL].Count - 1) + "\" | ");
+                            Output.Append(FileRowspan[package.URL].Count - 1);
 
                         else
-                            Output.Append("rowspan=\"" + FileRowspan[package.URL].Count + "\" | ");
+                            Output.Append(FileRowspan[package.URL].Count);
+
+                        Output.Append("\" | ");
                     }
 
                     Output.AppendLine(package.Size);
