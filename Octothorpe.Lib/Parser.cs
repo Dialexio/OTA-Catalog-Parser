@@ -401,7 +401,7 @@ namespace Octothorpe.Lib
                     }
 
                     // Give it a beta label (if it is one).
-                    if (package.ActualReleaseType > 0)
+                    if (package.BetaNumber > 0)
                     {
                         switch (package.ActualReleaseType)
                         {
