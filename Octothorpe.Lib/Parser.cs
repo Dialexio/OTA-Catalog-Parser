@@ -632,8 +632,8 @@ namespace Octothorpe.Lib
                     // we need to reset things for 10.3.3.
                     if (Handle10_3_3BetaSix)
                     {
-                        FileRowspan[package.URL].Clear();
-                        FileRowspan[package.URL].Add("14G60");
+                        while (FileRowspan[package.URL].Count > 1)
+                            FileRowspan[package.URL].RemoveAt(0);
                     }
 
                     else
