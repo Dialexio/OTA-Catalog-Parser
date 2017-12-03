@@ -313,12 +313,16 @@ namespace Octothorpe.Lib
 
                     // Don't print a 1 if this is the first beta.
                     if (package.BetaNumber > 1)
-                        Output.Append(" " + package.BetaNumber);
+                    {
+                        Output.Append(' ');
+                        Output.Append(package.BetaNumber);
+                    }
                 }
 
-                Output.AppendLine(" (Build " + package.ActualBuild + ')');
-                Output.AppendLine("Listed as: " + package.OSVersion + " (Build " + package.DeclaredBuild + ')');
-                Output.AppendLine("Reported Release Type: " + package.ReleaseType);
+                Output.AppendLine(string.Format(" (Build {0})", package.ActualBuild));
+                Output.AppendLine(string.Format("Listed as: {0} (Build {1})", package.OSVersion, package.DeclaredBuild));
+                Output.Append("Reported Release Type: ");
+                Output.AppendLine(package.ReleaseType);
 
                 // Print prerequisites if there are any.
                 if (package.PrerequisiteBuild == "N/A")
@@ -334,8 +338,9 @@ namespace Octothorpe.Lib
                 Output.AppendLine("Compatibility Version: " + package.CompatibilityVersion);
 
                 // Print out the url and file Size.
-                Output.AppendLine("URL: " + package.URL);
-                Output.AppendLine("File size: " + package.Size + Environment.NewLine);
+                Output.Append("URL: ");
+                Output.AppendLine(package.URL);
+                Output.AppendLine(string.Format("File size: {0}{1}", package.Size, Environment.NewLine));
             }
 
             Cleanup();
