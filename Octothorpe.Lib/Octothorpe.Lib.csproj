@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
     <ReleaseVersion>2.0</ReleaseVersion>
+    <Authors>Dialexio</Authors>
+    <Company />
+    <Copyright>Copyright ©2017 Dialexio.</Copyright>
+    <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
