@@ -4,7 +4,7 @@ This program lets you view an OTA update catalog for [audioOS](https://mesu.appl
 __NOTE:__ Dates are extracted from the file URL, which may not be the actual release date.
 
 ## Program Requirements
-The Mac version requires macOS v10.8 (Mountain Lion) or newer. It is built with Xamarin.Mac, so no other software is required.
+The Mac version requires macOS v10.9 (Mavericks) or newer. It is built with Xamarin.Mac, so no other software is required.
 
 The Windows version requires .NET Framework 4.6.1 or newer. ([Link to .NET Framework 4.7.1 for Windows 7 and newer.](https://support.microsoft.com/kb/4033344))
 
