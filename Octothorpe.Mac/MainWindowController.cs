@@ -60,6 +60,10 @@ namespace Octothorpe.Mac
         partial void ChangeOutputFormat(NSButton sender)
         {
             DisplayWikiMarkup = (sender.Title == "The iPhone Wiki markup");
+            NSButtonFullTable.Enabled = (sender.Title == "The iPhone Wiki markup");
+
+            if (NSButtonFullTable.Enabled == false)
+                NSButtonFullTable.State = NSCellStateValue.Off;
         }
 
         partial void ParsingSTART(NSButton sender)
@@ -70,6 +74,7 @@ namespace Octothorpe.Mac
                 parser = new Parser();
 
                 parser.Device = NSTextFieldDevice.StringValue;
+                parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);
                 parser.Model = NSTextFieldModel.StringValue;
                 parser.WikiMarkup = DisplayWikiMarkup;
 

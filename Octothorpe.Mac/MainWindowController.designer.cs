@@ -25,6 +25,9 @@ namespace Octothorpe.Mac
         AppKit.NSButton NSButtonCheckBeta { get; set; }
 
         [Outlet]
+        AppKit.NSButtonCell NSButtonFullTable { get; set; }
+
+        [Outlet]
         AppKit.NSButton NSButtonParse { get; set; }
 
         [Outlet]
@@ -77,6 +80,11 @@ namespace Octothorpe.Mac
             if (NSButtonCheckBeta != null) {
                 NSButtonCheckBeta.Dispose ();
                 NSButtonCheckBeta = null;
+            }
+
+            if (NSButtonFullTable != null) {
+                NSButtonFullTable.Dispose ();
+                NSButtonFullTable = null;
             }
 
             if (NSButtonParse != null) {

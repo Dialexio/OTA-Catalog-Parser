@@ -22,6 +22,7 @@ If no arguments are specified, the program will return the following information
 * `-b` specifies that you would like to see beta releases. By default, this program does not display beta releases.
 * `-max <OS version>` specifies the _highest_ version of iOS you're looking for. This argument is looking for a value like "4.3" or "8.0.1."
 * `-min <OS version>` _(renamed from_ `-o` _as of version 0.3)_ specifies the _lowest_ version of iOS you're looking for. This argument is looking for a value like "4.3" or "8.0.1."
+* `-t` adds the table headers, if `-w` is specified.
 * `-w` allows you to see the results formatted more appropriately for [The iPhone Wiki](https://www.theiphonewiki.com/wiki/OTA_Updates). Manual editing may still be required (e.g. for "marketing version"), but this will make the burden more bearable.
 
 ## Source Code Information

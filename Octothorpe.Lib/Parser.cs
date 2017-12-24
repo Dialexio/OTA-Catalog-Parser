@@ -32,7 +32,7 @@ namespace Octothorpe.Lib
 {
     public class Parser
     {
-        private bool showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
+        private bool fullTable, showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
         private Dictionary<string, List<string>> FileRowspan = new Dictionary<string, List<string>>();
         private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
             DateRowspan = new Dictionary<string, uint>(),
@@ -46,6 +46,11 @@ namespace Octothorpe.Lib
         public string Device
         {
             set { device = value; }
+        }
+
+        public bool FullTable
+        {
+            set { fullTable = value; }
         }
 
         public Version Maximum
@@ -358,6 +363,20 @@ namespace Octothorpe.Lib
             // So we don't add on to a previous run.
             Output.Length = 0;
 
+            if (fullTable)
+            {
+                Output.AppendLine("{| class=\"wikitable\" style=\"font-size: smaller; text-align: center;\"");
+                Output.AppendLine("|-");
+                Output.AppendLine("! Version");
+                Output.AppendLine("! Build");
+                Output.AppendLine("! Prerequisite Version");
+                Output.AppendLine("! Prerequisite Build");
+                Output.AppendLine("! Release Date");
+                Output.AppendLine("! Release Type");
+                Output.AppendLine("! OTA Download URL");
+                Output.AppendLine("! File Size");
+            }
+
             foreach (OTAPackage package in Packages)
             {
                 BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
@@ -640,6 +659,9 @@ namespace Octothorpe.Lib
                         FileRowspan.Remove(package.URL);
                 }
             }
+
+            if (fullTable)
+                Output.Append("|}");
 
             Cleanup();
 

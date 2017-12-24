@@ -13,6 +13,7 @@
                 <outlet property="NSBoxModel" destination="bUE-T3-DMb" id="aTZ-Sk-QWr"/>
                 <outlet property="NSBoxURL" destination="s7n-r6-laY" id="jLe-j5-VQH"/>
                 <outlet property="NSButtonCheckBeta" destination="3JW-3T-LWc" id="Dww-yS-sWx"/>
+                <outlet property="NSButtonFullTable" destination="Jg1-Ds-AZ0" id="CR0-5h-BXt"/>
                 <outlet property="NSButtonParse" destination="mqQ-XF-KBT" id="DBh-WK-Kdu"/>
                 <outlet property="NSTextFieldDevice" destination="dY4-Y3-cdF" id="RHS-mr-QIR"/>
                 <outlet property="NSTextFieldMax" destination="CpE-z8-1ue" id="cIF-xY-eNL"/>
@@ -27,25 +28,25 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="OTA Catalog Parser" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="2" customClass="MainWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="131" y="74" width="680" height="420"/>
+            <rect key="contentRect" x="131" y="74" width="680" height="440"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <value key="minSize" type="size" width="680" height="420"/>
+            <value key="minSize" type="size" width="680" height="440"/>
             <view key="contentView" id="3">
-                <rect key="frame" x="0.0" y="0.0" width="680" height="420"/>
+                <rect key="frame" x="0.0" y="0.0" width="680" height="440"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView wantsLayer="YES" fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="250" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lpg-0f-xUr">
-                        <rect key="frame" x="270" y="20" width="390" height="380"/>
+                        <rect key="frame" x="270" y="20" width="390" height="400"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="AOG-Ce-ADs">
-                            <rect key="frame" x="1" y="1" width="388" height="363"/>
+                            <rect key="frame" x="1" y="1" width="388" height="383"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView ambiguous="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" continuousSpellChecking="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="6FB-F6-C5V">
-                                    <rect key="frame" x="0.0" y="-1" width="399" height="363"/>
+                                    <rect key="frame" x="0.0" y="-1" width="399" height="383"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="388" height="363"/>
+                                    <size key="minSize" width="388" height="383"/>
                                     <size key="maxSize" width="504" height="10000000"/>
                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -53,7 +54,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </clipView>
                         <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="0fS-OG-fMd">
-                            <rect key="frame" x="1" y="364" width="388" height="15"/>
+                            <rect key="frame" x="1" y="384" width="388" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="8Dw-vT-N4n">
@@ -62,7 +63,7 @@
                         </scroller>
                     </scrollView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qec-n2-EFb">
-                        <rect key="frame" x="75" y="383" width="120" height="17"/>
+                        <rect key="frame" x="75" y="402" width="120" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Select file to load…" id="ZJN-mY-vK3">
                             <font key="font" metaFont="system"/>
@@ -71,7 +72,7 @@
                         </textFieldCell>
                     </textField>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fme-i2-nGb">
-                        <rect key="frame" x="46" y="351" width="179" height="26"/>
+                        <rect key="frame" x="46" y="369" width="179" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="iOS (Public)" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="x4L-Ek-xLE" id="8ti-3u-XYY">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -96,7 +97,7 @@
                         </connections>
                     </popUpButton>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IVo-MH-SB5">
-                        <rect key="frame" x="20" y="206" width="230" height="36"/>
+                        <rect key="frame" x="20" y="217" width="230" height="36"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aqf-E1-65H">
@@ -124,7 +125,7 @@
                         </subviews>
                     </customView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mqQ-XF-KBT">
-                        <rect key="frame" x="94" y="13" width="82" height="32"/>
+                        <rect key="frame" x="94" y="14" width="82" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Parse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lRX-fb-Mow">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -138,14 +139,14 @@ DQ
                         </connections>
                     </button>
                     <box fixedFrame="YES" title="Optional" translatesAutoresizingMaskIntoConstraints="NO" id="MgB-2g-Bdu">
-                        <rect key="frame" x="17" y="57" width="236" height="127"/>
+                        <rect key="frame" x="17" y="61" width="236" height="148"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <view key="contentView" id="kHo-eE-bnt">
-                            <rect key="frame" x="2" y="2" width="232" height="110"/>
+                            <rect key="frame" x="2" y="2" width="232" height="131"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dR4-ev-R4d">
-                                    <rect key="frame" x="18" y="48" width="124" height="17"/>
+                                    <rect key="frame" x="18" y="53" width="124" height="17"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Minimum version:" id="Slo-b2-UGH">
                                         <font key="font" metaFont="system"/>
@@ -154,7 +155,7 @@ DQ
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VX3-E8-91R">
-                                    <rect key="frame" x="141" y="46" width="71" height="22"/>
+                                    <rect key="frame" x="141" y="49" width="71" height="22"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="N2a-4c-Kqc">
                                         <font key="font" metaFont="system"/>
@@ -163,7 +164,7 @@ DQ
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CpE-z8-1ue">
-                                    <rect key="frame" x="141" y="16" width="71" height="22"/>
+                                    <rect key="frame" x="141" y="22" width="71" height="22"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="YLR-zs-sP4">
                                         <font key="font" metaFont="system"/>
@@ -172,7 +173,7 @@ DQ
                                     </textFieldCell>
                                 </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gel-JK-vfc">
-                                    <rect key="frame" x="18" y="18" width="117" height="17"/>
+                                    <rect key="frame" x="18" y="24" width="117" height="17"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Maximum version:" id="Tme-Wl-qTe">
                                         <font key="font" metaFont="system"/>
@@ -180,8 +181,16 @@ DQ
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JWj-5N-qxm">
+                                    <rect key="frame" x="39" y="97" width="154" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Include table headers" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Jg1-Ds-AZ0">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                </button>
                                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3JW-3T-LWc">
-                                    <rect key="frame" x="55" y="74" width="122" height="18"/>
+                                    <rect key="frame" x="55" y="77" width="122" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <buttonCell key="cell" type="check" title="Search for betas" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="QoA-3B-nph">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -192,7 +201,7 @@ DQ
                         </view>
                     </box>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MRS-D9-u0w">
-                        <rect key="frame" x="67" y="289" width="50" height="17"/>
+                        <rect key="frame" x="67" y="303" width="50" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Device:" id="F7I-4N-j4J">
                             <font key="font" metaFont="system"/>
@@ -201,7 +210,7 @@ DQ
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dY4-Y3-cdF">
-                        <rect key="frame" x="123" y="287" width="78" height="22"/>
+                        <rect key="frame" x="123" y="301" width="78" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="dDj-3t-1Hl">
                             <font key="font" metaFont="system"/>
@@ -213,7 +222,7 @@ DQ
                         </connections>
                     </textField>
                     <box hidden="YES" fixedFrame="YES" boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="bUE-T3-DMb">
-                        <rect key="frame" x="81" y="256" width="109" height="25"/>
+                        <rect key="frame" x="81" y="269" width="109" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <view key="contentView" ambiguous="YES" id="XFJ-n1-QKb">
                             <rect key="frame" x="0.0" y="0.0" width="109" height="25"/>
@@ -241,7 +250,7 @@ DQ
                         </view>
                     </box>
                     <box hidden="YES" fixedFrame="YES" boxType="custom" borderType="none" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="s7n-r6-laY">
-                        <rect key="frame" x="23" y="317" width="224" height="29"/>
+                        <rect key="frame" x="23" y="333" width="224" height="29"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <view key="contentView" ambiguous="YES" id="jNz-Pf-vz8">
                             <rect key="frame" x="0.0" y="0.0" width="224" height="29"/>
