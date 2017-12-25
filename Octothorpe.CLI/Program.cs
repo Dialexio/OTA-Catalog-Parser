@@ -118,6 +118,10 @@ namespace Octothorpe.CLI
                         Console.WriteLine("You need to specify a model for this device. Use the \"-m\" argument to specify, e.g. \"N71AP\"");
                         break;
 
+                    case "nofile":
+                        Console.WriteLine("You did not specify a file or URL to search.");
+                        break;
+
                     case "notmesu":
                         Console.WriteLine("The URL supplied should belong to mesu.apple.com.");
                         break;

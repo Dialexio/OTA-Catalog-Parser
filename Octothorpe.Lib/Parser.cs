@@ -268,6 +268,9 @@ namespace Octothorpe.Lib
             // Model check.
             if (ModelNeedsChecking && Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false)
                 throw new ArgumentException("model");
+
+            if (string.IsNullOrEmpty(Plist))
+                throw new ArgumentException("nofile");
         }
 
         private string OutputHumanFormat()
