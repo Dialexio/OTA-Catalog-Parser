@@ -61,6 +61,7 @@ namespace Octothorpe.Mac
         {
             DisplayWikiMarkup = (sender.Title == "The iPhone Wiki markup");
             NSButtonFullTable.Enabled = (sender.Title == "The iPhone Wiki markup");
+            NSButtonFullTable.Transparent = (sender.Title != "The iPhone Wiki markup");
 
             if (NSButtonFullTable.Enabled == false)
                 NSButtonFullTable.State = NSCellStateValue.Off;
