@@ -29,7 +29,7 @@ using System.Text.RegularExpressions;
 
 namespace Octothorpe.Lib
 {
-    public class OTAPackage
+    public class OTAPackage : IComparable<OTAPackage>
     {
         private Match match;
         private readonly Dictionary<string, object> ENTRY;
@@ -143,6 +143,11 @@ namespace Octothorpe.Lib
                         return 0;
                 }
             }
+        }
+        
+        public int CompareTo(OTAPackage compareWith)
+        {
+            return this.SortingString.CompareTo(compareWith.SortingString);
         }
 
         /// <summary>

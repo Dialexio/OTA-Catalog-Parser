@@ -39,7 +39,7 @@ namespace Octothorpe.Lib
             MarketingVersionRowspan = new Dictionary<string, uint>();
         private Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
-        private readonly SortedList<string, OTAPackage> Packages = new SortedList<string, OTAPackage>();
+        private readonly List<OTAPackage> Packages = new List<OTAPackage>();
         private string device, model, plist;
         private Version max, minimum;
 
@@ -159,11 +159,13 @@ namespace Octothorpe.Lib
                             return;
 
                         // It survived the checks!
-                        Packages.Add(package.SortingString, package);
+                        Packages.Add(package);
                     }
                 }));
             }
             Task.WaitAll(AssetTasks.ToArray());
+
+            Packages.Sort();
         }
 
         private void Cleanup()
@@ -178,13 +180,9 @@ namespace Octothorpe.Lib
         }
 
         private void CountRowspan()
-        {
-            OTAPackage entry;
-        
-            foreach (KeyValuePair<string, OTAPackage> kvp in Packages)
-            {
-                entry = kvp.Value;
-            
+        {        
+            foreach (OTAPackage entry in Packages)
+            {            
                 // Increment the count if the build exists.
                 if (BuildNumberRowspan.ContainsKey(entry.DeclaredBuild))
                     BuildNumberRowspan[entry.DeclaredBuild]++;
@@ -275,16 +273,14 @@ namespace Octothorpe.Lib
 
         private string OutputHumanFormat()
         {
-            OTAPackage package;
             StringBuilder Output = new StringBuilder();
             string osName;
 
             // So we don't add on to a previous run.
             Output.Length = 0;
         
-            foreach (KeyValuePair<string, OTAPackage> kvp in Packages)
+            foreach (OTAPackage package in Packages)
             {
-                package = kvp.Value;
                 switch (device.Substring(0, 4))
                 {
                     case "Appl":
@@ -365,12 +361,12 @@ namespace Octothorpe.Lib
         {
             bool BorkedDelta, Handle10_3_3BetaSix;
             Match name;
-            OTAPackage package;
             string fileName, NewTableCell = "| ";
-            StringBuilder Output = new StringBuilder();
-
             // So we don't add on to a previous run.
-            Output.Length = 0;
+            StringBuilder Output = new StringBuilder
+            {
+                Length = 0
+            };
 
             if (fullTable)
             {
@@ -386,10 +382,8 @@ namespace Octothorpe.Lib
                 Output.AppendLine("! File Size");
             }
         
-            foreach (KeyValuePair<string, OTAPackage> kvp in Packages)
-            {
-                package = kvp.Value;
-                
+            foreach (OTAPackage package in Packages)
+            {                
                 BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
                 Handle10_3_3BetaSix = (package.PrerequisiteBuild == "14C92" && Version.Parse(package.OSVersion).CompareTo(Version.Parse("11.2")) >= 0);
 
