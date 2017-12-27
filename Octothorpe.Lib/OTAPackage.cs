@@ -176,8 +176,9 @@ namespace Octothorpe.Lib
         {
             match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
 
+            // iOS 9.3.4
             if (match.Success)
-                return match.ToString().Substring(5, 9) + match.ToString().Substring(10, 12) + match.ToString().Substring(13, 15);
+                return match.ToString().Substring(5, 4) + match.ToString().Substring(10, 2) + match.ToString().Substring(13, 2);
 
             else
             {
