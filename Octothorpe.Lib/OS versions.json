@@ -23,6 +23,24 @@
 		"Beta":    0,
 		"Suffix":  "GM"
 	},
+	"13B137": {
+		"Product": "iOS",
+		"Version": "9.1",
+		"Beta":    5,
+		"Suffix":  null
+	},
+	"13D11": {
+		"Product": "iOS",
+		"Version": "9.2.1",
+		"Beta":    1,
+		"Suffix":  null
+	},
+	"13D14": {
+		"Product": "iOS",
+		"Version": "9.2.1",
+		"Beta":    2,
+		"Suffix":  null
+	},
 	"14G57": {
 		"Product": "iOS",
 		"Version": "10.3.3",

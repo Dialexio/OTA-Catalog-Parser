@@ -359,7 +359,8 @@ namespace Octothorpe.Lib
 
         private string OutputWikiMarkup()
         {
-            bool BorkedDelta, Handle10_3_3BetaSix;
+            bool BorkedDelta;
+            int ReduceRowspanBy = 0, RowspanOverride;
             Match name;
             string fileName, NewTableCell = "| ";
             // So we don't add on to a previous run.
@@ -385,7 +386,45 @@ namespace Octothorpe.Lib
             foreach (OTAPackage package in Packages)
             {                
                 BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
-                Handle10_3_3BetaSix = (package.PrerequisiteBuild == "14C92" && Version.Parse(package.OSVersion).CompareTo(Version.Parse("11.2")) >= 0);
+
+                // Some firmwares use one firmware file in multiple spots (that are separated by other files).
+                // (e.g. FILE_A, FILE_A, FILE_B, FILE_C, FILE_A, FILE_D, FILE_A, FILE_E)
+                ReduceRowspanBy = 0;
+            
+                switch (package.PrerequisiteBuild)
+                {
+                    case "N/A":
+                        switch (package.OSVersion)
+                        {
+                            case "9.2":
+                                if (device == "iPhone4,1" || device == "iPhone5,1" || device == "iPhone5,2")
+                                    ReduceRowspanBy = 4;
+                                break;
+                                
+                            case "9.2.1":
+                                ReduceRowspanBy = 2;
+                                break;
+                        }
+                        break;
+
+                    case "13A340":
+                        if (package.OSVersion == "9.2")
+                            ReduceRowspanBy = 2;
+                        break;
+                    
+                    case "13A344":
+                        if (package.OSVersion == "9.2.1")
+                            ReduceRowspanBy = 1;
+                        break;
+                
+                    // For iOS 11.2 and newer, iOS 10.2 needs its rowspan reduced
+                    // because iOS 10.3.3 uses the same delta, but iOS 10.3.3 beta 6
+                    // separates it.
+                    case "14C92":
+                        if (Version.Parse(package.OSVersion).CompareTo(Version.Parse("11.2")) >= 0)
+                            ReduceRowspanBy = 1;
+                        break;
+                }
 
                 // Obtain the file name.
                 fileName = string.Empty;
@@ -612,18 +651,14 @@ namespace Octothorpe.Lib
                 // Is there more than one of this prerequisite version tallied?
                 if ((FileRowspan.ContainsKey(package.URL) && FileRowspan[package.URL].Contains(package.PrerequisiteBuild)) || (BorkedDelta && package.OSVersion != "8.4.1"))
                 {
+                    RowspanOverride = FileRowspan[package.URL].Count - ReduceRowspanBy;
+
                     Output.Append(NewTableCell);
 
-                    if (BorkedDelta == false && FileRowspan[package.URL].Count > 1)
+                    if (BorkedDelta == false && RowspanOverride > 1)
                     {
                         Output.Append("rowspan=\"");
-
-                        if (Handle10_3_3BetaSix)
-                            Output.Append(FileRowspan[package.URL].Count - 1);
-
-                        else
-                            Output.Append(FileRowspan[package.URL].Count);
-
+                        Output.Append(RowspanOverride);
                         Output.Append("\" | ");
                     }
 
@@ -636,27 +671,20 @@ namespace Octothorpe.Lib
 
                     // Print file size.
                     // Only give rowspan if there is more than one row with the OS version.
-                    if (BorkedDelta == false && FileRowspan[package.URL].Count > 1)
+                    if (BorkedDelta == false && RowspanOverride > 1)
                     {
                         Output.Append("rowspan=\"");
-
-                        if (Handle10_3_3BetaSix)
-                            Output.Append(FileRowspan[package.URL].Count - 1);
-
-                        else
-                            Output.Append(FileRowspan[package.URL].Count);
-
+                        Output.Append(RowspanOverride);
                         Output.Append("\" | ");
                     }
 
                     Output.AppendLine(package.Size);
 
-                    // Remove the count since we're done with it.
-                    // Because iOS 10.3.3 beta 6 is notincluded in the 10.2-10.3.3 ZIPs,
-                    // we need to reset things for 10.3.3.
-                    if (Handle10_3_3BetaSix)
+                    // If we still need to list this file, we'll just take the build off of the List.
+                    // Otherwise, we can chuck this.
+                    if (RowspanOverride > 0)
                     {
-                        while (FileRowspan[package.URL].Count > 1)
+                        while (FileRowspan[package.URL].Count > ReduceRowspanBy)
                             FileRowspan[package.URL].RemoveAt(0);
                     }
 
