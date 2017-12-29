@@ -41,6 +41,24 @@
 		"Beta":    2,
 		"Suffix":  null
 	},
+	"13E5181d": {
+		"Product": "iOS",
+		"Version": "9.3",
+		"Beta": 1,
+		"Suffix": null
+	},
+	"13E5181f": {
+		"Product": "iOS",
+		"Version": "9.3",
+		"Beta": 1,
+		"Suffix": "Update"
+	},
+	"13E5200d": {
+		"Product": "iOS",
+		"Version": "9.3",
+		"Beta": 3,
+		"Suffix": null
+	},
 	"14G57": {
 		"Product": "iOS",
 		"Version": "10.3.3",

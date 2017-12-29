@@ -298,8 +298,22 @@ namespace Octothorpe.Lib
         {
             get
             {
-                string version = (string)ENTRY["OSVersion"];
-                return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
+                try
+                {
+                    Dictionary<string, JObject> Json;
+
+                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+                    {
+                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
+                        return (string)Json[ActualBuild].SelectToken("Version");
+                    }
+                }
+
+                catch (KeyNotFoundException)
+                {
+                    string version = (string)ENTRY["OSVersion"];
+                    return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
+                }
             }
         }
 
