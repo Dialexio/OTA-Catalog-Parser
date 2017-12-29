@@ -366,7 +366,7 @@ namespace Octothorpe.Lib
                         else if (Beta > 1)
                             VersionNum += " beta " + Beta;
 
-                        if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix) && Suffix != null)
+                        if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix) && string.IsNullOrEmpty((string)Suffix) == false)
                             return VersionNum + ' ' + (string)Suffix;
 
                         return VersionNum;
