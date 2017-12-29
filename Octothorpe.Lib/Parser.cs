@@ -421,10 +421,11 @@ namespace Octothorpe.Lib
                             ReduceRowspanBy = 1;
                         break;
                 
-                    // For iOS 11.2 and newer, iOS 10.2 needs its rowspan reduced
-                    // because iOS 10.3.3 uses the same delta, but iOS 10.3.3 beta 6
-                    // separates it.
+                    // For iOS 11.2 and newer, iOS 10.2 (and iOS 10.3 for iPad 5th generation)
+                    // needs its rowspan reduced because iOS 10.3.3 uses the same delta, but
+                    // iOS 10.3.3 beta 6 (and 10.3.2, for iPad 5th generation) separate it.
                     case "14C92":
+                    case "14E277":
                         if (Version.Parse(package.OSVersion).CompareTo(Version.Parse("11.2")) >= 0)
                             ReduceRowspanBy = 1;
                         break;
