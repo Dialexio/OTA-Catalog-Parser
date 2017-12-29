@@ -191,7 +191,7 @@ namespace Octothorpe.Lib
                         case "201218.D22":
                             return "20120307";
 
-                        case "2015106-DC":
+                        case "2015106-":
                             return "20151006";
 
                         case "20160009/1":
