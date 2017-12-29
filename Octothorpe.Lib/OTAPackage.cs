@@ -119,7 +119,7 @@ namespace Octothorpe.Lib
                     using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                     {
                         Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        return (int)Json[PrerequisiteBuild].SelectToken("Beta");
+                        return (int)Json[ActualBuild].SelectToken("Beta");
                     }
                 }
 
