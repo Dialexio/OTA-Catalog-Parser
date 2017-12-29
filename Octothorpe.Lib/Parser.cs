@@ -394,16 +394,20 @@ namespace Octothorpe.Lib
                 switch (package.PrerequisiteBuild)
                 {
                     case "N/A":
-                        switch (package.OSVersion)
+                        // Final releases only— don't hit betas.
+                        if (package.BetaNumber == 0)
                         {
-                            case "9.2":
-                                if (device == "iPhone4,1" || device == "iPhone5,1" || device == "iPhone5,2")
-                                    ReduceRowspanBy = 4;
-                                break;
-                                
-                            case "9.2.1":
-                                ReduceRowspanBy = 2;
-                                break;
+                            switch (package.OSVersion)
+                            {
+                                case "9.2":
+                                    if (device == "iPhone4,1" || device == "iPhone5,1" || device == "iPhone5,2")
+                                        ReduceRowspanBy = 4;
+                                    break;
+
+                                case "9.2.1":
+                                    ReduceRowspanBy = 2;
+                                    break;
+                            }
                         }
                         break;
 

@@ -29,6 +29,18 @@
 		"Beta":    5,
 		"Suffix":  null
 	},
+	"13C5055d": {
+		"Product": "iOS",
+		"Version": "9.2",
+		"Beta":    1,
+		"Suffix":  null
+	},
+	"13C5060d": {
+		"Product": "iOS",
+		"Version": "9.2",
+		"Beta":    2,
+		"Suffix":  null
+	},
 	"13D11": {
 		"Product": "iOS",
 		"Version": "9.2.1",
