@@ -119,7 +119,22 @@ namespace Octothorpe.Lib
                     using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                     {
                         Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        return (int)Json[ActualBuild].SelectToken("Beta");
+
+                        // If the JSON entry specifies "Devices," we need to check those out.
+                        if (Json[ActualBuild].TryGetValue("Devices", out JToken Tokens))
+                        {
+                            foreach (JToken Token in ((JArray)Tokens).Children())
+                            {
+                                if (SupportedDevices.Contains((string)Token))
+                                    return (int)Json[ActualBuild].SelectToken("Beta");
+                            }
+
+                            // Exception will only be thrown if the JSON entry specifies "Devices" but there isn't a match.
+                            throw new KeyNotFoundException();
+                        }
+
+                        else
+                            return (int)Json[ActualBuild].SelectToken("Beta");
                     }
                 }
 
