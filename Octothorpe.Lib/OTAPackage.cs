@@ -189,36 +189,35 @@ namespace Octothorpe.Lib
         /// </returns>
         public string Date()
         {
-            match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
-
-            // iOS 9.3.4
-            if (match.Success)
-                return match.ToString().Substring(5, 4) + match.ToString().Substring(10, 2) + match.ToString().Substring(13, 2);
-
-            else
+            try
             {
-                match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{4}(\d|\.)(\w|\-)");
+                Dictionary<string, JObject> Json;
 
-                if (match.Success)
+                using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
                 {
-                    switch (match.ToString().Substring(5))
-                    {
-                        case "201218.D22":
-                            return "20120307";
-
-                        case "2015106-":
-                            return "20151006";
-
-                        case "20160009/1":
-                            return "20160913";
-
-                        default:
-                            return match.ToString().Substring(5);
-                    }
+                    Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
+                    return (string)Json[ActualBuild].SelectToken("Date");
                 }
+            }
 
+            catch (KeyNotFoundException)
+            {
+                // Catch excess zeroes, e.g. "2016008004"
+                match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
+                
+                if (match.Success)
+                    return match.ToString().Substring(5, 4) + match.ToString().Substring(10, 2) + match.ToString().Substring(13, 2);
+    
                 else
-                    return "00000000";
+                {
+                    match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{6}\-");
+    
+                    if (match.Success)
+                        return match.ToString().Substring(5);
+    
+                    else
+                        return "00000000";
+                }
             }
         }
 
@@ -395,7 +394,7 @@ namespace Octothorpe.Lib
                         else if (Beta > 1)
                             VersionNum += " beta " + Beta;
 
-                        if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix) && string.IsNullOrEmpty((string)Suffix) == false)
+                        if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix))
                             return VersionNum + ' ' + (string)Suffix;
 
                         return VersionNum;
@@ -630,7 +629,7 @@ namespace Octothorpe.Lib
                         Models.Add((string)Model);
                 }
 
-                // No models specified. (Older PLISTs do )
+                // No models specified. (Very, very old PLISTs do this.)
                 catch (KeyNotFoundException)
                 { }
 
