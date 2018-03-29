@@ -16,6 +16,12 @@
 		"Beta":    0,
 		"Date":    20140128
 	},
+	"10B329": {
+		"Product": "iOS",
+		"Version": "6.1.3",
+		"Beta":    0,
+		"Date":    20130319
+	},
 	"12B407": {
 		"Product": "iOS",
 		"Version": "8.1",

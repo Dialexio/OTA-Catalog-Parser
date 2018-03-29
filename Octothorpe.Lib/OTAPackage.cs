@@ -33,10 +33,16 @@ namespace Octothorpe.Lib
     {
         private Match match;
         private readonly Dictionary<string, object> ENTRY;
+        private readonly Dictionary<string, JObject> Json;
 
         public OTAPackage(Dictionary<string, object> package)
         {
             ENTRY = package;
+            
+            using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+            {
+                Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
+            }
         }
 
         /// <summary>
@@ -114,28 +120,21 @@ namespace Octothorpe.Lib
             {
                 try
                 {
-                    Dictionary<string, JObject> Json;
-
-                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+                    // If the JSON entry specifies "Devices," we need to check those out.
+                    if (Json[ActualBuild].TryGetValue("Devices", out JToken Tokens))
                     {
-                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-
-                        // If the JSON entry specifies "Devices," we need to check those out.
-                        if (Json[ActualBuild].TryGetValue("Devices", out JToken Tokens))
+                        foreach (JToken Token in ((JArray)Tokens).Children())
                         {
-                            foreach (JToken Token in ((JArray)Tokens).Children())
-                            {
-                                if (SupportedDevices.Contains((string)Token))
-                                    return (int)Json[ActualBuild].SelectToken("Beta");
-                            }
-
-                            // Exception will only be thrown if the JSON entry specifies "Devices" but there isn't a match.
-                            throw new KeyNotFoundException();
+                            if (SupportedDevices.Contains((string)Token))
+                                return (int)Json[ActualBuild].SelectToken("Beta");
                         }
 
-                        else
-                            return (int)Json[ActualBuild].SelectToken("Beta");
+                        // Exception will only be thrown if the JSON entry specifies "Devices" but there isn't a match.
+                        throw new KeyNotFoundException();
                     }
+
+                    else
+                        return (int)Json[ActualBuild].SelectToken("Beta");
                 }
 
                 catch (KeyNotFoundException)
@@ -191,13 +190,7 @@ namespace Octothorpe.Lib
         {
             try
             {
-                Dictionary<string, JObject> Json;
-
-                using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
-                {
-                    Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                    return (string)Json[ActualBuild].SelectToken("Date");
-                }
+                return (string)Json[ActualBuild].SelectToken("Date");
             }
 
             catch (KeyNotFoundException)
@@ -210,10 +203,10 @@ namespace Octothorpe.Lib
     
                 else
                 {
-                    match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{6}\-");
+                    match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{6}(\-|.)");
     
                     if (match.Success)
-                        return match.ToString().Substring(5);
+                        return match.ToString().Substring(5, 8);
     
                     else
                         return "00000000";
@@ -314,13 +307,7 @@ namespace Octothorpe.Lib
             {
                 try
                 {
-                    Dictionary<string, JObject> Json;
-
-                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
-                    {
-                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        return (string)Json[ActualBuild].SelectToken("Version");
-                    }
+                    return (string)Json[ActualBuild].SelectToken("Version");
                 }
 
                 catch (KeyNotFoundException)
@@ -360,45 +347,40 @@ namespace Octothorpe.Lib
                 string VersionNum;
                 int Beta;
                 List<string> Devices = new List<string>();
-                Dictionary<string, JObject> Json;
                 bool fuhgeddaboudit = false;
 
                 try
                 {
-                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+                    Beta = (int)Json[PrerequisiteBuild].SelectToken("Beta");
+                    VersionNum = (string)Json[PrerequisiteBuild].SelectToken("Version");
+
+                    if (Json[PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))
                     {
-                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        Beta = (int)Json[PrerequisiteBuild].SelectToken("Beta");
-                        VersionNum = (string)Json[PrerequisiteBuild].SelectToken("Version");
+                        fuhgeddaboudit = true;
 
-                        if (Json[PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))
+                        foreach (JToken Token in ((JArray)Tokens).Children())
                         {
-                            fuhgeddaboudit = true;
-
-                            foreach (JToken Token in ((JArray)Tokens).Children())
+                            if (SupportedDevices.Contains((string)Token))
                             {
-                                if (SupportedDevices.Contains((string)Token))
-                                {
-                                    fuhgeddaboudit = false;
-                                    break;
-                                }
+                                fuhgeddaboudit = false;
+                                break;
                             }
-
-                            if (fuhgeddaboudit)
-                                throw new KeyNotFoundException();
                         }
 
-                        if (Beta == 1)
-                            VersionNum += " beta";
-
-                        else if (Beta > 1)
-                            VersionNum += " beta " + Beta;
-
-                        if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix))
-                            return VersionNum + ' ' + (string)Suffix;
-
-                        return VersionNum;
+                        if (fuhgeddaboudit)
+                            throw new KeyNotFoundException();
                     }
+
+                    if (Beta == 1)
+                        VersionNum += " beta";
+
+                    else if (Beta > 1)
+                        VersionNum += " beta " + Beta;
+
+                    if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix))
+                        return VersionNum + ' ' + (string)Suffix;
+
+                    return VersionNum;
                 }
 
                 catch (KeyNotFoundException)
@@ -595,13 +577,7 @@ namespace Octothorpe.Lib
             {
                 try
                 {
-                    Dictionary<string, JObject> Json;
-
-                    using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
-                    {
-                        Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-                        return (string)Json[ActualBuild].SelectToken("Suffix");
-                    }
+                    return (string)Json[ActualBuild].SelectToken("Suffix");
                 }
 
                 catch (KeyNotFoundException)
