@@ -180,7 +180,7 @@ namespace Octothorpe.Lib
         }
 
         private void CountRowspan()
-        {        
+        {
             foreach (OTAPackage entry in Packages)
             {            
                 // Increment the count if the build exists.
@@ -359,7 +359,7 @@ namespace Octothorpe.Lib
 
         private string OutputWikiMarkup()
         {
-            bool BorkedDelta;
+            bool BorkedDelta, WatchPlus2;
             int ReduceRowspanBy = 0, RowspanOverride;
             Match name;
             string fileName, NewTableCell = "| ";
@@ -386,11 +386,12 @@ namespace Octothorpe.Lib
             foreach (OTAPackage package in Packages)
             {                
                 BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
+                WatchPlus2 = false;
 
                 // Some firmwares use one firmware file in multiple spots (that are separated by other files).
                 // (e.g. FILE_A, FILE_A, FILE_B, FILE_C, FILE_A, FILE_D, FILE_A, FILE_E)
                 ReduceRowspanBy = 0;
-            
+
                 switch (package.PrerequisiteBuild)
                 {
                     case "N/A":
@@ -415,12 +416,12 @@ namespace Octothorpe.Lib
                         if (package.OSVersion == "9.2")
                             ReduceRowspanBy = 2;
                         break;
-                    
+
                     case "13A344":
                         if (package.OSVersion == "9.2.1")
                             ReduceRowspanBy = 1;
                         break;
-                
+
                     // For iOS 11.2 and newer, iOS 10.2 (and iOS 10.3 for iPad 5th generation)
                     // needs its rowspan reduced because iOS 10.3.3 uses the same delta, but
                     // iOS 10.3.3 beta 6 (and 10.3.2, for iPad 5th generation) separate it.
@@ -438,6 +439,13 @@ namespace Octothorpe.Lib
                 if (name.Success)
                     fileName = name.ToString();
 
+                // Hacky workaround to handle 9.0 rowspan for watchOS.
+                if (DeviceIsWatch && MarketingVersionRowspan.ContainsKey("9.0"))
+                {
+                    MarketingVersionRowspan.Remove("9.0");
+                    WatchPlus2 = true;
+                }
+
                 // Let us begin!
                 Output.AppendLine("|-");
 
@@ -454,9 +462,15 @@ namespace Octothorpe.Lib
                             Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
                             Output.AppendLine("\" | [MARKETING VERSION]");
                         }
-    
+
                         Output.Append("| rowspan=\"");
-                        Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
+
+                        if (WatchPlus2)
+                            Output.Append(MarketingVersionRowspan[package.MarketingVersion] + 2);
+
+                        else
+                            Output.Append(MarketingVersionRowspan[package.MarketingVersion]);
+                        
                         Output.Append("\" ");
                     }
 
