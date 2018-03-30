@@ -507,5 +507,40 @@
 		"Product": "watchOS",
 		"Version": "4.2.2",
 		"Beta":    3
+	},
+	"15S5540a": {
+		"Product": "watchOS",
+		"Version": "4.2.2",
+		"Beta":    4
+	},
+	"15T5165e": {
+		"Product": "watchOS",
+		"Version": "4.3",
+		"Beta":    1
+	},
+	"15T5176c": {
+		"Product": "watchOS",
+		"Version": "4.3",
+		"Beta":    2
+	},
+	"15T5187e": {
+		"Product": "watchOS",
+		"Version": "4.3",
+		"Beta":    3
+	},
+	"15T5199f": {
+		"Product": "watchOS",
+		"Version": "4.3",
+		"Beta":    4
+	},
+	"15T5209a": {
+		"Product": "watchOS",
+		"Version": "4.3",
+		"Beta":    5
+	},
+	"15T5212a": {
+		"Product": "watchOS",
+		"Version": "4.3",
+		"Beta":    6
 	}
 }
