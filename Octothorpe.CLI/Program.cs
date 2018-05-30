@@ -65,6 +65,7 @@ namespace Octothorpe.CLI
                         Console.WriteLine("-b               Displays beta firmwares. By default, this is disabled.");
                         Console.WriteLine("-max <version>   Choose the highest firmware version you are searching for. (e.g. 9.0.2)");
                         Console.WriteLine("-min <version>   Choose the lowest firmware version you are searching for. (e.g. 8.4.1)");
+                        Console.WriteLine("-s               Removes stubs. Apple uses stubs for problematic OTA updates.");
                         Console.WriteLine("-t               If -w is specified, the parser will also output the table headers.");
                         Console.WriteLine("-w               Formats the output for The iPhone Wiki.");
                         Environment.Exit(0);
@@ -87,6 +88,10 @@ namespace Octothorpe.CLI
                             parser.Minimum = (uint.TryParse(args[i++], out var verstring)) ?
                                 new Version(verstring + ".0") :
                                 new Version(verstring.ToString());
+                        break;
+
+                    case "-s":
+                        parser.RemoveStubs = true;
                         break;
 
                     case "-t":

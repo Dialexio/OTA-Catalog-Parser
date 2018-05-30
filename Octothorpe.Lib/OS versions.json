@@ -142,6 +142,21 @@
 		"Beta":    5,
 		"Devices": ["iPad7,1", "iPad7,2", "iPad7,3", "iPad7,4"]
 	},
+	"15E5211a": {
+		"Product": "iOS",
+		"Version": "11.3",
+		"Beta":    5
+	},
+	"15E5216a": {
+		"Product": "iOS",
+		"Version": "11.3",
+		"Beta":    6
+	},
+	"15F5077a": {
+		"Product": "iOS",
+		"Version": "11.4",
+		"Beta":    6
+	},
 
 	"15J5284e": {
 		"Product": "tvOS",
@@ -542,5 +557,21 @@
 		"Product": "watchOS",
 		"Version": "4.3",
 		"Beta":    6
+	},
+	"15T5535b": {
+		"Product": "watchOS",
+		"Version": "4.3.1",
+		"Beta":    1
+	},
+	"15T5545b": {
+		"Product": "watchOS",
+		"Version": "4.3.1",
+		"Beta":    2
+	},
+	"15T5555c": {
+		"Product": "watchOS",
+		"Version": "4.3.1",
+		"Beta":    3,
+		"Date":    20180501
 	}
 }

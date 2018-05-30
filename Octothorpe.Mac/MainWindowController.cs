@@ -76,6 +76,7 @@ namespace Octothorpe.Mac
 
                 parser.Device = NSTextFieldDevice.StringValue;
                 parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);
+                parser.RemoveStubs = (NSButtonRemoveStubs.State == NSCellStateValue.On);
                 parser.Model = NSTextFieldModel.StringValue;
                 parser.WikiMarkup = DisplayWikiMarkup;
 

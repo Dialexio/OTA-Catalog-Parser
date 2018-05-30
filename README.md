@@ -43,6 +43,7 @@ This program utilizes a JSON file, named "OS versions.json," to override the inf
 * "Version" (the displayed version, e.g. "11.1.2")
 * "Beta" (what number beta it is; if it is not a beta, it will be 0)
 * "Suffix" (if something should follow, e.g. "watchOS 3.1 beta 2 **Pre-release**")
+* "Date" (the release date for the software)
 * "Devices" (if the entry should only be applied to certain devices)
 
 If you encounter an issue, please make sure that "OTA versions.json" contains information for newer releases before reporting it. For the Mac version, it can be found at `OTA Parser.app/Contents/MonoBundle/OTA versions.json`.

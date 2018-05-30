@@ -109,6 +109,22 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
+        /// Reports the value of the key "AllowableOTA." If it's not present, returns true.
+        /// </summary>
+        /// <returns>
+        /// A boolean value of whether this release is "allowable" (true) or not (false).
+        /// </returns>
+        public bool AllowableOTA
+        {
+            get
+            {
+                return (ENTRY.ContainsKey("AllowableOTA")) ?
+                    (bool)ENTRY["AllowableOTA"] :
+                    true;
+            }
+        }
+
+        /// <summary>
         /// Returns the beta number of this entry. If a beta number cannot be determined, returns 0.
         /// </summary>
         /// <returns>
@@ -267,7 +283,7 @@ namespace Octothorpe.Lib
         /// Checks if the release has an inflated build number. Apple does this to push devices on beta builds to stable builds.
         /// </summary>
         /// <returns>
-        /// A boolean value of whether this release has a false build number (true) or not (false).
+        /// A boolean value of whether this release's reported build number is true or false.
         /// </returns>
         public bool IsHonestBuild
         {

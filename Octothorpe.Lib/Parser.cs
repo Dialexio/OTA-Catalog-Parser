@@ -32,7 +32,7 @@ namespace Octothorpe.Lib
 {
     public class Parser
     {
-        private bool fullTable, showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
+        private bool fullTable, removeStubs, showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
         private Dictionary<string, List<string>> FileRowspan = new Dictionary<string, List<string>>();
         private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
             DateRowspan = new Dictionary<string, uint>(),
@@ -46,6 +46,11 @@ namespace Octothorpe.Lib
         public string Device
         {
             set { device = value; }
+        }
+
+        public bool RemoveStubs
+        {
+            set { removeStubs = value; }
         }
 
         public bool FullTable
@@ -130,19 +135,23 @@ namespace Octothorpe.Lib
                 AssetTasks.Add(Task.Factory.StartNew( () => {
                     bool matched = false;
                     OTAPackage package = new OTAPackage((Dictionary<string, object>)entry); // Feed the info into a custom object so we can easily pull info and sort.
-                    
+
                     // Beta check.
                     if (showBeta == false && package.ActualReleaseType > 0)
                         return;
-    
+
+                    // Dummy check.
+                    if (removeStubs && package.AllowableOTA == false)
+                        return;
+
                     // Device check.
                     matched = package.SupportedDevices.Contains(device);
-    
+
                     // Model check, if needed.
                     if (matched && ModelNeedsChecking)
                     {
                         matched = false; // Skipping unless we can verify we want it.
-    
+
                         // Make sure "SupportedDeviceModels" exists before checking it.
                         if (package.SupportedDeviceModels.Count > 0)
                             matched = (package.SupportedDeviceModels.Contains(model));

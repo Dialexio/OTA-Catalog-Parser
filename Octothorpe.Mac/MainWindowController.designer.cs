@@ -9,118 +9,126 @@ using System.CodeDom.Compiler;
 
 namespace Octothorpe.Mac
 {
-    [Register ("MainWindowController")]
-    partial class MainWindowController
-    {
-        [Outlet]
-        AppKit.NSPopUpButton FileSelection { get; set; }
+	[Register ("MainWindowController")]
+	partial class MainWindowController
+	{
+		[Outlet]
+		AppKit.NSPopUpButton FileSelection { get; set; }
 
-        [Outlet]
-        AppKit.NSBox NSBoxModel { get; set; }
+		[Outlet]
+		AppKit.NSBox NSBoxModel { get; set; }
 
-        [Outlet]
-        AppKit.NSBox NSBoxURL { get; set; }
+		[Outlet]
+		AppKit.NSBox NSBoxURL { get; set; }
 
-        [Outlet]
-        AppKit.NSButton NSButtonCheckBeta { get; set; }
+		[Outlet]
+		AppKit.NSButton NSButtonCheckBeta { get; set; }
 
-        [Outlet]
-        AppKit.NSButtonCell NSButtonFullTable { get; set; }
+		[Outlet]
+		AppKit.NSButtonCell NSButtonFullTable { get; set; }
 
-        [Outlet]
-        AppKit.NSButton NSButtonParse { get; set; }
+		[Outlet]
+		AppKit.NSButton NSButtonParse { get; set; }
 
-        [Outlet]
-        AppKit.NSTextField NSTextFieldDevice { get; set; }
+		[Outlet]
+		AppKit.NSButton NSButtonRemoveStubs { get; set; }
 
-        [Outlet]
-        AppKit.NSTextField NSTextFieldMax { get; set; }
+		[Outlet]
+		AppKit.NSTextField NSTextFieldDevice { get; set; }
 
-        [Outlet]
-        AppKit.NSTextField NSTextFieldMin { get; set; }
+		[Outlet]
+		AppKit.NSTextField NSTextFieldMax { get; set; }
 
-        [Outlet]
-        AppKit.NSTextField NSTextFieldModel { get; set; }
+		[Outlet]
+		AppKit.NSTextField NSTextFieldMin { get; set; }
 
-        [Outlet]
-        AppKit.NSTextField NSTextFieldURL { get; set; }
+		[Outlet]
+		AppKit.NSTextField NSTextFieldModel { get; set; }
 
-        [Outlet]
-        AppKit.NSTextView NSTextViewOutput { get; set; }
+		[Outlet]
+		AppKit.NSTextField NSTextFieldURL { get; set; }
 
-        [Action ("ChangeOutputFormat:")]
-        partial void ChangeOutputFormat (AppKit.NSButton sender);
+		[Outlet]
+		AppKit.NSTextView NSTextViewOutput { get; set; }
 
-        [Action ("ParsingSTART:")]
-        partial void ParsingSTART (AppKit.NSButton sender);
+		[Action ("ChangeOutputFormat:")]
+		partial void ChangeOutputFormat (AppKit.NSButton sender);
 
-        [Action ("SourceChanged:")]
-        partial void SourceChanged (AppKit.NSPopUpButton sender);
+		[Action ("ParsingSTART:")]
+		partial void ParsingSTART (AppKit.NSButton sender);
 
-        [Action ("ToggleModelField:")]
-        partial void ToggleModelField (AppKit.NSTextField sender);
-        
-        void ReleaseDesignerOutlets ()
-        {
-            if (FileSelection != null) {
-                FileSelection.Dispose ();
-                FileSelection = null;
-            }
+		[Action ("SourceChanged:")]
+		partial void SourceChanged (AppKit.NSPopUpButton sender);
 
-            if (NSBoxModel != null) {
-                NSBoxModel.Dispose ();
-                NSBoxModel = null;
-            }
+		[Action ("ToggleModelField:")]
+		partial void ToggleModelField (AppKit.NSTextField sender);
+		
+		void ReleaseDesignerOutlets ()
+		{
+			if (FileSelection != null) {
+				FileSelection.Dispose ();
+				FileSelection = null;
+			}
 
-            if (NSBoxURL != null) {
-                NSBoxURL.Dispose ();
-                NSBoxURL = null;
-            }
+			if (NSBoxModel != null) {
+				NSBoxModel.Dispose ();
+				NSBoxModel = null;
+			}
 
-            if (NSButtonCheckBeta != null) {
-                NSButtonCheckBeta.Dispose ();
-                NSButtonCheckBeta = null;
-            }
+			if (NSBoxURL != null) {
+				NSBoxURL.Dispose ();
+				NSBoxURL = null;
+			}
 
-            if (NSButtonFullTable != null) {
-                NSButtonFullTable.Dispose ();
-                NSButtonFullTable = null;
-            }
+			if (NSButtonCheckBeta != null) {
+				NSButtonCheckBeta.Dispose ();
+				NSButtonCheckBeta = null;
+			}
 
-            if (NSButtonParse != null) {
-                NSButtonParse.Dispose ();
-                NSButtonParse = null;
-            }
+			if (NSButtonFullTable != null) {
+				NSButtonFullTable.Dispose ();
+				NSButtonFullTable = null;
+			}
 
-            if (NSTextFieldDevice != null) {
-                NSTextFieldDevice.Dispose ();
-                NSTextFieldDevice = null;
-            }
+			if (NSButtonParse != null) {
+				NSButtonParse.Dispose ();
+				NSButtonParse = null;
+			}
 
-            if (NSTextFieldMax != null) {
-                NSTextFieldMax.Dispose ();
-                NSTextFieldMax = null;
-            }
+			if (NSButtonRemoveStubs != null) {
+				NSButtonRemoveStubs.Dispose ();
+				NSButtonRemoveStubs = null;
+			}
 
-            if (NSTextFieldMin != null) {
-                NSTextFieldMin.Dispose ();
-                NSTextFieldMin = null;
-            }
+			if (NSTextFieldDevice != null) {
+				NSTextFieldDevice.Dispose ();
+				NSTextFieldDevice = null;
+			}
 
-            if (NSTextFieldModel != null) {
-                NSTextFieldModel.Dispose ();
-                NSTextFieldModel = null;
-            }
+			if (NSTextFieldMax != null) {
+				NSTextFieldMax.Dispose ();
+				NSTextFieldMax = null;
+			}
 
-            if (NSTextFieldURL != null) {
-                NSTextFieldURL.Dispose ();
-                NSTextFieldURL = null;
-            }
+			if (NSTextFieldMin != null) {
+				NSTextFieldMin.Dispose ();
+				NSTextFieldMin = null;
+			}
 
-            if (NSTextViewOutput != null) {
-                NSTextViewOutput.Dispose ();
-                NSTextViewOutput = null;
-            }
-        }
-    }
+			if (NSTextFieldModel != null) {
+				NSTextFieldModel.Dispose ();
+				NSTextFieldModel = null;
+			}
+
+			if (NSTextFieldURL != null) {
+				NSTextFieldURL.Dispose ();
+				NSTextFieldURL = null;
+			}
+
+			if (NSTextViewOutput != null) {
+				NSTextViewOutput.Dispose ();
+				NSTextViewOutput = null;
+			}
+		}
+	}
 }
