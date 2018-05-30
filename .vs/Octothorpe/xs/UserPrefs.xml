@@ -5,7 +5,7 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.Octothorpe.Mac PreferredExecutionTarget="MonoDevelop.Default" HideGettingStarted="True" />
+  <MonoDevelop.Ide.ItemProperties.Octothorpe.Mac PreferredExecutionTarget="Test1" HideGettingStarted="True" />
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.ItemProperties.Octothorpe.CLI PreferredExecutionTarget="MonoDevelop.Default" />
 </Properties>

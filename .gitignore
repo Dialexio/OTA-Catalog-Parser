@@ -2,6 +2,7 @@ Octothorpe.*/bin
 Octothorpe.*/obj
 packages/*/*
 XML files*
+.vs/Octothorpe/xs/sqlite3
 
 # OS generated files #
 ######################
