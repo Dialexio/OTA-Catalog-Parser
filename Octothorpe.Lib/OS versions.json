@@ -1,4 +1,9 @@
 ﻿{
+	"15D59": {
+		"Product": "audioOS",
+		"Version": "11.2.5",
+		"Beta":    3
+	},
 	"9B176": {
 		"Product": "iOS",
 		"Version": "5.1",
@@ -152,10 +157,25 @@
 		"Version": "11.3",
 		"Beta":    6
 	},
+	"15F5071a": {
+		"Product": "iOS",
+		"Version": "11.4",
+		"Beta":    4
+	},
 	"15F5077a": {
 		"Product": "iOS",
 		"Version": "11.4",
+		"Beta":    5
+	},
+	"15F5079a": {
+		"Product": "iOS",
+		"Version": "11.4",
 		"Beta":    6
+	},
+	"15G5054c": {
+		"Product": "iOS",
+		"Version": "11.4.1",
+		"Beta":    1
 	},
 
 	"15J5284e": {
@@ -573,5 +593,31 @@
 		"Version": "4.3.1",
 		"Beta":    3,
 		"Date":    20180501
+	},
+	"15T5565a": {
+		"Product": "watchOS",
+		"Version": "4.3.1",
+		"Beta":    4
+	},
+	"15T5567a": {
+		"Product": "watchOS",
+		"Version": "4.3.1",
+		"Beta":    5
+	},
+	"15U5053b": {
+		"Product": "watchOS",
+		"Version": "4.3.2",
+		"Beta":    1
+	},
+	"16R5283q": {
+		"Product": "watchOS",
+		"Version": "5.0",
+		"Beta":    1
+	},
+	"16R5283r": {
+		"Product": "watchOS",
+		"Version": "5.0",
+		"Beta":    1,
+		"Suffix":  "Update"
 	}
 }

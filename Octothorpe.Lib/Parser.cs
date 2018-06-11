@@ -339,8 +339,7 @@ namespace Octothorpe.Lib
 
                 Output.AppendLine(string.Format(" (Build {0})", package.ActualBuild));
                 Output.AppendLine(string.Format("Listed as: {0} (Build {1})", package.OSVersion, package.DeclaredBuild));
-                Output.Append("Reported Release Type: ");
-                Output.AppendLine(package.ReleaseType);
+                Output.AppendLine(string.Format("Reported Release Type: {0}", package.ReleaseType));
 
                 // Print prerequisites if there are any.
                 if (package.PrerequisiteBuild == "N/A")

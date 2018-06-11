@@ -204,26 +204,24 @@ namespace Octothorpe.Lib
         /// </returns>
         public string Date()
         {
-            try
-            {
+            if (Json[ActualBuild].ContainsKey("Date"))
                 return (string)Json[ActualBuild].SelectToken("Date");
-            }
 
-            catch (KeyNotFoundException)
+            else
             {
                 // Catch excess zeroes, e.g. "2016008004"
                 match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
-                
+
                 if (match.Success)
                     return match.ToString().Substring(5, 4) + match.ToString().Substring(10, 2) + match.ToString().Substring(13, 2);
-    
+
                 else
                 {
                     match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{6}(\-|.)");
-    
+
                     if (match.Success)
                         return match.ToString().Substring(5, 8);
-    
+
                     else
                         return "00000000";
                 }
