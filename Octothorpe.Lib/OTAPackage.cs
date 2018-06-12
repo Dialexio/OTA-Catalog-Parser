@@ -204,7 +204,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public string Date()
         {
-            if (Json[ActualBuild].ContainsKey("Date"))
+            if (Json.ContainsKey(ActualBuild) && Json[ActualBuild].ContainsKey("Date"))
                 return (string)Json[ActualBuild].SelectToken("Date");
 
             else
