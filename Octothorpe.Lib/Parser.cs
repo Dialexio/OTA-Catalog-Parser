@@ -385,6 +385,10 @@ namespace Octothorpe.Lib
                 Output.AppendLine("! Build");
                 Output.AppendLine("! Prerequisite Version");
                 Output.AppendLine("! Prerequisite Build");
+
+                if (DeviceIsWatch)
+                    Output.AppendLine("! Compatibility Version");
+
                 Output.AppendLine("! Release Date");
                 Output.AppendLine("! Release Type");
                 Output.AppendLine("! OTA Download URL");
