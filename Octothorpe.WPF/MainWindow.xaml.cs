@@ -24,6 +24,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Octothorpe.Lib;
 
 namespace Octothorpe
 {
@@ -50,15 +51,35 @@ namespace Octothorpe
                 parser.Model = TextBoxModel.Text;
                 parser.WikiMarkup = (RadioWiki.IsChecked == true);
 
+                parser.FullTable = CheckBoxFullTable.IsChecked.Value;
+                parser.RemoveStubs = CheckBoxRemoveStubs.IsChecked.Value;
                 parser.ShowBeta = CheckBoxBeta.IsChecked.Value;
 
-                // Set minimum version if one was specified
-                if (String.IsNullOrEmpty(TextBoxMin.Text) == false)
-                    parser.Minimum = new Version(TextBoxMin.Text);
+                try
+                {
+                    // Set maximum version if one was specified
+                    if (String.IsNullOrEmpty(TextBoxMax.Text) == false)
+                    {
+                        // Doing it like this converts an integer, e.g. "11" into "11.0"
+                        parser.Maximum = (uint.TryParse(TextBoxMax.Text, out var verstring)) ?
+                        new Version(TextBoxMax.Text + ".0") :
+                        new Version(TextBoxMax.Text);
+                    }
 
-                // Set maximum version if one was specified
-                if (String.IsNullOrEmpty(TextBoxMax.Text) == false)
-                    parser.Maximum = new Version(TextBoxMax.Text);
+                    // Set minimum version if one was specified
+                    if (String.IsNullOrEmpty(TextBoxMin.Text) == false)
+                    {
+                        // Doing it like this converts an integer, e.g. "11" into "11.0"
+                        parser.Minimum = (uint.TryParse(TextBoxMin.Text, out var verstring)) ?
+                            new Version(TextBoxMin.Text + ".0") :
+                            new Version(TextBoxMin.Text);
+                    }
+                }
+
+                catch (ArgumentException)
+                {
+                    throw new ArgumentException("badvalue");
+                }
 
                 switch ((string)((ComboBoxItem)FileSelection.SelectedItem).Content)
                 {
@@ -66,6 +87,10 @@ namespace Octothorpe
                     case "Custom URL…":
                     case "Custom URL":
                         parser.Plist = TextBoxURL.Text;
+                        break;
+
+                    case "audioOS (Public)":
+                        parser.Plist = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         break;
 
                     case "iOS (Public)":
@@ -157,7 +182,30 @@ namespace Octothorpe
 
         private void ToggleModelField(object sender, TextChangedEventArgs e)
         {
-            GridModel.Visibility = (((TextBox)sender).Text == "iPad6,11" || ((TextBox)sender).Text == "iPad6,12" || ((TextBox)sender).Text == "iPhone8,1" || ((TextBox)sender).Text == "iPhone8,2" || ((TextBox)sender).Text == "iPhone8,4") ? Visibility.Visible : Visibility.Collapsed;
+            switch (((TextBox)sender).Text)
+            {
+                case "iPad6,11":
+                case "iPad6,12":
+                case "iPhone8,1":
+                case "iPhone8,2":
+                case "iPhone8,4":
+                    GridModel.Visibility = Visibility.Visible;
+                    break;
+
+                default:
+                    GridModel.Visibility = Visibility.Collapsed;
+                    break;
+            }
+        }
+
+        private void RadioWiki_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBoxFullTable.Visibility = Visibility.Visible;
+        }
+
+        private void RadioWiki_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckBoxFullTable.Visibility = Visibility.Collapsed;
         }
     }
 }

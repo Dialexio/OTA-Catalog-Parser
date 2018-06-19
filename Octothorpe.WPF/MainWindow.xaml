@@ -7,46 +7,55 @@
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Margin="10" Name="GridForm">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="160*"/>
-                <RowDefinition Height="209*"/>
-            </Grid.RowDefinitions>
-            <Label Content="Select file to load…" HorizontalContentAlignment="Center" Name="LabelFileSelect" VerticalContentAlignment="Stretch" Height="26" Margin="0,25,0,109" VerticalAlignment="Center" />
-            <ComboBox Name="FileSelection" VerticalAlignment="Center" SelectionChanged="SourceChanged" Margin="48,51,49,87">
+            <Label Content="Select file to load…" HorizontalContentAlignment="Center" Name="LabelFileSelect" VerticalContentAlignment="Stretch" VerticalAlignment="Top" />
+            <ComboBox Name="FileSelection" VerticalAlignment="Top" SelectionChanged="SourceChanged" Margin="0,31,0,0" HorizontalAlignment="Center" Width="170">
+                <ComboBoxItem Content="audioOS (Public)" />
                 <ComboBoxItem Content="iOS (Public)" />
                 <ComboBoxItem Content="tvOS (Public)" />
                 <ComboBoxItem Content="watchOS (Public)" />
                 <ComboBoxItem Content="Custom URL…" />
                 <ComboBoxItem Content="Browse for Local File…" />
             </ComboBox>
-            <Grid Name="GridURL" Width="197" VerticalAlignment="Center" Margin="15,91,15,69" Visibility="Collapsed">
+            <Grid Name="GridURL" VerticalAlignment="Top" Width="200" Height="28" Margin="0,53,0,0" Visibility="Collapsed">
                 <Label Content="URL:" Name="LabelURL" VerticalAlignment="Center" Margin="0,0,162,0" />
-                <TextBox Margin="41,4,0,4" Name="TextBoxURL" Text="http://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml" VerticalAlignment="Center" />
+                <TextBox Margin="41,4,0,4" Name="TextBoxURL" Text="https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml" VerticalAlignment="Center" />
             </Grid>
-            <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="54,109,53,25" Width="120">
+            <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" Margin="0,86,0,265" Height="28">
                 <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" VerticalAlignment="Center" />
                 <TextBox Name="TextBoxDevice" VerticalAlignment="Center" TextChanged="ToggleModelField" Margin="52.763,4,0,4" />
             </Grid>
-            <Grid Name="GridModel" VerticalAlignment="Center" Margin="114,154,113,6" HorizontalAlignment="Center" Visibility="Collapsed">
+            <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,114,0,237" Height="28" Visibility="Collapsed">
                 <TextBox Name="TextBoxModel" VerticalAlignment="Center" Margin="51.657,5.02,0,5.02" />
                 <Label Content="Model:" Height="28" Name="LabelModel" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,60,0" />
             </Grid>
-            <RadioButton Content="Human-readable format" Name="RadioHuman" Margin="35,13,35,181" VerticalAlignment="Center" Grid.Row="1" />
-            <RadioButton Content="The iPhone Wiki markup" Margin="35,33,44,161" Name="RadioWiki" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" />
-            <GroupBox Header="Optional" x:Name="GroupOptional" VerticalAlignment="Center" Margin="5,53,5,52" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Grid.Row="1">
+            <GroupBox Header="Optional" x:Name="GroupOptional" VerticalAlignment="Bottom" Margin="16,0,15,34" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" HorizontalAlignment="Center">
                 <Grid>
-                    <CheckBox Content="Search for betas" Height="16" HorizontalAlignment="Center" x:Name="CheckBoxBeta" VerticalAlignment="Top" Width="105" IsChecked="True" Margin="40,6,40,0" />
-                    <Grid HorizontalAlignment="Center" x:Name="GridMin" VerticalAlignment="Top" Width="159" Margin="0,27,0,0">
-                        <Label Content="Minimum version:" x:Name="LabelMin" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                        <TextBox Margin="109.747,4,0,4" x:Name="TextBoxMin" VerticalAlignment="Center" />
-                    </Grid>
-                    <Grid HorizontalAlignment="Center" x:Name="GridMax" VerticalAlignment="Top" Margin="12,54,12,0" Width="162">
-                        <Label Content="Maximum version:" x:Name="LabelMax" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <TextBox x:Name="TextBoxMax" VerticalAlignment="Center" Margin="111.663,4.52,0,4.52" />
+                    <CheckBox Content="Include table headers" HorizontalAlignment="Center" x:Name="CheckBoxFullTable" VerticalAlignment="Top" Margin="0,6,0,0" />
+                    <CheckBox Content="Search for betas" HorizontalAlignment="Center" x:Name="CheckBoxBeta" VerticalAlignment="Top" IsChecked="True" Margin="0,26,0,0" />
+                    <CheckBox Content="Remove stubs" HorizontalAlignment="Center" x:Name="CheckBoxRemoveStubs" VerticalAlignment="Top" IsChecked="True" Margin="0,46,0,0" />
+                    <Grid HorizontalAlignment="Center" x:Name="GridVersions" VerticalAlignment="Top" Margin="10,66,10,0" Width="165">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="0.5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Label Content="Minimum version:" Grid.Column="0" Grid.Row="0" x:Name="LabelMin" />
+                        <TextBox Grid.Column="1" Grid.Row="0" x:Name="TextBoxMin" VerticalAlignment="Center" />
+
+                        <Label Content="Maximum version:" Grid.Column="0" Grid.Row="1" x:Name="LabelMax" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" Grid.Row="1" x:Name="TextBoxMax" VerticalAlignment="Center" />
                     </Grid>
                 </Grid>
             </GroupBox>
-            <Button Content="Parse" Name="ButtonParse" VerticalAlignment="Center" Click="ParsingSTART" HorizontalAlignment="Center" Width="58" Margin="84,163,85,26" Grid.Row="1" />
+            
+            <!--These come after the Optional GroupBox because the wiki radio button alters the visibiliuty of the table header checkbox-->
+            <RadioButton Content="Human-readable format" Name="RadioHuman" HorizontalAlignment="Center" Width="150" Margin="40,127,41,197" VerticalAlignment="Center" />
+            <RadioButton Content="The iPhone Wiki markup" Name="RadioWiki" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" Width="150" Margin="40,147,41,177" Checked="RadioWiki_Checked" Unchecked="RadioWiki_Unchecked" />
+            
+            <Button Content="Parse" Name="ButtonParse" VerticalAlignment="Bottom" Click="ParsingSTART" HorizontalAlignment="Center" Width="58" RenderTransformOrigin="0.466,4.6" />
         </Grid>
         <Grid Grid.Column="1">
             <TextBox Name="TextOutput" IsReadOnly="True" IsEnabled="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="10" />
