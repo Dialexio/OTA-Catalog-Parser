@@ -1,8 +1,9 @@
 Octothorpe.*/bin
 Octothorpe.*/obj
-packages/*/*
+packages
+UpgradeLog.htm
+.vs
 XML files*
-.vs/Octothorpe/xs/sqlite3
 
 # OS generated files #
 ######################

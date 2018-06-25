@@ -313,8 +313,10 @@ namespace Octothorpe.Lib
                 Output.Append(osName + package.MarketingVersion);
 
                 // Give it a beta label (if it is one).
-                if (package.ActualReleaseType > 0) {
-                    switch (package.ActualReleaseType) {
+                if (package.ActualReleaseType > 0)
+                {
+                    switch (package.ActualReleaseType)
+                    {
                         case 1:
                             Output.Append(" Public Beta");
                             break;
