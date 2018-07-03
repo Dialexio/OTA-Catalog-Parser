@@ -177,7 +177,27 @@
 		"Version": "11.4.1",
 		"Beta":    1
 	},
-
+	"15G5074a": {
+		"Product": "iOS",
+		"Version": "11.4.1",
+		"Beta":    4
+	},
+	"15G5077a": {
+		"Product": "iOS",
+		"Version": "11.4.1",
+		"Beta":    5
+	},
+	"16A5308e": {
+		"Product": "iOS",
+		"Version": "12.0",
+		"Beta":    2
+	},
+	"16A5318d": {
+		"Product": "iOS",
+		"Version": "12.0",
+		"Beta":    3,
+		"Date":    "20180703"
+	},
 	"15J5284e": {
 		"Product": "tvOS",
 		"Version": "11.0",
@@ -609,6 +629,16 @@
 		"Version": "4.3.2",
 		"Beta":    1
 	},
+	"15U5062a": {
+		"Product": "watchOS",
+		"Version": "4.3.2",
+		"Beta":    2
+	},
+	"15U5069a": {
+		"Product": "watchOS",
+		"Version": "4.3.2",
+		"Beta":    3
+	},
 	"16R5283q": {
 		"Product": "watchOS",
 		"Version": "5.0",
@@ -619,5 +649,10 @@
 		"Version": "5.0",
 		"Beta":    1,
 		"Suffix":  "Update"
+	},
+	"16R5303d": {
+		"Product": "watchOS",
+		"Version": "5.0",
+		"Beta":    2
 	}
 }
