@@ -39,7 +39,7 @@ namespace Octothorpe.Lib
         {
             ENTRY = package;
             
-            using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + "OS versions.json"))
+            using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "override.json"))
             {
                 Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
             }

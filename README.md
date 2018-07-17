@@ -34,10 +34,10 @@ When opening the solution in Visual Studio, one project will be incompatible, de
 ## Broken Output
 Apple may make changes to their property lists that break this program. Apple's ability to do so is limited since they need to ensure compatibility with older firmwares, but nevertheless remains a possibility.
 
-### OS versions.json
+### override.json
 Broken output most commonly happens with watchOS updates, especially with beta updates. The parser needs to know what is and isn't a beta in order to format it correctly, but Apple hasn't made that easy in the past.
 
-This program utilizes a JSON file, named "OS versions.json," to override the information that Apple provides. Its format is simple: the name of each field is a build number, which contains a dictionary of the following key/value pairs:
+This program utilizes a JSON file, named "override.json," to override the information that Apple provides. Its format is simple: the name of each field is a build number, which contains a dictionary of the following key/value pairs:
 
 * "Product" (the operating system's name, e.g. "iOS")
 * "Version" (the displayed version, e.g. "11.1.2")
@@ -46,7 +46,7 @@ This program utilizes a JSON file, named "OS versions.json," to override the inf
 * "Date" (the release date for the software)
 * "Devices" (if the entry should only be applied to certain devices)
 
-If you encounter an issue, please make sure that "OTA versions.json" contains information for newer releases before reporting it. For the Mac version, it can be found at `OTA Parser.app/Contents/MonoBundle/OTA versions.json`.
+If you encounter an issue, please make sure that "override.json" contains information for newer releases before reporting it. For the Mac version, it can be found at `OTA Parser.app/Contents/MonoBundle/override.json`.
 
 ## Licensing Information
 This program is distributed under the MIT License.
