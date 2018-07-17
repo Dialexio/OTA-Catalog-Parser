@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="plist-cil" Version="1.16.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="plist-cil" Version="1.50.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="override.json">

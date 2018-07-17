@@ -65,7 +65,7 @@
 		      <CustomCommands>
 		        <Command>
 		          <type>AfterBuild</type>
-		          <command>mv "OS versions.json" "OTA Parser.app/Contents/MonoBundle/OS versions.json"</command>
+		          <command>mv "override.json" "OTA Parser.app/Contents/MonoBundle/override.json"</command>
 		          <workingdir>${ProjectDir}/bin/Release</workingdir>
 		        </Command>
 		      </CustomCommands>
@@ -75,11 +75,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Mac" />
-    <Reference Include="plist-cil">
-      <HintPath>..\packages\plist-cil.1.16.0\lib\netstandard1.6\plist-cil.dll</HintPath>
+    <Reference Include="System.Buffers">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>..\packages\System.Memory.4.5.1\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="plist-cil">
+      <HintPath>..\packages\plist-cil.1.50.0\lib\netstandard2.0\plist-cil.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
