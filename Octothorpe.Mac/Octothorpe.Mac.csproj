@@ -10,7 +10,7 @@
     <AssemblyName>OTA Parser</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <ReleaseVersion>2.0</ReleaseVersion>
+    <ReleaseVersion>2.0.1</ReleaseVersion>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -43,6 +43,7 @@
         </Command>
       </CustomCommands>
     </CustomCommands>
+    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType></DebugType>
@@ -72,6 +73,7 @@
 		    </CustomCommands>
 		    <CodeSigningKey>Mac Developer</CodeSigningKey>
 		    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+		    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Mac" />
