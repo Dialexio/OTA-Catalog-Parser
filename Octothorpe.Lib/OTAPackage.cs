@@ -365,7 +365,7 @@ namespace Octothorpe.Lib
 
                 try
                 {
-                    Beta = (int)Json[PrerequisiteBuild].SelectToken("Beta");
+                    Beta = (Json[PrerequisiteBuild].TryGetValue("Beta", out JToken beet)) ? (int)beet : 0;
                     VersionNum = (string)Json[PrerequisiteBuild].SelectToken("Version");
 
                     if (Json[PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))

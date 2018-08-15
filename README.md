@@ -41,10 +41,11 @@ This program utilizes a JSON file, named "override.json," to override the inform
 
 * "Product" (the operating system's name, e.g. "iOS")
 * "Version" (the displayed version, e.g. "11.1.2")
-* "Beta" (what number beta it is; if it is not a beta, it will be 0)
-* "Suffix" (if something should follow, e.g. "watchOS 3.1 beta 2 **Pre-release**")
-* "Date" (the release date for the software)
-* "Devices" (if the entry should only be applied to certain devices)
+* Optional Keys
+  * "Beta" (what number beta it is; if it is not a beta, it will be 0)
+  * "Suffix" (if something should follow, e.g. "watchOS 3.1 beta 2 **Pre-release**")
+  * "Date" (the release date for the software)
+  * "Devices" (if the entry should only be applied to certain devices)
 
 If you encounter an issue, please make sure that "override.json" contains information for newer releases before reporting it. For the Mac version, it can be found at `OTA Parser.app/Contents/MonoBundle/override.json`.
 

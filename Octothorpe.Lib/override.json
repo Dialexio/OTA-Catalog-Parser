@@ -7,24 +7,20 @@
 	"9B176": {
 		"Product": "iOS",
 		"Version": "5.1",
-		"Beta":    0,
 		"Date":    20120307
 	},
 	"10A405": {
 		"Product": "iOS",
-		"Version": "6.0",
-		"Beta":    0
+		"Version": "6.0"
 	},
 	"10B141": {
 		"Product": "iOS",
 		"Version": "6.1",
-		"Beta":    0,
 		"Date":    20140128
 	},
 	"10B329": {
 		"Product": "iOS",
 		"Version": "6.1.3",
-		"Beta":    0,
 		"Date":    20130319
 	},
 	"12B407": {
@@ -67,13 +63,11 @@
 	"13A340": {
 		"Product": "iOS",
 		"Version": "9.0",
-		"Beta":    0,
 		"Suffix":  "GM"
 	},
 	"13A341": {
 		"Product": "iOS",
 		"Version": "9.0",
-		"Beta":    0,
 		"Suffix":  "GM"
 	},
 	"13B136": {
@@ -204,6 +198,18 @@
 		"Beta":    4,
 		"Date":    "20180717"
 	},
+	"16A5354b": {
+		"Product": "iOS",
+		"Version": "12.0",
+		"Beta":    7,
+		"Date":    "20180813"
+	},
+	"16A5357b": {
+		"Product": "iOS",
+		"Version": "12.0",
+		"Beta":    8,
+		"Date":    "20180815"
+	},
 	"15J5284e": {
 		"Product": "tvOS",
 		"Version": "11.0",
@@ -223,6 +229,17 @@
 		"Product": "tvOS",
 		"Version": "11.0",
 		"Beta":    2
+	},
+	"15M5072a": {
+		"Product": "tvOS",
+		"Version": "11.4.1",
+		"Beta":    4
+	},
+	"16J5322d": {
+		"Product": "tvOS",
+		"Version": "12.0",
+		"Beta":    4,
+		"Date":    20180717
 	},
 
 	"13S5254w": {
@@ -660,5 +677,26 @@
 		"Product": "watchOS",
 		"Version": "5.0",
 		"Beta":    2
+	},
+	"16R5313d": {
+		"Product": "watchOS",
+		"Version": "5.0",
+		"Beta":    3
+	},
+	"16R5322d": {
+		"Product": "watchOS",
+		"Version": "5.0",
+		"Beta":    4,
+		"Date":    20180717
+	},
+	"16R5334f": {
+		"Product": "watchOS",
+		"Version": "5.0",
+		"Beta":    5
+	},
+	"16R5340g": {
+		"Product": "watchOS",
+		"Version": "5.0",
+		"Beta":    6
 	}
 }
