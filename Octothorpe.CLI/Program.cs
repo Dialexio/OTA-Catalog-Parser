@@ -106,7 +106,7 @@ namespace Octothorpe.CLI
 
             try
             {
-                Console.WriteLine(parser.ParsePlist());
+                Console.WriteLine(parser.ParseAssets());
             }
 
             catch (ArgumentException message)

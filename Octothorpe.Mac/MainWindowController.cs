@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Dialexio
+ * Copyright (c) 2018 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -32,7 +32,7 @@ namespace Octothorpe.Mac
 	{
 		private bool DisplayWikiMarkup = true;
 		private NSAlert alert;
-		private Parser parser;
+		private Parser parser = new Parser();
 
 		public MainWindowController(IntPtr handle) : base(handle)
 		{
@@ -72,14 +72,13 @@ namespace Octothorpe.Mac
             try
             {
                 alert = null;
-                parser = new Parser();
 
                 parser.Device = NSTextFieldDevice.StringValue;
-                parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);
-                parser.RemoveStubs = (NSButtonRemoveStubs.State == NSCellStateValue.On);
                 parser.Model = NSTextFieldModel.StringValue;
                 parser.WikiMarkup = DisplayWikiMarkup;
 
+                parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);
+                parser.RemoveStubs = (NSButtonRemoveStubs.State == NSCellStateValue.On);
                 parser.ShowBeta = (NSButtonCheckBeta.State == NSCellStateValue.On);
 
                 try
@@ -88,18 +87,18 @@ namespace Octothorpe.Mac
                     if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
                     {
                         // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring)) ?
-                            new Version(NSTextFieldMax.StringValue + ".0") :
-                            new Version(NSTextFieldMax.StringValue);
+                        parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring))
+                            ? new Version(NSTextFieldMax.StringValue + ".0")
+                            : new Version(NSTextFieldMax.StringValue);
                     }
 
                     // Set minimum version if one was specified
                     if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
                     {
                         // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring)) ?
-                            new Version(NSTextFieldMin.StringValue + ".0") :
-                            new Version(NSTextFieldMin.StringValue);
+                        parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring))
+                            ? new Version(NSTextFieldMin.StringValue + ".0")
+                            : new Version(NSTextFieldMin.StringValue);
                     }
                 }
                 
@@ -108,47 +107,7 @@ namespace Octothorpe.Mac
                     throw new ArgumentException("badvalue");
                 }
 
-                switch (FileSelection.SelectedItem.Title)
-                {
-                    case "Custom URL...":
-                    case "Custom URL…":
-                    case "Custom URL":
-                        parser.Plist = NSTextFieldURL.StringValue;
-                        break;
-
-                    case "audioOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    case "iOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    case "tvOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    case "watchOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    default:
-                        NSOpenPanel FilePrompt = NSOpenPanel.OpenPanel;
-                        FilePrompt.AllowedFileTypes = new string[] { "xml", "plist" };
-                        FilePrompt.AllowsMultipleSelection = false;
-                        FilePrompt.CanChooseFiles = true;
-                        FilePrompt.CanChooseDirectories = false;
-
-                        if (FilePrompt.RunModal() == 1)
-                            parser.Plist = FilePrompt.Url.Path;
-
-                        else
-                            throw new ArgumentException("nofile");
-                        break;
-                }
-
-                NSTextViewOutput.Value = parser.ParsePlist();
-                parser = null;
+                NSTextViewOutput.Value = parser.ParseAssets();
             }
 
             catch (ArgumentException message)
@@ -176,22 +135,6 @@ namespace Octothorpe.Mac
                         {
                             MessageText = "Model Not Specified",
                             InformativeText = "This device requires you to specify a model number. For example, N71AP is a model number for the iPhone 6S."
-                        };
-                        break;
-
-                    case "nofile":
-                        alert = new NSAlert()
-                        {
-                            MessageText = "File Not Specified",
-                            InformativeText = "You must select a PLIST file (.plist or .xml) to load."
-                        };
-                        break;
-
-                    case "notmesu":
-                        alert = new NSAlert()
-                        {
-                            MessageText = "Incorrect URL",
-                            InformativeText = "The URL supplied should belong to mesu.apple.com."
                         };
                         break;
 
@@ -243,21 +186,96 @@ namespace Octothorpe.Mac
 
         partial void SourceChanged(NSPopUpButton sender)
 		{
-			switch (sender.SelectedItem.Title)
-			{
-				case "Custom URL...":
-				case "Custom URL…":
-				case "Custom URL":
-					NSBoxURL.Hidden = false;
-					break;
+            try
+            {
+                switch (sender.SelectedItem.Title)
+                {
+                    case "Custom URL...":
+                    case "Custom URL…":
+                    case "Custom URL":
+                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        NSTextFieldLoc.Enabled = true;
+                        break;
 
-				default:
-					NSBoxURL.Hidden = true;
-					break;
-			}
+                    case "audioOS (Public)":
+                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        NSTextFieldLoc.Enabled = false;
+                        break;
+
+                    case "iOS (Public)":
+                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        NSTextFieldLoc.Enabled = false;
+                        break;
+
+                    case "tvOS (Public)":
+                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        NSTextFieldLoc.Enabled = false;
+                        break;
+
+                    case "watchOS (Public)":
+                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        NSTextFieldLoc.Enabled = false;
+                        break;
+
+                    default:
+                        NSOpenPanel FilePrompt = NSOpenPanel.OpenPanel;
+                        FilePrompt.AllowedFileTypes = new string[] { "xml", "plist" };
+                        FilePrompt.AllowsMultipleSelection = false;
+                        FilePrompt.CanChooseFiles = true;
+                        FilePrompt.CanChooseDirectories = false;
+
+                        if (FilePrompt.RunModal() == 1)
+                            NSTextFieldLoc.StringValue = FilePrompt.Url.Path;
+
+                        else
+                            throw new ArgumentException("nofile");
+
+                        NSTextFieldLoc.Enabled = false;
+                        break;
+                }
+
+                parser.LoadPlist(NSTextFieldLoc.StringValue);
+            }
+
+            catch (ArgumentException message)
+            {
+                switch (message.Message)
+                {
+                    case "nofile":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "File Not Specified",
+                            InformativeText = "You must select a PLIST file (.plist or .xml) to load."
+                        };
+                        break;
+
+                    case "notmesu":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "Incorrect URL",
+                            InformativeText = "The URL supplied should belong to mesu.apple.com."
+                        };
+                        break;
+
+                    default:
+                        alert = new NSAlert()
+                        {
+                            MessageText = "Argument Error",
+                            InformativeText = "There is an unknown error with the arguments provided."
+                        };
+                        break;
+                }
+
+                alert.RunModal();
+            }
 		}
 
-		partial void ToggleModelField(NSTextField sender)
+        partial void SourceEdited(NSTextField sender)
+        {
+            parser.LoadPlist(NSTextFieldLoc.StringValue);
+        }
+
+        partial void ToggleModelField(NSTextField sender)
 		{
             switch (sender.StringValue)
             {

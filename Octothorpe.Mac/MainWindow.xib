@@ -11,16 +11,15 @@
             <connections>
                 <outlet property="FileSelection" destination="fme-i2-nGb" id="MfI-ee-sqU"/>
                 <outlet property="NSBoxModel" destination="bUE-T3-DMb" id="aTZ-Sk-QWr"/>
-                <outlet property="NSBoxURL" destination="s7n-r6-laY" id="jLe-j5-VQH"/>
                 <outlet property="NSButtonCheckBeta" destination="3JW-3T-LWc" id="Dww-yS-sWx"/>
                 <outlet property="NSButtonFullTable" destination="Jg1-Ds-AZ0" id="CR0-5h-BXt"/>
                 <outlet property="NSButtonParse" destination="mqQ-XF-KBT" id="DBh-WK-Kdu"/>
-                <outlet property="NSButtonRemoveStubs" destination="U6u-ee-mv9" id="i1G-mr-fGF"/>
+                <outlet property="NSButtonRemoveStubs" destination="U6u-ee-mv9" id="hFq-zg-1jM"/>
                 <outlet property="NSTextFieldDevice" destination="dY4-Y3-cdF" id="RHS-mr-QIR"/>
+                <outlet property="NSTextFieldLoc" destination="5C6-t3-lJu" id="va0-r0-09C"/>
                 <outlet property="NSTextFieldMax" destination="CpE-z8-1ue" id="cIF-xY-eNL"/>
                 <outlet property="NSTextFieldMin" destination="VX3-E8-91R" id="urS-Sv-GtF"/>
                 <outlet property="NSTextFieldModel" destination="pWT-22-ZzG" id="9wH-N6-s9e"/>
-                <outlet property="NSTextFieldURL" destination="5C6-t3-lJu" id="yga-V2-vi8"/>
                 <outlet property="NSTextViewOutput" destination="6FB-F6-C5V" id="ZfX-EA-15v"/>
                 <outlet property="window" destination="2" id="6"/>
             </connections>
@@ -59,7 +58,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="8Dw-vT-N4n">
-                            <rect key="frame" x="374" y="1" width="15" height="404"/>
+                            <rect key="frame" x="-15" y="1" width="16" height="0.0"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
@@ -188,34 +187,6 @@ DQ
                             </subviews>
                         </view>
                     </box>
-                    <box hidden="YES" fixedFrame="YES" boxType="custom" borderType="none" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="s7n-r6-laY">
-                        <rect key="frame" x="23" y="345" width="224" height="29"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                        <view key="contentView" ambiguous="YES" id="jNz-Pf-vz8">
-                            <rect key="frame" x="0.0" y="0.0" width="224" height="29"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5C6-t3-lJu">
-                                    <rect key="frame" x="38" y="7" width="186" height="22"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml" drawsBackground="YES" usesSingleLineMode="YES" id="tQB-fI-Nac">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aeq-hh-jQv">
-                                    <rect key="frame" x="-2" y="9" width="34" height="17"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="URL:" id="hFX-Bv-ai1">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
-                            </subviews>
-                        </view>
-                    </box>
                     <box fixedFrame="YES" title="Optional" translatesAutoresizingMaskIntoConstraints="NO" id="MgB-2g-Bdu">
                         <rect key="frame" x="17" y="59" width="236" height="160"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
@@ -264,9 +235,6 @@ DQ
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
-                                    <connections>
-                                        <action selector="NSButtonRemoveStubs:" target="-2" id="jOi-Qa-hAh"/>
-                                    </connections>
                                 </button>
                                 <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CpE-z8-1ue">
                                     <rect key="frame" x="141" y="14" width="71" height="22"/>
@@ -281,6 +249,37 @@ DQ
                                     <rect key="frame" x="18" y="15" width="117" height="17"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Maximum version:" id="Tme-Wl-qTe">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                        </view>
+                    </box>
+                    <box fixedFrame="YES" boxType="custom" borderType="none" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="s7n-r6-laY">
+                        <rect key="frame" x="20" y="355" width="230" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                        <view key="contentView" ambiguous="YES" id="jNz-Pf-vz8">
+                            <rect key="frame" x="0.0" y="0.0" width="230" height="22"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5C6-t3-lJu">
+                                    <rect key="frame" x="64" y="0.0" width="166" height="22"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml" drawsBackground="YES" usesSingleLineMode="YES" id="tQB-fI-Nac">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                    <connections>
+                                        <action selector="SourceEdited:" target="-2" id="adT-FG-fbI"/>
+                                    </connections>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aeq-hh-jQv">
+                                    <rect key="frame" x="-2" y="2" width="60" height="17"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Location:" id="hFX-Bv-ai1">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

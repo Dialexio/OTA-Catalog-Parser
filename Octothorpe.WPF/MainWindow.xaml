@@ -16,9 +16,9 @@
                 <ComboBoxItem Content="Custom URL…" />
                 <ComboBoxItem Content="Browse for Local File…" />
             </ComboBox>
-            <Grid Name="GridURL" VerticalAlignment="Top" Width="200" Height="28" Margin="0,53,0,0" Visibility="Collapsed">
-                <Label Content="URL:" Name="LabelURL" VerticalAlignment="Center" Margin="0,0,162,0" />
-                <TextBox Margin="41,4,0,4" Name="TextBoxURL" Text="https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml" VerticalAlignment="Center" />
+            <Grid Name="GridLoc" VerticalAlignment="Top" Height="28" Margin="0,53,0,0">
+                <Label Content="Location:" Name="LabelLoc" VerticalAlignment="Center" Margin="0,1,171,1" />
+                <TextBox Margin="60,5,0,5" Name="TextBoxLoc" VerticalAlignment="Center" LostFocus="SourceChanged" />
             </Grid>
             <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" Margin="0,86,0,265" Height="28">
                 <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" VerticalAlignment="Center" />

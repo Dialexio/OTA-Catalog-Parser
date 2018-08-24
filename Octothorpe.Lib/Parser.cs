@@ -39,8 +39,9 @@ namespace Octothorpe.Lib
             MarketingVersionRowspan = new Dictionary<string, uint>();
         private Dictionary<string, Dictionary<string, uint>> PrereqBuildRowspan = new Dictionary<string, Dictionary<string, uint>>(), // DeclaredBuild, <PrereqBuild, count>
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
+        private object[] Assets;
         private readonly List<OTAPackage> Packages = new List<OTAPackage>();
-        private string device, model, plist;
+        private string device, model;
         private Version max, minimum;
 
         public string Device
@@ -77,12 +78,6 @@ namespace Octothorpe.Lib
             }
         }
 
-        public string Plist
-        {
-            get { return plist; }
-            set { plist = value; }
-        }
-
         public bool ShowBeta
         {
             set { showBeta = value; }
@@ -93,7 +88,27 @@ namespace Octothorpe.Lib
             set { wikiMarkup = value; }
         }
 
-        public string ParsePlist()
+        public void LoadPlist(string plist)
+        {
+            NSDictionary root;
+
+            if (Regex.IsMatch(plist, @"://mesu.apple.com/assets/"))
+            {
+                HttpClient Fido = new HttpClient();
+                root = (NSDictionary)PropertyListParser.Parse(Fido.GetStreamAsync(plist).Result);
+                Fido.Dispose();
+            }
+
+            else if (plist.Contains("://"))
+                throw new ArgumentException("notmesu");
+
+            else
+                root = (NSDictionary)PropertyListParser.Parse(plist);
+
+            Assets = (object[])(root.Get("Assets").ToObject());
+        }
+
+        public string ParseAssets()
         {
             Cleanup();
             ErrorCheck();
@@ -113,24 +128,9 @@ namespace Octothorpe.Lib
         private void AddEntries()
         {
             List<Task> AssetTasks = new List<Task>();
-            NSDictionary root;
-
-            // Load the PLIST.
-            if (Regex.IsMatch(plist, @"://mesu.apple.com/assets/"))
-            {
-                HttpClient Fido = new HttpClient();
-                root = (NSDictionary)PropertyListParser.Parse(Fido.GetStreamAsync(plist).Result);
-                Fido.Dispose();
-            }
-
-            else if (plist.Contains("://"))
-                throw new ArgumentException("notmesu");
-
-            else
-                root = (NSDictionary)PropertyListParser.Parse(plist);
 
             // Look at every item in the NSArray named "Assets."
-            foreach (object entry in (object[])(root.Get("Assets").ToObject()))
+            foreach (object entry in Assets)
             {
                 AssetTasks.Add(Task.Factory.StartNew( () => {
                     bool matched = false;
@@ -186,6 +186,8 @@ namespace Octothorpe.Lib
             Packages.Clear();
             PrereqBuildRowspan.Clear();
             PrereqOSRowspan.Clear();
+
+            Console.WriteLine(Assets.Length);
         }
 
         private void CountRowspan()
@@ -276,7 +278,7 @@ namespace Octothorpe.Lib
             if (ModelNeedsChecking && Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false)
                 throw new ArgumentException("model");
 
-            if (string.IsNullOrEmpty(Plist))
+            if (Assets.Length == 0)
                 throw new ArgumentException("nofile");
         }
 

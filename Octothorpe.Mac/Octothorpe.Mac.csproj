@@ -38,7 +38,7 @@
       <CustomCommands>
         <Command>
           <type>AfterBuild</type>
-          <command>mv "OS versions.json" "OTA Parser.app/Contents/MonoBundle/OS versions.json"</command>
+          <command>mv "override.json" "OTA Parser.app/Contents/MonoBundle/override.json"</command>
           <workingdir>${ProjectDir}/bin/Debug</workingdir>
         </Command>
       </CustomCommands>

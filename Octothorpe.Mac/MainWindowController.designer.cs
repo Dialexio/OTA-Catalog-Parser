@@ -19,9 +19,6 @@ namespace Octothorpe.Mac
 		AppKit.NSBox NSBoxModel { get; set; }
 
 		[Outlet]
-		AppKit.NSBox NSBoxURL { get; set; }
-
-		[Outlet]
 		AppKit.NSButton NSButtonCheckBeta { get; set; }
 
 		[Outlet]
@@ -37,6 +34,9 @@ namespace Octothorpe.Mac
 		AppKit.NSTextField NSTextFieldDevice { get; set; }
 
 		[Outlet]
+		AppKit.NSTextField NSTextFieldLoc { get; set; }
+
+		[Outlet]
 		AppKit.NSTextField NSTextFieldMax { get; set; }
 
 		[Outlet]
@@ -44,9 +44,6 @@ namespace Octothorpe.Mac
 
 		[Outlet]
 		AppKit.NSTextField NSTextFieldModel { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField NSTextFieldURL { get; set; }
 
 		[Outlet]
 		AppKit.NSTextView NSTextViewOutput { get; set; }
@@ -59,6 +56,9 @@ namespace Octothorpe.Mac
 
 		[Action ("SourceChanged:")]
 		partial void SourceChanged (AppKit.NSPopUpButton sender);
+
+		[Action ("SourceEdited:")]
+		partial void SourceEdited (AppKit.NSTextField sender);
 
 		[Action ("ToggleModelField:")]
 		partial void ToggleModelField (AppKit.NSTextField sender);
@@ -73,11 +73,6 @@ namespace Octothorpe.Mac
 			if (NSBoxModel != null) {
 				NSBoxModel.Dispose ();
 				NSBoxModel = null;
-			}
-
-			if (NSBoxURL != null) {
-				NSBoxURL.Dispose ();
-				NSBoxURL = null;
 			}
 
 			if (NSButtonCheckBeta != null) {
@@ -105,6 +100,11 @@ namespace Octothorpe.Mac
 				NSTextFieldDevice = null;
 			}
 
+			if (NSTextFieldLoc != null) {
+				NSTextFieldLoc.Dispose ();
+				NSTextFieldLoc = null;
+			}
+
 			if (NSTextFieldMax != null) {
 				NSTextFieldMax.Dispose ();
 				NSTextFieldMax = null;
@@ -118,11 +118,6 @@ namespace Octothorpe.Mac
 			if (NSTextFieldModel != null) {
 				NSTextFieldModel.Dispose ();
 				NSTextFieldModel = null;
-			}
-
-			if (NSTextFieldURL != null) {
-				NSTextFieldURL.Dispose ();
-				NSTextFieldURL = null;
 			}
 
 			if (NSTextViewOutput != null) {

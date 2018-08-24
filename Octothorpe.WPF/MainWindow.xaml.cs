@@ -33,8 +33,9 @@ namespace Octothorpe
     /// </summary>
     public partial class MainWindow : Window
     {
-        static Microsoft.Win32.OpenFileDialog FilePrompt;
-        static Parser parser;
+        private Microsoft.Win32.OpenFileDialog FilePrompt;
+        private Parser parser = new Parser();
+
 
         public MainWindow()
         {
@@ -45,8 +46,6 @@ namespace Octothorpe
         {
             try
             {
-                parser = new Parser();
-
                 parser.Device = TextBoxDevice.Text;
                 parser.Model = TextBoxModel.Text;
                 parser.WikiMarkup = (RadioWiki.IsChecked == true);
@@ -81,45 +80,7 @@ namespace Octothorpe
                     throw new ArgumentException("badvalue");
                 }
 
-                switch ((string)((ComboBoxItem)FileSelection.SelectedItem).Content)
-                {
-                    case "Custom URL...":
-                    case "Custom URL…":
-                    case "Custom URL":
-                        parser.Plist = TextBoxURL.Text;
-                        break;
-
-                    case "audioOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    case "iOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    case "tvOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    case "watchOS (Public)":
-                        parser.Plist = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        break;
-
-                    default:
-                        FilePrompt = new Microsoft.Win32.OpenFileDialog();
-                        FilePrompt.Filter = "Apple XML Property List (.xml)|*.xml|Apple Property List (.plist)|*.plist";
-                        FilePrompt.FilterIndex = 0;
-                        FilePrompt.ShowDialog();
-
-                        if (FilePrompt.FileName == null)
-                            throw new ArgumentException("nofile");
-
-                        parser.Plist = FilePrompt.FileName;
-                        break;
-                }
-
-                TextOutput.Text = parser.ParsePlist();
-                parser = null;
+                TextOutput.Text = parser.ParseAssets();
             }
 
             catch (ArgumentException message)
@@ -132,14 +93,6 @@ namespace Octothorpe
 
                     case "model":
                         MessageBox.Show("This device requires you to specify a model number. For example, N71AP is a model number for the iPhone 6S.");
-                        break;
-
-                    case "nofile":
-                        MessageBox.Show("You must select a PLIST file (.plist or .xml) to load.");
-                        break;
-
-                    case "notmesu":
-                        MessageBox.Show("The URL supplied should belong to mesu.apple.com.");
                         break;
 
                     default:
@@ -166,18 +119,76 @@ namespace Octothorpe
 
         private void SourceChanged(object sender, SelectionChangedEventArgs e)
         {
-            switch ((string)(((ComboBoxItem)((ComboBox)sender).SelectedItem).Content))
+            try
             {
-                case "Custom URL...":
-                case "Custom URL…":
-                case "Custom URL":
-                    GridURL.Visibility = Visibility.Visible;
-                    break;
+                switch ((string)(((ComboBoxItem)((ComboBox)sender).SelectedItem).Content))
+                {
+                    case "Custom URL...":
+                    case "Custom URL…":
+                    case "Custom URL":
+                        TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        TextBoxLoc.IsEnabled = true;
+                        break;
 
-                default:
-                    GridURL.Visibility = Visibility.Collapsed;
-                    break;
+                    case "audioOS (Public)":
+                        TextBoxLoc.Text = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        TextBoxLoc.IsEnabled = false;
+                        break;
+
+                    case "iOS (Public)":
+                        TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        TextBoxLoc.IsEnabled = false;
+                        break;
+
+                    case "tvOS (Public)":
+                        TextBoxLoc.Text = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        TextBoxLoc.IsEnabled = false;
+                        break;
+
+                    case "watchOS (Public)":
+                        TextBoxLoc.Text = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        TextBoxLoc.IsEnabled = false;
+                        break;
+
+                    default:
+                        FilePrompt = new Microsoft.Win32.OpenFileDialog();
+                        FilePrompt.Filter = "Apple XML Property List (.xml)|*.xml|Apple Property List (.plist)|*.plist";
+                        FilePrompt.FilterIndex = 0;
+                        FilePrompt.ShowDialog();
+
+                        if (FilePrompt.FileName == null)
+                            throw new ArgumentException("nofile");
+
+                        TextBoxLoc.Text = FilePrompt.FileName;
+                        TextBoxLoc.IsEnabled = false;
+                        break;
+                }
+
+                parser.LoadPlist(TextBoxLoc.Text);
             }
+
+            catch (ArgumentException message)
+            {
+                switch (message.Message)
+                {
+                    case "nofile":
+                        MessageBox.Show("You must select a PLIST file (.plist or .xml) to load.");
+                        break;
+
+                    case "notmesu":
+                        MessageBox.Show("The URL supplied should belong to mesu.apple.com.");
+                        break;
+
+                    default:
+                        MessageBox.Show("There is an unknown error with the arguments provided.");
+                        break;
+                }
+            }
+        }
+
+        private void SourceChanged(object sender, RoutedEventArgs e)
+        {
+            parser.LoadPlist(TextBoxLoc.Text);
         }
 
         private void ToggleModelField(object sender, TextChangedEventArgs e)
