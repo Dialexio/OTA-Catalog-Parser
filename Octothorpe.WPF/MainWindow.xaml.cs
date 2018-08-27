@@ -117,11 +117,11 @@ namespace Octothorpe
             }
         }
 
-        private void SourceChanged(object sender, SelectionChangedEventArgs e)
+        private void SourceChanged(object sender, RoutedEventArgs e)
         {
             try
             {
-                switch ((string)(((ComboBoxItem)((ComboBox)sender).SelectedItem).Content))
+                switch (((ComboBoxItem)sender).Content)
                 {
                     case "Custom URL...":
                     case "Custom URL…":
@@ -172,6 +172,7 @@ namespace Octothorpe
                 switch (message.Message)
                 {
                     case "nofile":
+                    case "The path is not of a legal form.":
                         MessageBox.Show("You must select a PLIST file (.plist or .xml) to load.");
                         break;
 
@@ -187,6 +188,7 @@ namespace Octothorpe
             try
             {
                 parser.LoadPlist(TextBoxLoc.Text);
+                ButtonParse.IsEnabled = true;
             }
 
             catch (ArgumentException message)
@@ -194,6 +196,7 @@ namespace Octothorpe
                 switch (message.Message)
                 {
                     case "nofile":
+                    case "The path is not of a legal form.":
                         MessageBox.Show("You must select a PLIST file (.plist or .xml) to load.");
                         break;
 
@@ -205,6 +208,8 @@ namespace Octothorpe
                         MessageBox.Show("There is an unknown error with the arguments provided.");
                         break;
                 }
+
+                ButtonParse.IsEnabled = false;
             }
         }
 

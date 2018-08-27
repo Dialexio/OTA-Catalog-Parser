@@ -8,13 +8,13 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Margin="10" Name="GridForm">
             <Label Content="Select file to load…" HorizontalContentAlignment="Center" Name="LabelFileSelect" VerticalContentAlignment="Stretch" VerticalAlignment="Top" />
-            <ComboBox Name="FileSelection" VerticalAlignment="Top" SelectionChanged="SourceEdited" Margin="0,31,0,0" HorizontalAlignment="Center" Width="170">
-                <ComboBoxItem Content="audioOS (Public)" />
-                <ComboBoxItem Content="iOS (Public)" />
-                <ComboBoxItem Content="tvOS (Public)" />
-                <ComboBoxItem Content="watchOS (Public)" />
-                <ComboBoxItem Content="Custom URL…" />
-                <ComboBoxItem Content="Browse for Local File…" />
+            <ComboBox Name="FileSelection" VerticalAlignment="Top" Margin="0,31,0,0" HorizontalAlignment="Center" Width="170">
+                <ComboBoxItem Content="audioOS (Public)" Selected="SourceChanged" />
+                <ComboBoxItem Content="iOS (Public)" Selected="SourceChanged" />
+                <ComboBoxItem Content="tvOS (Public)" Selected="SourceChanged" />
+                <ComboBoxItem Content="watchOS (Public)" Selected="SourceChanged" />
+                <ComboBoxItem Content="Custom URL…" Selected="SourceChanged" />
+                <ComboBoxItem Content="Browse for Local File…" Selected="SourceChanged" />
             </ComboBox>
             <Grid Name="GridLoc" VerticalAlignment="Top" Height="28" Margin="0,53,0,0">
                 <Label Content="Location:" Name="LabelLoc" VerticalAlignment="Center" Margin="0,1,171,1" />
