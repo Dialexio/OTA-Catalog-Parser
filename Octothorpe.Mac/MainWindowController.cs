@@ -249,6 +249,38 @@ namespace Octothorpe.Mac
                         };
                         break;
 
+                    default:
+                        alert = new NSAlert()
+                        {
+                            MessageText = "Argument Error",
+                            InformativeText = "There is an unknown error with the arguments provided."
+                        };
+                        break;
+                }
+
+                alert.RunModal();
+            }
+		}
+
+        partial void SourceEdited(NSTextField sender)
+        {
+            try
+            {
+                parser.LoadPlist(NSTextFieldLoc.StringValue);
+            }
+            
+            catch (ArgumentException message)
+            {
+                switch (message.Message)
+                {
+                    case "nofile":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "File Not Specified",
+                            InformativeText = "You must select a PLIST file (.plist or .xml) to load."
+                        };
+                        break;
+
                     case "notmesu":
                         alert = new NSAlert()
                         {
@@ -268,11 +300,6 @@ namespace Octothorpe.Mac
 
                 alert.RunModal();
             }
-		}
-
-        partial void SourceEdited(NSTextField sender)
-        {
-            parser.LoadPlist(NSTextFieldLoc.StringValue);
         }
 
         partial void ToggleModelField(NSTextField sender)

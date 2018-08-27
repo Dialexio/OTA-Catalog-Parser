@@ -8,7 +8,7 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Margin="10" Name="GridForm">
             <Label Content="Select file to load…" HorizontalContentAlignment="Center" Name="LabelFileSelect" VerticalContentAlignment="Stretch" VerticalAlignment="Top" />
-            <ComboBox Name="FileSelection" VerticalAlignment="Top" SelectionChanged="SourceChanged" Margin="0,31,0,0" HorizontalAlignment="Center" Width="170">
+            <ComboBox Name="FileSelection" VerticalAlignment="Top" SelectionChanged="SourceEdited" Margin="0,31,0,0" HorizontalAlignment="Center" Width="170">
                 <ComboBoxItem Content="audioOS (Public)" />
                 <ComboBoxItem Content="iOS (Public)" />
                 <ComboBoxItem Content="tvOS (Public)" />
@@ -18,7 +18,7 @@
             </ComboBox>
             <Grid Name="GridLoc" VerticalAlignment="Top" Height="28" Margin="0,53,0,0">
                 <Label Content="Location:" Name="LabelLoc" VerticalAlignment="Center" Margin="0,1,171,1" />
-                <TextBox Margin="60,5,0,5" Name="TextBoxLoc" VerticalAlignment="Center" LostFocus="SourceChanged" />
+                <TextBox Margin="60,5,0,5" Name="TextBoxLoc" VerticalAlignment="Center" LostFocus="SourceEdited" IsEnabled="False" />
             </Grid>
             <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" Margin="0,86,0,265" Height="28">
                 <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" VerticalAlignment="Center" />

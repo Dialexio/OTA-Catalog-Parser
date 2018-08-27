@@ -175,6 +175,28 @@ namespace Octothorpe
                         MessageBox.Show("You must select a PLIST file (.plist or .xml) to load.");
                         break;
 
+                    default:
+                        MessageBox.Show("There is an unknown error with the arguments provided.");
+                        break;
+                }
+            }
+        }
+
+        private void SourceEdited(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                parser.LoadPlist(TextBoxLoc.Text);
+            }
+
+            catch (ArgumentException message)
+            {
+                switch (message.Message)
+                {
+                    case "nofile":
+                        MessageBox.Show("You must select a PLIST file (.plist or .xml) to load.");
+                        break;
+
                     case "notmesu":
                         MessageBox.Show("The URL supplied should belong to mesu.apple.com.");
                         break;
@@ -184,11 +206,6 @@ namespace Octothorpe
                         break;
                 }
             }
-        }
-
-        private void SourceChanged(object sender, RoutedEventArgs e)
-        {
-            parser.LoadPlist(TextBoxLoc.Text);
         }
 
         private void ToggleModelField(object sender, TextChangedEventArgs e)
