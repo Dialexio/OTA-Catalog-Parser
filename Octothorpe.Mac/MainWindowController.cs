@@ -235,6 +235,7 @@ namespace Octothorpe.Mac
                 }
 
                 parser.LoadPlist(NSTextFieldLoc.StringValue);
+                NSButtonParse.Enabled = true;
             }
 
             catch (ArgumentException message)
@@ -259,6 +260,7 @@ namespace Octothorpe.Mac
                 }
 
                 alert.RunModal();
+                NSButtonParse.Enabled = false;
             }
 		}
 
@@ -267,6 +269,7 @@ namespace Octothorpe.Mac
             try
             {
                 parser.LoadPlist(NSTextFieldLoc.StringValue);
+                NSButtonParse.Enabled = true;
             }
             
             catch (ArgumentException message)
@@ -299,6 +302,7 @@ namespace Octothorpe.Mac
                 }
 
                 alert.RunModal();
+                NSButtonParse.Enabled = false;
             }
         }
 
