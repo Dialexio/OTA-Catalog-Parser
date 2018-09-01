@@ -48,7 +48,7 @@ namespace Octothorpe.CLI
 
                     case "-f":
                         if (i < args.Length)
-                            parser.Plist = args[i++];
+                            parser.LoadPlist(args[i++]);
                         break;
 
                     case "-h":
@@ -78,16 +78,16 @@ namespace Octothorpe.CLI
 
                     case "-max":
                         if (i < args.Length)
-                            parser.Maximum = (uint.TryParse(args[i++], out var verstring)) ?
-                                new Version(verstring + ".0") :
-                                new Version(verstring.ToString());
+                            parser.Maximum = (uint.TryParse(args[i++], out var verstring))
+                                ? new Version($"{verstring}.0")
+                                : new Version(verstring.ToString());
                         break;
 
                     case "-min":
                         if (i < args.Length)
-                            parser.Minimum = (uint.TryParse(args[i++], out var verstring)) ?
-                                new Version(verstring + ".0") :
-                                new Version(verstring.ToString());
+                            parser.Minimum = (uint.TryParse(args[i++], out var verstring))
+                                ? new Version($"{verstring}.0")
+                                : new Version(verstring.ToString());
                         break;
 
                     case "-s":
