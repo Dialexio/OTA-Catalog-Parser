@@ -186,8 +186,6 @@ namespace Octothorpe.Lib
             Packages.Clear();
             PrereqBuildRowspan.Clear();
             PrereqOSRowspan.Clear();
-
-            Console.WriteLine(Assets.Length);
         }
 
         private void CountRowspan()
