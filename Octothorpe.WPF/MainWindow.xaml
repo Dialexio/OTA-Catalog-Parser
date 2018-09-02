@@ -6,23 +6,27 @@
             <ColumnDefinition />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Margin="10" Name="GridForm">
+        <Grid Grid.Column="0" Margin="10,10,5,10" Name="GridForm">
             <Label Content="Select file to load…" HorizontalContentAlignment="Center" Name="LabelFileSelect" VerticalContentAlignment="Stretch" VerticalAlignment="Top" />
-            <ComboBox Name="FileSelection" VerticalAlignment="Top" Margin="0,31,0,0" HorizontalAlignment="Center" Width="170">
-                <ComboBoxItem Content="audioOS (Public)" Selected="SourceChanged" />
-                <ComboBoxItem Content="iOS (Public)" Selected="SourceChanged" />
-                <ComboBoxItem Content="tvOS (Public)" Selected="SourceChanged" />
-                <ComboBoxItem Content="watchOS (Public)" Selected="SourceChanged" />
-                <ComboBoxItem Content="Custom URL…" Selected="SourceChanged" />
-                <ComboBoxItem Content="Browse for Local File…" Selected="SourceChanged" />
+            <ComboBox HorizontalAlignment="Center" Margin="0,31,0,0" Name="FileSelection" SelectionChanged="SourceChanged" VerticalAlignment="Top" Width="170">
+                <ComboBoxItem Content="audioOS (Public)" />
+                <ComboBoxItem Content="iOS (Public)" />
+                <ComboBoxItem Content="tvOS (Public)" />
+                <ComboBoxItem Content="watchOS (Public)" />
+                <ComboBoxItem Content="Custom URL…" />
+                <ComboBoxItem Content="Browse for Local File…" />
             </ComboBox>
-            <Grid Name="GridLoc" VerticalAlignment="Top" Height="28" Margin="0,53,0,0">
-                <Label Content="Location:" Name="LabelLoc" VerticalAlignment="Center" Margin="0,1,171,1" />
-                <TextBox Margin="60,5,0,5" Name="TextBoxLoc" VerticalAlignment="Center" LostFocus="SourceEdited" IsEnabled="False" />
+            <Grid Name="GridLoc" VerticalAlignment="Top" Margin="0,60,0,0">
+                <Label Content="Location:" Name="LabelLoc" VerticalAlignment="Center" Margin="0,0,179,0" />
+                <TextBox IsEnabled="False" Height="20" LostFocus="SourceEdited" Name="TextBoxLoc" VerticalAlignment="Center" Margin="62,0,0,0" />
+            </Grid>
+            <Grid Name="GridFile" Height="26" Margin="0,60,0,0" VerticalAlignment="Top" Visibility="Collapsed">
+                <TextBox IsEnabled="False" Height="20" Margin="0,0,75,0" Name="TextBoxFile" VerticalAlignment="Center" />
+                <Button Click="BrowseForFile" Content="Browse…" Height="20" Margin="171,0,0,0" VerticalAlignment="Center" />
             </Grid>
             <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" Margin="0,86,0,265" Height="28">
                 <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" VerticalAlignment="Center" />
-                <TextBox Name="TextBoxDevice" VerticalAlignment="Center" TextChanged="ToggleModelField" Margin="52.763,4,0,4" />
+                <TextBox Name="TextBoxDevice" VerticalAlignment="Center" TextChanged="ToggleModelField" Margin="53,0,0,0" />
             </Grid>
             <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,114,0,237" Height="28" Visibility="Collapsed">
                 <TextBox Name="TextBoxModel" VerticalAlignment="Center" Margin="51.657,5.02,0,5.02" />

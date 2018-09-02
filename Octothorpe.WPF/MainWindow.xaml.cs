@@ -42,6 +42,54 @@ namespace Octothorpe
             InitializeComponent();
         }
 
+        private void BrowseForFile(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                FilePrompt = new Microsoft.Win32.OpenFileDialog();
+                FilePrompt.Filter = "Apple XML Property List (.xml)|*.xml|Apple Property List (.plist)|*.plist";
+                FilePrompt.FilterIndex = 0;
+                FilePrompt.ShowDialog();
+
+                if (FilePrompt.FileName == null)
+                    throw new ArgumentException("nofile");
+
+                TextBoxFile.Text = FilePrompt.FileName;
+
+                parser.LoadPlist(TextBoxFile.Text);
+                ButtonParse.IsEnabled = true;
+            }
+
+            catch (ArgumentException message)
+            {
+                switch (message.Message)
+                {
+                    case "nofile":
+                    case "The path is not of a legal form.":
+                        MessageBox.Show("You must select a PLIST file (.plist or .xml) to load.");
+                        break;
+
+                    default:
+                        MessageBox.Show("There is an unknown error with the arguments provided.");
+                        break;
+                }
+
+                ButtonParse.IsEnabled = false;
+            }
+
+            catch (DirectoryNotFoundException)
+            {
+                MessageBox.Show("Please double-check that you entered the path correctly!");
+                ButtonParse.IsEnabled = false;
+            }
+
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Please double-check that you entered the file name correctly!");
+                ButtonParse.IsEnabled = false;
+            }
+        }
+
         private void ParsingSTART(object sender, RoutedEventArgs e)
         {
             try
@@ -117,54 +165,65 @@ namespace Octothorpe
             }
         }
 
-        private void SourceChanged(object sender, RoutedEventArgs e)
+        private void SourceChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                switch (((ComboBoxItem)sender).Content)
+                switch (((ComboBoxItem)((ComboBox)sender).SelectedItem).Content)
                 {
                     case "Custom URL...":
                     case "Custom URL…":
                     case "Custom URL":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         TextBoxLoc.IsEnabled = true;
+                        GridLoc.Visibility = Visibility.Visible;
+                        GridFile.Visibility = Visibility.Hidden;
+
+                        parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "audioOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         TextBoxLoc.IsEnabled = false;
+                        GridLoc.Visibility = Visibility.Visible;
+                        GridFile.Visibility = Visibility.Hidden;
+
+                        parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "iOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         TextBoxLoc.IsEnabled = false;
+                        GridLoc.Visibility = Visibility.Visible;
+                        GridFile.Visibility = Visibility.Hidden;
+
+                        parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "tvOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         TextBoxLoc.IsEnabled = false;
+                        GridLoc.Visibility = Visibility.Visible;
+                        GridFile.Visibility = Visibility.Hidden;
+
+                        parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "watchOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         TextBoxLoc.IsEnabled = false;
+                        GridLoc.Visibility = Visibility.Visible;
+                        GridFile.Visibility = Visibility.Hidden;
+
+                        parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     default:
-                        FilePrompt = new Microsoft.Win32.OpenFileDialog();
-                        FilePrompt.Filter = "Apple XML Property List (.xml)|*.xml|Apple Property List (.plist)|*.plist";
-                        FilePrompt.FilterIndex = 0;
-                        FilePrompt.ShowDialog();
-
-                        if (FilePrompt.FileName == null)
-                            throw new ArgumentException("nofile");
-
-                        TextBoxLoc.Text = FilePrompt.FileName;
-                        TextBoxLoc.IsEnabled = false;
+                        GridLoc.Visibility = Visibility.Hidden;
+                        GridFile.Visibility = Visibility.Visible;
                         break;
                 }
 
-                parser.LoadPlist(TextBoxLoc.Text);
             }
 
             catch (ArgumentException message)
@@ -187,7 +246,7 @@ namespace Octothorpe
         {
             try
             {
-                parser.LoadPlist(TextBoxLoc.Text);
+                parser.LoadPlist(((TextBox)sender).Text);
                 ButtonParse.IsEnabled = true;
             }
 
