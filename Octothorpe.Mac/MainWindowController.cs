@@ -57,6 +57,76 @@ namespace Octothorpe.Mac
 			get { return (MainWindow)base.Window; }
 		}
 
+        partial void BrowseForFile(NSButton sender)
+        {
+            try
+            {
+                NSOpenPanel FilePrompt = NSOpenPanel.OpenPanel;
+                FilePrompt.AllowedFileTypes = new string[] { "xml", "plist" };
+                FilePrompt.AllowsMultipleSelection = false;
+                FilePrompt.CanChooseFiles = true;
+                FilePrompt.CanChooseDirectories = false;
+
+                if (FilePrompt.RunModal() == 1)
+                    NSTextFieldFile.StringValue = FilePrompt.Url.Path;
+
+                else
+                    throw new ArgumentException("nofile");
+
+                parser.LoadPlist(NSTextFieldFile.StringValue);
+                NSButtonParse.Enabled = true;
+            }
+
+            catch (ArgumentException message)
+            {
+                switch (message.Message)
+                {
+                    case "nofile":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "File Not Specified",
+                            InformativeText = "You must select a PLIST file (.plist or .xml) to load."
+                        };
+                        break;
+
+                    default:
+                        alert = new NSAlert()
+                        {
+                            MessageText = "Argument Error",
+                            InformativeText = "There is an unknown error with the arguments provided."
+                        };
+                        break;
+                }
+
+                alert.RunModal();
+                NSButtonParse.Enabled = false;
+            }
+
+            catch (DirectoryNotFoundException)
+            {
+                alert = new NSAlert()
+                {
+                    MessageText = "Directory Not Found",
+                    InformativeText = "Please double-check that you entered the path correctly!"
+                };
+
+                alert.RunModal();
+                NSButtonParse.Enabled = false;
+            }
+
+            catch (FileNotFoundException)
+            {
+                alert = new NSAlert()
+                {
+                    MessageText = "Directory Not Found",
+                    InformativeText = "Please double-check that you entered the file name correctly!"
+                };
+
+                alert.RunModal();
+                NSButtonParse.Enabled = false;
+            }
+        }
+
         partial void ChangeOutputFormat(NSButton sender)
         {
             DisplayWikiMarkup = (sender.Title == "The iPhone Wiki markup");
@@ -193,48 +263,51 @@ namespace Octothorpe.Mac
                     case "Custom URL...":
                     case "Custom URL…":
                     case "Custom URL":
+                        NSBoxFile.Hidden = true;
+                        NSBoxLoc.Hidden = false;
                         NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         NSTextFieldLoc.Enabled = true;
+                        parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 
                     case "audioOS (Public)":
+                        NSBoxFile.Hidden = true;
+                        NSBoxLoc.Hidden = false;
                         NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         NSTextFieldLoc.Enabled = false;
+                        parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 
                     case "iOS (Public)":
+                        NSBoxFile.Hidden = true;
+                        NSBoxLoc.Hidden = false;
                         NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         NSTextFieldLoc.Enabled = false;
+                        parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 
                     case "tvOS (Public)":
+                        NSBoxFile.Hidden = true;
+                        NSBoxLoc.Hidden = false;
                         NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         NSTextFieldLoc.Enabled = false;
+                        parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 
                     case "watchOS (Public)":
+                        NSBoxFile.Hidden = true;
+                        NSBoxLoc.Hidden = false;
                         NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         NSTextFieldLoc.Enabled = false;
+                        parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 
                     default:
-                        NSOpenPanel FilePrompt = NSOpenPanel.OpenPanel;
-                        FilePrompt.AllowedFileTypes = new string[] { "xml", "plist" };
-                        FilePrompt.AllowsMultipleSelection = false;
-                        FilePrompt.CanChooseFiles = true;
-                        FilePrompt.CanChooseDirectories = false;
-
-                        if (FilePrompt.RunModal() == 1)
-                            NSTextFieldLoc.StringValue = FilePrompt.Url.Path;
-
-                        else
-                            throw new ArgumentException("nofile");
-
-                        NSTextFieldLoc.Enabled = false;
+                        NSBoxFile.Hidden = false;
+                        NSBoxLoc.Hidden = true;
                         break;
                 }
 
-                parser.LoadPlist(NSTextFieldLoc.StringValue);
                 NSButtonParse.Enabled = true;
             }
 

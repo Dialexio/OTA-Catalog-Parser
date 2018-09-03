@@ -16,6 +16,12 @@ namespace Octothorpe.Mac
 		AppKit.NSPopUpButton FileSelection { get; set; }
 
 		[Outlet]
+		AppKit.NSBox NSBoxFile { get; set; }
+
+		[Outlet]
+		AppKit.NSBox NSBoxLoc { get; set; }
+
+		[Outlet]
 		AppKit.NSBox NSBoxModel { get; set; }
 
 		[Outlet]
@@ -34,6 +40,9 @@ namespace Octothorpe.Mac
 		AppKit.NSTextField NSTextFieldDevice { get; set; }
 
 		[Outlet]
+		AppKit.NSTextField NSTextFieldFile { get; set; }
+
+		[Outlet]
 		AppKit.NSTextField NSTextFieldLoc { get; set; }
 
 		[Outlet]
@@ -47,6 +56,9 @@ namespace Octothorpe.Mac
 
 		[Outlet]
 		AppKit.NSTextView NSTextViewOutput { get; set; }
+
+		[Action ("BrowseForFile:")]
+		partial void BrowseForFile (AppKit.NSButton sender);
 
 		[Action ("ChangeOutputFormat:")]
 		partial void ChangeOutputFormat (AppKit.NSButton sender);
@@ -68,6 +80,16 @@ namespace Octothorpe.Mac
 			if (FileSelection != null) {
 				FileSelection.Dispose ();
 				FileSelection = null;
+			}
+
+			if (NSBoxFile != null) {
+				NSBoxFile.Dispose ();
+				NSBoxFile = null;
+			}
+
+			if (NSBoxLoc != null) {
+				NSBoxLoc.Dispose ();
+				NSBoxLoc = null;
 			}
 
 			if (NSBoxModel != null) {
@@ -98,6 +120,11 @@ namespace Octothorpe.Mac
 			if (NSTextFieldDevice != null) {
 				NSTextFieldDevice.Dispose ();
 				NSTextFieldDevice = null;
+			}
+
+			if (NSTextFieldFile != null) {
+				NSTextFieldFile.Dispose ();
+				NSTextFieldFile = null;
 			}
 
 			if (NSTextFieldLoc != null) {
