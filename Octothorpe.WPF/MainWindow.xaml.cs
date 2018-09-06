@@ -289,15 +289,5 @@ namespace Octothorpe
                     break;
             }
         }
-
-        private void RadioWiki_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBoxFullTable.Visibility = Visibility.Visible;
-        }
-
-        private void RadioWiki_Unchecked(object sender, RoutedEventArgs e)
-        {
-            CheckBoxFullTable.Visibility = Visibility.Collapsed;
-        }
     }
 }
