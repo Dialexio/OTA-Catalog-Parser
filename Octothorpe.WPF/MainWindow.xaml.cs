@@ -21,9 +21,11 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 using System;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Octothorpe.Lib;
 
 namespace Octothorpe
@@ -175,55 +177,29 @@ namespace Octothorpe
                     case "Custom URL…":
                     case "Custom URL":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        TextBoxLoc.IsEnabled = true;
-                        GridLoc.Visibility = Visibility.Visible;
-                        GridFile.Visibility = Visibility.Hidden;
-
                         parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "audioOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        TextBoxLoc.IsEnabled = false;
-                        GridLoc.Visibility = Visibility.Visible;
-                        GridFile.Visibility = Visibility.Hidden;
-
                         parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "iOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        TextBoxLoc.IsEnabled = false;
-                        GridLoc.Visibility = Visibility.Visible;
-                        GridFile.Visibility = Visibility.Hidden;
-
                         parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "tvOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        TextBoxLoc.IsEnabled = false;
-                        GridLoc.Visibility = Visibility.Visible;
-                        GridFile.Visibility = Visibility.Hidden;
-
                         parser.LoadPlist(TextBoxLoc.Text);
                         break;
 
                     case "watchOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        TextBoxLoc.IsEnabled = false;
-                        GridLoc.Visibility = Visibility.Visible;
-                        GridFile.Visibility = Visibility.Hidden;
-
                         parser.LoadPlist(TextBoxLoc.Text);
                         break;
-
-                    default:
-                        GridLoc.Visibility = Visibility.Hidden;
-                        GridFile.Visibility = Visibility.Visible;
-                        break;
                 }
-
             }
 
             catch (ArgumentException message)
@@ -288,6 +264,26 @@ namespace Octothorpe
                     GridModel.Visibility = Visibility.Collapsed;
                     break;
             }
+        }
+    }
+
+    public class InvertVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType == typeof(Visibility))
+            {
+                return (Visibility)value == Visibility.Collapsed
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+            }
+
+            throw new InvalidOperationException("Converter can only convert to value of type Visibility.");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new Exception("Invalid call - one way only");
         }
     }
 }
