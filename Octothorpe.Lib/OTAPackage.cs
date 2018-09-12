@@ -130,26 +130,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                try
-                {
-                    // If the JSON entry specifies "Devices," we need to check those out.
-                    if (Json[ActualBuild].TryGetValue("Devices", out JToken Tokens))
-                    {
-                        foreach (JToken Token in ((JArray)Tokens).Children())
-                        {
-                            if (SupportedDevices.Contains((string)Token))
-                                return (int)Json[ActualBuild].SelectToken("Beta");
-                        }
-
-                        // Exception will only be thrown if the JSON entry specifies "Devices" but there isn't a match.
-                        throw new KeyNotFoundException();
-                    }
-
-                    else
-                        return (int)Json[ActualBuild].SelectToken("Beta");
-                }
-
-                catch (KeyNotFoundException)
+                if (GetJToken("Beta") == null)
                 {
                     string number = DocumentationID.Substring(DocumentationID.Length - 2);
 
@@ -160,13 +141,18 @@ namespace Octothorpe.Lib
 
                         else if (char.IsDigit(number[1]))
                             return (int)char.GetNumericValue(number[1]);
-                        
+
                         else
                             return 1;
                     }
-                        
+
                     else
                         return 0;
+                }
+
+                else
+                {
+                    return (int)GetJToken("Beta");
                 }
             }
         }
@@ -198,10 +184,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public string Date()
         {
-            if (Json.ContainsKey(ActualBuild) && Json[ActualBuild].TryGetValue("Date", out JToken timestamp))
-                return (string)timestamp;
-
-            else
+            if (GetJToken("Date") == null)
             {
                 // Catch excess zeroes, e.g. "2016008004"
                 match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
@@ -220,6 +203,9 @@ namespace Octothorpe.Lib
                         return "00000000";
                 }
             }
+
+            else
+                return (string)GetJToken("Date");
         }
 
         /// <summary>
@@ -269,6 +255,33 @@ namespace Octothorpe.Lib
             }
         }
 
+        private JToken GetJToken(string name)
+        {
+            try
+            {
+                // If the JSON entry specifies "Devices," we need to check those out.
+                if (Json[ActualBuild].TryGetValue("Devices", out JToken Tokens))
+                {
+                    foreach (JToken Token in ((JArray)Tokens).Children())
+                    {
+                        if (SupportedDevices.Contains((string)Token))
+                            return (Json[ActualBuild].TryGetValue(name, out JToken value)) ? value : null;
+                    }
+
+                    // Exception will only be thrown if the JSON entry specifies "Devices" but there isn't a match.
+                    throw new KeyNotFoundException();
+                }
+
+                else
+                    return (Json[ActualBuild].TryGetValue(name, out JToken value)) ? value : null;
+            }
+
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Checks if the release has an inflated build number. Apple does this to push devices on beta builds to stable builds.
         /// </summary>
@@ -305,20 +318,19 @@ namespace Octothorpe.Lib
         /// <returns>
         /// The "OSVersion" key, as a string. For iOS 10 and newer, this will also strip "9.9." from the version.
         /// </returns>
+
         public string OSVersion
         {
             get
             {
-                try
-                {
-                    return (string)Json[ActualBuild].SelectToken("Version");
-                }
-
-                catch (KeyNotFoundException)
+                if (GetJToken("Version") == null)
                 {
                     string version = (string)ENTRY["OSVersion"];
                     return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
                 }
+
+                else
+                    return (string)GetJToken("Version");
             }
         }
 
@@ -354,7 +366,12 @@ namespace Octothorpe.Lib
                 try
                 {
                     Beta = (Json[PrerequisiteBuild].TryGetValue("Beta", out JToken beet)) ? (int)beet : 0;
-                    VersionNum.Append((string)Json[PrerequisiteBuild].SelectToken("Version"));
+
+                    if (Json[PrerequisiteBuild].TryGetValue("Version", out JToken version))
+                        VersionNum.Append((string)version);
+
+                    else
+                        VersionNum.Append(ENTRY["PrerequisiteOSVersion"]);
 
                     if (Json[PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))
                     {
@@ -572,9 +589,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return Json.ContainsKey(ActualBuild) && Json[ActualBuild].TryGetValue("Suffix", out JToken ending)
-                    ? (string)ending
-                    : null;
+                return (string)GetJToken("Suffix");
             }
         }
 

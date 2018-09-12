@@ -4,6 +4,7 @@
 		"Version": "11.2.5",
 		"Beta":    3
 	},
+
 	"9B176": {
 		"Product": "iOS",
 		"Version": "5.1",
@@ -182,52 +183,40 @@
 		"Beta":    5
 	},
 	"16A5318d": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    3,
 		"Date":    20180703
 	},
 	"16A5327f": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    4,
 		"Date":    20180717
 	},
 	"16A5354b": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    7,
 		"Date":    20180813
 	},
 	"16A5357b": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    8,
 		"Date":    20180815
 	},
 	"16A5362a": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    9,
 		"Date":    20180820
 	},
 	"16A5364a": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    10,
 		"Date":    20180823
 	},
 	"16A5365b": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    11,
 		"Date":    20180827
 	},
 	"16A5366a": {
-		"Product": "iOS",
-		"Version": "12.0",
 		"Beta":    12,
 		"Date":    20180831
+	},
+	"16A366": {
+		"Product": "iOS",
+		"Date":    20180912
 	},
 
 	"15J5284e": {
@@ -760,8 +749,7 @@
 		"Version": "5.0",
 		"Beta":    9,
 		"Date":    20180824
-	}
-	,
+	},
 	"16R5363a": {
 		"Product": "watchOS",
 		"Version": "5.0",
