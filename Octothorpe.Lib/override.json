@@ -215,8 +215,26 @@
 		"Date":    20180831
 	},
 	"16A366": {
-		"Product": "iOS",
 		"Date":    20180912
+	},
+	"16D5039a": {
+		"Product": "iOS",
+		"Beta":    4,
+		"Date":    20190110
+	},
+	"16D57": {
+		"Product": "iOS",
+		"Date":    20190207
+	},
+	"16E5191d": {
+		"Product": "iOS",
+		"Beta":    2,
+		"Date":    20190204
+	},
+	"16E5201e": {
+		"Product": "iOS",
+		"Beta":    3,
+		"Date":    20190219
 	},
 
 	"15J5284e": {
