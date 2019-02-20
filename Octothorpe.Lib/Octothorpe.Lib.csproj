@@ -6,14 +6,14 @@
     <Company />
     <Copyright>Copyright ©2018 Dialexio.</Copyright>
     <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
-    <AssemblyVersion>2.1.0.1</AssemblyVersion>
-    <FileVersion>2.1.0.1</FileVersion>
-    <Version>1.1.0</Version>
-    <ReleaseVersion>2.1.0</ReleaseVersion>
+    <AssemblyVersion>2.0.2.0</AssemblyVersion>
+    <FileVersion>2.0.2.0</FileVersion>
+    <Version>1.0.3</Version>
+    <ReleaseVersion>2.0.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="plist-cil" Version="1.50.0" />
   </ItemGroup>
   <ItemGroup>
