@@ -1,0 +1,288 @@
+{
+    "iPad": {
+        "iPad (1st generation)": {
+            "Device":      "iPad1,1",
+            "HeaderLevel": 2,
+            "Models":      ["K48AP"]
+        },
+        "iPad 2 (K93AP)": {
+            "Device":      "iPad2,1",
+            "HeaderLevel": 3,
+            "Models":      ["K93AP"]
+        },
+        "iPad 2 (K94AP)": {
+            "Device":      "iPad2,2",
+            "HeaderLevel": 3,
+            "Models":      ["K94AP"]
+        },
+        "iPad 2 (K95AP)": {
+            "Device":      "iPad2,3",
+            "HeaderLevel": 3,
+            "Models":      ["K95AP"]
+        },
+        "iPad 2 (K93AAP)": {
+            "Device":      "iPad2,4",
+            "HeaderLevel": 3,
+            "Models":      ["K93AAP"]
+        },
+        "iPad 3rd generation (J1AP)": {
+            "Device":      "iPad3,1",
+            "HeaderLevel": 3,
+            "Models":      ["J1AP"]
+        },
+        "iPad 3rd generation (J2AP)": {
+            "Device":      "iPad3,2",
+            "HeaderLevel": 3,
+            "Models":      ["J2AP"]
+        },
+        "iPad 3rd generation (J2AAP)": {
+            "Device":      "iPad3,3",
+            "HeaderLevel": 3,
+            "Models":      ["J2AAP"]
+        },
+        "iPad 4th generation (P101AP)": {
+            "Device":      "iPad3,4",
+            "HeaderLevel": 3,
+            "Models":      ["P101AP"]
+        },
+        "iPad 4th generation (P102AP)": {
+            "Device":      "iPad3,5",
+            "HeaderLevel": 3,
+            "Models":      ["P102AP"]
+        },
+        "iPad 4th generation (P103AP)": {
+            "Device":      "iPad3,6",
+            "HeaderLevel": 3,
+            "Models":      ["P103AP"]
+        },
+        "iPad Air (J71AP)": {
+            "Device":      "iPad4,1",
+            "HeaderLevel": 3,
+            "Models":      ["J71AP"]
+        },
+        "iPad Air (J72AP)": {
+            "Device":      "iPad4,2",
+            "HeaderLevel": 3,
+            "Models":      ["J72AP"]
+        },
+        "iPad Air (J73AP)": {
+            "Device":      "iPad4,3",
+            "HeaderLevel": 3,
+            "Models":      ["J73AP"]
+        },
+        "iPad Air 2 (J81AP)": {
+            "Device":      "iPad5,3",
+            "HeaderLevel": 3,
+            "Models":      ["J81AP"]
+        },
+        "iPad Air 2 (J82AP)": {
+            "Device":      "iPad5,4",
+            "HeaderLevel": 3,
+            "Models":      ["J82AP"]
+        },
+        "iPad Pro 12.9-inch 1st generation (J98aAP)": {
+            "Device":      "iPad6,7",
+            "HeaderLevel": 3,
+            "Models":      ["J98aAP"]
+        },
+        "iPad Pro 12.9-inch 1st generation (J99aAP)": {
+            "Device":      "iPad6,8",
+            "HeaderLevel": 3,
+            "Models":      ["J99aAP"]
+        },
+        "iPad Pro 9.7-inch (J127AP)": {
+            "Device":      "iPad6,3",
+            "HeaderLevel": 3,
+            "Models":      ["J127AP"]
+        },
+        "iPad Pro 9.7-inch (J128AP)": {
+            "Device":      "iPad6,4",
+            "HeaderLevel": 3,
+            "Models":      ["J128AP"]
+        },
+        "iPad 5th generation (Wi-Fi)": {
+            "Device":      "iPad6,11",
+            "HeaderLevel": 3,
+            "Models":      ["J71sAP", "J71tAP"]
+        },
+        "iPad 5th generation (Cellular)": {
+            "Device":      "iPad6,12",
+            "HeaderLevel": 3,
+            "Models":      ["J72sAP", "J72tAP"]
+        }
+    },
+    "iPhone": {
+        "iPhone 3GS": {
+            "Device":      "iPhone2,1",
+            "HeaderLevel": 2,
+            "Models":      ["N88AP"]
+        },
+        "iPhone 4 (N90AP)": {
+            "Device":      "iPhone3,1",
+            "HeaderLevel": 3,
+            "Models":      ["N90AP"]
+        },
+        "iPhone 4 (N90BAP)": {
+            "Device":      "iPhone3,2",
+            "HeaderLevel": 3,
+            "Models":      ["N90BAP"]
+        },
+        "iPhone 4 (N92AP)": {
+            "Device":      "iPhone3,3",
+            "HeaderLevel": 3,
+            "Models":      ["N92AP"]
+        },
+        "iPhone 4S": {
+            "Device":      "iPhone4,1",
+            "HeaderLevel": 2,
+            "Models":      ["N94AP"]
+        },
+        "iPhone 5 (N41AP)": {
+            "Device":      "iPhone5,1",
+            "HeaderLevel": 3,
+            "Models":      ["N41AP"]
+        },
+        "iPhone 5 (N42AP)": {
+            "Device":      "iPhone5,2",
+            "HeaderLevel": 3,
+            "Models":      ["N42AP"]
+        },
+        "iPhone 5C (N48AP)": {
+            "Device":      "iPhone5,3",
+            "HeaderLevel": 3,
+            "Models":      ["N48AP"]
+        },
+        "iPhone 5C (N49AP)": {
+            "Device":      "iPhone5,4",
+            "HeaderLevel": 3,
+            "Models":      ["N49AP"]
+        },
+        "iPhone 5S (N51AP)": {
+            "Device":      "iPhone6,1",
+            "HeaderLevel": 3,
+            "Models":      ["N51AP"]
+        },
+        "iPhone 5S (N53AP)": {
+            "Device":      "iPhone6,2",
+            "HeaderLevel": 3,
+            "Models":      ["N53AP"]
+        },
+        "iPhone 6": {
+            "Device":      "iPhone7,2",
+            "HeaderLevel": 2,
+            "Models":      ["N61AP"]
+        },
+        "iPhone 6 Plus": {
+            "Device":      "iPhone7,1",
+            "HeaderLevel": 2,
+            "Models":      ["N56AP"]
+        },
+        "iPhone 6S": {
+            "Device":      "iPhone8,1",
+            "HeaderLevel": 3,
+            "Models":      ["N71AP", "N71mAP"]
+        },
+        "iPhone 6S Plus": {
+            "Device":      "iPhone8,2",
+            "HeaderLevel": 3,
+            "Models":      ["N66AP", "N66mAP"]
+        },
+        "iPhone SE": {
+            "Device":      "iPhone8,4",
+            "HeaderLevel": 3,
+            "Models":      ["N69AP", "N69uAP"]
+        },
+        "iPhone 7 (D10AP)": {
+            "Device":      "iPhone9,1",
+            "HeaderLevel": 3,
+            "Models":      ["D10AP"]
+        },
+        "iPhone 7 Plus (D11AP)": {
+            "Device":      "iPhone9,2",
+            "HeaderLevel": 3,
+            "Models":      ["D11AP"]
+        },
+        "iPhone 7 (D101AP)": {
+            "Device":      "iPhone9,3",
+            "HeaderLevel": 3,
+            "Models":      ["D101AP"]
+        },
+        "iPhone 7 Plus (D111AP)": {
+            "Device":      "iPhone9,4",
+            "HeaderLevel": 3,
+            "Models":      ["D111AP"]
+        },
+        "iPhone 8 (D20AP)": {
+            "Device":      "iPhone10,1",
+            "HeaderLevel": 3,
+            "Models":      ["D20AP"]
+        },
+        "iPhone 8 (D201AP)": {
+            "Device":      "iPhone10,4",
+            "HeaderLevel": 3,
+            "Models":      ["D201AP"]
+        },
+        "iPhone 8 Plus (D21AP)": {
+            "Device":      "iPhone10,2",
+            "HeaderLevel": 3,
+            "Models":      ["D21AP"]
+        },
+        "iPhone 8 Plus (D211AP)": {
+            "Device":      "iPhone10,5",
+            "HeaderLevel": 3,
+            "Models":      ["D211AP"]
+        },
+        "iPhone X (D22AP)": {
+            "Device":      "iPhone10,3",
+            "HeaderLevel": 3,
+            "Models":      ["D22AP"]
+        },
+        "iPhone X (D221AP)": {
+            "Device":      "iPhone10,6",
+            "HeaderLevel": 3,
+            "Models":      ["D221AP"]
+        },
+        "iPhone XR": {
+            "Device":      "iPhone11,8",
+            "HeaderLevel": 2,
+            "Models":      ["N841AP"]
+        },
+        "iPhone XS": {
+            "Device":      "iPhone11,2",
+            "HeaderLevel": 2,
+            "Models":      ["D321AP"]
+        },
+        "iPhone XS Max (D331AP)": {
+            "Device":      "iPhone11,4",
+            "HeaderLevel": 3,
+            "Models":      ["D331AP"]
+        },
+        "iPhone XS Max (D331pAP)": {
+            "Device":      "iPhone11,6",
+            "HeaderLevel": 3,
+            "Models":      ["D331pAP"]
+        }
+    },
+    "iPod touch": {
+        "iPod touch (3rd generation)": {
+            "Device":      "iPod3,1",
+            "HeaderLevel": 2,
+            "Models":      ["N18AP"]
+        },
+        "iPod touch (4th generation)": {
+            "Device":      "iPod4,1",
+            "HeaderLevel": 2,
+            "Models":      ["N81AP"]
+        },
+        "iPod touch (5th generation)": {
+            "Device":      "iPod5,1",
+            "HeaderLevel": 2,
+            "Models":      ["N78AP"]
+        },
+        "iPod touch (6th generation)": {
+            "Device":      "iPod7,1",
+            "HeaderLevel": 2,
+            "Models":      ["N102AP"]
+        }
+    }
+}

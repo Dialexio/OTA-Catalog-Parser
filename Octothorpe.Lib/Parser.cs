@@ -23,6 +23,7 @@
 using Claunia.PropertyList;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -368,6 +369,7 @@ namespace Octothorpe.Lib
             bool BorkedDelta, WatchPlus2;
             int ReduceRowspanBy = 0, RowspanOverride;
             Match name;
+            NSDictionary devices = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "devices.plist");
             string fileName, NewTableCell = "| ";
             // So we don't add on to a previous run.
             StringBuilder Output = new StringBuilder
@@ -377,6 +379,15 @@ namespace Octothorpe.Lib
 
             if (fullTable)
             {
+                if (ModelNeedsChecking)
+                {
+                    Output.AppendLine(string.Format("=== [[{0}]] ===", model));
+                }
+                else
+                {
+                    Output.AppendLine(string.Format("=== [[{0}|{1}]] ===", model, device));
+                }
+
                 Output.AppendLine("{| class=\"wikitable\" style=\"font-size: smaller; text-align: center;\"");
                 Output.AppendLine("|-");
                 Output.AppendLine("! Version");
