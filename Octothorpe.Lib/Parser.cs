@@ -33,10 +33,11 @@ namespace Octothorpe.Lib
 {
     class DeviceInfo
     {
-        public DeviceInfo(NSDictionary deviceInfo)
+        public DeviceInfo(KeyValuePair<string, NSObject> deviceInfo)
         {
-            HeaderLevel = (int)deviceInfo["HeaderLevel"].ToObject();
-            Models = (object[])deviceInfo["Models"].ToObject();
+            HeaderLevel = (int)((NSDictionary)deviceInfo.Value)["HeaderLevel"].ToObject();
+            Models = (object[])((NSDictionary)deviceInfo.Value)["Models"].ToObject();
+            Name = deviceInfo.Key;
         }
 
         public int HeaderLevel
@@ -45,6 +46,11 @@ namespace Octothorpe.Lib
         }
 
         public object[] Models
+        {
+            get;
+        }
+
+        public string Name
         {
             get;
         }
@@ -401,10 +407,10 @@ namespace Octothorpe.Lib
             foreach (NSObject devicesNames in deviceInfo.Values)
             {
                 // Looking through the <dict>s for each device.
-                foreach (NSObject devicesInfo in ((NSDictionary)devicesNames).Values)
+                foreach (KeyValuePair<string, NSObject> devicesInfo in (NSDictionary)devicesNames)
                 {
-                    if (((NSDictionary)devicesInfo)["Device"].ToString() == device)
-                        info = new DeviceInfo((NSDictionary)devicesInfo);
+                    if (((NSDictionary)devicesInfo.Value)["Device"].ToString() == device)
+                        info = new DeviceInfo(devicesInfo);
                 }
             }
 
@@ -418,7 +424,7 @@ namespace Octothorpe.Lib
                     Output.Append(string.Format(" [[{0}]] ", model));
 
                 else
-                    Output.Append(string.Format(" [[{0}|{1}]] ", info.Models[0], device));
+                    Output.Append(string.Format(" [[{0}|{1}]] ", info.Models[0], info.Name));
 
                 for (int i = 0; i < info.HeaderLevel; i++)
                     Output.Append('=');
