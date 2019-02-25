@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2018 Dialexio
+ * Copyright (c) 2019 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -31,6 +31,25 @@ using System.Threading.Tasks;
 
 namespace Octothorpe.Lib
 {
+    class DeviceInfo
+    {
+        public DeviceInfo(NSDictionary deviceInfo)
+        {
+            HeaderLevel = (int)deviceInfo["HeaderLevel"].ToObject();
+            Models = (object[])deviceInfo["Models"].ToObject();
+        }
+
+        public int HeaderLevel
+        {
+            get;
+        }
+
+        public object[] Models
+        {
+            get;
+        }
+    }
+
     public class Parser
     {
         private bool fullTable, removeStubs, showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
@@ -367,9 +386,10 @@ namespace Octothorpe.Lib
         private string OutputWikiMarkup()
         {
             bool BorkedDelta, WatchPlus2;
+            DeviceInfo info = null;
             int ReduceRowspanBy = 0, RowspanOverride;
             Match name;
-            NSDictionary devices = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "devices.plist");
+            NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
             string fileName, NewTableCell = "| ";
             // So we don't add on to a previous run.
             StringBuilder Output = new StringBuilder
@@ -377,17 +397,35 @@ namespace Octothorpe.Lib
                 Length = 0
             };
 
+            // Looking through the <dict>s for each device class.
+            foreach (NSObject devicesNames in deviceInfo.Values)
+            {
+                // Looking through the <dict>s for each device.
+                foreach (NSObject devicesInfo in ((NSDictionary)devicesNames).Values)
+                {
+                    if (((NSDictionary)devicesInfo)["Device"].ToString() == device)
+                        info = new DeviceInfo((NSDictionary)devicesInfo);
+                }
+            }
+
             if (fullTable)
             {
-                if (ModelNeedsChecking)
-                {
-                    Output.AppendLine(string.Format("=== [[{0}]] ===", model));
-                }
-                else
-                {
-                    Output.AppendLine(string.Format("=== [[{0}|{1}]] ===", model, device));
-                }
+                // Header
+                for (int i = 0; i < info.HeaderLevel; i++)
+                    Output.Append('=');
 
+                if (ModelNeedsChecking)
+                    Output.Append(string.Format(" [[{0}]] ", model));
+
+                else
+                    Output.Append(string.Format(" [[{0}|{1}]] ", info.Models[0], device));
+
+                for (int i = 0; i < info.HeaderLevel; i++)
+                    Output.Append('=');
+
+                Output.AppendLine();
+
+                // Table
                 Output.AppendLine("{| class=\"wikitable\" style=\"font-size: smaller; text-align: center;\"");
                 Output.AppendLine("|-");
                 Output.AppendLine("! Version");
@@ -405,7 +443,7 @@ namespace Octothorpe.Lib
             }
         
             foreach (OTAPackage package in Packages)
-            {                
+            {
                 BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
                 WatchPlus2 = false;
 
