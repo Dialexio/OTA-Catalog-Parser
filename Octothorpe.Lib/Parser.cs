@@ -33,26 +33,39 @@ namespace Octothorpe.Lib
 {
     class DeviceInfo
     {
+        private readonly KeyValuePair<string, NSObject> Information;
+
         public DeviceInfo(KeyValuePair<string, NSObject> deviceInfo)
         {
-            HeaderLevel = (int)((NSDictionary)deviceInfo.Value)["HeaderLevel"].ToObject();
-            Models = (object[])((NSDictionary)deviceInfo.Value)["Models"].ToObject();
-            Name = deviceInfo.Key;
+            Information = deviceInfo;
         }
 
         public int HeaderLevel
         {
-            get;
+            get
+            {
+                return (((NSDictionary)Information.Value).ContainsKey("HeaderLevel")) ?
+                    (int)((NSDictionary)Information.Value)["HeaderLevel"].ToObject() :
+                    3;
+            }
         }
 
         public object[] Models
         {
-            get;
+            get
+            {
+                return (((NSDictionary)Information.Value).ContainsKey("Models")) ?
+                    (object[])((NSDictionary)Information.Value)["Models"].ToObject() :
+                    new object[] {"X999xAP"};
+            }
         }
 
         public string Name
         {
-            get;
+            get
+            {
+                return Information.Key;
+            }
         }
     }
 
@@ -420,8 +433,8 @@ namespace Octothorpe.Lib
                 for (int i = 0; i < info.HeaderLevel; i++)
                     Output.Append('=');
 
-                if (ModelNeedsChecking)
-                    Output.Append(string.Format(" [[{0}]] ", model));
+                if (info.HeaderLevel == 3)
+                    Output.Append(string.Format(" [[{0}]] ", info.Models[0]));
 
                 else
                     Output.Append(string.Format(" [[{0}|{1}]] ", info.Models[0], info.Name));
