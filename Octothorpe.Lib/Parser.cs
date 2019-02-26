@@ -392,7 +392,7 @@ namespace Octothorpe.Lib
                 // Compatibility Version.
                 Output.AppendLine($"Compatibility Version: {package.CompatibilityVersion}");
 
-                // Print out the url and file Size.
+                // Print out the URL and file size.
                 Output.AppendLine($"URL: {package.URL}");
                 Output.AppendLine($"File size: {package.Size}{Environment.NewLine}");
             }
@@ -434,10 +434,10 @@ namespace Octothorpe.Lib
                     Output.Append('=');
 
                 if (info.HeaderLevel == 3)
-                    Output.Append(string.Format(" [[{0}]] ", info.Models[0]));
+                    Output.Append($" [[{info.Models[0]}]] ");
 
                 else
-                    Output.Append(string.Format(" [[{0}|{1}]] ", info.Models[0], info.Name));
+                    Output.Append($" [[{info.Models[0]}|{info.Name}]] ");
 
                 for (int i = 0; i < info.HeaderLevel; i++)
                     Output.Append('=');
