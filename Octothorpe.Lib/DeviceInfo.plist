@@ -67,7 +67,7 @@
                 <key>Device</key>
                 <string>Watch1,1</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N27aAP</string>
@@ -76,9 +76,9 @@
             <key>Apple Watch 1st generation (N28aAP)</key>
             <dict>
                 <key>Device</key>
-                <string>Watch1,1</string>
+                <string>Watch1,2</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N28aAP</string>
@@ -89,7 +89,7 @@
                 <key>Device</key>
                 <string>Watch2,6</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N27dAP</string>
@@ -100,7 +100,7 @@
                 <key>Device</key>
                 <string>Watch2,7</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N28dAP</string>
@@ -111,7 +111,7 @@
                 <key>Device</key>
                 <string>Watch2,3</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N74AP</string>
@@ -122,7 +122,7 @@
                 <key>Device</key>
                 <string>Watch2,4</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N75AP</string>
@@ -133,7 +133,7 @@
                 <key>Device</key>
                 <string>Watch3,1</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N111sAP</string>
@@ -144,7 +144,7 @@
                 <key>Device</key>
                 <string>Watch3,2</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N111bAP</string>
@@ -155,7 +155,7 @@
                 <key>Device</key>
                 <string>Watch3,3</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N121sAP</string>
@@ -166,7 +166,7 @@
                 <key>Device</key>
                 <string>Watch3,4</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N121bAP</string>
@@ -177,7 +177,7 @@
                 <key>Device</key>
                 <string>Watch4,1</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N131sAP</string>
@@ -188,7 +188,7 @@
                 <key>Device</key>
                 <string>Watch4,2</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N131bAP</string>
@@ -199,7 +199,7 @@
                 <key>Device</key>
                 <string>Watch4,3</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N141sAP</string>
@@ -210,23 +210,10 @@
                 <key>Device</key>
                 <string>Watch4,4</string>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <array>
                     <string>N141bAP</string>
-                </array>
-            </dict>
-        </dict>
-        <dict>
-            <key>HomePod 1st generation (B238AP)</key>
-            <dict>
-                <key>Device</key>
-                <string>AudioAccessory1,2</string>
-                <key>HeaderLevel</key>
-                <integer>2</integer>
-                <key>Models</key>
-                <array>
-                    <string>B238AP</string>
                 </array>
             </dict>
         </dict>
