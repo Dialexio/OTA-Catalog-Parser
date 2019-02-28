@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using NSArray = Claunia.PropertyList.NSArray;
 using NSDictionary = Claunia.PropertyList.NSDictionary;
 using NSObject = Claunia.PropertyList.NSObject;
 
@@ -51,19 +52,25 @@ namespace Octothorpe.Mac
 
         public MainWindowController() : base("MainWindow")
         {
-            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
-            {
-                DeviceSelection.AddItem(deviceClass.Key);
-                DeviceSelection.LastItem.Enabled = false;
-
-                foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
-                    DeviceSelection.AddItem(device.Key);
-            }
         }
 
         public override void AwakeFromNib()
         {
             base.AwakeFromNib();
+
+            // Populate the Device dropdown box
+            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
+            {
+                // Add and disable items that are group headers
+                DeviceSelection.AddItem(deviceClass.Key);
+                DeviceSelection.LastItem.Action = null;
+                DeviceSelection.LastItem.Enabled = false;
+
+                foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
+                    DeviceSelection.AddItem(device.Key);
+            }
+
+            DeviceSelection.SelectItem(1);
         }
 
         public new MainWindow Window
@@ -153,19 +160,40 @@ namespace Octothorpe.Mac
 
         partial void DeviceChanged(NSPopUpButton sender)
         {
-            switch (sender.StringValue)
-            {
-                case "iPad6,11":
-                case "iPad6,12":
-                case "iPhone8,1":
-                case "iPhone8,2":
-                case "iPhone8,4":
-                    NSBoxModel.Hidden = false;
-                    break;
+            string selecteditem = (sender.SelectedItem.Title);
 
-                default:
-                    NSBoxModel.Hidden = true;
-                    break;
+            // Empty out the dropdown box for models
+            ModelSelection.RemoveAllItems();
+
+            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
+            {
+                if (((NSDictionary)deviceClass.Value).ContainsKey(selecteditem))
+                {
+                    parser.Device = ((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Device"].ToString();
+
+                    // If we have an A9 device with multiple models, we need to show the models
+                    switch (parser.Device)
+                    {
+                        case "iPad6,11":
+                        case "iPad6,12":
+                        case "iPhone8,1":
+                        case "iPhone8,2":
+                        case "iPhone8,4":
+                            NSBoxModel.Hidden = false;
+
+                            foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
+                                ModelSelection.AddItem(model.ToString());
+
+                            break;
+
+                        default:
+                            NSBoxModel.Hidden = true;
+                            break;
+                    }
+                }
+
+                else
+                    parser.Device = "iProd999,99"; // This should never be a final value.
             }
         }
 
@@ -175,7 +203,7 @@ namespace Octothorpe.Mac
             {
                 alert = null;
 
-                parser.Model = NSTextFieldModel.StringValue;
+                parser.Model = ModelSelection.StringValue;
                 parser.WikiMarkup = DisplayWikiMarkup;
 
                 parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);

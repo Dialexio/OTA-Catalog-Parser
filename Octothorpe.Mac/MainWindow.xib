@@ -10,6 +10,7 @@
             <connections>
                 <outlet property="DeviceSelection" destination="7sb-Q2-Rvh" id="C4S-Du-Jgm"/>
                 <outlet property="FileSelection" destination="fme-i2-nGb" id="MfI-ee-sqU"/>
+                <outlet property="ModelSelection" destination="9vf-ZE-GFD" id="xiQ-wp-DaE"/>
                 <outlet property="NSBoxFile" destination="V7z-AE-E0N" id="Yx3-RZ-eW5"/>
                 <outlet property="NSBoxLoc" destination="s7n-r6-laY" id="ePY-oD-BOR"/>
                 <outlet property="NSBoxModel" destination="bUE-T3-DMb" id="aTZ-Sk-QWr"/>
@@ -21,7 +22,6 @@
                 <outlet property="NSTextFieldLoc" destination="5C6-t3-lJu" id="va0-r0-09C"/>
                 <outlet property="NSTextFieldMax" destination="CpE-z8-1ue" id="cIF-xY-eNL"/>
                 <outlet property="NSTextFieldMin" destination="VX3-E8-91R" id="urS-Sv-GtF"/>
-                <outlet property="NSTextFieldModel" destination="pWT-22-ZzG" id="9wH-N6-s9e"/>
                 <outlet property="NSTextViewOutput" destination="6FB-F6-C5V" id="ZfX-EA-15v"/>
                 <outlet property="window" destination="2" id="6"/>
             </connections>
@@ -226,7 +226,7 @@ DQ
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FYH-lH-9Ps">
-                                    <rect key="frame" x="67" y="2" width="48" height="17"/>
+                                    <rect key="frame" x="59" y="2" width="48" height="17"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Model:" id="9vf-Ie-mrt">
                                         <font key="font" metaFont="system"/>
@@ -234,15 +234,15 @@ DQ
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pWT-22-ZzG">
-                                    <rect key="frame" x="119" y="0.0" width="68" height="22"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="O4e-ne-G5v">
-                                        <font key="font" metaFont="system"/>
-                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
+                                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9vf-ZE-GFD">
+                                    <rect key="frame" x="111" y="-3" width="86" height="25"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="boH-8o-Fjr">
+                                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="menu"/>
+                                        <menu key="menu" id="Obj-hV-gyP"/>
+                                    </popUpButtonCell>
+                                </popUpButton>
                             </subviews>
                         </view>
                     </box>
@@ -308,7 +308,7 @@ DQ
                             <menu key="menu" id="kwn-5B-qbY"/>
                         </popUpButtonCell>
                         <connections>
-                            <action selector="DeviceChanged:" target="-2" id="BBn-qv-K5y"/>
+                            <action selector="DeviceChanged:" target="-2" id="m4y-sx-c7D"/>
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MRS-D9-u0w">
