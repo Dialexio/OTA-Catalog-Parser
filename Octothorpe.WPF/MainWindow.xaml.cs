@@ -20,7 +20,9 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+using Claunia.PropertyList;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -36,12 +38,21 @@ namespace Octothorpe
     public partial class MainWindow : Window
     {
         private Microsoft.Win32.OpenFileDialog FilePrompt;
+        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
         private Parser parser = new Parser();
 
 
         public MainWindow()
         {
             InitializeComponent();
+
+            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
+            {
+                ComboBoxDevice.Items.Add(new ComboBoxItem() { Content = deviceClass.Key, IsEnabled = false });
+
+                foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
+                    ComboBoxDevice.Items.Add(new ComboBoxItem() { Content = device.Key });
+            }
         }
 
         private void BrowseForFile(object sender, RoutedEventArgs e)
@@ -92,12 +103,52 @@ namespace Octothorpe
             }
         }
 
+        private void DeviceChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selecteditem = ((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString();
+
+            // Empty out the dropdown box for models
+            while (ComboBoxModel.Items.IsEmpty == false)
+                ComboBoxModel.Items.RemoveAt(0);
+
+            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
+            {
+                if (((NSDictionary)deviceClass.Value).ContainsKey(selecteditem))
+                {
+                    parser.Device = ((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Device"].ToString();
+
+                    // If we have an A9 device with multiple models, we need to show the models
+                    switch (parser.Device)
+                    {
+                        case "iPad6,11":
+                        case "iPad6,12":
+                        case "iPhone8,1":
+                        case "iPhone8,2":
+                        case "iPhone8,4":
+                            GridModel.Visibility = Visibility.Visible;
+
+                            foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
+                                ComboBoxModel.Items.Add(new ComboBoxItem() { Content = model.ToString() });
+                            break;
+
+                        default:
+                            GridModel.Visibility = Visibility.Collapsed;
+                            break;
+                    }
+
+                    break;
+                }
+
+                else
+                    parser.Device = "iProd999,99"; // This should never be a final value.
+            }
+        }
+
         private void ParsingSTART(object sender, RoutedEventArgs e)
         {
             try
             {
-                parser.Device = TextBoxDevice.Text;
-                parser.Model = TextBoxModel.Text;
+                parser.Model = (string)ComboBoxModel.SelectedValue;
                 parser.WikiMarkup = (RadioWiki.IsChecked == true);
 
                 parser.FullTable = CheckBoxFullTable.IsChecked.Value;
@@ -111,8 +162,8 @@ namespace Octothorpe
                     {
                         // Doing it like this converts an integer, e.g. "11" into "11.0"
                         parser.Maximum = (uint.TryParse(TextBoxMax.Text, out var verstring)) ?
-                        new Version(TextBoxMax.Text + ".0") :
-                        new Version(TextBoxMax.Text);
+                            new Version(TextBoxMax.Text + ".0") :
+                            new Version(TextBoxMax.Text);
                     }
 
                     // Set minimum version if one was specified
@@ -247,24 +298,6 @@ namespace Octothorpe
                 ButtonParse.IsEnabled = false;
             }
         }
-
-        private void ToggleModelField(object sender, TextChangedEventArgs e)
-        {
-            switch (((TextBox)sender).Text)
-            {
-                case "iPad6,11":
-                case "iPad6,12":
-                case "iPhone8,1":
-                case "iPhone8,2":
-                case "iPhone8,4":
-                    GridModel.Visibility = Visibility.Visible;
-                    break;
-
-                default:
-                    GridModel.Visibility = Visibility.Collapsed;
-                    break;
-            }
-        }
     }
 
     public class InvertVisibilityConverter : IValueConverter
@@ -273,9 +306,9 @@ namespace Octothorpe
         {
             if (targetType == typeof(Visibility))
             {
-                return (Visibility)value == Visibility.Collapsed
-                    ? Visibility.Visible
-                    : Visibility.Collapsed;
+                return (Visibility)value == Visibility.Collapsed ?
+                    Visibility.Visible :
+                    Visibility.Collapsed;
             }
 
             throw new InvalidOperationException("Converter can only convert to value of type Visibility.");

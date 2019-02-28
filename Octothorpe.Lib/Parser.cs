@@ -85,6 +85,7 @@ namespace Octothorpe.Lib
 
         public string Device
         {
+            get { return device; }
             set { device = value; }
         }
 

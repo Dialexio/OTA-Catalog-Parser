@@ -29,13 +29,13 @@
                 <TextBox IsEnabled="False" Height="20" Margin="0,0,75,0" Name="TextBoxFile" VerticalAlignment="Center" />
                 <Button Click="BrowseForFile" Content="Browse…" Height="20" Margin="171,0,0,0" VerticalAlignment="Center" />
             </Grid>
-            <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" Margin="0,86,0,265" Height="28">
-                <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" VerticalAlignment="Center" />
-                <TextBox Name="TextBoxDevice" VerticalAlignment="Center" TextChanged="ToggleModelField" Margin="53,0,0,0" />
+            <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,91,0,270" Width="170">
+                <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" />
+                <ComboBox HorizontalAlignment="Center" Name="ComboBoxDevice" Margin="53,0,0,0" SelectionChanged="DeviceChanged" Width="117"/>
             </Grid>
-            <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,114,0,237" Height="28" Visibility="Collapsed">
-                <TextBox Name="TextBoxModel" VerticalAlignment="Center" Margin="51.657,5.02,0,5.02" />
-                <Label Content="Model:" Height="28" Name="LabelModel" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,60,0" />
+            <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,117" Visibility="Collapsed" Width="170">
+                <Label Content="Model:" HorizontalAlignment="Left" Name="LabelModel" />
+                <ComboBox HorizontalAlignment="Center" Name="ComboBoxModel" Margin="53,0,0,0" Width="117"/>
             </Grid>
             <GroupBox Header="Optional" x:Name="GroupOptional" VerticalAlignment="Bottom" Margin="16,0,15,34" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" HorizontalAlignment="Center">
                 <Grid>
@@ -61,8 +61,8 @@
             </GroupBox>
 
             <!--These come after the Optional GroupBox because the wiki radio button alters the visibiliuty of the table header checkbox-->
-            <RadioButton Content="Human-readable format" Name="RadioHuman" HorizontalAlignment="Center" Width="152" Margin="0,132,0,197" VerticalAlignment="Center" />
-            <RadioButton Content="The iPhone Wiki markup" Name="RadioWiki" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" Width="152" Margin="0,147,0,177" />
+            <RadioButton Content="Human-readable format" Name="RadioHuman" HorizontalAlignment="Center" Width="152" VerticalAlignment="Center" Margin="0,0,0,17" />
+            <RadioButton Content="The iPhone Wiki markup" Name="RadioWiki" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" Width="152" Margin="0,17,0,0" />
 
             <Button Content="Parse" Name="ButtonParse" VerticalAlignment="Bottom" Click="ParsingSTART" HorizontalAlignment="Center" Width="58" IsDefault="True" />
         </Grid>
