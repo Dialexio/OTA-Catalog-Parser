@@ -13,6 +13,9 @@ namespace Octothorpe.Mac
 	partial class MainWindowController
 	{
 		[Outlet]
+		AppKit.NSPopUpButton DeviceSelection { get; set; }
+
+		[Outlet]
 		AppKit.NSPopUpButton FileSelection { get; set; }
 
 		[Outlet]
@@ -35,9 +38,6 @@ namespace Octothorpe.Mac
 
 		[Outlet]
 		AppKit.NSButton NSButtonRemoveStubs { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField NSTextFieldDevice { get; set; }
 
 		[Outlet]
 		AppKit.NSTextField NSTextFieldFile { get; set; }
@@ -63,6 +63,9 @@ namespace Octothorpe.Mac
 		[Action ("ChangeOutputFormat:")]
 		partial void ChangeOutputFormat (AppKit.NSButton sender);
 
+		[Action ("DeviceChanged:")]
+		partial void DeviceChanged (AppKit.NSPopUpButton sender);
+
 		[Action ("ParsingSTART:")]
 		partial void ParsingSTART (AppKit.NSButton sender);
 
@@ -71,9 +74,6 @@ namespace Octothorpe.Mac
 
 		[Action ("SourceEdited:")]
 		partial void SourceEdited (AppKit.NSTextField sender);
-
-		[Action ("ToggleModelField:")]
-		partial void ToggleModelField (AppKit.NSTextField sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -117,9 +117,9 @@ namespace Octothorpe.Mac
 				NSButtonRemoveStubs = null;
 			}
 
-			if (NSTextFieldDevice != null) {
-				NSTextFieldDevice.Dispose ();
-				NSTextFieldDevice = null;
+			if (DeviceSelection != null) {
+				DeviceSelection.Dispose ();
+				DeviceSelection = null;
 			}
 
 			if (NSTextFieldFile != null) {

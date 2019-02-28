@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2018 Dialexio
+ * Copyright (c) 2019 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -21,41 +21,55 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 using AppKit;
+using Claunia.PropertyList;
 using Foundation;
 using Octothorpe.Lib;
 using System;
+using System.Collections.Generic;
 using System.IO;
+
+using NSDictionary = Claunia.PropertyList.NSDictionary;
+using NSObject = Claunia.PropertyList.NSObject;
 
 namespace Octothorpe.Mac
 {
-	public partial class MainWindowController : NSWindowController
-	{
-		private bool DisplayWikiMarkup = true;
-		private NSAlert alert;
-		private Parser parser = new Parser();
+    public partial class MainWindowController : NSWindowController
+    {
+        private bool DisplayWikiMarkup = true;
+        private NSAlert alert;
+        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
+        private Parser parser = new Parser();
 
-		public MainWindowController(IntPtr handle) : base(handle)
-		{
-		}
+        public MainWindowController(IntPtr handle) : base(handle)
+        {
+        }
 
-		[Export("initWithCoder:")]
-		public MainWindowController(NSCoder coder) : base(coder)
-		{
-		}
+        [Export("initWithCoder:")]
+        public MainWindowController(NSCoder coder) : base(coder)
+        {
+        }
 
-		public MainWindowController() : base("MainWindow")
-		{
-		}
+        public MainWindowController() : base("MainWindow")
+        {
+            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
+            {
+                DeviceSelection.AddItem(deviceClass.Key);
+                DeviceSelection.LastItem.Enabled = false;
 
-		public override void AwakeFromNib()
-		{
-			base.AwakeFromNib();
-		}
+                foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
+                    DeviceSelection.AddItem(device.Key);
+            }
+        }
 
-		public new MainWindow Window
-		{
-			get { return (MainWindow)base.Window; }
-		}
+        public override void AwakeFromNib()
+        {
+            base.AwakeFromNib();
+        }
+
+        public new MainWindow Window
+        {
+            get { return (MainWindow)base.Window; }
+        }
 
         partial void BrowseForFile(NSButton sender)
         {
@@ -137,13 +151,30 @@ namespace Octothorpe.Mac
                 NSButtonFullTable.State = NSCellStateValue.Off;
         }
 
+        partial void DeviceChanged(NSPopUpButton sender)
+        {
+            switch (sender.StringValue)
+            {
+                case "iPad6,11":
+                case "iPad6,12":
+                case "iPhone8,1":
+                case "iPhone8,2":
+                case "iPhone8,4":
+                    NSBoxModel.Hidden = false;
+                    break;
+
+                default:
+                    NSBoxModel.Hidden = true;
+                    break;
+            }
+        }
+
         partial void ParsingSTART(NSButton sender)
         {
             try
             {
                 alert = null;
 
-                parser.Device = NSTextFieldDevice.StringValue;
                 parser.Model = NSTextFieldModel.StringValue;
                 parser.WikiMarkup = DisplayWikiMarkup;
 
@@ -157,18 +188,18 @@ namespace Octothorpe.Mac
                     if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
                     {
                         // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring))
-                            ? new Version(NSTextFieldMax.StringValue + ".0")
-                            : new Version(NSTextFieldMax.StringValue);
+                        parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring)) ?
+                            new Version(NSTextFieldMax.StringValue + ".0") :
+                            new Version(NSTextFieldMax.StringValue);
                     }
 
                     // Set minimum version if one was specified
                     if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
                     {
                         // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring))
-                            ? new Version(NSTextFieldMin.StringValue + ".0")
-                            : new Version(NSTextFieldMin.StringValue);
+                        parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring)) ?
+                            new Version(NSTextFieldMin.StringValue + ".0") :
+                            new Version(NSTextFieldMin.StringValue);
                     }
                 }
                 
@@ -255,7 +286,7 @@ namespace Octothorpe.Mac
         }
 
         partial void SourceChanged(NSPopUpButton sender)
-		{
+        {
             try
             {
                 switch (sender.SelectedItem.Title)
@@ -335,7 +366,7 @@ namespace Octothorpe.Mac
                 alert.RunModal();
                 NSButtonParse.Enabled = false;
             }
-		}
+        }
 
         partial void SourceEdited(NSTextField sender)
         {
@@ -378,23 +409,5 @@ namespace Octothorpe.Mac
                 NSButtonParse.Enabled = false;
             }
         }
-
-        partial void ToggleModelField(NSTextField sender)
-		{
-            switch (sender.StringValue)
-            {
-                case "iPad6,11":
-                case "iPad6,12":
-                case "iPhone8,1":
-                case "iPhone8,2":
-                case "iPhone8,4":
-                    NSBoxModel.Hidden = false;
-                    break;
-
-                default:
-                    NSBoxModel.Hidden = true;
-                    break;
-            }
-		}
-	}
+    }
 }

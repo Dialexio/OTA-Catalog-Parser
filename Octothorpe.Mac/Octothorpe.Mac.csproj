@@ -41,6 +41,11 @@
           <command>mv "override.json" "OTA Parser.app/Contents/MonoBundle/override.json"</command>
           <workingdir>${ProjectDir}/bin/Debug</workingdir>
         </Command>
+        <Command>
+          <type>AfterBuild</type>
+          <command>mv "DeviceInfo.plist" "OTA Parser.app/Contents/MonoBundle/DeviceInfo.plist"</command>
+          <workingdir>${ProjectDir}/bin/Debug</workingdir>
+        </Command>
       </CustomCommands>
     </CustomCommands>
     <AOTMode>None</AOTMode>
@@ -67,6 +72,11 @@
 		        <Command>
 		          <type>AfterBuild</type>
 		          <command>mv "override.json" "OTA Parser.app/Contents/MonoBundle/override.json"</command>
+		          <workingdir>${ProjectDir}/bin/Release</workingdir>
+		        </Command>
+		        <Command>
+		          <type>AfterBuild</type>
+		          <command>mv "DeviceInfo.plist" "OTA Parser.app/Contents/MonoBundle/DeviceInfo.plist"</command>
 		          <workingdir>${ProjectDir}/bin/Release</workingdir>
 		        </Command>
 		      </CustomCommands>
