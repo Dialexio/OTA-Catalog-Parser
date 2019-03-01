@@ -69,8 +69,6 @@ namespace Octothorpe.Mac
                 foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
                     DeviceSelection.AddItem(device.Key);
             }
-
-            DeviceSelection.SelectItem(1);
         }
 
         public new MainWindow Window
@@ -171,6 +169,10 @@ namespace Octothorpe.Mac
                 {
                     parser.Device = ((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Device"].ToString();
 
+                    // Populate the model dropdown box
+                    foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
+                        ModelSelection.AddItem(model.ToString());
+
                     // If we have an A9 device with multiple models, we need to show the models
                     switch (parser.Device)
                     {
@@ -180,16 +182,14 @@ namespace Octothorpe.Mac
                         case "iPhone8,2":
                         case "iPhone8,4":
                             NSBoxModel.Hidden = false;
-
-                            foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
-                                ModelSelection.AddItem(model.ToString());
-
                             break;
 
                         default:
                             NSBoxModel.Hidden = true;
                             break;
                     }
+
+                    break;
                 }
 
                 else
@@ -203,7 +203,7 @@ namespace Octothorpe.Mac
             {
                 alert = null;
 
-                parser.Model = ModelSelection.StringValue;
+                parser.Model = ModelSelection.SelectedItem.Title;
                 parser.WikiMarkup = DisplayWikiMarkup;
 
                 parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);

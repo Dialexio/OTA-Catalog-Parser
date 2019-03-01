@@ -249,12 +249,13 @@ DQ
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fme-i2-nGb">
                         <rect key="frame" x="59" y="391" width="179" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="iOS (Public)" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="x4L-Ek-xLE" id="8ti-3u-XYY">
+                        <popUpButtonCell key="cell" type="push" title="Select a source…" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" autoenablesItems="NO" selectedItem="Av1-L1-oEZ" id="8ti-3u-XYY">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="menu"/>
-                            <menu key="menu" id="2Yx-bz-GAU">
+                            <menu key="menu" autoenablesItems="NO" id="2Yx-bz-GAU">
                                 <items>
-                                    <menuItem title="iOS (Public)" state="on" id="x4L-Ek-xLE"/>
+                                    <menuItem title="Select a source…" state="off" enabled="NO" id="Av1-L1-oEZ" />
+                                    <menuItem title="iOS (Public)" id="x4L-Ek-xLE"/>
                                     <menuItem title="audioOS (Public)" id="fS5-2G-yMN"/>
                                     <menuItem title="tvOS (Public)" id="SE7-HT-qLr"/>
                                     <menuItem title="watchOS (Public)" id="dFX-CG-GYn"/>
