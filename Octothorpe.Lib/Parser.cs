@@ -80,13 +80,12 @@ namespace Octothorpe.Lib
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
         private object[] Assets;
         private readonly List<OTAPackage> Packages = new List<OTAPackage>();
-        private string device, model;
+        private string model = null;
         private Version max, minimum;
 
         public string Device
         {
-            get { return device; }
-            set { device = value; }
+            get; set;
         }
 
         public bool RemoveStubs
@@ -114,7 +113,7 @@ namespace Octothorpe.Lib
             set
             {
                 model = value;
-                ModelNeedsChecking = Regex.IsMatch(device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
+                ModelNeedsChecking = Regex.IsMatch(Device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
             }
         }
 
@@ -185,7 +184,7 @@ namespace Octothorpe.Lib
                         return;
 
                     // Device check.
-                    matched = package.SupportedDevices.Contains(device);
+                    matched = package.SupportedDevices.Contains(Device);
 
                     // Model check, if needed.
                     if (matched && ModelNeedsChecking)
@@ -306,17 +305,22 @@ namespace Octothorpe.Lib
         private void ErrorCheck()
         {
             // Device check.
-            if (device == null || Regex.IsMatch(device, @"(AppleTV|AudioAccessory|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
+            if (Device == null || Regex.IsMatch(Device, @"(AppleTV|AudioAccessory|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
                 throw new ArgumentException("device");
 
-            DeviceIsWatch = Regex.IsMatch(device, @"Watch\d,\d");
-            ModelNeedsChecking = Regex.IsMatch(device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
+            DeviceIsWatch = Regex.IsMatch(Device, @"Watch\d,\d");
 
             // Model check.
-            if (ModelNeedsChecking && Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false)
-                throw new ArgumentException("model");
+            if (ModelNeedsChecking)
+            {
+                if (model == null)
+                    throw new ArgumentException("model");
 
-            if (Assets.Length == 0)
+                else if (Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false)
+                    throw new ArgumentException("model");
+            }
+
+            if (Assets == null)
                 throw new ArgumentException("nofile");
         }
 
@@ -330,10 +334,10 @@ namespace Octothorpe.Lib
         
             foreach (OTAPackage package in Packages)
             {
-                switch (device.Substring(0, 4))
+                switch (Device.Substring(0, 4))
                 {
                     case "Appl":
-                        osName = (Regex.Match(device, @"AppleTV(2,1|3,1|3,2)").Success) ? "Apple TV software" : "tvOS";
+                        osName = (Regex.Match(Device, @"AppleTV(2,1|3,1|3,2)").Success) ? "Apple TV software" : "tvOS";
                         break;
 
                     case "Audi":
@@ -423,7 +427,7 @@ namespace Octothorpe.Lib
                 // Looking through the <dict>s for each device.
                 foreach (KeyValuePair<string, NSObject> devicesInfo in (NSDictionary)devicesNames)
                 {
-                    if (((NSDictionary)devicesInfo.Value)["Device"].ToString() == device)
+                    if (((NSDictionary)devicesInfo.Value)["Device"].ToString() == Device)
                         info = new DeviceInfo(devicesInfo);
                 }
             }
@@ -480,7 +484,7 @@ namespace Octothorpe.Lib
                             switch (package.OSVersion)
                             {
                                 case "9.2":
-                                    if (device == "iPhone4,1" || device == "iPhone5,1" || device == "iPhone5,2")
+                                    if (Device == "iPhone4,1" || Device == "iPhone5,1" || Device == "iPhone5,2")
                                         ReduceRowspanBy = 4;
                                     break;
 
@@ -535,7 +539,7 @@ namespace Octothorpe.Lib
                     {
                         // 32-bit Apple TV receives a filler for Marketing Version.
                         // (OTAPackage.MarketingVersion for 32-bit Apple TVs returns the OS version because the Marketing Version isn't specified in the XML... Confusing, I know.)
-                        if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success)
+                        if (Regex.Match(Device, "AppleTV(2,1|3,1|3,2)").Success)
                             Output.AppendLine($"| rowspan=\"{MarketVerRowspanCount}\" | [MARKETING VERSION]");
 
                         Output.Append("| rowspan=\"");
@@ -551,7 +555,7 @@ namespace Octothorpe.Lib
 
                     // 32-bit Apple TV receives a filler for Marketing Version.
                     // (OTAPackage.MarketingVersion for 32-bit Apple TVs returns the OS version because the Marketing Version isn't specified in the XML... Confusing, I know.)
-                    else if (Regex.Match(device, "AppleTV(2,1|3,1|3,2)").Success)
+                    else if (Regex.Match(Device, "AppleTV(2,1|3,1|3,2)").Success)
                         Output.AppendLine("| [MARKETING VERSION]");
 
                     // Don't let entries for watchOS 1.0(.1) spit out an OS version of 9.0.

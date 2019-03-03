@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.3</TargetFramework>
     <Authors>Dialexio</Authors>
     <Company />
     <Copyright>Copyright ©2019 Dialexio.</Copyright>
     <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
-    <AssemblyVersion>2.1.0.3</AssemblyVersion>
-    <FileVersion>2.1.0.3</FileVersion>
+    <AssemblyVersion>2.1.0.4</AssemblyVersion>
+    <FileVersion>2.1.0.4</FileVersion>
     <Version>1.1</Version>
-    <ReleaseVersion>2.1.0.3</ReleaseVersion>
+    <ReleaseVersion>2.1.0.4</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
