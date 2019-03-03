@@ -234,21 +234,25 @@ namespace Octothorpe
                     case "audioOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         parser.LoadPlist(TextBoxLoc.Text);
+                        ButtonParse.IsEnabled = true;
                         break;
 
                     case "iOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         parser.LoadPlist(TextBoxLoc.Text);
+                        ButtonParse.IsEnabled = true;
                         break;
 
                     case "tvOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         parser.LoadPlist(TextBoxLoc.Text);
+                        ButtonParse.IsEnabled = true;
                         break;
 
                     case "watchOS (Public)":
                         TextBoxLoc.Text = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         parser.LoadPlist(TextBoxLoc.Text);
+                        ButtonParse.IsEnabled = true;
                         break;
                 }
             }
