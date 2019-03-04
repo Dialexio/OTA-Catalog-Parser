@@ -117,6 +117,12 @@ namespace Octothorpe
                 {
                     parser.Device = ((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Device"].ToString();
 
+                    // Repopulate the dropdown box for models
+                    foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
+                        ComboBoxModel.Items.Add(new ComboBoxItem() { Content = model.ToString() });
+
+                    ComboBoxModel.SelectedIndex = 0;
+
                     // If we have an A9 device with multiple models, we need to show the models
                     switch (parser.Device)
                     {
@@ -126,9 +132,6 @@ namespace Octothorpe
                         case "iPhone8,2":
                         case "iPhone8,4":
                             GridModel.Visibility = Visibility.Visible;
-
-                            foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
-                                ComboBoxModel.Items.Add(new ComboBoxItem() { Content = model.ToString() });
                             break;
 
                         default:
