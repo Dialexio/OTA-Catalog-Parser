@@ -148,7 +148,7 @@ namespace Octothorpe
         {
             try
             {
-                parser.Model = (string)ComboBoxModel.SelectedValue;
+                parser.Model = (string)((ComboBoxItem)ComboBoxModel.SelectedItem).Content;
                 parser.WikiMarkup = (RadioWiki.IsChecked == true);
 
                 parser.FullTable = CheckBoxFullTable.IsChecked.Value;

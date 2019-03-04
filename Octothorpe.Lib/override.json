@@ -148,41 +148,30 @@
 		"Beta":    5
 	},
 	"15E5216a": {
-		"Product": "iOS",
-		"Version": "11.3",
 		"Beta":    6
 	},
 	"15F5071a": {
-		"Product": "iOS",
 		"Version": "11.4",
 		"Beta":    4
 	},
 	"15F5077a": {
-		"Product": "iOS",
-		"Version": "11.4",
 		"Beta":    5
 	},
 	"15F5079a": {
-		"Product": "iOS",
-		"Version": "11.4",
 		"Beta":    6
 	},
 	"15G5054c": {
-		"Product": "iOS",
 		"Version": "11.4.1",
 		"Beta":    1
 	},
 	"15G5074a": {
-		"Product": "iOS",
-		"Version": "11.4.1",
 		"Beta":    4
 	},
 	"15G5077a": {
-		"Product": "iOS",
-		"Version": "11.4.1",
 		"Beta":    5
 	},
 	"16A5318d": {
+		"Version": "12.0",
 		"Beta":    3,
 		"Date":    20180703
 	},
@@ -218,23 +207,24 @@
 		"Date":    20180912
 	},
 	"16D5039a": {
-		"Product": "iOS",
 		"Beta":    4,
 		"Date":    20190110
 	},
 	"16D57": {
-		"Product": "iOS",
 		"Date":    20190207
 	},
 	"16E5191d": {
-		"Product": "iOS",
 		"Beta":    2,
 		"Date":    20190204
 	},
 	"16E5201e": {
-		"Product": "iOS",
 		"Beta":    3,
 		"Date":    20190219
+	},
+	"16E5212f": {
+		"Product": "iOS",
+		"Beta":    4,
+		"Date":    20190304
 	},
 
 	"15J5284e": {
