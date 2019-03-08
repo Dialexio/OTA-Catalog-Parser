@@ -31,44 +31,6 @@ using System.Threading.Tasks;
 
 namespace Octothorpe.Lib
 {
-    class DeviceInfo
-    {
-        private readonly KeyValuePair<string, NSObject> Information;
-
-        public DeviceInfo(KeyValuePair<string, NSObject> deviceInfo)
-        {
-            Information = deviceInfo;
-        }
-
-        public int HeaderLevel
-        {
-            get
-            {
-                return (((NSDictionary)Information.Value).ContainsKey("HeaderLevel")) ?
-                    (int)((NSDictionary)Information.Value)["HeaderLevel"].ToObject() :
-                    3;
-            }
-        }
-
-        public object[] Models
-        {
-            get
-            {
-                return (((NSDictionary)Information.Value).ContainsKey("Models")) ?
-                    (object[])((NSDictionary)Information.Value)["Models"].ToObject() :
-                    new object[] {"X999xAP"};
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return Information.Key;
-            }
-        }
-    }
-
     public class Parser
     {
         private bool fullTable, removeStubs, showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
@@ -110,6 +72,11 @@ namespace Octothorpe.Lib
 
         public string Model
         {
+            get
+            {
+                return model;
+            }
+
             set
             {
                 model = value;
@@ -410,7 +377,7 @@ namespace Octothorpe.Lib
         private string OutputWikiMarkup()
         {
             bool BorkedDelta, WatchPlus2;
-            DeviceInfo info = null;
+            NSDictionary info = null;
             int ReduceRowspanBy = 0, RowspanOverride;
             Match name;
             NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
@@ -422,29 +389,31 @@ namespace Octothorpe.Lib
             };
 
             // Looking through the <dict>s for each device class.
-            foreach (NSObject devicesNames in deviceInfo.Values)
+            foreach (NSDictionary deviceClass in deviceInfo.Values)
             {
-                // Looking through the <dict>s for each device.
-                foreach (KeyValuePair<string, NSObject> devicesInfo in (NSDictionary)devicesNames)
+                foreach (NSDictionary deviceEntry in (deviceClass.Values))
                 {
-                    if (((NSDictionary)devicesInfo.Value)["Device"].ToString() == Device)
-                        info = new DeviceInfo(devicesInfo);
+                    if (((NSDictionary)deviceEntry["Models"]).ContainsKey(Model))
+                    {
+                        info = deviceEntry;
+                        break;
+                    }
                 }
             }
 
             if (fullTable)
             {
                 // Header
-                for (int i = 0; i < info.HeaderLevel; i++)
+                for (int i = 0; i < (int)info["HeaderLevel"].ToObject(); i++)
                     Output.Append('=');
 
-                if (info.HeaderLevel == 3)
-                    Output.Append($" [[{info.Models[0]}]] ");
+                if ((int)info["HeaderLevel"].ToObject() == 3)
+                    Output.Append($" [[{Model}]] ");
 
                 else
-                    Output.Append($" [[{info.Models[0]}|{info.Name}]] ");
+                    Output.Append($" [[{Model}|{((NSDictionary)info["Models"])[Model]}]] ");
 
-                for (int i = 0; i < info.HeaderLevel; i++)
+                for (int i = 0; i < (int)info["HeaderLevel"].ToObject(); i++)
                     Output.Append('=');
 
                 Output.AppendLine();

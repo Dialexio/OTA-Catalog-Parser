@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Octothorpe.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:octothorpe="clr-namespace:Octothorpe" Title="OTA Catalog Parser" MinWidth="760" MinHeight="450" Width="760" Height="450" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+        xmlns:octothorpe="clr-namespace:Octothorpe" Title="OTA Catalog Parser" MinWidth="760" MinHeight="460" Width="760" Height="460" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <octothorpe:InvertVisibilityConverter x:Key="InvertVis" />
@@ -25,17 +25,17 @@
                 <Label Content="Location:" Name="LabelLoc" VerticalAlignment="Center" Margin="0,0,175,0" />
                 <TextBox IsEnabled="{Binding ElementName=CustomURL, Path=IsSelected}" Height="20" LostFocus="SourceEdited" Name="TextBoxLoc" VerticalAlignment="Center" Margin="66,3,0,3" />
             </Grid>
-            <Grid Name="GridFile" Height="26" Margin="0,60,0,0" VerticalAlignment="Top" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=LocalFile, Path=IsSelected, UpdateSourceTrigger=PropertyChanged}">
+            <Grid Name="GridFile" Margin="0,60,0,0" VerticalAlignment="Top" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=LocalFile, Path=IsSelected, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox IsEnabled="False" Height="20" Margin="0,0,75,0" Name="TextBoxFile" VerticalAlignment="Center" />
                 <Button Click="BrowseForFile" Content="Browse…" Height="20" Margin="171,0,0,0" VerticalAlignment="Center" />
             </Grid>
-            <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,91,0,270" Width="170">
+            <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,97,0,276">
                 <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" />
-                <ComboBox HorizontalAlignment="Center" Name="ComboBoxDevice" Margin="53,0,0,0" SelectionChanged="DeviceChanged" Width="117"/>
+                <ComboBox HorizontalAlignment="Center" Name="ComboBoxDevice" Margin="53,0,0,0" SelectionChanged="DeviceChanged" Width="173" />
             </Grid>
-            <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,117" Visibility="Collapsed" Width="170">
+            <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,117">
                 <Label Content="Model:" HorizontalAlignment="Left" Name="LabelModel" />
-                <ComboBox HorizontalAlignment="Center" Name="ComboBoxModel" Margin="53,0,0,0" Width="117"/>
+                <ComboBox HorizontalAlignment="Center" Name="ComboBoxModel" Margin="52,0,0,0" SelectionChanged="DeviceModelUpdate" Width="98" />
             </Grid>
             <GroupBox Header="Optional" x:Name="GroupOptional" VerticalAlignment="Bottom" Margin="16,0,15,34" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" HorizontalAlignment="Center">
                 <Grid>

@@ -105,45 +105,57 @@ namespace Octothorpe
 
         private void DeviceChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selecteditem = ((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString();
+            string SelectedDevice = (string)((ComboBoxItem)ComboBoxDevice.SelectedItem).Content;
 
             // Empty out the dropdown box for models
-            while (ComboBoxModel.Items.IsEmpty == false)
-                ComboBoxModel.Items.RemoveAt(0);
+            ComboBoxModel.Items.Clear();
 
-            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
+            foreach (NSDictionary deviceClass in deviceInfo.Values)
             {
-                if (((NSDictionary)deviceClass.Value).ContainsKey(selecteditem))
+                if (deviceClass.ContainsKey(SelectedDevice))
                 {
-                    parser.Device = ((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Device"].ToString();
-
                     // Repopulate the dropdown box for models
-                    foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
-                        ComboBoxModel.Items.Add(new ComboBoxItem() { Content = model.ToString() });
+                    foreach (KeyValuePair<string, NSObject> model in (NSDictionary)((NSDictionary)deviceClass[SelectedDevice])["Models"])
+                        ComboBoxModel.Items.Add(new ComboBoxItem() { Content = model.Key });
 
                     ComboBoxModel.SelectedIndex = 0;
+                }
+            }
+        }
 
-                    // If we have an A9 device with multiple models, we need to show the models
-                    switch (parser.Device)
+        private void DeviceModelUpdate(object sender, SelectionChangedEventArgs e)
+        {
+            // Prevent a NullReferenceException when the model dropdown box is cleared
+            if (ComboBoxModel.Items.Count == 0)
+                return;
+
+            bool loopBreak = false;
+            string ModelSelected = (string)((ComboBoxItem)ComboBoxModel.SelectedItem).Content;
+
+            foreach (NSDictionary deviceClassDict in deviceInfo.Values)
+            {
+                foreach (NSDictionary deviceDict in deviceClassDict.Values)
+                {
+                    foreach (KeyValuePair<string, NSObject> modelDeviceString in (NSDictionary)deviceDict["Models"])
                     {
-                        case "iPad6,11":
-                        case "iPad6,12":
-                        case "iPhone8,1":
-                        case "iPhone8,2":
-                        case "iPhone8,4":
-                            GridModel.Visibility = Visibility.Visible;
+                        if (ModelSelected == modelDeviceString.Key)
+                        {
+                            parser.Device = modelDeviceString.Value.ToString();
+                            parser.Model = ModelSelected;
+                            loopBreak = true;
                             break;
+                        }
 
-                        default:
-                            GridModel.Visibility = Visibility.Collapsed;
-                            break;
+                        else
+                            parser.Device = "iProd999,99";
                     }
 
-                    break;
+                    if (loopBreak)
+                        break;
                 }
 
-                else
-                    parser.Device = "iProd999,99"; // This should never be a final value.
+                if (loopBreak)
+                    break;
             }
         }
 
