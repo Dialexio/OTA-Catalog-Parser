@@ -158,42 +158,54 @@ namespace Octothorpe.Mac
 
         partial void DeviceChanged(NSPopUpButton sender)
         {
-            string selecteditem = (sender.SelectedItem.Title);
+            string SelectedDevice = DeviceSelection.SelectedItem.Title;
 
             // Empty out the dropdown box for models
             ModelSelection.RemoveAllItems();
 
-            foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
+            foreach (NSDictionary deviceClass in deviceInfo.Values)
             {
-                if (((NSDictionary)deviceClass.Value).ContainsKey(selecteditem))
+                if (deviceClass.ContainsKey(SelectedDevice))
                 {
-                    parser.Device = ((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Device"].ToString();
+                    // Repopulate the dropdown box for models
+                    foreach (KeyValuePair<string, NSObject> model in (NSDictionary)((NSDictionary)deviceClass[SelectedDevice])["Models"])
+                        ModelSelection.AddItem(model.Key);
 
-                    // Populate the model dropdown box
-                    foreach (NSObject model in ((NSArray)((NSDictionary)((NSDictionary)deviceClass.Value)[selecteditem])["Models"]))
-                        ModelSelection.AddItem(model.ToString());
+                    ModelSelection.SelectItem(0);
+                    DeviceModelUpdate(ModelSelection);
+                }
+            }
+        }
 
-                    // If we have an A9 device with multiple models, we need to show the models
-                    switch (parser.Device)
+        partial void DeviceModelUpdate(NSPopUpButton sender)
+        {
+            bool loopBreak = false;
+            string ModelSelected = (string)ModelSelection.SelectedItem.Title;
+
+            foreach (NSDictionary deviceClassDict in deviceInfo.Values)
+            {
+                foreach (NSDictionary deviceDict in deviceClassDict.Values)
+                {
+                    foreach (KeyValuePair<string, NSObject> modelDeviceString in (NSDictionary)deviceDict["Models"])
                     {
-                        case "iPad6,11":
-                        case "iPad6,12":
-                        case "iPhone8,1":
-                        case "iPhone8,2":
-                        case "iPhone8,4":
-                            NSBoxModel.Hidden = false;
+                        if (ModelSelected == modelDeviceString.Key)
+                        {
+                            parser.Device = modelDeviceString.Value.ToString();
+                            parser.Model = ModelSelected;
+                            loopBreak = true;
                             break;
+                        }
 
-                        default:
-                            NSBoxModel.Hidden = true;
-                            break;
+                        else
+                            parser.Device = "iProd999,99";
                     }
 
-                    break;
+                    if (loopBreak)
+                        break;
                 }
 
-                else
-                    parser.Device = "iProd999,99"; // This should never be a final value.
+                if (loopBreak)
+                    break;
             }
         }
 

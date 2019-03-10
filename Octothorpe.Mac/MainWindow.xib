@@ -218,7 +218,7 @@ DQ
                             </subviews>
                         </view>
                     </box>
-                    <box hidden="YES" fixedFrame="YES" boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="bUE-T3-DMb">
+                    <box fixedFrame="YES" boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="bUE-T3-DMb">
                         <rect key="frame" x="20" y="306" width="256" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <view key="contentView" ambiguous="YES" id="XFJ-n1-QKb">
@@ -242,6 +242,9 @@ DQ
                                         <font key="font" metaFont="menu"/>
                                         <menu key="menu" id="Obj-hV-gyP"/>
                                     </popUpButtonCell>
+                                    <connections>
+                                        <action selector="DeviceModelUpdate:" target="-2" id="q5C-mc-p2J"/>
+                                    </connections>
                                 </popUpButton>
                             </subviews>
                         </view>

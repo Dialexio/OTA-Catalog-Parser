@@ -64,7 +64,10 @@ namespace Octothorpe.Mac
 		partial void ChangeOutputFormat (AppKit.NSButton sender);
 
 		[Action ("DeviceChanged:")]
-		partial void DeviceChanged(AppKit.NSPopUpButton sender);
+		partial void DeviceChanged (AppKit.NSPopUpButton sender);
+
+		[Action ("DeviceModelUpdate:")]
+		partial void DeviceModelUpdate (AppKit.NSPopUpButton sender);
 
 		[Action ("ParsingSTART:")]
 		partial void ParsingSTART (AppKit.NSButton sender);
