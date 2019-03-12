@@ -112,10 +112,10 @@ namespace Octothorpe
 
             foreach (NSDictionary deviceClass in deviceInfo.Values)
             {
-                if (deviceClass.ContainsKey(SelectedDevice))
+                if (deviceClass.TryGetValue(SelectedDevice, out NSObject DeviceDict))
                 {
                     // Repopulate the dropdown box for models
-                    foreach (KeyValuePair<string, NSObject> model in (NSDictionary)((NSDictionary)deviceClass[SelectedDevice])["Models"])
+                    foreach (KeyValuePair<string, NSObject> model in (NSDictionary)((NSDictionary)DeviceDict)["Models"])
                         ComboBoxModel.Items.Add(new ComboBoxItem() { Content = model.Key });
 
                     ComboBoxModel.SelectedIndex = 0;

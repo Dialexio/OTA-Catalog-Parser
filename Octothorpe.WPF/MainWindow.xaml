@@ -23,19 +23,19 @@
             </ComboBox>
             <Grid Name="GridLoc" VerticalAlignment="Top" Margin="0,60,0,0" Visibility="{Binding Converter={StaticResource InvertVis}, ElementName=GridFile, Path=Visibility}">
                 <Label Content="Location:" Name="LabelLoc" VerticalAlignment="Center" Margin="0,0,175,0" />
-                <TextBox IsEnabled="{Binding ElementName=CustomURL, Path=IsSelected}" Height="20" LostFocus="SourceEdited" Name="TextBoxLoc" VerticalAlignment="Center" Margin="66,3,0,3" />
+                <TextBox IsEnabled="{Binding ElementName=CustomURL, Path=IsSelected}" LostFocus="SourceEdited" Name="TextBoxLoc" VerticalAlignment="Center" Margin="66,0,0,0" />
             </Grid>
             <Grid Name="GridFile" Margin="0,60,0,0" VerticalAlignment="Top" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=LocalFile, Path=IsSelected, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox IsEnabled="False" Height="20" Margin="0,0,75,0" Name="TextBoxFile" VerticalAlignment="Center" />
                 <Button Click="BrowseForFile" Content="Browse…" Height="20" Margin="171,0,0,0" VerticalAlignment="Center" />
             </Grid>
-            <Grid Name="GridDevice" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,97,0,276">
+            <Grid Name="GridDevice" VerticalAlignment="Center" Margin="0,106,0,269">
                 <Label Content="Device:" HorizontalAlignment="Left" Name="LabelDevice" />
-                <ComboBox HorizontalAlignment="Center" Name="ComboBoxDevice" Margin="53,0,0,0" SelectionChanged="DeviceChanged" Width="173" />
+                <ComboBox Name="ComboBoxDevice" Margin="53,0,0,0" SelectionChanged="DeviceChanged" />
             </Grid>
-            <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,117">
+            <Grid Name="GridModel" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,135,0,236" Width="130">
                 <Label Content="Model:" HorizontalAlignment="Left" Name="LabelModel" />
-                <ComboBox HorizontalAlignment="Center" Name="ComboBoxModel" Margin="52,0,0,0" SelectionChanged="DeviceModelUpdate" Width="98" />
+                <ComboBox Name="ComboBoxModel" Margin="52,0,0,0" SelectionChanged="DeviceModelUpdate" />
             </Grid>
             <GroupBox Header="Optional" x:Name="GroupOptional" VerticalAlignment="Bottom" Margin="16,0,15,34" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" HorizontalAlignment="Center">
                 <Grid>

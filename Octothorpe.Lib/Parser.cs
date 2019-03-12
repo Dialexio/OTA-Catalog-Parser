@@ -626,17 +626,17 @@ namespace Octothorpe.Lib
                 }
 
                 // Printing prerequisite build
-                if (package.PrerequisiteBuild != "N/A"
-                    && PrereqBuildRowspan.ContainsKey(package.DeclaredBuild)
-                    && PrereqBuildRowspan[package.DeclaredBuild].ContainsKey(package.PrerequisiteBuild))
+                if (package.PrerequisiteBuild != "N/A" &&
+                    PrereqBuildRowspan.ContainsKey(package.DeclaredBuild) &&
+                    PrereqBuildRowspan[package.DeclaredBuild].TryGetValue(package.PrerequisiteBuild, out uint PrereqRowspanCount))
                 {
                     Output.Append(NewTableCell);
 
                     // Is there more than one of this prerequisite build tallied?
                     // Also do not use rowspan if the prerequisite build is a beta.
-                    if (PrereqBuildRowspan[package.DeclaredBuild][package.PrerequisiteBuild] > 1)
+                    if (PrereqRowspanCount > 1)
                     {
-                        Output.Append($"rowspan=\"{PrereqBuildRowspan[package.DeclaredBuild][package.PrerequisiteBuild]}\" | ");
+                        Output.Append($"rowspan=\"{PrereqRowspanCount}\" | ");
 
                         PrereqBuildRowspan[package.DeclaredBuild].Remove(package.PrerequisiteBuild);
                     }
