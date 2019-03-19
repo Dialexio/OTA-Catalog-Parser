@@ -52,6 +52,6 @@ If you encounter an issue, please make sure that "override.json" contains inform
 ## Licensing Information
 This program is distributed under the MIT License.
 
-This program utilizes the [Json.NET](http://www.newtonsoft.com/json) and [plist-cil](https://github.com/claunia/plist-cil) libraries.
+This program utilizes the [plist-cil](https://github.com/claunia/plist-cil) library.
 
-Please refer to LICENSE.md for more details regarding the licenses.
+Please refer to LICENSE.md for more details regarding the licenses for third-party libraries.

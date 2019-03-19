@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2018 Dialexio
+ * Copyright (c) 2019 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -20,11 +20,11 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Claunia.PropertyList;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Octothorpe.Lib
@@ -33,16 +33,12 @@ namespace Octothorpe.Lib
     {
         private Match match;
         private readonly Dictionary<string, object> ENTRY;
-        private readonly Dictionary<string, JObject> Json;
+        private readonly NSDictionary OVERRIDE_DICT;
 
         public OTAPackage(Dictionary<string, object> package)
         {
             ENTRY = package;
-            
-            using (StreamReader JsonFile = File.OpenText(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "override.json"))
-            {
-                Json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(JsonFile.ReadToEnd());
-            }
+            OVERRIDE_DICT = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "BuildOverride.plist");
         }
 
         /// <summary>
@@ -130,7 +126,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                if (GetJToken("Beta") == null)
+                if (GetKey("Beta") == null)
                 {
                     string number = DocumentationID.Substring(DocumentationID.Length - 2);
 
@@ -152,7 +148,7 @@ namespace Octothorpe.Lib
 
                 else
                 {
-                    return (int)GetJToken("Beta");
+                    return (int)GetKey("Beta");
                 }
             }
         }
@@ -184,7 +180,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public string Date()
         {
-            if (GetJToken("Date") == null)
+            if (GetKey("Date") == null)
             {
                 // Catch excess zeroes, e.g. "2016008004"
                 match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
@@ -205,7 +201,7 @@ namespace Octothorpe.Lib
             }
 
             else
-                return (string)GetJToken("Date");
+                return (string)GetKey("Date");
         }
 
         /// <summary>
@@ -255,25 +251,38 @@ namespace Octothorpe.Lib
             }
         }
 
-        private JToken GetJToken(string name)
+        private object GetKey(string name)
         {
+            NSDictionary ItemsForBuild;
+            
             try
             {
-                // If the JSON entry specifies "Devices," we need to check those out.
-                if (Json[ActualBuild].TryGetValue("Devices", out JToken Tokens))
+                // Items are separated by OS branch.
+                foreach (KeyValuePair<string, NSObject> osBranch in OVERRIDE_DICT)
                 {
-                    foreach (JToken Token in ((JArray)Tokens).Children())
+                    if (((NSDictionary)osBranch.Value).ContainsKey(ActualBuild))
                     {
-                        if (SupportedDevices.Contains((string)Token))
-                            return (Json[ActualBuild].TryGetValue(name, out JToken value)) ? value : null;
-                    }
+                        ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[ActualBuild];
 
-                    // Exception will only be thrown if the JSON entry specifies "Devices" but there isn't a match.
-                    throw new KeyNotFoundException();
+                        // If the item for that build specifies "Models," we need to check those out.
+                        if (((NSDictionary)((NSDictionary)osBranch.Value)[ActualBuild]).ContainsKey("Models"))
+                        {
+                            foreach (NSObject Item in (NSArray)ItemsForBuild["Models"])
+                            {
+                                if (SupportedDeviceModels.Contains(Item.ToString()))
+                                    return ItemsForBuild.ContainsKey(name) ? ItemsForBuild[name].ToObject() : null;
+                            }
+
+                            // Exception will only be thrown if the JSON entry specifies "Models" but there isn't a match.
+                            throw new KeyNotFoundException();
+                        }
+
+                        else
+                            return ItemsForBuild.ContainsKey(name) ? ItemsForBuild[name].ToObject() : null;
+                    }
                 }
 
-                else
-                    return (Json[ActualBuild].TryGetValue(name, out JToken value)) ? value : null;
+                return null;
             }
 
             catch (KeyNotFoundException)
@@ -323,14 +332,14 @@ namespace Octothorpe.Lib
         {
             get
             {
-                if (GetJToken("Version") == null)
+                if (GetKey("Version") == null)
                 {
                     string version = (string)ENTRY["OSVersion"];
                     return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
                 }
 
                 else
-                    return (string)GetJToken("Version");
+                    return (string)GetKey("Version");
             }
         }
 
@@ -360,26 +369,37 @@ namespace Octothorpe.Lib
             {
                 System.Text.StringBuilder VersionNum = new System.Text.StringBuilder();
                 int Beta;
-                List<string> Devices = new List<string>();
                 bool fuhgeddaboudit = false;
+                NSDictionary ItemsForBuild = new NSDictionary();
 
                 try
                 {
-                    Beta = (Json[PrerequisiteBuild].TryGetValue("Beta", out JToken beet)) ? (int)beet : 0;
+                    // Items are separated by OS branch.
+                    foreach (KeyValuePair<string, NSObject> osBranch in OVERRIDE_DICT)
+                    {
+                        if (((NSDictionary)osBranch.Value).ContainsKey(PrerequisiteBuild))
+                        {
+                            ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[PrerequisiteBuild];
+                        }
+                    }
 
-                    if (Json[PrerequisiteBuild].TryGetValue("Version", out JToken version))
-                        VersionNum.Append((string)version);
+                    Beta = (ItemsForBuild.ContainsKey("Beta")) ?
+                        (int)ItemsForBuild["Beta"].ToObject() :
+                        0;
+
+                    if (ItemsForBuild.ContainsKey("Version"))
+                        VersionNum.Append((string)ItemsForBuild["Version"].ToObject());
 
                     else
                         VersionNum.Append(ENTRY["PrerequisiteOSVersion"]);
 
-                    if (Json[PrerequisiteBuild].TryGetValue("Devices", out JToken Tokens))
+                    if (ItemsForBuild.ContainsKey("Models"))
                     {
                         fuhgeddaboudit = true;
 
-                        foreach (JToken Token in ((JArray)Tokens).Children())
+                        foreach (NSObject model in (NSArray)ItemsForBuild["Models"])
                         {
-                            if (SupportedDevices.Contains((string)Token))
+                            if (SupportedDeviceModels.Contains(model.ToString()))
                             {
                                 fuhgeddaboudit = false;
                                 break;
@@ -398,15 +418,17 @@ namespace Octothorpe.Lib
                             VersionNum.Append($" {Beta}");
                     }
 
-                    if (Json[PrerequisiteBuild].TryGetValue("Suffix", out JToken Suffix))
-                        VersionNum.Append($" {(string)Suffix}");
+                    if (ItemsForBuild.ContainsKey("Suffix"))
+                        VersionNum.Append($" {ItemsForBuild["Suffix"].ToString()}");
 
                     return VersionNum.ToString();
                 }
 
                 catch (KeyNotFoundException)
                 {
-                    return ENTRY.TryGetValue("PrerequisiteOSVersion", out object ver) ? (string)ver : "N/A";
+                    return ENTRY.TryGetValue("PrerequisiteOSVersion", out object ver) ?
+                        (string)ver :
+                        "N/A";
                 }
             }
         }
@@ -589,7 +611,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return (string)GetJToken("Suffix");
+                return (string)GetKey("Suffix");
             }
         }
 
@@ -607,13 +629,13 @@ namespace Octothorpe.Lib
 
                 try
                 {
-                    foreach (object Model in (object[])ENTRY["SupportedDeviceModels"])
-                        Models.Add((string)Model);
+                    Models = ((object[])ENTRY["SupportedDeviceModels"]).Select(i => (string)i).ToList();
                 }
 
                 // No models specified. (Very, very old PLISTs do this.)
                 catch (KeyNotFoundException)
-                { }
+                {
+                }
 
                 return Models;
             }
@@ -629,12 +651,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                List<string> Devices = new List<string>();
-
-                foreach (object Device in (object[])ENTRY["SupportedDevices"])
-                    Devices.Add((string)Device);
-
-                return Devices;
+                return ((object[])ENTRY["SupportedDevices"]).Select(i => (string)i).ToList();
             }
         }
 

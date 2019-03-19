@@ -6,21 +6,19 @@
     <Company />
     <Copyright>Copyright ©2019 Dialexio.</Copyright>
     <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
-    <AssemblyVersion>2.1.0.5</AssemblyVersion>
-    <FileVersion>2.1.0.5</FileVersion>
+    <AssemblyVersion>2.1.0.6</AssemblyVersion>
+    <FileVersion>2.1.0.6</FileVersion>
     <Version>1.1</Version>
-    <ReleaseVersion>2.1.0.5</ReleaseVersion>
+    <ReleaseVersion>2.1.0.6</ReleaseVersion>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="plist-cil" Version="1.50.0" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DeviceInfo.plist">
+    <Content Include="BuildOverride.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="override.json">
+    <Content Include="DeviceInfo.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
