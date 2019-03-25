@@ -323,6 +323,87 @@
                     <string>iPad8,8</string>
                 </dict>
             </dict>
+            <key>iPad Air (3rd generation)</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J217AP</key>
+                    <string>iPad11,3</string>
+                    <key>J218AP</key>
+                    <string>iPad11,4</string>
+                </dict>
+            </dict>
+        </dict>
+        <key>iPad mini</key>
+        <dict>
+            <key>iPad mini (1st generation)</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>P105AP</key>
+                    <string>iPad2,5</string>
+                    <key>P106AP</key>
+                    <string>iPad2,6</string>
+                    <key>P107AP</key>
+                    <string>iPad2,7</string>
+                </dict>
+            </dict>
+            <key>iPad mini 2</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J85AP</key>
+                    <string>iPad4,4</string>
+                    <key>J86AP</key>
+                    <string>iPad4,5</string>
+                    <key>J87AP</key>
+                    <string>iPad4,6</string>
+                </dict>
+            </dict>
+            <key>iPad mini 3</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J85mAP</key>
+                    <string>iPad4,7</string>
+                    <key>J86mAP</key>
+                    <string>iPad4,8</string>
+                    <key>J87mAP</key>
+                    <string>iPad4,9</string>
+                </dict>
+            </dict>
+            <key>iPad mini 4</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J96AP</key>
+                    <string>iPad5,1</string>
+                    <key>J97AP</key>
+                    <string>iPad5,2</string>
+                </dict>
+            </dict>
+            <key>iPad mini (5th generation)</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J210AP</key>
+                    <string>iPad11,1</string>
+                    <key>J211AP</key>
+                    <string>iPad11,2</string>
+                </dict>
+            </dict>
         </dict>
         <key>iPhone</key>
         <dict>
