@@ -201,7 +201,7 @@ namespace Octothorpe.Lib
             }
 
             else
-                return (string)GetKey("Date");
+                return GetKey("Date").ToString();
         }
 
         /// <summary>
