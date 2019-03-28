@@ -358,14 +358,14 @@
 		<key>16E5223a</key>
 		<dict>
 			<key>Beta</key>
-			<string>5</string>
+			<integer>5</integer>
 			<key>Date</key>
 			<integer>20190311</integer>
 		</dict>
 		<key>16E5227a</key>
 		<dict>
 			<key>Beta</key>
-			<string>6</string>
+			<integer>6</integer>
 			<key>Date</key>
 			<integer>20190318</integer>
 		</dict>
@@ -373,6 +373,13 @@
 		<dict>
 			<key>Date</key>
 			<integer>20190325</integer>
+		</dict>
+		<key>16F5117h</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190327</integer>
 		</dict>
 	</dict>
 	<key>tvOS</key>

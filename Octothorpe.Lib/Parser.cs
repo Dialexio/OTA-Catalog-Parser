@@ -349,6 +349,12 @@ namespace Octothorpe.Lib
 
                 Output.AppendLine($" (Build {package.ActualBuild})");
                 Output.AppendLine($"Listed as: {package.OSVersion} (Build {package.DeclaredBuild})");
+                // Stub OTA?
+                Output.AppendLine($"Installation permitted: {((package.AllowableOTA) ? "Yes" : "No")}");
+
+                // Auto-Update
+                Output.AppendLine($"Auto-Update permitted: {((package.AllowableOTA) ? "Yes" : "No")}");
+
                 Output.AppendLine($"Reported Release Type: {package.ReleaseType}");
 
                 // Print prerequisites if there are any.
@@ -358,7 +364,7 @@ namespace Octothorpe.Lib
                 else
                     Output.AppendLine($"Requires: {package.PrerequisiteVer} (Build {package.PrerequisiteBuild})");
 
-                // Date as extracted from the url.
+                // Date as extracted from the URL.
                 Output.AppendLine($"Timestamp: {package.Date('y')}/{package.Date('m')}/{package.Date('d')}");
 
                 // Compatibility Version.

@@ -117,6 +117,20 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
+        /// Reports the value of the key "AutoUpdate." If it's not present, returns false.
+        /// </summary>
+        /// <returns>
+        /// A boolean value of whether the OS may auto-update to the package (true) or not (false).
+        /// </returns>
+        public bool AutoUpdate
+        {
+            get
+            {
+                return ENTRY.TryGetValue("AutoUpdate", out object autoupdate) ? (bool)autoupdate : false;
+            }
+        }
+
+        /// <summary>
         /// Returns the beta number of this entry. If a beta number cannot be determined, returns 0.
         /// </summary>
         /// <returns>
@@ -385,7 +399,7 @@ namespace Octothorpe.Lib
                     }
 
                     if (ItemsForBuild.ContainsKey("Beta"))
-                        Beta = int.Parse(ItemsForBuild["Beta"].ToString());
+                        Beta = (int)ItemsForBuild["Beta"].ToObject();
 
                     if (ItemsForBuild.ContainsKey("Version"))
                         VersionNum.Append((string)ItemsForBuild["Version"].ToObject());
