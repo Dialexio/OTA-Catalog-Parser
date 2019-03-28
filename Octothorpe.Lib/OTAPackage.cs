@@ -368,7 +368,7 @@ namespace Octothorpe.Lib
             get
             {
                 System.Text.StringBuilder VersionNum = new System.Text.StringBuilder();
-                int Beta;
+                int Beta = 0;
                 bool fuhgeddaboudit = false;
                 NSDictionary ItemsForBuild = new NSDictionary();
 
@@ -380,12 +380,12 @@ namespace Octothorpe.Lib
                         if (((NSDictionary)osBranch.Value).ContainsKey(PrerequisiteBuild))
                         {
                             ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[PrerequisiteBuild];
+                            break;
                         }
                     }
 
-                    Beta = (ItemsForBuild.ContainsKey("Beta")) ?
-                        (int)ItemsForBuild["Beta"].ToObject() :
-                        0;
+                    if (ItemsForBuild.ContainsKey("Beta"))
+                        Beta = int.Parse(ItemsForBuild["Beta"].ToString());
 
                     if (ItemsForBuild.ContainsKey("Version"))
                         VersionNum.Append((string)ItemsForBuild["Version"].ToObject());
