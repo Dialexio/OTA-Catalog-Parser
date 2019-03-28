@@ -123,7 +123,7 @@
             <key>HomePod 1st generation</key>
             <dict>
                 <key>HeaderLevel</key>
-                <integer>2</integer>
+                <integer>3</integer>
                 <key>Models</key>
                 <dict>
                     <key>B238aAP</key>
@@ -242,7 +242,7 @@
             <key>iPad 5th generation</key>
             <dict>
                 <key>HeaderLevel</key>
-                <integer>3</integer>
+                <integer>4</integer>
                 <key>Models</key>
                 <dict>
                     <key>J71sAP</key>
