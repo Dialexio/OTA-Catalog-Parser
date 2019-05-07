@@ -381,6 +381,34 @@
 			<key>Date</key>
 			<integer>20190327</integer>
 		</dict>
+		<key>16F5129d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190408</integer>
+		</dict>
+		<key>16F5139e</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190422</integer>
+		</dict>
+		<key>16F5148a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<integer>20190429</integer>
+		</dict>
+		<key>16F5155a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190507</integer>
+		</dict>
 	</dict>
 	<key>tvOS</key>
 	<dict>

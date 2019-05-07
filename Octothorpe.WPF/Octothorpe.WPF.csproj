@@ -62,8 +62,8 @@
     <StartupObject>Octothorpe.WPF.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="plist-cil, Version=1.50.0.0, Culture=neutral, PublicKeyToken=ec2cb9e1a719933d, processorArchitecture=MSIL">
-      <HintPath>..\packages\plist-cil.1.50.0\lib\netstandard2.0\plist-cil.dll</HintPath>
+    <Reference Include="plist-cil, Version=1.60.0.0, Culture=neutral, PublicKeyToken=ec2cb9e1a719933d, processorArchitecture=MSIL">
+      <HintPath>..\packages\plist-cil.1.60.0\lib\netstandard2.0\plist-cil.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
