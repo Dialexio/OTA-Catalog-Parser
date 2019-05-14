@@ -409,6 +409,11 @@
 			<key>Date</key>
 			<integer>20190507</integer>
 		</dict>
+		<key>16F156</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190513</integer>
+		</dict>
 	</dict>
 	<key>tvOS</key>
 	<dict>
@@ -1027,6 +1032,170 @@
 			<integer>10</integer>
 			<key>Date</key>
 			<integer>20180831</integer>
+		</dict>
+		<!-- 5.1 -->
+		<key>16R5559d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+		</dict>
+		<key>16R5568d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+		</dict>
+		<key>16R5577c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+		</dict>
+		<key>16R5584a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+		</dict>
+		<key>16R5589c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+		</dict>
+		<!-- 5.1.2 -->
+		<key>16S5042a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20181107</integer>
+		</dict>
+		<key>16S5046a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20181115</integer>
+		</dict>
+		<key>16S46</key>
+		<dict>
+			<key>Date</key>
+			<integer>20181206</integer>
+		</dict>
+		<!-- 5.1.3 -->
+		<key>16S5523a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20181210</integer>
+		</dict>
+		<key>16S5531a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20181219</integer>
+		</dict>
+		<key>16S5535a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190107</integer>
+		</dict>
+		<key>16S535</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190122</integer>
+		</dict>
+		<!-- 5.2 -->
+		<key>16T5181f</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190124</integer>
+		</dict>
+		<key>16T5191d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190204</integer>
+		</dict>
+		<key>16T5201c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190219</integer>
+		</dict>
+		<key>16T5212e</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<integer>20190304</integer>
+		</dict>
+		<key>16T5222a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190311</integer>
+		</dict>
+		<key>16T5225a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>6</integer>
+			<key>Date</key>
+			<integer>20190318</integer>
+			<key>Version</key>
+			<string>5.2</string>
+		</dict>
+		<key>16T225</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190327</integer>
+		</dict>
+		<!-- 5.2.1 -->
+		<key>16U5079d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190328</integer>
+		</dict>
+		<key>16U5091b</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190408</integer>
+		</dict>
+		<key>16U5101c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190422</integer>
+		</dict>
+		<key>16U5110a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<integer>20190429</integer>
+		</dict>
+		<key>16U5113a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190507</integer>
+		</dict>
+		<key>16U113</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190513</integer>
 		</dict>
 	</dict>
 </dict>

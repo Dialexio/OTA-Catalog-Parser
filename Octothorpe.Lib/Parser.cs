@@ -387,7 +387,7 @@ namespace Octothorpe.Lib
             int ReduceRowspanBy = 0, RowspanOverride;
             Match name;
             NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
-            string fileName, NewTableCell = "| ";
+            string deviceName = "", fileName, NewTableCell = "| ";
             // So we don't add on to a previous run.
             StringBuilder Output = new StringBuilder
             {
@@ -397,11 +397,13 @@ namespace Octothorpe.Lib
             // Looking through the <dict>s for each device class.
             foreach (NSDictionary deviceClass in deviceInfo.Values)
             {
-                foreach (NSDictionary deviceEntry in (deviceClass.Values))
+                // Loading it as a KeyValuePair instead of an NSDictionary so we can grab the key name.
+                foreach (KeyValuePair<string, NSObject> deviceEntry in deviceClass)
                 {
-                    if (((NSDictionary)deviceEntry["Models"]).ContainsKey(Model))
+                    if (((NSDictionary)((NSDictionary)deviceEntry.Value)["Models"]).ContainsKey(Model))
                     {
-                        info = deviceEntry;
+                        deviceName = deviceEntry.Key;
+                        info = (NSDictionary)deviceEntry.Value;
                         break;
                     }
                 }
@@ -417,7 +419,7 @@ namespace Octothorpe.Lib
                     Output.Append($" [[{Model}]] ");
 
                 else
-                    Output.Append($" [[{Model}|{((NSDictionary)info["Models"])[Model]}]] ");
+                    Output.Append($" [[{Model}|{deviceName}]] ");
 
                 for (int i = 0; i < (int)info["HeaderLevel"].ToObject(); i++)
                     Output.Append('=');

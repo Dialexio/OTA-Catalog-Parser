@@ -6,10 +6,10 @@
     <Company />
     <Copyright>Copyright ©2019 Dialexio.</Copyright>
     <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
-    <AssemblyVersion>2.1.0.9</AssemblyVersion>
-    <FileVersion>2.1.0.9</FileVersion>
+    <AssemblyVersion>2.1.0.10</AssemblyVersion>
+    <FileVersion>2.1.0.10</FileVersion>
     <Version>1.1</Version>
-    <ReleaseVersion>2.1.0.9</ReleaseVersion>
+    <ReleaseVersion>2.1.0.10</ReleaseVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="plist-cil" Version="1.60.0" />
