@@ -668,6 +668,16 @@
                     <string>iPod7,1</string>
                 </dict>
             </dict>
+            <key>iPod touch (7th generation)</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>2</integer>
+                <key>Models</key>
+                <dict>
+                    <key>N112AP</key>
+                    <string>iPod9,1</string>
+                </dict>
+            </dict>
         </dict>
     </dict>
 </plist>

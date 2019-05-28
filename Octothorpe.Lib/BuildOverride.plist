@@ -409,14 +409,56 @@
 			<key>Date</key>
 			<integer>20190507</integer>
 		</dict>
+		<key>16F5156a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>6</integer>
+			<key>Date</key>
+			<integer>20190510</integer>
+		</dict>
 		<key>16F156</key>
 		<dict>
 			<key>Date</key>
 			<integer>20190513</integer>
 		</dict>
+		<key>16F203</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190524</integer>
+		</dict>
+		<!--12.4-->
+		<key>16G5027g</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190515</integer>
+		</dict>
+		<key>16G5027i</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190520</integer>
+		</dict>
+		<key>16G5038d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190528</integer>
+		</dict>
 	</dict>
 	<key>tvOS</key>
 	<dict>
+		<!-- OK, this isn't quite tvOS, but it makes more sense here. -->
+		<key>12H847</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190513</integer>
+			<key>Version</key>
+			<string>7.3</string>
+		</dict>
 		<key>15J5284e</key>
 		<dict>
 			<key>Beta</key>
@@ -487,6 +529,21 @@
 		<dict>
 			<key>Date</key>
 			<integer>20190122</integer>
+		</dict>
+		<!--12.4-->
+		<key>16M5526d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190515</integer>
+		</dict>
+		<key>16M5537c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190528</integer>
 		</dict>
 	</dict>
 	<key>watchOS</key>
@@ -1196,6 +1253,21 @@
 		<dict>
 			<key>Date</key>
 			<integer>20190513</integer>
+		</dict>
+		<!--5.3-->
+		<key>16U5526f</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190515</integer>
+		</dict>
+		<key>16U5537b</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190528</integer>
 		</dict>
 	</dict>
 </dict>
