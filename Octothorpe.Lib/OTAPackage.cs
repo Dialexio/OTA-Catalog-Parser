@@ -287,7 +287,7 @@ namespace Octothorpe.Lib
                                     return ItemsForBuild.ContainsKey(name) ? ItemsForBuild[name].ToObject() : null;
                             }
 
-                            // Exception will only be thrown if the JSON entry specifies "Models" but there isn't a match.
+                            // Exception will only be thrown if the PLIST entry specifies "Models" but there isn't a match.
                             throw new KeyNotFoundException();
                         }
 
@@ -375,75 +375,72 @@ namespace Octothorpe.Lib
         /// "PrerequisiteVer" states the specific version that the OTA package is intended for, since most OTA packages are deltas.
         /// </summary>
         /// <returns>
-        /// If an entry is in the JSON, that will be used to create a human-friendly string (e.g. "7.0 beta 5"). If not, returns the "PrerequisiteVersion" key as a string.
+        /// If an entry is in BuildOverride.plist, that will be used to create a human-friendly string (e.g. "7.0 beta 5"). If not, returns the "PrerequisiteVersion" key as a string.
         /// </returns>
-        public string PrerequisiteVer
+        public string PrerequisiteVer()
         {
-            get
-            {
-                System.Text.StringBuilder VersionNum = new System.Text.StringBuilder();
-                int Beta = 0;
-                bool fuhgeddaboudit = false;
-                NSDictionary ItemsForBuild = new NSDictionary();
+            System.Text.StringBuilder VersionNum = new System.Text.StringBuilder();
+            int Beta = 0;
+            bool fuhgeddaboudit = false;
+            NSDictionary ItemsForBuild = new NSDictionary();
 
-                try
+            try
+            {
+                // Items are separated by OS branch.
+                foreach (KeyValuePair<string, NSObject> osBranch in OVERRIDE_DICT)
                 {
-                    // Items are separated by OS branch.
-                    foreach (KeyValuePair<string, NSObject> osBranch in OVERRIDE_DICT)
+                    if (((NSDictionary)osBranch.Value).ContainsKey(PrerequisiteBuild))
                     {
-                        if (((NSDictionary)osBranch.Value).ContainsKey(PrerequisiteBuild))
+                        ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[PrerequisiteBuild];
+                        break;
+                    }
+                }
+
+                if (ItemsForBuild.ContainsKey("Beta"))
+                    Beta = (int)ItemsForBuild["Beta"].ToObject();
+
+                if (ItemsForBuild.ContainsKey("Version"))
+                    VersionNum.Append((string)ItemsForBuild["Version"].ToObject());
+
+                else
+                    VersionNum.Append(ENTRY["PrerequisiteOSVersion"]);
+
+                if (ItemsForBuild.ContainsKey("Models"))
+                {
+                    fuhgeddaboudit = true;
+
+                    foreach (NSObject model in (NSArray)ItemsForBuild["Models"])
+                    {
+                        if (SupportedDeviceModels.Contains(model.ToString()))
                         {
-                            ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[PrerequisiteBuild];
+                            fuhgeddaboudit = false;
                             break;
                         }
                     }
 
-                    if (ItemsForBuild.ContainsKey("Beta"))
-                        Beta = (int)ItemsForBuild["Beta"].ToObject();
-
-                    if (ItemsForBuild.ContainsKey("Version"))
-                        VersionNum.Append((string)ItemsForBuild["Version"].ToObject());
-
-                    else
-                        VersionNum.Append(ENTRY["PrerequisiteOSVersion"]);
-
-                    if (ItemsForBuild.ContainsKey("Models"))
-                    {
-                        fuhgeddaboudit = true;
-
-                        foreach (NSObject model in (NSArray)ItemsForBuild["Models"])
-                        {
-                            if (SupportedDeviceModels.Contains(model.ToString()))
-                            {
-                                fuhgeddaboudit = false;
-                                break;
-                            }
-                        }
-
-                        if (fuhgeddaboudit)
-                            throw new KeyNotFoundException();
-                    }
-
-                    if (Beta >= 1)
-                    {
-                        VersionNum.Append(" beta");
-
-                        if (Beta > 1)
-                            VersionNum.Append($" {Beta}");
-                    }
-
-                    if (ItemsForBuild.ContainsKey("Suffix"))
-                        VersionNum.Append($" {ItemsForBuild["Suffix"].ToString()}");
-
-                    return VersionNum.ToString();
+                    if (fuhgeddaboudit)
+                        throw new KeyNotFoundException();
                 }
 
-                catch (KeyNotFoundException)
+                if (Beta >= 1)
                 {
-                    return ENTRY.TryGetValue("PrerequisiteOSVersion", out object ver) ?
-                        (string)ver :
-                        "N/A";
+                    VersionNum.Append(" beta");
+
+                    if (Beta > 1)
+                        VersionNum.Append($" {Beta}");
                 }
+
+                if (ItemsForBuild.ContainsKey("Suffix"))
+                    VersionNum.Append($" {ItemsForBuild["Suffix"].ToString()}");
+
+                return VersionNum.ToString();
+            }
+
+            catch (KeyNotFoundException)
+            {
+                return ENTRY.TryGetValue("PrerequisiteOSVersion", out object ver) ?
+                    (string)ver :
+                    "N/A";
             }
         }
 
@@ -589,7 +586,7 @@ namespace Octothorpe.Lib
             if (char.IsLetter(build[1]))
                 return $"0{build}";
                 
-            if (PrerequisiteVer.Contains("beta"))
+            if (PrerequisiteVer().Contains("beta"))
                 build = RemoveBetaPadding(build);
 
             // If the number after the capital letter is too small, pad it.

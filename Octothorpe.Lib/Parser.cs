@@ -33,7 +33,7 @@ namespace Octothorpe.Lib
 {
     public class Parser
     {
-        private bool fullTable, removeStubs, showBeta, wikiMarkup, DeviceIsWatch, ModelNeedsChecking;
+        private bool fullTable, removeStubs, showBeta, wikiMarkup, AddStubBlurb, DeviceIsWatch, ModelNeedsChecking;
         private Dictionary<string, List<string>> FileRowspan = new Dictionary<string, List<string>>();
         private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
             DateRowspan = new Dictionary<string, uint>(),
@@ -146,10 +146,6 @@ namespace Octothorpe.Lib
                     if (showBeta == false && package.ActualReleaseType > 0)
                         return;
 
-                    // Dummy check.
-                    if (removeStubs && package.AllowableOTA == false)
-                        return;
-
                     // Device check.
                     matched = package.SupportedDevices.Contains(Device);
 
@@ -162,6 +158,14 @@ namespace Octothorpe.Lib
                         if (package.SupportedDeviceModels.Count > 0)
                             matched = (package.SupportedDeviceModels.Contains(model));
                     }
+
+                    // Stub check.
+                    // But first, determine if we need to add the stub blurb.
+                    if (Regex.IsMatch(Device, "iPad[4-6]|iPhone[6-8]|iPod7,1") && package.AllowableOTA == false && package.ActualBuild == "99Z999")
+                        AddStubBlurb = true;
+
+                    if (removeStubs && package.AllowableOTA == false)
+                        return;
 
                     // If it's still a match, check the OS version.
                     // If the OS version doesn't fit what we're
@@ -185,6 +189,7 @@ namespace Octothorpe.Lib
 
         private void Cleanup()
         {
+            AddStubBlurb = false;
             BuildNumberRowspan.Clear();
             DateRowspan.Clear();
             FileRowspan.Clear();
@@ -239,7 +244,7 @@ namespace Octothorpe.Lib
                 // Increment the count if Prerequisite OS version exists.
                 try
                 {
-                    PrereqOSRowspan[entry.DeclaredBuild][entry.PrerequisiteVer]++;
+                    PrereqOSRowspan[entry.DeclaredBuild][entry.PrerequisiteVer()]++;
                 }
                 // If not, add the first tally.
                 catch (KeyNotFoundException)
@@ -247,7 +252,7 @@ namespace Octothorpe.Lib
                     if (PrereqOSRowspan.ContainsKey(entry.DeclaredBuild) == false)
                         PrereqOSRowspan.Add(entry.DeclaredBuild, new Dictionary<string, uint>());
 
-                    PrereqOSRowspan[entry.DeclaredBuild].Add(entry.PrerequisiteVer, 1);
+                    PrereqOSRowspan[entry.DeclaredBuild].Add(entry.PrerequisiteVer(), 1);
                 }
 
 
@@ -362,7 +367,7 @@ namespace Octothorpe.Lib
                     Output.AppendLine("Requires: Not specified");
 
                 else
-                    Output.AppendLine($"Requires: {package.PrerequisiteVer} (Build {package.PrerequisiteBuild})");
+                    Output.AppendLine($"Requires: {package.PrerequisiteVer()} (Build {package.PrerequisiteBuild})");
 
                 // Date as extracted from the URL.
                 Output.AppendLine($"Timestamp: {package.Date('y')}/{package.Date('m')}/{package.Date('d')}");
@@ -425,6 +430,10 @@ namespace Octothorpe.Lib
                     Output.Append('=');
 
                 Output.AppendLine();
+
+                // Message about dummy update
+                if (AddStubBlurb)
+                    Output.AppendLine("Users still running older versions of iOS (up to 9.3.5) are now presented with a [http://appldnld.apple.com/ios9/031-21276-20150906-9C5374F6-0D6F-4CEC-A322-668F61700CC9/com_apple_MobileAsset_OTARescueAsset/f393ae5156319e127a2b21d2f85b66a151c44ff5.zip dummy update file], and are instructed to use [[iTunes]] to install software updates.\n");
 
                 // Table
                 Output.AppendLine("{| class=\"wikitable\" style=\"font-size: smaller; text-align: center;\"");
@@ -599,16 +608,16 @@ namespace Octothorpe.Lib
                 }
 
                 // Printing prerequisite version
-                if (PrereqOSRowspan.ContainsKey(package.DeclaredBuild) && PrereqOSRowspan[package.DeclaredBuild].ContainsKey(package.PrerequisiteVer))
+                if (PrereqOSRowspan.ContainsKey(package.DeclaredBuild) && PrereqOSRowspan[package.DeclaredBuild].ContainsKey(package.PrerequisiteVer()))
                 {
                     Output.Append(NewTableCell);
 
                     // Is there more than one of this prerequisite version tallied?
-                    if (PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer] > 1)
+                    if (PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer()] > 1)
                     {
-                        Output.Append($"rowspan=\"{PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer]}\" ");
+                        Output.Append($"rowspan=\"{PrereqOSRowspan[package.DeclaredBuild][package.PrerequisiteVer()]}\" ");
 
-                        PrereqOSRowspan[package.DeclaredBuild].Remove(package.PrerequisiteVer);
+                        PrereqOSRowspan[package.DeclaredBuild].Remove(package.PrerequisiteVer());
 
                         if (package.PrerequisiteBuild != "N/A")
                             Output.Append(NewTableCell);
@@ -621,15 +630,15 @@ namespace Octothorpe.Lib
                     else
                     {
                         // If this is a GM, print the link to Golden Master.
-                        if (package.PrerequisiteVer.Contains(" GM"))
-                            Output.AppendLine(package.PrerequisiteVer.Replace("GM", "[[Golden Master|GM]]"));
+                        if (package.PrerequisiteVer().Contains(" GM"))
+                            Output.AppendLine(package.PrerequisiteVer().Replace("GM", "[[Golden Master|GM]]"));
 
                         // Very quick check if prerequisite is a beta. This is not bulletproof.
-                        else if (Regex.Match(package.PrerequisiteBuild, OTAPackage.REGEX_BETA).Success && package.PrerequisiteVer.Contains("beta") == false)
-                            Output.AppendLine($"{package.PrerequisiteVer} beta #");
+                        else if (Regex.Match(package.PrerequisiteBuild, OTAPackage.REGEX_BETA).Success && package.PrerequisiteVer().Contains("beta") == false)
+                            Output.AppendLine($"{package.PrerequisiteVer()} beta #");
 
                         else
-                            Output.AppendLine(package.PrerequisiteVer);
+                            Output.AppendLine(package.PrerequisiteVer());
                     }
                 }
 
