@@ -161,7 +161,7 @@
                     <string>iPad2,4</string>
                 </dict>
             </dict>
-            <key>iPad 3rd generation</key>
+            <key>iPad (3rd generation)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -175,7 +175,7 @@
                     <string>iPad3,3</string>
                 </dict>
             </dict>
-            <key>iPad 4th generation</key>
+            <key>iPad (4th generation)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -189,7 +189,38 @@
                     <string>iPad3,6</string>
                 </dict>
             </dict>
-            <key>iPad Air</key>
+            <key>iPad (5th generation)</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>4</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J71sAP</key>
+                    <string>iPad6,11</string>
+                    <key>J71tAP</key>
+                    <string>iPad6,11</string>
+                    <key>J72sAP</key>
+                    <string>iPad6,12</string>
+                    <key>J72tAP</key>
+                    <string>iPad6,12</string>
+                </dict>
+            </dict>
+            <key>iPad (6th generation)</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J71bAP</key>
+                    <string>iPad7,5</string>
+                    <key>J72bAP</key>
+                    <string>iPad7,6</string>
+                </dict>
+            </dict>
+        </dict>
+        <key>iPad Air</key>
+        <dict>
+            <key>iPad Air (1st generation)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -215,7 +246,22 @@
                     <string>iPad5,4</string>
                 </dict>
             </dict>
-            <key>iPad Pro 12.9-inch 1st generation</key>
+            <key>iPad Air (3rd generation)</key>
+            <dict>
+                <key>HeaderLevel</key>
+                <integer>3</integer>
+                <key>Models</key>
+                <dict>
+                    <key>J217AP</key>
+                    <string>iPad11,3</string>
+                    <key>J218AP</key>
+                    <string>iPad11,4</string>
+                </dict>
+            </dict>
+        </dict>
+        <key>iPad Pro</key>
+        <dict>
+            <key>iPad Pro (12.9-inch 1st generation)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -227,7 +273,7 @@
                     <string>iPad6,8</string>
                 </dict>
             </dict>
-            <key>iPad Pro 9.7-inch</key>
+            <key>iPad Pro (9.7-inch)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -239,23 +285,7 @@
                     <string>iPad6,4</string>
                 </dict>
             </dict>
-            <key>iPad 5th generation</key>
-            <dict>
-                <key>HeaderLevel</key>
-                <integer>4</integer>
-                <key>Models</key>
-                <dict>
-                    <key>J71sAP</key>
-                    <string>iPad6,11</string>
-                    <key>J71tAP</key>
-                    <string>iPad6,11</string>
-                    <key>J72sAP</key>
-                    <string>iPad6,12</string>
-                    <key>J72tAP</key>
-                    <string>iPad6,12</string>
-                </dict>
-            </dict>
-            <key>iPad Pro 12.9-inch 2nd generation</key>
+            <key>iPad Pro (12.9-inch 2nd generation)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -267,7 +297,7 @@
                     <string>iPad7,2</string>
                 </dict>
             </dict>
-            <key>iPad Pro 10.5-inch</key>
+            <key>iPad Pro (10.5-inch)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -279,19 +309,7 @@
                     <string>iPad7,4</string>
                 </dict>
             </dict>
-            <key>iPad 6th generation</key>
-            <dict>
-                <key>HeaderLevel</key>
-                <integer>3</integer>
-                <key>Models</key>
-                <dict>
-                    <key>J71bAP</key>
-                    <string>iPad7,5</string>
-                    <key>J72bAP</key>
-                    <string>iPad7,6</string>
-                </dict>
-            </dict>
-            <key>iPad Pro 11-inch</key>
+            <key>iPad Pro (11-inch)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -307,7 +325,7 @@
                     <string>iPad8,4</string>
                 </dict>
             </dict>
-            <key>iPad Pro 12.9-inch 3rd generation</key>
+            <key>iPad Pro (12.9-inch 3rd generation)</key>
             <dict>
                 <key>HeaderLevel</key>
                 <integer>3</integer>
@@ -321,18 +339,6 @@
                     <string>iPad8,7</string>
                     <key>J321xAP</key>
                     <string>iPad8,8</string>
-                </dict>
-            </dict>
-            <key>iPad Air (3rd generation)</key>
-            <dict>
-                <key>HeaderLevel</key>
-                <integer>3</integer>
-                <key>Models</key>
-                <dict>
-                    <key>J217AP</key>
-                    <string>iPad11,3</string>
-                    <key>J218AP</key>
-                    <string>iPad11,4</string>
                 </dict>
             </dict>
         </dict>
