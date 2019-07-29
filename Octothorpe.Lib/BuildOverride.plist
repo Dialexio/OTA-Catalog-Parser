@@ -11,6 +11,11 @@
 			<key>Version</key>
 			<string>11.2.5</string>
 		</dict>
+		<key>16G78</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190722</integer>
+		</dict>
 	</dict>
 	<key>iOS</key>
 	<dict>
@@ -460,6 +465,77 @@
 			<key>Date</key>
 			<integer>20190611</integer>
 		</dict>
+		<key>16G5056d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190624</integer>
+		</dict>
+		<key>16G5069a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>6</integer>
+			<key>Date</key>
+			<integer>20190709</integer>
+		</dict>
+		<key>16G5077a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>7</integer>
+			<key>Date</key>
+			<integer>20190716</integer>
+		</dict>
+		<key>16G77</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190722</integer>
+		</dict>
+		<!--13.0-->
+		<key>17A5492t</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190603</integer>
+		</dict>
+		<key>17A5508m</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190617</integer>
+		</dict>
+		<key>17A5522f</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190702</integer>
+		</dict>
+		<key>17A5522g</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190708</integer>
+			<key>Suffix</key>
+			<string>Re-release</string>
+		</dict>
+		<key>17A5534f</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<integer>20190717</integer>
+		</dict>
+		<key>17A5547d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190729</integer>
+		</dict>
 	</dict>
 	<key>tvOS</key>
 	<dict>
@@ -556,6 +632,47 @@
 			<integer>2</integer>
 			<key>Date</key>
 			<integer>20190528</integer>
+		</dict>
+		<key>16M568</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190722</integer>
+		</dict>
+		<!--13.0-->
+		<key>17J5485s</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190603</integer>
+		</dict>
+		<key>17J5501l</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190617</integer>
+		</dict>
+		<key>17J5515e</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190702</integer>
+		</dict>
+		<key>17J5526e</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<integer>20190717</integer>
+		</dict>
+		<key>17J5540d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190729</integer>
 		</dict>
 	</dict>
 	<key>watchOS</key>
@@ -1287,6 +1404,61 @@
 			<integer>3</integer>
 			<key>Date</key>
 			<integer>20190611</integer>
+		</dict>
+		<key>16U5558b</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<integer>20190624</integer>
+		</dict>
+		<key>16U5566a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190709</integer>
+		</dict>
+		<key>16U5569a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>6</integer>
+			<key>Date</key>
+			<integer>20190716</integer>
+		</dict>
+		<key>16U569</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190722</integer>
+		</dict>
+		<!--6.0-->
+		<key>17R5491t</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20190603</integer>
+		</dict>
+		<key>17R5507l</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20190617</integer>
+		</dict>
+		<key>17R5521e</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20190702</integer>
+		</dict>
+		<key>17R5532f</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<integer>20190717</integer>
 		</dict>
 	</dict>
 </dict>
