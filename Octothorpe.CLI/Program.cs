@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2017 Dialexio
+ * Copyright (c) 2019 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
