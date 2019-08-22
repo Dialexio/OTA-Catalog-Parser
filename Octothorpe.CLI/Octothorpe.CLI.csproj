@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Octothorpe</RootNamespace>
     <AssemblyName>CLI</AssemblyName>
-    <ReleaseVersion>2.1.0</ReleaseVersion>
+    <ReleaseVersion>2.1.1</ReleaseVersion>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <ApplicationIcon>AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
