@@ -212,7 +212,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FYH-lH-9Ps">
-                                    <rect key="frame" x="59" y="2" width="48" height="17"/>
+                                    <rect key="frame" x="51" y="2" width="48" height="17"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Model:" id="9vf-Ie-mrt">
                                         <font key="font" metaFont="system"/>
@@ -221,7 +221,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9vf-ZE-GFD">
-                                    <rect key="frame" x="111" y="-3" width="85" height="25"/>
+                                    <rect key="frame" x="103" y="-3" width="102" height="25"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="boH-8o-Fjr">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>

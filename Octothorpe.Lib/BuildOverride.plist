@@ -436,7 +436,6 @@
 			<key>Date</key>
 			<integer>20190528</integer>
 		</dict>
-		<!--12.4-->
 		<key>16G5027g</key>
 		<dict>
 			<key>Beta</key>
@@ -491,7 +490,11 @@
 			<key>Date</key>
 			<integer>20190722</integer>
 		</dict>
-		<!--13.0-->
+		<key>16G102</key>
+		<dict>
+			<key>Date</key>
+			<real>20190826</real>
+		</dict>
 		<key>17A5492t</key>
 		<dict>
 			<key>Beta</key>
@@ -536,10 +539,30 @@
 			<key>Date</key>
 			<integer>20190729</integer>
 		</dict>
+		<key>17A5556d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>6</integer>
+			<key>Date</key>
+			<real>20190807</real>
+		</dict>
+		<key>17A5565b</key>
+		<dict>
+			<key>Beta</key>
+			<integer>7</integer>
+			<key>Date</key>
+			<real>20190815</real>
+		</dict>
+		<key>17A5572a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>8</integer>
+			<key>Date</key>
+			<real>20190821</real>
+		</dict>
 	</dict>
 	<key>tvOS</key>
 	<dict>
-		<!-- OK, this isn't quite tvOS, but it makes more sense here. -->
 		<key>12H847</key>
 		<dict>
 			<key>Date</key>
@@ -618,7 +641,6 @@
 			<key>Date</key>
 			<integer>20190122</integer>
 		</dict>
-		<!--12.4-->
 		<key>16M5526d</key>
 		<dict>
 			<key>Beta</key>
@@ -638,7 +660,11 @@
 			<key>Date</key>
 			<integer>20190722</integer>
 		</dict>
-		<!--13.0-->
+		<key>16M600</key>
+		<dict>
+			<key>Date</key>
+			<real>20190826</real>
+		</dict>
 		<key>17J5485s</key>
 		<dict>
 			<key>Beta</key>
@@ -1219,7 +1245,6 @@
 			<key>Date</key>
 			<integer>20180831</integer>
 		</dict>
-		<!-- 5.1 -->
 		<key>16R5559d</key>
 		<dict>
 			<key>Beta</key>
@@ -1245,7 +1270,6 @@
 			<key>Beta</key>
 			<integer>5</integer>
 		</dict>
-		<!-- 5.1.2 -->
 		<key>16S5042a</key>
 		<dict>
 			<key>Beta</key>
@@ -1265,7 +1289,6 @@
 			<key>Date</key>
 			<integer>20181206</integer>
 		</dict>
-		<!-- 5.1.3 -->
 		<key>16S5523a</key>
 		<dict>
 			<key>Beta</key>
@@ -1292,7 +1315,6 @@
 			<key>Date</key>
 			<integer>20190122</integer>
 		</dict>
-		<!-- 5.2 -->
 		<key>16T5181f</key>
 		<dict>
 			<key>Beta</key>
@@ -1342,7 +1364,6 @@
 			<key>Date</key>
 			<integer>20190327</integer>
 		</dict>
-		<!-- 5.2.1 -->
 		<key>16U5079d</key>
 		<dict>
 			<key>Beta</key>
@@ -1383,7 +1404,6 @@
 			<key>Date</key>
 			<integer>20190513</integer>
 		</dict>
-		<!--5.3-->
 		<key>16U5526f</key>
 		<dict>
 			<key>Beta</key>
@@ -1431,7 +1451,6 @@
 			<key>Date</key>
 			<integer>20190722</integer>
 		</dict>
-		<!--6.0-->
 		<key>17R5491t</key>
 		<dict>
 			<key>Beta</key>
