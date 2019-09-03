@@ -161,7 +161,7 @@ namespace Octothorpe.Mac
 
         partial void DeviceChanged(NSPopUpButton sender)
         {
-            string SelectedDevice = DeviceSelection.SelectedItem.Title;
+            string SelectedDevice = DeviceSelection.SelectedItem.Title.Substring(1);
 
             // Empty out the dropdown box for models
             ModelSelection.RemoveAllItems();
@@ -364,7 +364,7 @@ namespace Octothorpe.Mac
                         NSBoxFile.Hidden = true;
                         NSBoxLoc.Hidden = false;
                         NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        NSTextFieldLoc.Enabled = false;
+                        NSTextFieldLoc.Enabled = true;
                         parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 

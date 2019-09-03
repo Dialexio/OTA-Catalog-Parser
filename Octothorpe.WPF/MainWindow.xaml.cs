@@ -110,7 +110,7 @@ namespace Octothorpe
 
         private void DeviceChanged(object sender, SelectionChangedEventArgs e)
         {
-            string SelectedDevice = (string)((ComboBoxItem)ComboBoxDevice.SelectedItem).Content;
+            string SelectedDevice = (string)((ComboBoxItem)ComboBoxDevice.SelectedItem).Content.Substring(1);
 
             // Empty out the dropdown box for models
             ComboBoxModel.Items.Clear();
