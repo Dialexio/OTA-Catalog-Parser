@@ -28,7 +28,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using NSArray = Claunia.PropertyList.NSArray;
 using NSDictionary = Claunia.PropertyList.NSDictionary;
 using NSObject = Claunia.PropertyList.NSObject;
 
@@ -61,13 +60,17 @@ namespace Octothorpe.Mac
             // Populate the Device dropdown box
             foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
             {
-                // Add and disable items that are group headers
+                // Prevent drawing a separator at the top
+                if (DeviceSelection.ItemCount > 1)
+                    DeviceSelection.Menu.AddItem(NSMenuItem.SeparatorItem);
+
+                // Group headers
                 DeviceSelection.AddItem(deviceClass.Key);
                 DeviceSelection.LastItem.Action = null;
                 DeviceSelection.LastItem.Enabled = false;
 
                 foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
-                    DeviceSelection.AddItem(device.Key);
+                    DeviceSelection.AddItem($"\t{device.Key}");
             }
         }
 
