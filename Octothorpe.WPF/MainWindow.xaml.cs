@@ -38,7 +38,7 @@ namespace Octothorpe
     public partial class MainWindow : Window
     {
         private Microsoft.Win32.OpenFileDialog FilePrompt;
-        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
+        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}DeviceInfo.plist");
         private Parser parser = new Parser();
 
 
@@ -48,10 +48,15 @@ namespace Octothorpe
 
             foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
             {
+                // Prevent drawing a separator at the top
+                if (ComboBoxDevice.Items.Count > 0)
+                    ComboBoxDevice.Items.Add(new Separator());
+
+                // Group headers
                 ComboBoxDevice.Items.Add(new ComboBoxItem() { Content = deviceClass.Key, IsEnabled = false });
 
                 foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
-                    ComboBoxDevice.Items.Add(new ComboBoxItem() { Content = device.Key });
+                    ComboBoxDevice.Items.Add(new ComboBoxItem() { Content = $"\t{device.Key}" });
             }
         }
 

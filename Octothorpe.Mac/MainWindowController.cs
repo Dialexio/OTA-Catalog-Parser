@@ -61,7 +61,7 @@ namespace Octothorpe.Mac
             foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
             {
                 // Prevent drawing a separator at the top
-                if (DeviceSelection.ItemCount > 1)
+                if (DeviceSelection.ItemCount > 0)
                     DeviceSelection.Menu.AddItem(NSMenuItem.SeparatorItem);
 
                 // Group headers
