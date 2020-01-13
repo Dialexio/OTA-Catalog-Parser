@@ -495,6 +495,11 @@
 			<key>Date</key>
 			<real>20190826</real>
 		</dict>
+		<key>16G114</key>
+		<dict>
+			<key>Date</key>
+			<real>20190926</real>
+		</dict>
 		<key>17A5492t</key>
 		<dict>
 			<key>Beta</key>
@@ -559,6 +564,59 @@
 			<integer>8</integer>
 			<key>Date</key>
 			<real>20190821</real>
+		</dict>
+		<key>17A577</key>
+		<dict>
+			<key>Date</key>
+			<real>20190919</real>
+		</dict>
+		<key>17A5821e</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<real>20190827</real>
+		</dict>
+		<key>17A5831c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<real>20190904</real>
+		</dict>
+		<key>17A5837a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<real>20190910</real>
+		</dict>
+		<key>17A5844a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>4</integer>
+			<key>Date</key>
+			<real>20190918</real>
+		</dict>
+		<key>17A844</key>
+		<dict>
+			<key>Date</key>
+			<real>20190924</real>
+		</dict>
+		<key>17A854</key>
+		<dict>
+			<key>Date</key>
+			<real>20190927</real>
+		</dict>
+		<key>17A860</key>
+		<dict>
+			<key>Date</key>
+			<real>20190930</real>
+		</dict>
+		<key>17A861</key>
+		<dict>
+			<key>Date</key>
+			<real>20190930</real>
 		</dict>
 	</dict>
 	<key>tvOS</key>
@@ -699,6 +757,48 @@
 			<integer>5</integer>
 			<key>Date</key>
 			<integer>20190729</integer>
+		</dict>
+		<key>17J5549c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>6</integer>
+			<key>Date</key>
+			<real>20190807</real>
+		</dict>
+		<key>17J5557a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>7</integer>
+			<key>Date</key>
+			<real>20190815</real>
+		</dict>
+		<key>17J5564c</key>
+		<dict>
+			<key>Beta</key>
+			<integer>8</integer>
+			<key>Date</key>
+			<real>20190827</real>
+		</dict>
+		<key>17J5573a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>9</integer>
+			<key>Date</key>
+			<real>20190904</real>
+		</dict>
+		<key>17J5579a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>10</integer>
+			<key>Date</key>
+			<real>20190910</real>
+		</dict>
+		<key>17J5584a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>11</integer>
+			<key>Date</key>
+			<real>20190918</real>
 		</dict>
 	</dict>
 	<key>watchOS</key>
@@ -1451,6 +1551,16 @@
 			<key>Date</key>
 			<integer>20190722</integer>
 		</dict>
+		<key>16U600</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190826</integer>
+		</dict>
+		<key>16U611</key>
+		<dict>
+			<key>Date</key>
+			<real>20190926</real>
+		</dict>
 		<key>17R5491t</key>
 		<dict>
 			<key>Beta</key>
@@ -1478,6 +1588,53 @@
 			<integer>4</integer>
 			<key>Date</key>
 			<integer>20190717</integer>
+		</dict>
+		<key>17R5546f</key>
+		<dict>
+			<key>Beta</key>
+			<integer>5</integer>
+			<key>Date</key>
+			<integer>20190730</integer>
+		</dict>
+		<key>17R5556d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>6</integer>
+			<key>Date</key>
+			<integer>20190807</integer>
+		</dict>
+		<key>17R5566a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>7</integer>
+			<key>Date</key>
+			<integer>20190815</integer>
+		</dict>
+		<key>17R5571a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>8</integer>
+			<key>Date</key>
+			<integer>20190821</integer>
+		</dict>
+		<key>17R5575a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>9</integer>
+			<key>Date</key>
+			<integer>20190827</integer>
+			<key>Version</key>
+			<string>6.0</string>
+		</dict>
+		<key>17R575</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190911</integer>
+		</dict>
+		<key>17R605</key>
+		<dict>
+			<key>Date</key>
+			<real>20190930</real>
 		</dict>
 	</dict>
 </dict>

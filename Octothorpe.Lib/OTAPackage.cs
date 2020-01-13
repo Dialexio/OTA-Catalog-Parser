@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2019 Dialexio
+ * Copyright (c) 2020 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -53,7 +53,7 @@ namespace Octothorpe.Lib
             {
                 // If it's labeled as a beta when it's not one... We need the actual build number.
                 return Regex.Match(DeclaredBuild, REGEX_BETA).Success && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]) == false
-                    ? RemoveBetaPadding(DeclaredBuild)
+                    ? RemoveBuildPadding(DeclaredBuild)
                     : DeclaredBuild;
             }
         }
@@ -100,6 +100,35 @@ namespace Octothorpe.Lib
                         return -1;
                 }
             }
+        }
+
+        /// <summary>
+        /// Some build numbers are small. This adds some padding to make it easier to sort.
+        /// </summary>
+        /// <returns>
+        /// A string value of the provided build number, padded with zeroes for easier comparisons.
+        /// </returns>
+        private string AddBuildPadding(string BuildNum)
+        {
+            int LetterPos, NumPos;
+            string zeros = null;
+
+            for (LetterPos = 1; LetterPos < BuildNum.Length; LetterPos++)
+            {
+                if (char.IsUpper(BuildNum[LetterPos]))
+                {
+                    LetterPos++;
+                    break;
+                }
+            }
+
+            // NumPos will be the first actual digit that comes after the letter.
+            NumPos = LetterPos + 1;
+
+            while (BuildNum.Substring(NumPos).Length < 3)
+                zeros.Insert(0, "0");
+
+            return $"{BuildNum.Substring(0, LetterPos)}{zeros}{BuildNum.Substring(NumPos)}";
         }
 
         /// <summary>
@@ -169,7 +198,7 @@ namespace Octothorpe.Lib
         
         public int CompareTo(OTAPackage compareWith)
         {
-            return this.SortingString.CompareTo(compareWith.SortingString);
+            return SortingString.CompareTo(compareWith.SortingString);
         }
 
         /// <summary>
@@ -440,7 +469,7 @@ namespace Octothorpe.Lib
             {
                 return ENTRY.TryGetValue("PrerequisiteOSVersion", out object ver) ?
                     (string)ver :
-                    "N/A";
+                    "0.0";
             }
         }
 
@@ -475,7 +504,7 @@ namespace Octothorpe.Lib
         /// <returns>
         /// The build number, minus the padding for a beta.
         /// </returns>
-        private string RemoveBetaPadding(string BuildNum)
+        private string RemoveBuildPadding(string BuildNum)
         {
             if (Regex.Match(BuildNum, REGEX_BETA).Success)
             {
@@ -587,7 +616,7 @@ namespace Octothorpe.Lib
                 return $"0{build}";
                 
             if (PrerequisiteVer().Contains("beta"))
-                build = RemoveBetaPadding(build);
+                build = RemoveBuildPadding(build);
 
             // If the number after the capital letter is too small, pad it.
             // (Note [A-Z] vs. [A-z]. The latter may chop off a lower case letter at the end.)
@@ -609,7 +638,10 @@ namespace Octothorpe.Lib
         /// </returns>
         public string SortingString
         {
-            get { return SortingBuild() + SortingPrerequisiteBuild() + CompatibilityVersion + ActualReleaseType; }
+            get
+            {
+                return $"{SortingBuild()}{PrerequisiteVer().Split('.')[0]}{SortingPrerequisiteBuild()}{CompatibilityVersion}{ActualReleaseType}";
+            }
         }
 
         /// <summary>
