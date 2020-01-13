@@ -233,6 +233,18 @@
 				<string>iPad7,6</string>
 			</dict>
 		</dict>
+		<key>iPad (7th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J171AP</key>
+				<string>iPad7,11</string>
+				<key>J172AP</key>
+				<string>iPad7,12</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPad Air</key>
 	<dict>
