@@ -70,7 +70,7 @@ namespace Octothorpe.Mac
                 DeviceSelection.LastItem.Enabled = false;
 
                 foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
-                    DeviceSelection.AddItem($"\t{device.Key}");
+                    DeviceSelection.AddItem(device.Key);
             }
         }
 
