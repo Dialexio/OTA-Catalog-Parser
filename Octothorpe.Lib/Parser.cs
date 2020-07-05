@@ -98,73 +98,6 @@ namespace Octothorpe.Lib
             set { wikiMarkup = value; }
         }
 
-        private void GetPallasEntries()
-        {
-            Dictionary<string, object> DecryptedPayload;
-            IRestResponse response;
-            JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
-            List<string> Builds = new List<string>();
-            OTAPackage package;
-            RestClient Fido = new RestClient();
-            RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
-            string AssetAudience = null, PostingDate;
-
-            switch (Device.Substring(0,3))
-            {
-                // audioOS
-                case "Aud":
-                    AssetAudience = "0322d49d-d558-4ddf-bdff-c0443d0e6fac";
-                    break;
-
-                // tvOS
-                case "App":
-                    // I don't think Apple TV 2nd and 3rd gen. use Pallas? Can't hurt to be cautious I guess.
-                    AssetAudience = (Device == "AppleTV2,1" || Device.Substring(0,9) == "AppleTV3,") ? "01c1d682-6e8f-4908-b724-5501fe3f5e5c" : "356d9da0-eee4-4c6c-bbe5-99b60eadddf0";
-                    break;
-
-                // iOS / iPadOS
-                case "iPa":
-                case "iPh":
-                case "iPo":
-                    AssetAudience = "01c1d682-6e8f-4908-b724-5501fe3f5e5c";
-                    break;
-
-                // watchOS
-                case "Wat":
-                    AssetAudience = "b82fcf9c-c284-41c9-8eb2-e69bf5a5269f";
-                    break;
-            }
-
-            // Put together the request.
-            request.AddJsonBody(new {
-                AssetAudience = AssetAudience,
-                AssetType = "com.apple.MobileAsset.SoftwareUpdate",
-                BuildVersion = pallasBuild,
-                ClientVersion = 2,
-                HWModelStr = Model,
-                ProductType = Device
-            });
-            request.AddHeader("Accept", "application/json");
-            request.Method = Method.POST;
-
-            // Get Apple's response, then decode it.
-            response = Fido.Execute(request);
-            DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
-
-            // Grab the release date.
-            PostingDate = ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty);
-
-            if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
-            {
-                foreach (JContainer container in (JArray)AssetsArray)
-                {
-                    package = new OTAPackage(container, PostingDate);
-
-                    Packages.Add(package);
-                }
-            }
-        }
-
         public void LoadPlist(string AssetFile)
         {
             NSDictionary root;
@@ -375,6 +308,74 @@ namespace Octothorpe.Lib
 
             if (Assets == null)
                 throw new ArgumentException("nofile");
+        }
+
+        private void GetPallasEntries()
+        {
+            Dictionary<string, object> DecryptedPayload;
+            IRestResponse response;
+            JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
+            List<string> Builds = new List<string>();
+            OTAPackage package;
+            RestClient Fido = new RestClient();
+            RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
+            string AssetAudience = null, PostingDate;
+
+            switch (Device.Substring(0, 3))
+            {
+                // audioOS
+                case "Aud":
+                    AssetAudience = "0322d49d-d558-4ddf-bdff-c0443d0e6fac";
+                    break;
+
+                // tvOS
+                case "App":
+                    // I don't think Apple TV 2nd and 3rd gen. use Pallas? Can't hurt to be cautious I guess.
+                    AssetAudience = (Device == "AppleTV2,1" || Device.Substring(0, 9) == "AppleTV3,") ? "01c1d682-6e8f-4908-b724-5501fe3f5e5c" : "356d9da0-eee4-4c6c-bbe5-99b60eadddf0";
+                    break;
+
+                // iOS / iPadOS
+                case "iPa":
+                case "iPh":
+                case "iPo":
+                    AssetAudience = "01c1d682-6e8f-4908-b724-5501fe3f5e5c";
+                    break;
+
+                // watchOS
+                case "Wat":
+                    AssetAudience = "b82fcf9c-c284-41c9-8eb2-e69bf5a5269f";
+                    break;
+            }
+
+            // Put together the request.
+            request.AddJsonBody(new
+            {
+                AssetAudience = AssetAudience,
+                AssetType = "com.apple.MobileAsset.SoftwareUpdate",
+                BuildVersion = pallasBuild,
+                ClientVersion = 2,
+                HWModelStr = Model,
+                ProductType = Device
+            });
+            request.AddHeader("Accept", "application/json");
+            request.Method = Method.POST;
+
+            // Get Apple's response, then decode it.
+            response = Fido.Execute(request);
+            DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
+
+            // Grab the release date.
+            PostingDate = ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty);
+
+            if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
+            {
+                foreach (JContainer container in (JArray)AssetsArray)
+                {
+                    package = new OTAPackage(container, PostingDate);
+
+                    Packages.Add(package);
+                }
+            }
         }
 
         private string OutputHumanFormat()
