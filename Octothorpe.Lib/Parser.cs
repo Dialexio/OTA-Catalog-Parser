@@ -337,11 +337,11 @@ namespace Octothorpe.Lib
 
                         if (showBeta)
                             AssetAudiences.AddRange(new List<string> {
-                            "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
-                            "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
-                            "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
-                            "84da8706-e267-4554-8207-865ae0c3a120"  // iOS 14 beta
-                        });
+                                "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
+                                "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
+                                "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
+                                "84da8706-e267-4554-8207-865ae0c3a120"  // iOS 14 beta
+                            });
                     }
 
                     else
@@ -350,10 +350,10 @@ namespace Octothorpe.Lib
 
                         if (showBeta)
                             AssetAudiences.AddRange(new List<string> {
-                            "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
-                            "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
-                            "65254ac3-f331-4c19-8559-cbe22f5bc1a6"  // tvOS 14 beta
-                        });
+                                "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
+                                "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
+                                "65254ac3-f331-4c19-8559-cbe22f5bc1a6"  // tvOS 14 beta
+                            });
                     }
                     break;
 
