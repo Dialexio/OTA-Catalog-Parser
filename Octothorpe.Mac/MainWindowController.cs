@@ -263,7 +263,7 @@ namespace Octothorpe.Mac
                 NSTextViewOutput.Value = parser.ParseAssets(Pallas);
             }
 
-/*            catch (ArgumentException message)
+            catch (ArgumentException message)
             {
                 switch (message.Message)
                 {
@@ -301,7 +301,7 @@ namespace Octothorpe.Mac
                 }
 
                 alert.RunModal();
-            }*/
+            }
 
             catch (FileNotFoundException)
             {
