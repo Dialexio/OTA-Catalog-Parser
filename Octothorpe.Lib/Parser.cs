@@ -21,10 +21,12 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 using Claunia.PropertyList;
+using JWT;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -42,13 +44,10 @@ namespace Octothorpe.Lib
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
         private object[] Assets;
         private readonly List<OTAPackage> Packages = new List<OTAPackage>();
-        private string model = null;
+        private string model = null, pallasBuild = null;
         private Version max, minimum;
 
-        public string Device
-        {
-            get; set;
-        }
+        public string Device { get; set; }
 
         public bool RemoveStubs
         {
@@ -84,6 +83,11 @@ namespace Octothorpe.Lib
             }
         }
 
+        public string PallasBuild
+        {
+            set { pallasBuild = value; }
+        }
+
         public bool ShowBeta
         {
             set { showBeta = value; }
@@ -94,36 +98,123 @@ namespace Octothorpe.Lib
             set { wikiMarkup = value; }
         }
 
-        public void LoadPlist(string plist)
+        public void GetPallasEntries()
+        {
+            Dictionary<string, object> DecryptedPayload;
+            JContainer Asset;
+            JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
+            IRestResponse response;
+            RestClient Fido = new RestClient();
+            RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
+            string AssetAudience = null, PostingDate;
+
+            switch (Device.Substring(0,3))
+            {
+                // audioOS
+                case "Aud":
+                    AssetAudience = "0322d49d-d558-4ddf-bdff-c0443d0e6fac";
+                    break;
+
+                // tvOS
+                case "App":
+                    // I don't think Apple TV 2nd and 3rd gen. use Pallas? Can't hurt to be cautious I guess.
+                    AssetAudience = (Device == "AppleTV2,1" || Device.Substring(0,9) == "AppleTV3,") ? "01c1d682-6e8f-4908-b724-5501fe3f5e5c" : "356d9da0-eee4-4c6c-bbe5-99b60eadddf0";
+                    break;
+
+                // iOS / iPadOS
+                case "iPa":
+                case "iPh":
+                case "iPo":
+                    AssetAudience = "01c1d682-6e8f-4908-b724-5501fe3f5e5c";
+                    break;
+
+                // watchOS
+                case "Wat":
+                    AssetAudience = "b82fcf9c-c284-41c9-8eb2-e69bf5a5269f";
+                    break;
+            }
+
+            // Put together the request.
+            request.AddJsonBody(new {
+                AssetAudience = AssetAudience,
+                AssetType = "com.apple.MobileAsset.SoftwareUpdate",
+                BuildVersion = pallasBuild,
+                ClientVersion = 2,
+                HWModelStr = Model,
+                ProductType = Device
+            });
+            request.AddHeader("Accept", "application/json");
+            request.Method = Method.POST;
+
+            // Get Apple's response, then decode it.
+            response = Fido.Execute(request);
+            DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
+
+            // Grab the release date.
+            PostingDate = ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty);
+
+            if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
+            {
+                Asset = (JContainer)(((JArray)AssetsArray)[0]);
+                OTAPackage package = new OTAPackage(Asset, Device, Model, PostingDate, pallasBuild);
+
+                Packages.Add(package);
+
+                // Time to fill in rowspan counts.
+                BuildNumberRowspan.Add(package.DeclaredBuild, 1);
+                DateRowspan.Add(package.ActualBuild, 1);
+                FileRowspan.Add(package.URL, new List<string>(new string[] { package.PrerequisiteBuild }));
+                MarketingVersionRowspan.Add(package.MarketingVersion, 1);
+
+                PrereqBuildRowspan.Add(package.DeclaredBuild, new Dictionary<string, uint>());
+                PrereqBuildRowspan[package.DeclaredBuild].Add(package.PrerequisiteBuild, 1);
+
+                PrereqOSRowspan.Add(package.DeclaredBuild, new Dictionary<string, uint>());
+                PrereqOSRowspan[package.DeclaredBuild].Add(package.PrerequisiteVer(), 1);
+            }
+        }
+
+        public void LoadPlist(string AssetFile)
         {
             NSDictionary root;
 
-            if (Regex.IsMatch(plist, @"://mesu.apple.com/assets/"))
+            if (Regex.IsMatch(AssetFile, @"://mesu.apple.com/assets/"))
             {
-                HttpClient Fido = new HttpClient();
-                root = (NSDictionary)PropertyListParser.Parse(Fido.GetStreamAsync(plist).Result);
-                Fido.Dispose();
+                RestClient Fido = new RestClient();
+                var request = new RestRequest(AssetFile);
+                IRestResponse response = Fido.Execute(request);
+                MemoryStream ResponseAsStream = new MemoryStream(Encoding.UTF8.GetBytes(response.Content));
+                root = (NSDictionary)PropertyListParser.Parse(ResponseAsStream);
             }
 
-            else if (plist.Contains("://"))
+            else if (AssetFile.Contains("://"))
                 throw new ArgumentException("notmesu");
 
             else
-                root = (NSDictionary)PropertyListParser.Parse(plist);
+                root = (NSDictionary)PropertyListParser.Parse(AssetFile);
 
             Assets = (object[])(root.Get("Assets").ToObject());
         }
 
-        public string ParseAssets()
+        public string ParseAssets(bool Pallas)
         {
             Cleanup();
-            ErrorCheck();
 
-            AddEntries();
+            if (Pallas)
+                GetPallasEntries();
+
+            else
+            {
+                ErrorCheck();
+                AddPlistEntries();
+            }
+
 
             if (wikiMarkup)
             {
-                CountRowspan();
+                if (Pallas == false)
+                    CountRowspan();
+
                 return OutputWikiMarkup();
             }
 
@@ -131,7 +222,7 @@ namespace Octothorpe.Lib
                 return OutputHumanFormat();
         }
 
-        private void AddEntries()
+        private void AddPlistEntries()
         {
             List<Task> AssetTasks = new List<Task>();
 
@@ -156,7 +247,7 @@ namespace Octothorpe.Lib
 
                         // Make sure "SupportedDeviceModels" exists before checking it.
                         if (package.SupportedDeviceModels.Count > 0)
-                            matched = (package.SupportedDeviceModels.Contains(model));
+                            matched = (package.SupportedDeviceModels.Contains(Model));
                     }
 
                     // Stub check.
@@ -285,10 +376,10 @@ namespace Octothorpe.Lib
             // Model check.
             if (ModelNeedsChecking)
             {
-                if (model == null)
+                if (Model == null)
                     throw new ArgumentException("model");
 
-                else if (Regex.IsMatch(model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false)
+                else if (Regex.IsMatch(Model, @"[BDJKMNP]\d((\d)?){2}[A-Za-z]?AP") == false)
                     throw new ArgumentException("model");
             }
 
@@ -394,10 +485,7 @@ namespace Octothorpe.Lib
             NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
             string deviceName = "", fileName, NewTableCell = "| ";
             // So we don't add on to a previous run.
-            StringBuilder Output = new StringBuilder
-            {
-                Length = 0
-            };
+            StringBuilder Output = new StringBuilder { Length = 0 };
 
             // Looking through the <dict>s for each device class.
             foreach (NSDictionary deviceClass in deviceInfo.Values)

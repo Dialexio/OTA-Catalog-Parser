@@ -21,7 +21,9 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 using Claunia.PropertyList;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,12 +35,38 @@ namespace Octothorpe.Lib
     {
         private Match match;
         private readonly Dictionary<string, object> ENTRY;
-        private readonly NSDictionary OVERRIDE_DICT;
+        private readonly NSDictionary BUILD_INFO_DICT = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "BuildInfo.plist");
 
         public OTAPackage(Dictionary<string, object> package)
         {
             ENTRY = package;
-            OVERRIDE_DICT = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "BuildOverride.plist");
+        }
+
+        public OTAPackage(JContainer package, string device, string model, string pallasDate, string pallasPrereqBuild)
+        {
+            Dictionary<string, object> convertedPackage = new Dictionary<string, object>();
+            List<object> array;
+
+            foreach (JProperty a in package)
+            {
+                // If we have an array, we need to go through each array item.
+                if (a.Value.Type == JTokenType.Array)
+                {
+                    array = new List<object>();
+
+                    foreach (JToken item in a.Value)
+                        array.Add(item.ToObject<object>());
+
+                    convertedPackage.Add(a.Name, array.ToArray());
+                }
+
+                else
+                    convertedPackage.Add(a.Name, a.Value.ToObject<object>());
+            }
+            ENTRY = convertedPackage;
+            // Add some missing values.
+            ENTRY.Add("Date", pallasDate);
+            ENTRY.Add("PrerequisiteBuild", pallasPrereqBuild);
         }
 
         /// <summary>
@@ -52,9 +80,9 @@ namespace Octothorpe.Lib
             get
             {
                 // If it's labeled as a beta when it's not one... We need the actual build number.
-                return Regex.Match(DeclaredBuild, REGEX_BETA).Success && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]) == false
-                    ? RemoveBuildPadding(DeclaredBuild)
-                    : DeclaredBuild;
+                return (Regex.Match(DeclaredBuild, REGEX_BETA).Success && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]) == false) ?
+                    RemoveBuildPadding(DeclaredBuild) :
+                    DeclaredBuild;
             }
         }
 
@@ -216,10 +244,10 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
-        /// Returns the timestamp found in the url. Note that this is not always accurate; it may be off by a day, or even a week.
+        /// Returns the timestamp found in the URL. Note that this is not always accurate; it may be off by a day, or even a week.
         /// </summary>
         /// <returns>
-        /// The timestamp found in the url, which may not be accurate. Its format is YYYYMMDD.
+        /// The timestamp found in the URL, which may not be accurate. Its format is YYYYMMDD.
         /// </returns>
         public string Date()
         {
@@ -248,10 +276,10 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
-        /// Returns part of the timestamp found in the url.
+        /// Returns part of the timestamp found in the URL.
         /// </summary>
         /// <returns>
-        /// The day, month, or year found in the url.
+        /// The day, month, or year found in the URL.
         /// </returns>
         /// <param name="dmy">Indicates if you just want the day, month, or year.</param>
         public string Date(char dmy)
@@ -301,7 +329,7 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                foreach (KeyValuePair<string, NSObject> osBranch in OVERRIDE_DICT)
+                foreach (KeyValuePair<string, NSObject> osBranch in BUILD_INFO_DICT)
                 {
                     if (((NSDictionary)osBranch.Value).ContainsKey(ActualBuild))
                     {
@@ -396,7 +424,9 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return ENTRY.TryGetValue("PrerequisiteBuild", out object build) ? (string)build : "N/A";
+                return (ENTRY.TryGetValue("PrerequisiteBuild", out object build) && Regex.Match((string)build, @"\d?\d[A-Z]\d(\d?){2}").Success) ?
+                    (string)build :
+                    "N/A";
             }
         }
 
@@ -416,7 +446,7 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                foreach (KeyValuePair<string, NSObject> osBranch in OVERRIDE_DICT)
+                foreach (KeyValuePair<string, NSObject> osBranch in BUILD_INFO_DICT)
                 {
                     if (((NSDictionary)osBranch.Value).ContainsKey(PrerequisiteBuild))
                     {
@@ -481,7 +511,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public static string REGEX_BETA
         {
-            get { return @"(\d)?\d[A-Z][4-6]\d{3}[a-z]?"; }
+            get { return @"\d?\d[A-Z][4-6]\d{3}[a-z]?"; }
         }
 
         /// <summary>

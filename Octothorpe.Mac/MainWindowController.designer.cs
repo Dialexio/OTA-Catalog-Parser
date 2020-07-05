@@ -5,6 +5,7 @@
 // Manual changes to this file may not be handled correctly.
 //
 using Foundation;
+using System.CodeDom.Compiler;
 
 namespace Octothorpe.Mac
 {
@@ -56,6 +57,15 @@ namespace Octothorpe.Mac
 		[Outlet]
 		AppKit.NSTextView NSTextViewOutput { get; set; }
 
+		[Outlet]
+		AppKit.NSTextField PallasBuild { get; set; }
+
+		[Outlet]
+		AppKit.NSView PallasView { get; set; }
+
+		[Outlet]
+		AppKit.NSView PlistView { get; set; }
+
 		[Action ("BrowseForFile:")]
 		partial void BrowseForFile (AppKit.NSButton sender);
 
@@ -72,10 +82,13 @@ namespace Octothorpe.Mac
 		partial void ParsingSTART (AppKit.NSButton sender);
 
 		[Action ("SourceChanged:")]
-		partial void SourceChanged (AppKit.NSPopUpButton sender);
+		partial void PlistChanged (AppKit.NSPopUpButton sender);
 
 		[Action ("SourceEdited:")]
-		partial void SourceEdited (AppKit.NSTextField sender);
+		partial void PlistPathEdited (AppKit.NSTextField sender);
+
+		[Action ("UpdateSourceChanged:")]
+		partial void UpdateSourceChanged (AppKit.NSButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
@@ -129,6 +142,11 @@ namespace Octothorpe.Mac
 				NSButtonRemoveStubs = null;
 			}
 
+			if (PallasBuild != null) {
+				PallasBuild.Dispose ();
+				PallasBuild = null;
+			}
+
 			if (NSTextFieldFile != null) {
 				NSTextFieldFile.Dispose ();
 				NSTextFieldFile = null;
@@ -152,6 +170,16 @@ namespace Octothorpe.Mac
 			if (NSTextViewOutput != null) {
 				NSTextViewOutput.Dispose ();
 				NSTextViewOutput = null;
+			}
+
+			if (PallasView != null) {
+				PallasView.Dispose ();
+				PallasView = null;
+			}
+
+			if (PlistView != null) {
+				PlistView.Dispose ();
+				PlistView = null;
 			}
 		}
 	}

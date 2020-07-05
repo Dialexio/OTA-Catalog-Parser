@@ -19,13 +19,6 @@
 	</dict>
 	<key>iOS</key>
 	<dict>
-		<key>9B176</key>
-		<dict>
-			<key>Date</key>
-			<integer>20120307</integer>
-			<key>Version</key>
-			<string>5.1</string>
-		</dict>
 		<key>10A405</key>
 		<dict>
 			<key>Version</key>
@@ -268,6 +261,15 @@
 		<dict>
 			<key>Date</key>
 			<integer>20180912</integer>
+			<key>Version</key>
+			<string>12.0</string>
+		</dict>
+		<key>16A404</key>
+		<dict>
+			<key>Date</key>
+			<integer>20181008</integer>
+			<key>Version</key>
+			<string>12.0.1</string>
 		</dict>
 		<key>16A5318d</key>
 		<dict>
@@ -327,6 +329,20 @@
 			<key>Date</key>
 			<integer>20180831</integer>
 		</dict>
+		<key>16B92</key>
+		<dict>
+			<key>Date</key>
+			<integer>20181030</integer>
+			<key>Version</key>
+			<string>12.1</string>
+		</dict>
+		<key>16C50</key>
+		<dict>
+			<key>Date</key>
+			<integer>20181205</integer>
+			<key>Version</key>
+			<string>12.1.1</string>
+		</dict>
 		<key>16D5039a</key>
 		<dict>
 			<key>Beta</key>
@@ -339,12 +355,21 @@
 			<key>Date</key>
 			<integer>20190207</integer>
 		</dict>
+		<key>16E227</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190325</integer>
+			<key>Version</key>
+			<string>12.2</string>
+		</dict>
 		<key>16E5191d</key>
 		<dict>
 			<key>Beta</key>
 			<integer>2</integer>
 			<key>Date</key>
 			<integer>20190204</integer>
+			<key>Version</key>
+			<string>12.2</string>
 		</dict>
 		<key>16E5201e</key>
 		<dict>
@@ -352,6 +377,8 @@
 			<integer>3</integer>
 			<key>Date</key>
 			<integer>20190219</integer>
+			<key>Version</key>
+			<string>12.2</string>
 		</dict>
 		<key>16E5212f</key>
 		<dict>
@@ -359,6 +386,8 @@
 			<integer>4</integer>
 			<key>Date</key>
 			<integer>20190304</integer>
+			<key>Version</key>
+			<string>12.2</string>
 		</dict>
 		<key>16E5223a</key>
 		<dict>
@@ -366,6 +395,8 @@
 			<integer>5</integer>
 			<key>Date</key>
 			<integer>20190311</integer>
+			<key>Version</key>
+			<string>12.2</string>
 		</dict>
 		<key>16E5227a</key>
 		<dict>
@@ -373,11 +404,22 @@
 			<integer>6</integer>
 			<key>Date</key>
 			<integer>20190318</integer>
+			<key>Version</key>
+			<string>12.2</string>
 		</dict>
-		<key>16E227</key>
+		<key>16F156</key>
 		<dict>
 			<key>Date</key>
-			<integer>20190325</integer>
+			<integer>20190513</integer>
+			<key>Version</key>
+			<string>12.3</string>
+		</dict>
+		<key>16F203</key>
+		<dict>
+			<key>Date</key>
+			<integer>20190524</integer>
+			<key>Version</key>
+			<string>12.3.1</string>
 		</dict>
 		<key>16F5117h</key>
 		<dict>
@@ -421,20 +463,61 @@
 			<key>Date</key>
 			<integer>20190510</integer>
 		</dict>
-		<key>16F156</key>
-		<dict>
-			<key>Date</key>
-			<integer>20190513</integer>
-		</dict>
-		<key>16F203</key>
-		<dict>
-			<key>Date</key>
-			<integer>20190524</integer>
-		</dict>
 		<key>16F8202</key>
 		<dict>
 			<key>Date</key>
 			<integer>20190528</integer>
+			<key>Version</key>
+			<string>12.3.1</string>
+		</dict>
+		<key>16G102</key>
+		<dict>
+			<key>Date</key>
+			<real>20190826</real>
+			<key>Version</key>
+			<string>12.4.1</string>
+		</dict>
+		<key>16G114</key>
+		<dict>
+			<key>Date</key>
+			<real>20190926</real>
+			<key>Version</key>
+			<string>12.4.2</string>
+		</dict>
+		<key>16G130</key>
+		<dict>
+			<key>Date</key>
+			<integer>20191028</integer>
+			<key>Version</key>
+			<string>12.4.3</string>
+		</dict>
+		<key>16G140</key>
+		<dict>
+			<key>Date</key>
+			<integer>20191210</integer>
+			<key>Version</key>
+			<string>12.4.4</string>
+		</dict>
+		<key>16G161</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200128</integer>
+			<key>Version</key>
+			<string>12.4.5</string>
+		</dict>
+		<key>16G183</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200324</integer>
+			<key>Version</key>
+			<string>12.4.6</string>
+		</dict>
+		<key>16G192</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200520</integer>
+			<key>Version</key>
+			<string>12.4.7</string>
 		</dict>
 		<key>16G5027g</key>
 		<dict>
@@ -489,16 +572,8 @@
 		<dict>
 			<key>Date</key>
 			<integer>20190722</integer>
-		</dict>
-		<key>16G102</key>
-		<dict>
-			<key>Date</key>
-			<real>20190826</real>
-		</dict>
-		<key>16G114</key>
-		<dict>
-			<key>Date</key>
-			<real>20190926</real>
+			<key>Version</key>
+			<string>12.4</string>
 		</dict>
 		<key>17A5492t</key>
 		<dict>
@@ -602,21 +677,43 @@
 		<dict>
 			<key>Date</key>
 			<real>20190924</real>
+			<key>Version</key>
+			<string>13.1</string>
 		</dict>
 		<key>17A854</key>
 		<dict>
 			<key>Date</key>
 			<real>20190927</real>
+			<key>Version</key>
+			<string>13.1.1</string>
 		</dict>
 		<key>17A860</key>
 		<dict>
 			<key>Date</key>
 			<real>20190930</real>
+			<key>Version</key>
+			<string>13.1.2</string>
 		</dict>
 		<key>17A861</key>
 		<dict>
 			<key>Date</key>
 			<real>20190930</real>
+			<key>Version</key>
+			<string>13.1.2</string>
+		</dict>
+		<key>17F80</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200601</integer>
+			<key>Version</key>
+			<string>13.5.1</string>
+		</dict>
+		<key>9B176</key>
+		<dict>
+			<key>Date</key>
+			<integer>20120307</integer>
+			<key>Version</key>
+			<string>5.1</string>
 		</dict>
 	</dict>
 	<key>tvOS</key>
@@ -1370,6 +1467,11 @@
 			<key>Beta</key>
 			<integer>5</integer>
 		</dict>
+		<key>16S46</key>
+		<dict>
+			<key>Date</key>
+			<integer>20181206</integer>
+		</dict>
 		<key>16S5042a</key>
 		<dict>
 			<key>Beta</key>
@@ -1384,10 +1486,10 @@
 			<key>Date</key>
 			<integer>20181115</integer>
 		</dict>
-		<key>16S46</key>
+		<key>16S535</key>
 		<dict>
 			<key>Date</key>
-			<integer>20181206</integer>
+			<integer>20190122</integer>
 		</dict>
 		<key>16S5523a</key>
 		<dict>
@@ -1410,10 +1512,10 @@
 			<key>Date</key>
 			<integer>20190107</integer>
 		</dict>
-		<key>16S535</key>
+		<key>16T225</key>
 		<dict>
 			<key>Date</key>
-			<integer>20190122</integer>
+			<integer>20190327</integer>
 		</dict>
 		<key>16T5181f</key>
 		<dict>
@@ -1459,10 +1561,10 @@
 			<key>Version</key>
 			<string>5.2</string>
 		</dict>
-		<key>16T225</key>
+		<key>16U113</key>
 		<dict>
 			<key>Date</key>
-			<integer>20190327</integer>
+			<integer>20190513</integer>
 		</dict>
 		<key>16U5079d</key>
 		<dict>
@@ -1498,11 +1600,6 @@
 			<integer>5</integer>
 			<key>Date</key>
 			<integer>20190507</integer>
-		</dict>
-		<key>16U113</key>
-		<dict>
-			<key>Date</key>
-			<integer>20190513</integer>
 		</dict>
 		<key>16U5526f</key>
 		<dict>

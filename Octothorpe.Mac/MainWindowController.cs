@@ -35,9 +35,9 @@ namespace Octothorpe.Mac
 {
     public partial class MainWindowController : NSWindowController
     {
-        private bool DisplayWikiMarkup = true;
+        private bool DisplayWikiMarkup = true, Pallas = false;
         private NSAlert alert;
-        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "DeviceInfo.plist");
+        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + "DeviceInfo.plist");
         private Parser parser = new Parser();
 
         public MainWindowController(IntPtr handle) : base(handle)
@@ -161,7 +161,7 @@ namespace Octothorpe.Mac
 
         partial void DeviceChanged(NSPopUpButton sender)
         {
-            string SelectedDevice = DeviceSelection.SelectedItem.Title.Substring(1);
+            string SelectedDevice = DeviceSelection.SelectedItem.Title;
 
             // Empty out the dropdown box for models
             ModelSelection.RemoveAllItems();
@@ -222,39 +222,48 @@ namespace Octothorpe.Mac
                 parser.WikiMarkup = DisplayWikiMarkup;
 
                 parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);
-                parser.RemoveStubs = (NSButtonRemoveStubs.State == NSCellStateValue.On);
-                parser.ShowBeta = (NSButtonCheckBeta.State == NSCellStateValue.On);
 
-                try
+                if (Pallas)
                 {
-                    // Set maximum version if one was specified
-                    if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
-                    {
-                        // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring)) ?
-                            new Version(NSTextFieldMax.StringValue + ".0") :
-                            new Version(NSTextFieldMax.StringValue);
-                    }
-
-                    // Set minimum version if one was specified
-                    if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
-                    {
-                        // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring)) ?
-                            new Version(NSTextFieldMin.StringValue + ".0") :
-                            new Version(NSTextFieldMin.StringValue);
-                    }
-                }
-                
-                catch (ArgumentException)
-                {
-                    throw new ArgumentException("badvalue");
+                    parser.PallasBuild = PallasBuild.StringValue;
                 }
 
-                NSTextViewOutput.Value = parser.ParseAssets();
+                else
+                {
+                    parser.RemoveStubs = (NSButtonRemoveStubs.State == NSCellStateValue.On);
+                    parser.ShowBeta = (NSButtonCheckBeta.State == NSCellStateValue.On);
+
+                    try
+                    {
+                        // Set maximum version if one was specified
+                        if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
+                        {
+                            // Doing it like this converts an integer, e.g. "11" into "11.0"
+                            parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring)) ?
+                                new Version(NSTextFieldMax.StringValue + ".0") :
+                                new Version(NSTextFieldMax.StringValue);
+                        }
+
+                        // Set minimum version if one was specified
+                        if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
+                        {
+                            // Doing it like this converts an integer, e.g. "11" into "11.0"
+                            parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring)) ?
+                                new Version(NSTextFieldMin.StringValue + ".0") :
+                                new Version(NSTextFieldMin.StringValue);
+                        }
+                    }
+
+                    catch (ArgumentException)
+                    {
+                        throw new ArgumentException("badvalue");
+                    }
+                }
+
+                NSTextViewOutput.Value = parser.ParseAssets(Pallas);
             }
 
-            catch (ArgumentException message)
+/*            catch (ArgumentException message)
             {
                 switch (message.Message)
                 {
@@ -292,7 +301,7 @@ namespace Octothorpe.Mac
                 }
 
                 alert.RunModal();
-            }
+            }*/
 
             catch (FileNotFoundException)
             {
@@ -328,7 +337,7 @@ namespace Octothorpe.Mac
             }
         }
 
-        partial void SourceChanged(NSPopUpButton sender)
+        partial void PlistChanged(NSPopUpButton sender)
         {
             try
             {
@@ -341,6 +350,14 @@ namespace Octothorpe.Mac
                         NSBoxLoc.Hidden = false;
                         NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
                         NSTextFieldLoc.Enabled = true;
+                        parser.LoadPlist(NSTextFieldLoc.StringValue);
+                        break;
+
+                    case "Pallas":
+                        NSBoxFile.Hidden = true;
+                        NSBoxLoc.Hidden = false;
+                        NSTextFieldLoc.StringValue = "https://gdmf.apple.com/v2/assets";
+                        NSTextFieldLoc.Enabled = false;
                         parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 
@@ -411,7 +428,7 @@ namespace Octothorpe.Mac
             }
         }
 
-        partial void SourceEdited(NSTextField sender)
+        partial void PlistPathEdited(NSTextField sender)
         {
             try
             {
@@ -451,6 +468,13 @@ namespace Octothorpe.Mac
                 alert.RunModal();
                 NSButtonParse.Enabled = false;
             }
+        }
+
+        partial void UpdateSourceChanged(NSButton sender)
+        {
+            Pallas = (sender.Title == "Pallas");
+            PallasView.Hidden = !Pallas;
+            PlistView.Hidden = Pallas;
         }
     }
 }

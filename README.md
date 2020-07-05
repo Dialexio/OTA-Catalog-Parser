@@ -4,7 +4,7 @@ This program lets you view an OTA update catalog for [audioOS](https://mesu.appl
 __NOTE:__ Dates are extracted from the file URL, which may not be the actual release date.
 
 ## Program Requirements
-The Mac version requires macOS v10.9 (Mavericks) or newer. It is built with Xamarin.Mac, so no other software is required.
+The Mac version requires macOS v10.9 (Mavericks) or newer. It is built with Xamarin.Mac; no additional downloads are required.
 
 The Windows version requires .NET Framework 4.6.1 or newer. ([Link to .NET Framework 4.7.1 for Windows 7 and newer.](https://support.microsoft.com/kb/4033344))
 
@@ -34,20 +34,21 @@ When opening the solution in Visual Studio, one project will be incompatible, de
 ## Broken Output
 Apple may make changes to their property lists that break this program. Apple's ability to do so is limited since they need to ensure compatibility with older firmwares, but nevertheless remains a possibility.
 
-### override.json
+### BuildInfo.plist
 Broken output most commonly happens with watchOS updates, especially with beta updates. The parser needs to know what is and isn't a beta in order to format it correctly, but Apple hasn't made that easy in the past.
 
-This program utilizes a JSON file, named "override.json," to override the information that Apple provides. Its format is simple: the name of each field is a build number, which contains a dictionary of the following key/value pairs:
+This program utilizes a PLIST file, named "BuildInfo.plist," to override the information that Apple provides. Its format is simple:
 
-* "Product" (the operating system's name, e.g. "iOS")
-* "Version" (the displayed version, e.g. "11.1.2")
-* Optional Keys
-  * "Beta" (what number beta it is; if it is not a beta, it will be 0)
-  * "Suffix" (if something should follow, e.g. "watchOS 3.1 beta 2 **Pre-release**")
-  * "Date" (the release date for the software)
-  * "Devices" (if the entry should only be applied to certain devices)
+* There is a dictionary for each OS branch (e.g. audioOS, iOS…); this is only done to make it easier to traverse.
+* In each OS branch's dictionary are more dictionaries, named by the build number.
+* In each build number's dictionary, you may specify the following keys:
+ * "Version" (the displayed OS version, e.g. "11.1.2")
+ * "Beta" (what number beta it is; if it is not a beta, it will be 0)
+ * "Suffix" (if something should follow, e.g. "watchOS 3.1 beta 2 **Pre-release**")
+ * "Date" (the release date for the software)
+ * "Devices" (if the entry should only be applied to certain devices)
 
-If you encounter an issue, please make sure that "override.json" contains information for newer releases before reporting it. For the Mac version, it can be found at `OTA Parser.app/Contents/MonoBundle/override.json`.
+Before reporting issues with the program's output, please make sure BuildInfo.plist contains information for the latest OS updates. For the Mac version, this file can be found at `OTA Parser.app/Contents/MonoBundle/BuildOverride.plist`.
 
 ## Licensing Information
 This program is distributed under the MIT License.

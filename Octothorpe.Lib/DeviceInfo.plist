@@ -689,6 +689,16 @@
 				<string>iPhone12,5</string>
 			</dict>
 		</dict>
+		<key>iPhone SE (2nd generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D79AP</key>
+				<string>iPhone12,8</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPod touch</key>
 	<dict>

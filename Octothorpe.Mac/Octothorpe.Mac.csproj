@@ -10,7 +10,7 @@
     <AssemblyName>OTA Parser</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <ReleaseVersion>2.1.1</ReleaseVersion>
+    <ReleaseVersion>2.2.0</ReleaseVersion>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -38,12 +38,12 @@
       <CustomCommands>
         <Command>
           <type>AfterBuild</type>
-          <command>mv "BuildOverride.plist" "OTA Parser.app/Contents/MonoBundle/BuildOverride.plist"</command>
+          <command>cp "BuildInfo.plist" "OTA Parser.app/Contents/MonoBundle/BuildInfo.plist"</command>
           <workingdir>${ProjectDir}/bin/Debug</workingdir>
         </Command>
         <Command>
           <type>AfterBuild</type>
-          <command>mv "DeviceInfo.plist" "OTA Parser.app/Contents/MonoBundle/DeviceInfo.plist"</command>
+          <command>cp "DeviceInfo.plist" "OTA Parser.app/Contents/MonoBundle/DeviceInfo.plist"</command>
           <workingdir>${ProjectDir}/bin/Debug</workingdir>
         </Command>
       </CustomCommands>
@@ -71,12 +71,12 @@
 		      <CustomCommands>
 		        <Command>
 		          <type>AfterBuild</type>
-		          <command>mv "BuildOverride.plist" "OTA Parser.app/Contents/MonoBundle/BuildOverride.plist"</command>
+		          <command>cp "BuildInfo.plist" "OTA Parser.app/Contents/MonoBundle/BuildInfo.plist"</command>
 		          <workingdir>${ProjectDir}/bin/Release</workingdir>
 		        </Command>
 		        <Command>
 		          <type>AfterBuild</type>
-		          <command>mv "DeviceInfo.plist" "OTA Parser.app/Contents/MonoBundle/DeviceInfo.plist"</command>
+		          <command>cp "DeviceInfo.plist" "OTA Parser.app/Contents/MonoBundle/DeviceInfo.plist"</command>
 		          <workingdir>${ProjectDir}/bin/Release</workingdir>
 		        </Command>
 		      </CustomCommands>
@@ -98,6 +98,15 @@
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.106.11.4\lib\netstandard2.0\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="JWT">
+      <HintPath>..\packages\JWT.7.2.1\lib\netstandard2.0\JWT.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

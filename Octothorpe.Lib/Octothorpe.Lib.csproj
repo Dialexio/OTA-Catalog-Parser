@@ -1,21 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Dialexio</Authors>
     <Company />
-    <Copyright>Copyright ©2019 Dialexio.</Copyright>
+    <Copyright>Copyright ©2020 Dialexio.</Copyright>
     <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
-    <AssemblyVersion>2.1.1.0</AssemblyVersion>
-    <FileVersion>2.1.1.0</FileVersion>
-    <Version>1.1.1</Version>
-    <ReleaseVersion>2.1.1</ReleaseVersion>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
+    <Version>1.2</Version>
+    <ReleaseVersion>2.2.0</ReleaseVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="plist-cil" Version="2.1.0" />
+    <PackageReference Include="JWT" Version="7.2.1" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="BuildOverride.plist">
+    <None Update="BuildInfo.plist">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="DeviceInfo.plist">
