@@ -23,7 +23,6 @@
 using Claunia.PropertyList;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -238,7 +237,9 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return ENTRY.TryGetValue("CompatibilityVersion", out object cv) ? (int)cv : 0;
+                return (ENTRY.TryGetValue("CompatibilityVersion", out object compatVer)) ?
+                    Convert.ToInt32(compatVer) :
+                    0;
             }
         }
 

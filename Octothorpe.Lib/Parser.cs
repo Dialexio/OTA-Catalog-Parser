@@ -315,67 +315,110 @@ namespace Octothorpe.Lib
             Dictionary<string, object> DecryptedPayload;
             IRestResponse response;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
-            List<string> Builds = new List<string>();
+            List<string> AssetAudiences = new List<string>();
             OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
-            string AssetAudience = null, PostingDate;
+            string PostingDate;
 
             switch (Device.Substring(0, 3))
             {
                 // audioOS
                 case "Aud":
-                    AssetAudience = "0322d49d-d558-4ddf-bdff-c0443d0e6fac";
+                    AssetAudiences.Add("0322d49d-d558-4ddf-bdff-c0443d0e6fac");
                     break;
 
                 // tvOS
                 case "App":
                     // I don't think Apple TV 2nd and 3rd gen. use Pallas? Can't hurt to be cautious I guess.
-                    AssetAudience = (Device == "AppleTV2,1" || Device.Substring(0, 9) == "AppleTV3,") ? "01c1d682-6e8f-4908-b724-5501fe3f5e5c" : "356d9da0-eee4-4c6c-bbe5-99b60eadddf0";
+                    if (Device == "AppleTV2,1" || Device.Substring(0, 9) == "AppleTV3,")
+                    {
+                        AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c");
+
+                        if (showBeta)
+                            AssetAudiences.AddRange(new List<string> {
+                            "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
+                            "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
+                            "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
+                            "84da8706-e267-4554-8207-865ae0c3a120"  // iOS 14 beta
+                        });
+                    }
+
+                    else
+                    {
+                        AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0");
+
+                        if (showBeta)
+                            AssetAudiences.AddRange(new List<string> {
+                            "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
+                            "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
+                            "65254ac3-f331-4c19-8559-cbe22f5bc1a6"  // tvOS 14 beta
+                        });
+                    }
                     break;
 
                 // iOS / iPadOS
                 case "iPa":
                 case "iPh":
                 case "iPo":
-                    AssetAudience = "01c1d682-6e8f-4908-b724-5501fe3f5e5c";
+                    AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c");
+
+                    if (showBeta)
+                        AssetAudiences.AddRange(new List<string> {
+                            "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
+                            "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
+                            "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
+                            "84da8706-e267-4554-8207-865ae0c3a120"  // iOS 14 beta
+                        });
                     break;
 
                 // watchOS
                 case "Wat":
-                    AssetAudience = "b82fcf9c-c284-41c9-8eb2-e69bf5a5269f";
+                    AssetAudiences.Add("b82fcf9c-c284-41c9-8eb2-e69bf5a5269f");
+
+                    if (showBeta)
+                        AssetAudiences.AddRange( new List<string> {
+                            "e841259b-ad2e-4046-b80f-ca96bc2e17f3", // watchOS 5 beta
+                            "d08cfd47-4a4a-4825-91b5-3353dfff194f", // watchOS 6 beta
+                            "ff6df985-3cbe-4d54-ba5f-50d02428d2a3"  // watchOS 7 beta
+                        });
                     break;
             }
 
             // Put together the request.
-            request.AddJsonBody(new
+            foreach (string AssetAudience in AssetAudiences)
             {
-                AssetAudience = AssetAudience,
-                AssetType = "com.apple.MobileAsset.SoftwareUpdate",
-                BuildVersion = pallasBuild,
-                ClientVersion = 2,
-                HWModelStr = Model,
-                ProductType = Device
-            });
-            request.AddHeader("Accept", "application/json");
-            request.Method = Method.POST;
-
-            // Get Apple's response, then decode it.
-            response = Fido.Execute(request);
-            DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
-
-            // Grab the release date.
-            PostingDate = ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty);
-
-            if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
-            {
-                foreach (JContainer container in (JArray)AssetsArray)
+                request.AddJsonBody(new
                 {
-                    package = new OTAPackage(container, PostingDate);
+                    AssetAudience = AssetAudience,
+                    AssetType = "com.apple.MobileAsset.SoftwareUpdate",
+                    BuildVersion = pallasBuild,
+                    ClientVersion = 2,
+                    HWModelStr = Model,
+                    ProductType = Device
+                });
+                request.AddHeader("Accept", "application/json");
+                request.Method = Method.POST;
 
-                    Packages.Add(package);
+                // Get Apple's response, then decode it.
+                response = Fido.Execute(request);
+                DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
+
+                // Grab the release date.
+                PostingDate = ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty);
+
+                if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
+                {
+                    foreach (JContainer container in (JArray)AssetsArray)
+                    {
+                        package = new OTAPackage(container, PostingDate);
+
+                        Packages.Add(package);
+                    }
                 }
             }
+
+            Packages.Sort();
         }
 
         private string OutputHumanFormat()
