@@ -6,8 +6,8 @@
     <Company />
     <Copyright>Copyright ©2020 Dialexio.</Copyright>
     <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
-    <AssemblyVersion>2.2.0.1</AssemblyVersion>
-    <FileVersion>2.2.0.1</FileVersion>
+    <AssemblyVersion>2.2.0.2</AssemblyVersion>
+    <FileVersion>2.2.0.2</FileVersion>
     <Version>1.2</Version>
     <ReleaseVersion>2.2.0</ReleaseVersion>
   </PropertyGroup>

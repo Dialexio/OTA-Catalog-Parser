@@ -102,8 +102,9 @@ namespace Octothorpe.Lib
         {
             Dictionary<string, object> DecryptedPayload;
             IRestResponse response;
-            JContainer Asset;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
+            List<string> Builds = new List<string>();
+            OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
             string AssetAudience = null, PostingDate;
@@ -155,12 +156,12 @@ namespace Octothorpe.Lib
 
             if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
             {
-                Asset = (JContainer)(((JArray)AssetsArray)[0]);
-                OTAPackage package = new OTAPackage(Asset, Device, Model, PostingDate, pallasBuild);
+                foreach (JContainer container in (JArray)AssetsArray)
+                {
+                    package = new OTAPackage(container, PostingDate);
 
-                Packages.Add(package);
-
-
+                    Packages.Add(package);
+                }
             }
         }
 

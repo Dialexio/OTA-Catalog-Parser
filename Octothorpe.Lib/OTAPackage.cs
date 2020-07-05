@@ -42,7 +42,7 @@ namespace Octothorpe.Lib
             ENTRY = package;
         }
 
-        public OTAPackage(JContainer package, string device, string model, string pallasDate, string pallasPrereqBuild)
+        public OTAPackage(JContainer package, string pallasDate)
         {
             Dictionary<string, object> convertedPackage = new Dictionary<string, object>();
             List<object> array;
@@ -66,7 +66,6 @@ namespace Octothorpe.Lib
             ENTRY = convertedPackage;
             // Add some missing values.
             ENTRY.Add("Date", pallasDate);
-            ENTRY.Add("PrerequisiteBuild", pallasPrereqBuild);
         }
 
         /// <summary>
