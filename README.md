@@ -6,9 +6,11 @@ __NOTE:__ Dates are extracted from the file URL, which may not be the actual rel
 ## Program Requirements
 The Mac version requires macOS v10.9 (Mavericks) or newer. It is built with Xamarin.Mac; no additional downloads are required.
 
-The Windows version requires .NET Framework 4.6.1 or newer. ([Link to .NET Framework 4.7.1 for Windows 7 and newer.](https://support.microsoft.com/kb/4033344))
+The Windows version requires .NET Framework 4.6.1 or newer.
 
-The command-line version is cross-platform and requires either [Mono](http://www.mono-project.com/) or .NET Framework 4.6.1 or newer ([link to .NET Framework 4.7.1 for Windows 7 and newer](https://support.microsoft.com/kb/4033344)) to be installed.
+The command-line version is cross-platform and requires either [Mono](http://www.mono-project.com/) or .NET Framework 4.6.1 or newer to be installed.
+
+([Link to .NET Framework 4.8 for Windows 7 and newer.](https://support.microsoft.com/help/4503548/microsoft-net-framework-4-8-offline-installer-for-windows))
 
 ## Command-Line Arguments (CLI version only)
 If no arguments are specified, the program will return the following information about the arguments that it uses.
