@@ -98,12 +98,12 @@ namespace Octothorpe.Lib
             set { wikiMarkup = value; }
         }
 
-        public void GetPallasEntries()
+        private void GetPallasEntries()
         {
             Dictionary<string, object> DecryptedPayload;
+            IRestResponse response;
             JContainer Asset;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
-            IRestResponse response;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
             string AssetAudience = null, PostingDate;
@@ -160,17 +160,7 @@ namespace Octothorpe.Lib
 
                 Packages.Add(package);
 
-                // Time to fill in rowspan counts.
-                BuildNumberRowspan.Add(package.DeclaredBuild, 1);
-                DateRowspan.Add(package.ActualBuild, 1);
-                FileRowspan.Add(package.URL, new List<string>(new string[] { package.PrerequisiteBuild }));
-                MarketingVersionRowspan.Add(package.MarketingVersion, 1);
 
-                PrereqBuildRowspan.Add(package.DeclaredBuild, new Dictionary<string, uint>());
-                PrereqBuildRowspan[package.DeclaredBuild].Add(package.PrerequisiteBuild, 1);
-
-                PrereqOSRowspan.Add(package.DeclaredBuild, new Dictionary<string, uint>());
-                PrereqOSRowspan[package.DeclaredBuild].Add(package.PrerequisiteVer(), 1);
             }
         }
 
@@ -212,8 +202,7 @@ namespace Octothorpe.Lib
 
             if (wikiMarkup)
             {
-                if (Pallas == false)
-                    CountRowspan();
+                CountRowspan();
 
                 return OutputWikiMarkup();
             }
