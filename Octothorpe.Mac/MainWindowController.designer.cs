@@ -31,12 +31,6 @@ namespace Octothorpe.Mac
 		AppKit.NSBox NSBoxModel { get; set; }
 
 		[Outlet]
-		AppKit.NSButton NSButtonCheckBeta { get; set; }
-
-		[Outlet]
-		AppKit.NSButtonCell NSButtonFullTable { get; set; }
-
-		[Outlet]
 		AppKit.NSButton NSButtonParse { get; set; }
 
 		[Outlet]
@@ -65,6 +59,12 @@ namespace Octothorpe.Mac
 
 		[Outlet]
 		AppKit.NSView PlistView { get; set; }
+
+		[Outlet]
+		AppKit.NSButton ShowBeta { get; set; }
+
+		[Outlet]
+		AppKit.NSButton TableHeaders { get; set; }
 
 		[Action ("BrowseForFile:")]
 		partial void BrowseForFile (AppKit.NSButton sender);
@@ -122,16 +122,6 @@ namespace Octothorpe.Mac
 				NSBoxModel = null;
 			}
 
-			if (NSButtonCheckBeta != null) {
-				NSButtonCheckBeta.Dispose ();
-				NSButtonCheckBeta = null;
-			}
-
-			if (NSButtonFullTable != null) {
-				NSButtonFullTable.Dispose ();
-				NSButtonFullTable = null;
-			}
-
 			if (NSButtonParse != null) {
 				NSButtonParse.Dispose ();
 				NSButtonParse = null;
@@ -142,9 +132,14 @@ namespace Octothorpe.Mac
 				NSButtonRemoveStubs = null;
 			}
 
-			if (PallasBuild != null) {
-				PallasBuild.Dispose ();
-				PallasBuild = null;
+			if (ShowBeta != null) {
+				ShowBeta.Dispose ();
+				ShowBeta = null;
+			}
+
+			if (TableHeaders != null) {
+				TableHeaders.Dispose ();
+				TableHeaders = null;
 			}
 
 			if (NSTextFieldFile != null) {
@@ -170,6 +165,11 @@ namespace Octothorpe.Mac
 			if (NSTextViewOutput != null) {
 				NSTextViewOutput.Dispose ();
 				NSTextViewOutput = null;
+			}
+
+			if (PallasBuild != null) {
+				PallasBuild.Dispose ();
+				PallasBuild = null;
 			}
 
 			if (PallasView != null) {

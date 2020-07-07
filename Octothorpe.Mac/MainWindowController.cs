@@ -152,11 +152,11 @@ namespace Octothorpe.Mac
         partial void ChangeOutputFormat(NSButton sender)
         {
             DisplayWikiMarkup = (sender.Title == "The iPhone Wiki markup");
-            NSButtonFullTable.Enabled = (sender.Title == "The iPhone Wiki markup");
-            NSButtonFullTable.Transparent = (sender.Title != "The iPhone Wiki markup");
+            TableHeaders.Enabled = (sender.Title == "The iPhone Wiki markup");
+            TableHeaders.Transparent = (sender.Title != "The iPhone Wiki markup");
 
-            if (NSButtonFullTable.Enabled == false)
-                NSButtonFullTable.State = NSCellStateValue.Off;
+            if (TableHeaders.Enabled == false)
+                TableHeaders.State = NSCellStateValue.Off;
         }
 
         partial void DeviceChanged(NSPopUpButton sender)
@@ -219,9 +219,10 @@ namespace Octothorpe.Mac
                 alert = null;
 
                 parser.Model = ModelSelection.SelectedItem.Title;
+                parser.ShowBeta = (ShowBeta.State == NSCellStateValue.On);
                 parser.WikiMarkup = DisplayWikiMarkup;
 
-                parser.FullTable = (NSButtonFullTable.State == NSCellStateValue.On);
+                parser.FullTable = (TableHeaders.State == NSCellStateValue.On);
 
                 if (Pallas)
                 {
@@ -231,7 +232,6 @@ namespace Octothorpe.Mac
                 else
                 {
                     parser.RemoveStubs = (NSButtonRemoveStubs.State == NSCellStateValue.On);
-                    parser.ShowBeta = (NSButtonCheckBeta.State == NSCellStateValue.On);
 
                     try
                     {

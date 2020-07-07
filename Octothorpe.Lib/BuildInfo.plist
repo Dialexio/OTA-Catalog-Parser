@@ -897,6 +897,33 @@
 			<key>Date</key>
 			<real>20190918</real>
 		</dict>
+		<key>17M5558b</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20200630</integer>
+			<key>Version</key>
+			<string>13.4.8</string>
+		</dict>
+		<key>18J5313t</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20200622</integer>
+			<key>Version</key>
+			<string>14.0</string>
+		</dict>
+		<key>18J5331g</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20200707</integer>
+			<key>Version</key>
+			<string>14.0</string>
+		</dict>
 	</dict>
 	<key>watchOS</key>
 	<dict>
@@ -1732,6 +1759,24 @@
 		<dict>
 			<key>Date</key>
 			<real>20190930</real>
+		</dict>
+		<key>18R5310a</key>
+		<dict>
+			<key>Beta</key>
+			<integer>1</integer>
+			<key>Date</key>
+			<integer>20200622</integer>
+			<key>Version</key>
+			<string>7.0</string>
+		</dict>
+		<key>18R5327h</key>
+		<dict>
+			<key>Beta</key>
+			<integer>2</integer>
+			<key>Date</key>
+			<integer>20200707</integer>
+			<key>Version</key>
+			<string>7.0</string>
 		</dict>
 	</dict>
 </dict>

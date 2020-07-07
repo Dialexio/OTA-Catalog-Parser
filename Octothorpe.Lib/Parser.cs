@@ -386,8 +386,15 @@ namespace Octothorpe.Lib
             }
 
             // Put together the request.
+            request.AddHeader("Accept", "application/json");
+            request.Method = Method.POST;
+
             foreach (string AssetAudience in AssetAudiences)
             {
+                // If this isn't the first run-through, remove the previous JSON body.
+                if (request.Parameters.Count >= 2)
+                    request.Parameters.RemoveAt(1);
+
                 request.AddJsonBody(new
                 {
                     AssetAudience = AssetAudience,
@@ -397,8 +404,6 @@ namespace Octothorpe.Lib
                     HWModelStr = Model,
                     ProductType = Device
                 });
-                request.AddHeader("Accept", "application/json");
-                request.Method = Method.POST;
 
                 // Get Apple's response, then decode it.
                 response = Fido.Execute(request);
@@ -410,11 +415,7 @@ namespace Octothorpe.Lib
                 if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
                 {
                     foreach (JContainer container in (JArray)AssetsArray)
-                    {
-                        package = new OTAPackage(container, PostingDate);
-
-                        Packages.Add(package);
-                    }
+                        Packages.Add(new OTAPackage(container, PostingDate));
                 }
             }
 

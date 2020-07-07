@@ -14,8 +14,6 @@
                 <outlet property="NSBoxFile" destination="V7z-AE-E0N" id="Yx3-RZ-eW5"/>
                 <outlet property="NSBoxLoc" destination="s7n-r6-laY" id="ePY-oD-BOR"/>
                 <outlet property="NSBoxModel" destination="bUE-T3-DMb" id="aTZ-Sk-QWr"/>
-                <outlet property="NSButtonCheckBeta" destination="3JW-3T-LWc" id="Dww-yS-sWx"/>
-                <outlet property="NSButtonFullTable" destination="Jg1-Ds-AZ0" id="CR0-5h-BXt"/>
                 <outlet property="NSButtonParse" destination="mqQ-XF-KBT" id="DBh-WK-Kdu"/>
                 <outlet property="NSButtonRemoveStubs" destination="U6u-ee-mv9" id="hFq-zg-1jM"/>
                 <outlet property="NSTextFieldFile" destination="eKI-Da-Mva" id="4NG-KV-R84"/>
@@ -26,6 +24,8 @@
                 <outlet property="PallasBuild" destination="a3B-TX-l3m" id="wZm-n3-7vz"/>
                 <outlet property="PallasView" destination="tgP-RC-Xx0" id="bWX-ui-1rU"/>
                 <outlet property="PlistView" destination="BnJ-7d-SLR" id="mlG-ZX-whc"/>
+                <outlet property="ShowBeta" destination="3JW-3T-LWc" id="vbF-f5-J9E"/>
+                <outlet property="TableHeaders" destination="JWj-5N-qxm" id="ioT-M5-ooG"/>
                 <outlet property="window" destination="2" id="6"/>
             </connections>
         </customObject>
@@ -379,7 +379,7 @@ DQ
                                     </textFieldCell>
                                 </textField>
                                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3JW-3T-LWc">
-                                    <rect key="frame" x="62" y="93" width="127" height="18"/>
+                                    <rect key="frame" x="62" y="94" width="127" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <buttonCell key="cell" type="check" title="Search for betas" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="QoA-3B-nph">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
