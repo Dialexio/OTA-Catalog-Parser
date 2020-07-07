@@ -316,7 +316,6 @@ namespace Octothorpe.Lib
             IRestResponse response;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
             List<string> AssetAudiences = new List<string>();
-            OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
             string PostingDate;

@@ -1758,7 +1758,14 @@
 		<key>17R605</key>
 		<dict>
 			<key>Date</key>
-			<real>20190930</real>
+			<integer>20190930</integer>
+		</dict>
+		<key>17T620</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200601</integer>
+			<key>Version</key>
+			<string>6.2.6</string>
 		</dict>
 		<key>18R5310a</key>
 		<dict>

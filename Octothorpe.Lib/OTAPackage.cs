@@ -589,29 +589,40 @@ namespace Octothorpe.Lib
         private string SortingBuild()
         {
             int LetterPos;
-            string SortBuild = DeclaredBuild;
+            string SortBuild = DeclaredBuild, BuildDigits;
+            string[] SplitBuildNumber;
 
             // Make 9A### appear before 10A###.
             if (char.IsLetter(SortBuild[1]))
                 SortBuild = $"0{SortBuild}";
 
+            // Find the letter in the build number.
+            for (LetterPos = 1; LetterPos < SortBuild.Length; LetterPos++)
+            {
+                if (char.IsUpper(SortBuild[LetterPos]))
+                {
+                    LetterPos++;
+                    break;
+                }
+            }
+
             // If the build number is false, replace everything after the letter with "0000."
             // This will cause betas to appear first.
             if (IsHonestBuild == false)
+                return $"{SortBuild.Substring(0, LetterPos)}0000";
+
+            else
             {
-                for (LetterPos = 1; LetterPos < SortBuild.Length; LetterPos++)
-                {
-                    if (char.IsUpper(SortBuild[LetterPos]))
-                    {
-                        LetterPos++;
-                        break;
-                    }
-                }
+                BuildDigits = SortBuild.Substring(LetterPos);
 
-                SortBuild = $"{SortBuild.Substring(0, LetterPos)}0000";
+                if (char.IsLetter(BuildDigits[BuildDigits.Length - 1]))
+                    BuildDigits = BuildDigits.Substring(0, BuildDigits.Length - 1);
+
+                while (BuildDigits.Length < 3)
+                    BuildDigits = $"0{BuildDigits}";
+
+                return $"{SortBuild.Substring(0, LetterPos)}{BuildDigits}{SortBuild[SortBuild.Length-1]}";
             }
-
-            return SortBuild;
         }
 
         private string SortingPrerequisiteBuild()
