@@ -590,7 +590,6 @@ namespace Octothorpe.Lib
         {
             int LetterPos;
             string SortBuild = DeclaredBuild, BuildDigits;
-            string[] SplitBuildNumber;
 
             // Make 9A### appear before 10A###.
             if (char.IsLetter(SortBuild[1]))

@@ -318,13 +318,16 @@ namespace Octothorpe.Lib
             List<string> AssetAudiences = new List<string>();
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
-            string PostingDate;
 
+            // Gather the asset audiences.
             switch (Device.Substring(0, 3))
             {
                 // audioOS
                 case "Aud":
                     AssetAudiences.Add("0322d49d-d558-4ddf-bdff-c0443d0e6fac");
+
+                    if (showBeta)
+                        AssetAudiences.Add("b05ddb59-b26d-4c89-9d09-5fda15e99207"); //audioOS 14 beta
                     break;
 
                 // tvOS
@@ -390,6 +393,8 @@ namespace Octothorpe.Lib
 
             foreach (string AssetAudience in AssetAudiences)
             {
+                string PostingDate;
+
                 // If this isn't the first run-through, remove the previous JSON body.
                 if (request.Parameters.Count >= 2)
                     request.Parameters.RemoveAt(1);
@@ -408,8 +413,10 @@ namespace Octothorpe.Lib
                 response = Fido.Execute(request);
                 DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
 
-                // Grab the release date.
-                PostingDate = ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty);
+                // Grab the release date. If none is present, default to all zeroes.
+                PostingDate = (DecryptedPayload.ContainsKey("PostingDate")) ?
+                    ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty) :
+                    "00000000";
 
                 if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
                 {
