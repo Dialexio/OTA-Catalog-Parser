@@ -28,9 +28,6 @@ namespace Octothorpe.Mac
 		AppKit.NSBox NSBoxLoc { get; set; }
 
 		[Outlet]
-		AppKit.NSBox NSBoxModel { get; set; }
-
-		[Outlet]
 		AppKit.NSButton NSButtonParse { get; set; }
 
 		[Outlet]
@@ -117,11 +114,6 @@ namespace Octothorpe.Mac
 				NSBoxLoc = null;
 			}
 
-			if (NSBoxModel != null) {
-				NSBoxModel.Dispose ();
-				NSBoxModel = null;
-			}
-
 			if (NSButtonParse != null) {
 				NSButtonParse.Dispose ();
 				NSButtonParse = null;
@@ -130,16 +122,6 @@ namespace Octothorpe.Mac
 			if (NSButtonRemoveStubs != null) {
 				NSButtonRemoveStubs.Dispose ();
 				NSButtonRemoveStubs = null;
-			}
-
-			if (ShowBeta != null) {
-				ShowBeta.Dispose ();
-				ShowBeta = null;
-			}
-
-			if (TableHeaders != null) {
-				TableHeaders.Dispose ();
-				TableHeaders = null;
 			}
 
 			if (NSTextFieldFile != null) {
@@ -162,14 +144,14 @@ namespace Octothorpe.Mac
 				NSTextFieldMin = null;
 			}
 
-			if (NSTextViewOutput != null) {
-				NSTextViewOutput.Dispose ();
-				NSTextViewOutput = null;
-			}
-
 			if (PallasBuild != null) {
 				PallasBuild.Dispose ();
 				PallasBuild = null;
+			}
+
+			if (NSTextViewOutput != null) {
+				NSTextViewOutput.Dispose ();
+				NSTextViewOutput = null;
 			}
 
 			if (PallasView != null) {
@@ -180,6 +162,16 @@ namespace Octothorpe.Mac
 			if (PlistView != null) {
 				PlistView.Dispose ();
 				PlistView = null;
+			}
+
+			if (ShowBeta != null) {
+				ShowBeta.Dispose ();
+				ShowBeta = null;
+			}
+
+			if (TableHeaders != null) {
+				TableHeaders.Dispose ();
+				TableHeaders = null;
 			}
 		}
 	}

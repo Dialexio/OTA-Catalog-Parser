@@ -153,7 +153,7 @@ namespace Octothorpe.Mac
         {
             DisplayWikiMarkup = (sender.Title == "The iPhone Wiki markup");
             TableHeaders.Enabled = (sender.Title == "The iPhone Wiki markup");
-            TableHeaders.Transparent = (sender.Title != "The iPhone Wiki markup");
+            TableHeaders.Hidden = (sender.Title != "The iPhone Wiki markup");
 
             if (TableHeaders.Enabled == false)
                 TableHeaders.State = NSCellStateValue.Off;
@@ -256,7 +256,7 @@ namespace Octothorpe.Mac
 
                     catch (ArgumentException)
                     {
-                        throw new ArgumentException("badvalue");
+                        throw new ArgumentException("badversion");
                     }
                 }
 
@@ -267,7 +267,7 @@ namespace Octothorpe.Mac
             {
                 switch (message.Message)
                 {
-                    case "badvalue":
+                    case "badversion":
                         alert = new NSAlert()
                         {
                             MessageText = "Not A Version Number",
