@@ -465,6 +465,7 @@ namespace Octothorpe.Mac
         partial void UpdateSourceChanged(NSButton sender)
         {
             Pallas = (sender.Title == "Pallas");
+            MinVerView.Hidden = Pallas;
             PallasView.Hidden = !Pallas;
             PlistView.Hidden = Pallas;
         }

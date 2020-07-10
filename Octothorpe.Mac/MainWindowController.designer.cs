@@ -19,6 +19,9 @@ namespace Octothorpe.Mac
 		AppKit.NSPopUpButton FileSelection { get; set; }
 
 		[Outlet]
+		AppKit.NSView MinVerView { get; set; }
+
+		[Outlet]
 		AppKit.NSPopUpButton ModelSelection { get; set; }
 
 		[Outlet]
@@ -144,14 +147,14 @@ namespace Octothorpe.Mac
 				NSTextFieldMin = null;
 			}
 
-			if (PallasBuild != null) {
-				PallasBuild.Dispose ();
-				PallasBuild = null;
-			}
-
 			if (NSTextViewOutput != null) {
 				NSTextViewOutput.Dispose ();
 				NSTextViewOutput = null;
+			}
+
+			if (PallasBuild != null) {
+				PallasBuild.Dispose ();
+				PallasBuild = null;
 			}
 
 			if (PallasView != null) {
@@ -167,6 +170,11 @@ namespace Octothorpe.Mac
 			if (ShowBeta != null) {
 				ShowBeta.Dispose ();
 				ShowBeta = null;
+			}
+
+			if (MinVerView != null) {
+				MinVerView.Dispose ();
+				MinVerView = null;
 			}
 
 			if (TableHeaders != null) {
