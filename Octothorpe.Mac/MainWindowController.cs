@@ -353,14 +353,6 @@ namespace Octothorpe.Mac
                         parser.LoadPlist(NSTextFieldLoc.StringValue);
                         break;
 
-                    case "Pallas":
-                        NSBoxFile.Hidden = true;
-                        NSBoxLoc.Hidden = false;
-                        NSTextFieldLoc.StringValue = "https://gdmf.apple.com/v2/assets";
-                        NSTextFieldLoc.Enabled = false;
-                        parser.LoadPlist(NSTextFieldLoc.StringValue);
-                        break;
-
                     case "audioOS (Public)":
                         NSBoxFile.Hidden = true;
                         NSBoxLoc.Hidden = false;

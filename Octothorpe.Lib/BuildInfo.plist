@@ -1685,6 +1685,13 @@
 			<key>Date</key>
 			<real>20190926</real>
 		</dict>
+		<key>16U674</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200518</integer>
+			<key>Version</key>
+			<string>5.3.7</string>
+		</dict>
 		<key>17R5491t</key>
 		<dict>
 			<key>Beta</key>
@@ -1766,6 +1773,15 @@
 			<integer>20200601</integer>
 			<key>Version</key>
 			<string>6.2.6</string>
+		</dict>
+		<key>17U5559d</key>
+		<dict>
+			<key>Beta</key>
+			<integer>3</integer>
+			<key>Date</key>
+			<integer>20200630</integer>
+			<key>Version</key>
+			<string>6.2.8</string>
 		</dict>
 		<key>18R5310a</key>
 		<dict>
