@@ -123,15 +123,13 @@ namespace Octothorpe.Lib
         public string ParseAssets(bool Pallas)
         {
             Cleanup();
+            ErrorCheck(Pallas);
 
             if (Pallas)
                 GetPallasEntries();
 
             else
-            {
-                ErrorCheck();
                 AddPlistEntries();
-            }
 
 
             if (wikiMarkup)
@@ -288,7 +286,7 @@ namespace Octothorpe.Lib
             }
         }
 
-        private void ErrorCheck()
+        private void ErrorCheck(bool Pallas)
         {
             // Device check.
             if (Device == null || Regex.IsMatch(Device, @"(AppleTV|AudioAccessory|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
@@ -306,7 +304,16 @@ namespace Octothorpe.Lib
                     throw new ArgumentException("model");
             }
 
-            if (Assets == null)
+            if (Pallas)
+            {
+                if (string.IsNullOrEmpty(pallasBuild))
+                    throw new ArgumentException();
+
+                else if (char.IsDigit(pallasBuild[0]) == false)
+                    throw new ArgumentException("badbuild");
+            }
+
+            else if (Pallas == false && Assets == null)
                 throw new ArgumentException("nofile");
         }
 
@@ -338,7 +345,7 @@ namespace Octothorpe.Lib
                         AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c");
 
                         if (showBeta)
-                            AssetAudiences.AddRange(new List<string> {
+                            AssetAudiences.AddRange(new string[] {
                                 "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
                                 "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
                                 "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
@@ -351,7 +358,7 @@ namespace Octothorpe.Lib
                         AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0");
 
                         if (showBeta)
-                            AssetAudiences.AddRange(new List<string> {
+                            AssetAudiences.AddRange(new string[] {
                                 "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
                                 "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
                                 "65254ac3-f331-4c19-8559-cbe22f5bc1a6"  // tvOS 14 beta
@@ -366,7 +373,7 @@ namespace Octothorpe.Lib
                     AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c");
 
                     if (showBeta)
-                        AssetAudiences.AddRange(new List<string> {
+                        AssetAudiences.AddRange(new string[] {
                             "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
                             "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
                             "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
@@ -379,7 +386,7 @@ namespace Octothorpe.Lib
                     AssetAudiences.Add("b82fcf9c-c284-41c9-8eb2-e69bf5a5269f");
 
                     if (showBeta)
-                        AssetAudiences.AddRange( new List<string> {
+                        AssetAudiences.AddRange(new string[] {
                             "e841259b-ad2e-4046-b80f-ca96bc2e17f3", // watchOS 5 beta
                             "d08cfd47-4a4a-4825-91b5-3353dfff194f", // watchOS 6 beta
                             "ff6df985-3cbe-4d54-ba5f-50d02428d2a3"  // watchOS 7 beta

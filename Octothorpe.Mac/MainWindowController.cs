@@ -267,6 +267,14 @@ namespace Octothorpe.Mac
             {
                 switch (message.Message)
                 {
+                    case "badbuild":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "Build Not Specified",
+                            InformativeText = "A build number was specified."
+                        };
+                        break;
+
                     case "badversion":
                         alert = new NSAlert()
                         {
@@ -288,6 +296,15 @@ namespace Octothorpe.Mac
                         {
                             MessageText = "Model Not Specified",
                             InformativeText = "This device requires you to specify a model number. For example, N71AP is a model number for the iPhone 6S."
+                        };
+                        break;
+
+                    case "nofile":
+                    case "The path is not of a legal form.":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "No Source",
+                            InformativeText = "You must select a PLIST file (.plist or .xml) to load."
                         };
                         break;
 
