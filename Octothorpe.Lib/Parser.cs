@@ -44,7 +44,7 @@ namespace Octothorpe.Lib
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
         private object[] Assets;
         private readonly List<OTAPackage> Packages = new List<OTAPackage>();
-        private string model = null, pallasBuild = null;
+        private string model = null, pallasBuild = null, pallasVersion = null;
         private Version max, minimum;
 
         public string Device { get; set; }
@@ -86,6 +86,11 @@ namespace Octothorpe.Lib
         public string PallasBuild
         {
             set { pallasBuild = value; }
+        }
+
+        public string PallasVersion
+        {
+            set { pallasVersion = value; }
         }
 
         public bool ShowBeta
@@ -413,7 +418,8 @@ namespace Octothorpe.Lib
                     BuildVersion = pallasBuild,
                     ClientVersion = 2,
                     HWModelStr = Model,
-                    ProductType = Device
+                    ProductType = Device,
+                    ProductVersion = pallasVersion
                 });
 
                 // Get Apple's response, then decode it.

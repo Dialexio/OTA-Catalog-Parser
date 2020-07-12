@@ -10,7 +10,7 @@
             <connections>
                 <outlet property="DeviceSelection" destination="7sb-Q2-Rvh" id="C4S-Du-Jgm"/>
                 <outlet property="FileSelection" destination="fme-i2-nGb" id="MfI-ee-sqU"/>
-                <outlet property="MinVerView" destination="1S7-mw-tvH" id="CIc-Q0-tED"/>
+                <outlet property="MinVerField" destination="1S7-mw-tvH" id="n7v-t4-E4R"/>
                 <outlet property="ModelSelection" destination="9vf-ZE-GFD" id="xiQ-wp-DaE"/>
                 <outlet property="NSBoxFile" destination="V7z-AE-E0N" id="Yx3-RZ-eW5"/>
                 <outlet property="NSBoxLoc" destination="s7n-r6-laY" id="ePY-oD-BOR"/>
@@ -22,6 +22,7 @@
                 <outlet property="NSTextFieldMin" destination="VX3-E8-91R" id="urS-Sv-GtF"/>
                 <outlet property="NSTextViewOutput" destination="6FB-F6-C5V" id="ZfX-EA-15v"/>
                 <outlet property="PallasBuild" destination="27D-Id-qWf" id="tPl-W4-FEW"/>
+                <outlet property="PallasVersion" destination="lly-P3-eSC" id="jEH-Tv-oVa"/>
                 <outlet property="PallasView" destination="zBH-1l-0ez" id="ipH-V4-jzZ"/>
                 <outlet property="PlistView" destination="BnJ-7d-SLR" id="mlG-ZX-whc"/>
                 <outlet property="ShowBeta" destination="3JW-3T-LWc" id="vbF-f5-J9E"/>
@@ -235,8 +236,26 @@
                         <rect key="frame" x="20" y="285" width="284" height="96"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wgW-4p-hdp">
+                                <rect key="frame" x="37" y="53" width="119" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="OS Version:" id="PQK-m3-nwX">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lly-P3-eSC">
+                                <rect key="frame" x="162" y="51" width="83" height="22"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="Rb2-5F-6qr">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XD9-tF-qtO">
-                                <rect key="frame" x="36" y="77" width="119" height="17"/>
+                                <rect key="frame" x="37" y="26" width="119" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="OS Build Installed:" id="YHE-7C-A8E">
                                     <font key="font" metaFont="system"/>
@@ -245,23 +264,11 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="27D-Id-qWf">
-                                <rect key="frame" x="161" y="74" width="83" height="22"/>
+                                <rect key="frame" x="162" y="23" width="83" height="22"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="2xT-JA-q0p">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NgF-mW-cM9">
-                                <rect key="frame" x="0.0" y="0.0" width="284" height="75"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" alignment="center" id="1NX-Qf-de3">
-                                    <font key="font" metaFont="system"/>
-                                    <string key="title">
-TIP:
-You may specify a value of "0" to get all available builds.</string>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>

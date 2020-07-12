@@ -227,6 +227,9 @@ namespace Octothorpe.Mac
                 if (Pallas)
                 {
                     parser.PallasBuild = PallasBuild.StringValue;
+                    parser.PallasVersion = (uint.TryParse(PallasVersion.StringValue, out var verstring)) ?
+                        $"{verstring}.0" :
+                        PallasVersion.StringValue;
                 }
 
                 else
@@ -240,7 +243,7 @@ namespace Octothorpe.Mac
                         {
                             // Doing it like this converts an integer, e.g. "11" into "11.0"
                             parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring)) ?
-                                new Version(NSTextFieldMax.StringValue + ".0") :
+                                new Version($"{verstring}.0") :
                                 new Version(NSTextFieldMax.StringValue);
                         }
 
@@ -249,8 +252,8 @@ namespace Octothorpe.Mac
                         {
                             // Doing it like this converts an integer, e.g. "11" into "11.0"
                             parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring)) ?
-                                new Version(NSTextFieldMin.StringValue + ".0") :
-                                new Version(NSTextFieldMin.StringValue);
+                                new Version($"{verstring}.0") :
+                                new Version(NSTextFieldMax.StringValue);
                         }
                     }
 
@@ -482,7 +485,7 @@ namespace Octothorpe.Mac
         partial void UpdateSourceChanged(NSButton sender)
         {
             Pallas = (sender.Title == "Pallas");
-            MinVerView.Hidden = Pallas;
+            MinVerField.Hidden = Pallas;
             PallasView.Hidden = !Pallas;
             PlistView.Hidden = Pallas;
         }

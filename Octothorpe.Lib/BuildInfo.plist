@@ -223,6 +223,13 @@
 			<key>Beta</key>
 			<integer>6</integer>
 		</dict>
+		<key>15E216</key>
+		<dict>
+			<key>Date</key>
+			<string>20180329</string>
+			<key>Version</key>
+			<string>11.3</string>
+		</dict>
 		<key>15F5071a</key>
 		<dict>
 			<key>Beta</key>
@@ -700,6 +707,27 @@
 			<real>20190930</real>
 			<key>Version</key>
 			<string>13.1.2</string>
+		</dict>
+		<key>17E255</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200324</integer>
+			<key>Version</key>
+			<string>13.4</string>
+		</dict>
+		<key>17E262</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200407</integer>
+			<key>Version</key>
+			<string>13.4.1</string>
+		</dict>
+		<key>17F75</key>
+		<dict>
+			<key>Date</key>
+			<integer>20200520</integer>
+			<key>Version</key>
+			<string>13.5</string>
 		</dict>
 		<key>17F80</key>
 		<dict>
