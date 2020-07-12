@@ -13,6 +13,8 @@
 				<key>K66AP</key>
 				<string>AppleTV2,1</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>Apple TV (3rd generation)</key>
 		<dict>
@@ -25,6 +27,8 @@
 				<key>J33IAP</key>
 				<string>AppleTV3,2</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>Apple TV (4th generation)</key>
 		<dict>
@@ -160,6 +164,8 @@
 				<key>K48AP</key>
 				<string>iPad1,1</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPad 2</key>
 		<dict>
@@ -176,6 +182,8 @@
 				<key>K93AAP</key>
 				<string>iPad2,4</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPad (3rd generation)</key>
 		<dict>
@@ -190,6 +198,8 @@
 				<key>J2AAP</key>
 				<string>iPad3,3</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPad (4th generation)</key>
 		<dict>
@@ -204,6 +214,8 @@
 				<key>P103AP</key>
 				<string>iPad3,6</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPad (5th generation)</key>
 		<dict>
@@ -385,6 +397,8 @@
 				<key>P107AP</key>
 				<string>iPad2,7</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPad mini 2</key>
 		<dict>
@@ -450,6 +464,8 @@
 				<key>N88AP</key>
 				<string>iPhone2,1</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPhone 4</key>
 		<dict>
@@ -464,6 +480,8 @@
 				<key>N92AP</key>
 				<string>iPhone3,3</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPhone 4S</key>
 		<dict>
@@ -474,6 +492,8 @@
 				<key>N94AP</key>
 				<string>iPhone4,1</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPhone 5</key>
 		<dict>
@@ -486,6 +506,8 @@
 				<key>N42AP</key>
 				<string>iPhone5,2</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPhone 5C</key>
 		<dict>
@@ -498,6 +520,8 @@
 				<key>N49AP</key>
 				<string>iPhone5,4</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPhone 5S</key>
 		<dict>
@@ -711,6 +735,8 @@
 				<key>N18AP</key>
 				<string>iPod3,1</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPod touch (4th generation)</key>
 		<dict>
@@ -721,6 +747,8 @@
 				<key>N81AP</key>
 				<string>iPod4,1</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPod touch (5th generation)</key>
 		<dict>
@@ -731,6 +759,8 @@
 				<key>N78AP</key>
 				<string>iPod5,1</string>
 			</dict>
+			<key>PallasRequests</key>
+			<false/>
 		</dict>
 		<key>iPod touch (6th generation)</key>
 		<dict>
