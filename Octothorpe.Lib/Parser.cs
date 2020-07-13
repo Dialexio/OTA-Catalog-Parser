@@ -503,7 +503,7 @@ namespace Octothorpe.Lib
                 Output.AppendLine($"Installation permitted: {((package.AllowableOTA) ? "Yes" : "No")}");
 
                 // Auto-Update
-                Output.AppendLine($"Auto-Update permitted: {((package.AllowableOTA) ? "Yes" : "No")}");
+                Output.AppendLine($"Auto-Update permitted: {((package.AutoUpdate) ? "Yes" : "No")}");
 
                 Output.AppendLine($"Reported Release Type: {package.ReleaseType}");
 
