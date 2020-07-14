@@ -381,6 +381,30 @@
 				<string>iPad8,8</string>
 			</dict>
 		</dict>
+		<key>iPad Pro (11-inch 2nd generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J417AP</key>
+				<string>iPad8,9</string>
+				<key>J418AP</key>
+				<string>iPad8,10</string>
+			</dict>
+		</dict>
+		<key>iPad Pro (12.9-inch 4th generation) - 2</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J420AP</key>
+				<string>iPad8,11</string>
+				<key>J421AP</key>
+				<string>iPad8,12</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPad mini</key>
 	<dict>
