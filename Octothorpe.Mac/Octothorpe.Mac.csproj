@@ -71,6 +71,11 @@
 		      <CustomCommands>
 		        <Command>
 		          <type>AfterBuild</type>
+		          <command>plutil -convert binary1 "BuildInfo.plist"</command>
+		          <workingdir>${ProjectDir}/bin/Release</workingdir>
+		        </Command>
+		        <Command>
+		          <type>AfterBuild</type>
 		          <command>cp "BuildInfo.plist" "OTA Parser.app/Contents/MonoBundle/BuildInfo.plist"</command>
 		          <workingdir>${ProjectDir}/bin/Release</workingdir>
 		        </Command>
