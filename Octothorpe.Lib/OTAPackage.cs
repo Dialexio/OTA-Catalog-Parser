@@ -336,7 +336,7 @@ namespace Octothorpe.Lib
                         ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[ActualBuild];
 
                         // If the item for that build specifies "Models," we need to check those out.
-                        if (((NSDictionary)((NSDictionary)osBranch.Value)[ActualBuild]).ContainsKey("Models"))
+                        if (ItemsForBuild.ContainsKey("Models"))
                         {
                             foreach (NSObject Item in (NSArray)ItemsForBuild["Models"])
                             {
