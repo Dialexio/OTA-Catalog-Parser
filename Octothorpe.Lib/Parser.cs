@@ -44,8 +44,8 @@ namespace Octothorpe.Lib
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
         private object[] Assets;
         private readonly List<OTAPackage> Packages = new List<OTAPackage>();
-        private string model = null, pallasBuild = null, pallasVersion = null;
-        private Version max, minimum;
+        private string model = null, pallasBuild = null;
+        private Version max, minimum, pallasVersion;
 
         public string Device { get; set; }
 
@@ -90,7 +90,7 @@ namespace Octothorpe.Lib
 
         public string PallasVersion
         {
-            set { pallasVersion = value; }
+            set { pallasVersion = new Version(value); }
         }
 
         public bool ShowBeta
@@ -328,14 +328,18 @@ namespace Octothorpe.Lib
             IRestResponse response;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
             List<string> AssetAudiences = new List<string>();
+            NSDictionary BuildInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "BuildInfo.plist");
+            OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
+            string UniversalPackageURL = null;
 
             // Gather the asset audiences.
             switch (Device.Substring(0, 3))
             {
                 // audioOS
                 case "Aud":
+                    BuildInfo = (NSDictionary)BuildInfo["audioOS"];
                     AssetAudiences.Add("0322d49d-d558-4ddf-bdff-c0443d0e6fac");
 
                     if (showBeta)
@@ -344,6 +348,8 @@ namespace Octothorpe.Lib
 
                 // tvOS
                 case "App":
+                    BuildInfo = (NSDictionary)BuildInfo["tvOS"];
+
                     // I don't think Apple TV 2nd and 3rd gen. use Pallas? Can't hurt to be cautious I guess.
                     if (Device == "AppleTV2,1" || Device.Substring(0, 9) == "AppleTV3,")
                     {
@@ -375,6 +381,8 @@ namespace Octothorpe.Lib
                 case "iPa":
                 case "iPh":
                 case "iPo":
+                    BuildInfo = (NSDictionary)BuildInfo["iOS"];
+
                     AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c");
 
                     if (showBeta)
@@ -388,6 +396,8 @@ namespace Octothorpe.Lib
 
                 // watchOS
                 case "Wat":
+                    BuildInfo = (NSDictionary)BuildInfo["watchOS"];
+
                     AssetAudiences.Add("b82fcf9c-c284-41c9-8eb2-e69bf5a5269f");
 
                     if (showBeta)
@@ -403,38 +413,63 @@ namespace Octothorpe.Lib
             request.AddHeader("Accept", "application/json");
             request.Method = Method.POST;
 
-            foreach (string AssetAudience in AssetAudiences)
+            foreach (KeyValuePair<string, NSObject> majorVersion in BuildInfo)
             {
-                string PostingDate;
+                // Is the version lower than where we're starting? Skip it.
+                if (new Version(majorVersion.Key).CompareTo(pallasVersion) < 0)
+                    continue;
 
-                // If this isn't the first run-through, remove the previous JSON body.
-                if (request.Parameters.Count >= 2)
-                    request.Parameters.RemoveAt(1);
-
-                request.AddJsonBody(new
+                foreach (KeyValuePair<string, NSObject> build in (NSDictionary)majorVersion.Value)
                 {
-                    AssetAudience = AssetAudience,
-                    AssetType = "com.apple.MobileAsset.SoftwareUpdate",
-                    BuildVersion = pallasBuild,
-                    ClientVersion = 2,
-                    HWModelStr = Model,
-                    ProductType = Device,
-                    ProductVersion = pallasVersion
-                });
+                    foreach (string AssetAudience in AssetAudiences)
+                    {
+                        string PostingDate;
 
-                // Get Apple's response, then decode it.
-                response = Fido.Execute(request);
-                DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
+                        // If this isn't the first run-through, remove the previous JSON body.
+                        if (request.Parameters.Count >= 2)
+                            request.Parameters.RemoveAt(1);
 
-                // Grab the release date. If none is present, default to all zeroes.
-                PostingDate = (DecryptedPayload.ContainsKey("PostingDate")) ?
-                    ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty) :
-                    "00000000";
+                        request.AddJsonBody(new
+                        {
+                            AssetAudience = AssetAudience,
+                            AssetType = "com.apple.MobileAsset.SoftwareUpdate",
+                            BuildVersion = build.Key,
+                            ClientVersion = 2,
+                            HWModelStr = Model,
+                            ProductType = Device,
+                            ProductVersion = majorVersion.Key
+                        });
 
-                if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
-                {
-                    foreach (JContainer container in (JArray)AssetsArray)
-                        Packages.Add(new OTAPackage(container, PostingDate));
+                        // Get Apple's response, then decode it.
+                        response = Fido.Execute(request);
+                        DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
+
+                        // Grab the release date. If none is present, default to all zeroes.
+                        PostingDate = (DecryptedPayload.ContainsKey("PostingDate")) ?
+                            ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty) :
+                            "00000000";
+
+                        if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
+                        {
+                            foreach (JContainer container in (JArray)AssetsArray)
+                            {
+                                package = new OTAPackage(container, PostingDate);
+
+                                // Do we have a universal package?
+                                if (package.PrerequisiteBuild == "N/A")
+                                {
+                                    UniversalPackageURL = package.URL;
+
+                                    // Make sure we only add it once.
+                                    if (Packages.Count == 0)
+                                        Packages.Add(package);
+                                }
+
+                                if (package.URL != UniversalPackageURL)
+                                    Packages.Add(package);
+                            }
+                        }
+                    }
                 }
             }
 

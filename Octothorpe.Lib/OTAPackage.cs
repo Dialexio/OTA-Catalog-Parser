@@ -325,15 +325,45 @@ namespace Octothorpe.Lib
         private object GetKey(string name)
         {
             NSDictionary ItemsForBuild;
+            string osName = null;
             
             try
             {
                 // Items are separated by OS branch.
-                foreach (KeyValuePair<string, NSObject> osBranch in BUILD_INFO_DICT)
+                switch (SupportedDevices[0].Substring(0, 3))
                 {
-                    if (((NSDictionary)osBranch.Value).ContainsKey(ActualBuild))
+                    // audioOS
+                    case "Aud":
+                        osName = "audioOS";
+                        break;
+
+                    // tvOS
+                    case "App":
+                        osName = "tvOS";
+                        break;
+
+                    // iOS / iPadOS
+                    case "iPa":
+                    case "iPh":
+                    case "iPo":
+                        osName = "iOS";
+                        break;
+
+                    // watchOS
+                    case "Wat":
+                        osName = "watchOS";
+                        break;
+                }
+
+                foreach (KeyValuePair<string, NSObject> majorVersion in (NSDictionary)BUILD_INFO_DICT[osName])
+                {
+                    if (((NSDictionary)majorVersion.Value).ContainsKey(ActualBuild))
                     {
-                        ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[ActualBuild];
+                        ItemsForBuild = (NSDictionary)((NSDictionary)majorVersion.Value)[ActualBuild];
+
+                        // We have the version in the key name now.
+                        if (name == "Version")
+                            return majorVersion.Key;
 
                         // If the item for that build specifies "Models," we need to check those out.
                         if (ItemsForBuild.ContainsKey("Models"))
@@ -438,19 +468,45 @@ namespace Octothorpe.Lib
         /// </returns>
         public string PrerequisiteVer()
         {
-            System.Text.StringBuilder VersionNum = new System.Text.StringBuilder();
+            bool fuhgeddaboudit;
             int Beta = 0;
-            bool fuhgeddaboudit = false;
             NSDictionary ItemsForBuild = new NSDictionary();
+            string osName = null;
+            System.Text.StringBuilder VersionNum = new System.Text.StringBuilder();
 
             try
             {
                 // Items are separated by OS branch.
-                foreach (KeyValuePair<string, NSObject> osBranch in BUILD_INFO_DICT)
+                switch (SupportedDevices[0].Substring(0, 3))
                 {
-                    if (((NSDictionary)osBranch.Value).ContainsKey(PrerequisiteBuild))
+                    // audioOS
+                    case "Aud":
+                        osName = "audioOS";
+                        break;
+
+                    // tvOS
+                    case "App":
+                        osName = "tvOS";
+                        break;
+
+                    // iOS / iPadOS
+                    case "iPa":
+                    case "iPh":
+                    case "iPo":
+                        osName = "iOS";
+                        break;
+
+                    // watchOS
+                    case "Wat":
+                        osName = "watchOS";
+                        break;
+                }
+
+                foreach (KeyValuePair<string, NSObject> majorVersion in (NSDictionary)BUILD_INFO_DICT[osName])
+                {
+                    if (((NSDictionary)majorVersion.Value).ContainsKey(ActualBuild))
                     {
-                        ItemsForBuild = (NSDictionary)((NSDictionary)osBranch.Value)[PrerequisiteBuild];
+                        ItemsForBuild = (NSDictionary)((NSDictionary)majorVersion.Value)[PrerequisiteBuild];
                         break;
                     }
                 }

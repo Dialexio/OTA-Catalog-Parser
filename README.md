@@ -41,16 +41,16 @@ Broken output most commonly happens with watchOS updates, especially with beta u
 
 This program utilizes a PLIST file, named "BuildInfo.plist," to override the information that Apple provides. Its format is simple:
 
-* There is a dictionary for each OS branch (e.g. audioOS, iOS…); this is only done to make it easier to traverse.
-* In each OS branch's dictionary are more dictionaries, named by the build number.
+* There is a dictionary for each OS branch (e.g. audioOS, iOS…).
+* In each OS branch's dictionary are more dictionaries, named by the version number.
+* In each version number's dictionary, there is another dictionary for each build number available.
 * In each build number's dictionary, you may specify the following keys:
- * "Version" (the displayed OS version, e.g. "11.1.2")
  * "Beta" (what number beta it is; if it is not a beta, it will be 0)
  * "Suffix" (if something should follow, e.g. "watchOS 3.1 beta 2 **Pre-release**")
  * "Date" (the release date for the software)
  * "Devices" (if the entry should only be applied to certain devices)
 
-Before reporting issues with the program's output, please make sure BuildInfo.plist contains information for the latest OS updates. For the Mac version, this file can be found at `OTA Parser.app/Contents/MonoBundle/BuildOverride.plist`.
+Before reporting issues with the program's output, please make sure BuildInfo.plist contains information for the latest OS updates. For the Mac version, this file can be found at `OTA Parser.app/Contents/MonoBundle/BuildInfo.plist`.
 
 ## Licensing Information
 This program is distributed under the MIT License.
