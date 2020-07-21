@@ -470,7 +470,7 @@ namespace Octothorpe.Lib
         {
             bool fuhgeddaboudit;
             int Beta = 0;
-            NSDictionary ItemsForBuild = new NSDictionary();
+            NSDictionary ItemsForBuild = null;
             string osName = null;
             System.Text.StringBuilder VersionNum = new System.Text.StringBuilder();
 
@@ -504,21 +504,23 @@ namespace Octothorpe.Lib
 
                 foreach (KeyValuePair<string, NSObject> majorVersion in (NSDictionary)BUILD_INFO_DICT[osName])
                 {
-                    if (((NSDictionary)majorVersion.Value).ContainsKey(ActualBuild))
+                    ItemsForBuild = new NSDictionary();
+
+                    if (((NSDictionary)majorVersion.Value).ContainsKey(PrerequisiteBuild))
                     {
                         ItemsForBuild = (NSDictionary)((NSDictionary)majorVersion.Value)[PrerequisiteBuild];
+                        VersionNum.Append(majorVersion.Key);
+
                         break;
                     }
                 }
 
+                // Nothing found in BuildInfo.plist?
+                if (ItemsForBuild.IsEmpty)
+                    throw new KeyNotFoundException();
+
                 if (ItemsForBuild.ContainsKey("Beta"))
                     Beta = (int)ItemsForBuild["Beta"].ToObject();
-
-                if (ItemsForBuild.ContainsKey("Version"))
-                    VersionNum.Append((string)ItemsForBuild["Version"].ToObject());
-
-                else
-                    VersionNum.Append(ENTRY["PrerequisiteOSVersion"]);
 
                 if (ItemsForBuild.ContainsKey("Models"))
                 {

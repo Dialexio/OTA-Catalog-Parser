@@ -327,12 +327,12 @@ namespace Octothorpe.Lib
             Dictionary<string, object> DecryptedPayload;
             IRestResponse response;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
-            List<string> AssetAudiences = new List<string>();
+            List<string> AssetAudiences = new List<string>(),
+                PackagesPresent = new List<string>();
             NSDictionary BuildInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "BuildInfo.plist");
             OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
-            string UniversalPackageURL = null;
 
             // Gather the asset audiences.
             switch (Device.Substring(0, 3))
@@ -455,18 +455,12 @@ namespace Octothorpe.Lib
                             {
                                 package = new OTAPackage(container, PostingDate);
 
-                                // Do we have a universal package?
-                                if (package.PrerequisiteBuild == "N/A")
+                                // Prevent addition of duplicate entries.
+                                if (PackagesPresent.Contains(package.SortingString) == false)
                                 {
-                                    UniversalPackageURL = package.URL;
-
-                                    // Make sure we only add it once.
-                                    if (Packages.Count == 0)
-                                        Packages.Add(package);
-                                }
-
-                                if (package.URL != UniversalPackageURL)
                                     Packages.Add(package);
+                                    PackagesPresent.Add(package.SortingString);
+                                }
                             }
                         }
                     }
