@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Octothorpe</RootNamespace>
     <AssemblyName>CLI</AssemblyName>
-    <ReleaseVersion>2.2.0</ReleaseVersion>
+    <ReleaseVersion>2.2.0.1</ReleaseVersion>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <ApplicationIcon>AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -34,7 +34,6 @@
     <Reference Include="plist-cil">
       <HintPath>..\packages\plist-cil.2.1.0\lib\netstandard2.0\plist-cil.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.Memory">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -44,7 +43,15 @@
     <Reference Include="System.Buffers">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
-    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="JWT">
+      <HintPath>..\packages\JWT.7.2.1\lib\net46\JWT.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.106.11.4\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

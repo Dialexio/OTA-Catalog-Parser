@@ -30,6 +30,7 @@ namespace Octothorpe.CLI
     {
         public static void Main(string[] args)
         {
+            bool Pallas = false;
             Parser parser = new Parser();
             int i = 0;
 
@@ -49,6 +50,9 @@ namespace Octothorpe.CLI
                     case "-f":
                         if (i < args.Length)
                             parser.LoadPlist(args[i++]);
+
+                        Pallas = false;
+
                         break;
 
                     case "-h":
@@ -59,7 +63,11 @@ namespace Octothorpe.CLI
                         Console.WriteLine("-d <device>      Choose the device you are searching for. (e.g. iPhone8,1)");
                         Console.WriteLine("-f <file>        Specify the path to the PLIST file you are searching in.");
                         Console.WriteLine("                 This may be either a local file, or a mesu.apple.com URL.");
-                        Console.WriteLine("-m <model>       Choose the model you are searching for. (e.g. N71mAP)\n                 This is only used and required for iPhone 6S or 6S Plus.");
+                        Console.WriteLine("                 Either this, or Pallas fields must be specified.");
+                        Console.WriteLine("-m <model>       Choose the model you are searching for. (e.g. N71mAP)\n                 This is only used and required for A9 devices, or Pallas requests.");
+                        Console.WriteLine("-pb <build>      Specify the build number where the parser should begin\n                 querying Pallas requests.");
+                        Console.WriteLine("-pv <version>    Specify the OS version where the parser should begin\n                 querying Pallas requests.");
+
 
                         Console.WriteLine("\nOptional Arguments:");
                         Console.WriteLine("-b               Displays beta firmwares. By default, this is disabled.");
@@ -85,9 +93,21 @@ namespace Octothorpe.CLI
 
                     case "-min":
                         if (i < args.Length)
-                            parser.Minimum = (uint.TryParse(args[i++], out var verstring))
-                                ? new Version($"{verstring}.0")
-                                : new Version(verstring.ToString());
+                            parser.Minimum = (uint.TryParse(args[i++], out var verstring)) ?
+                                new Version($"{verstring}.0") :
+                                new Version(verstring.ToString());
+                        break;
+
+                    case "-pb":
+                        parser.PallasBuild = args[i++];
+
+                        Pallas = true;
+                        break;
+
+                    case "-pv":
+                        parser.PallasVersion = args[i++];
+
+                        Pallas = true;
                         break;
 
                     case "-s":
@@ -106,7 +126,7 @@ namespace Octothorpe.CLI
 
             try
             {
-                Console.WriteLine(parser.ParseAssets());
+                Console.WriteLine(parser.ParseAssets(Pallas));
             }
 
             catch (ArgumentException message)
