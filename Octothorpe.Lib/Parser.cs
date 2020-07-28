@@ -350,31 +350,14 @@ namespace Octothorpe.Lib
                 case "App":
                     BuildInfo = (NSDictionary)BuildInfo["tvOS"];
 
-                    // I don't think Apple TV 2nd and 3rd gen. use Pallas? Can't hurt to be cautious I guess.
-                    if (Device == "AppleTV2,1" || Device.Substring(0, 9) == "AppleTV3,")
-                    {
-                        AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c");
+                    AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0");
 
-                        if (showBeta)
-                            AssetAudiences.AddRange(new string[] {
-                                "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
-                                "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
-                                "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
-                                "84da8706-e267-4554-8207-865ae0c3a120"  // iOS 14 beta
-                            });
-                    }
-
-                    else
-                    {
-                        AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0");
-
-                        if (showBeta)
-                            AssetAudiences.AddRange(new string[] {
-                                "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
-                                "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
-                                "65254ac3-f331-4c19-8559-cbe22f5bc1a6"  // tvOS 14 beta
-                            });
-                    }
+                    if (showBeta)
+                        AssetAudiences.AddRange(new string[] {
+                            "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
+                            "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
+                            "65254ac3-f331-4c19-8559-cbe22f5bc1a6"  // tvOS 14 beta
+                        });
                     break;
 
                 // iOS / iPadOS
