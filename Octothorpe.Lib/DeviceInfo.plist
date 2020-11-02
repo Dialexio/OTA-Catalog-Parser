@@ -137,6 +137,22 @@
 				<string>Watch5,4</string>
 			</dict>
 		</dict>
+		<key>Apple Watch Series 6</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>N157sAP</key>
+				<string>Watch6,1</string>
+				<key>N157bAP</key>
+				<string>Watch6,2</string>
+				<key>N158sAP</key>
+				<string>Watch6,3</string>
+				<key>N158bAP</key>
+				<string>Watch6,4</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>HomePod</key>
 	<dict>
@@ -745,6 +761,46 @@
 			<dict>
 				<key>D79AP</key>
 				<string>iPhone12,8</string>
+			</dict>
+		</dict>
+		<key>iPhone 12</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D53gAP</key>
+				<string>iPhone13,2</string>
+			</dict>
+		</dict>
+		<key>iPhone 12 mini</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D52gAP</key>
+				<string>iPhone13,1</string>
+			</dict>
+		</dict>
+		<key>iPhone 12 Pro</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D53pAP</key>
+				<string>iPhone13,3</string>
+			</dict>
+		</dict>
+		<key>iPhone 12 Pro Max</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D54pAP</key>
+				<string>iPhone13,4</string>
 			</dict>
 		</dict>
 	</dict>
