@@ -787,6 +787,10 @@ namespace Octothorpe.Lib
                         if (package.PrerequisiteVer().Contains(" GM"))
                             Output.AppendLine(package.PrerequisiteVer().Replace("GM", "[[Golden Master|GM]]"));
 
+                        // If this is a release candidate, print a link.
+                        else if (package.PrerequisiteVer().Contains(" RC"))
+                            Output.AppendLine(package.PrerequisiteVer().Replace("RC", "[[Release Candidate|RC]]"));
+
                         // Very quick check if prerequisite is a beta. This is not bulletproof.
                         else if (Regex.Match(package.PrerequisiteBuild, OTAPackage.REGEX_BETA).Success && package.PrerequisiteVer().Contains("beta") == false)
                             Output.AppendLine($"{package.PrerequisiteVer()} beta #");

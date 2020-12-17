@@ -152,6 +152,42 @@
 				<real>20201020</real>
 			</dict>
 		</dict>
+		<key>14.3</key>
+		<dict>
+			<key>18K5545e</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20201112</integer>
+			</dict>
+			<key>18K5556a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<real>20201118</real>
+			</dict>
+			<key>18K5559a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<real>20201202</real>
+			</dict>
+			<key>18K561</key>
+			<dict>
+				<key>Date</key>
+				<real>20201208</real>
+				<key>Suffix</key>
+				<string>RC</string>
+			</dict>
+			<key>18K563</key>
+			<dict>
+				<key>Date</key>
+				<real>20201215</real>
+			</dict>
+		</dict>
 	</dict>
 	<key>iOS</key>
 	<dict>
@@ -1352,6 +1388,57 @@
 				<key>Date</key>
 				<integer>20201030</integer>
 			</dict>
+			<key>18B92</key>
+			<dict>
+				<key>Date</key>
+				<real>20201105</real>
+			</dict>
+		</dict>
+		<key>14.3</key>
+		<dict>
+			<key>18C5044f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20201112</real>
+			</dict>
+			<key>18C5054c</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<real>20201117</real>
+			</dict>
+			<key>18C5061a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<real>20201202</real>
+			</dict>
+			<key>18C65</key>
+			<dict>
+				<key>Suffix</key>
+				<string>RC</string>
+				<key>Date</key>
+				<real>20201208</real>
+			</dict>
+			<key>18C66</key>
+			<dict>
+				<key>Date</key>
+				<real>20201214</real>
+			</dict>
+		</dict>
+		<key>14.4</key>
+		<dict>
+			<key>18D5030e</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20201216</real>
+			</dict>
 		</dict>
 		<key>5.1</key>
 		<dict>
@@ -2103,6 +2190,50 @@
 				<key>Date</key>
 				<real>20201020</real>
 			</dict>
+			<key>18K57</key>
+			<dict>
+				<key>Date</key>
+				<real>20201105</real>
+			</dict>
+		</dict>
+		<key>14.3</key>
+		<dict>
+			<key>18K5545e</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20201112</real>
+			</dict>
+			<key>18K5556a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<real>20201118</real>
+			</dict>
+			<key>18K5559a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<real>20201202</real>
+			</dict>
+			<key>18K561</key>
+			<dict>
+				<key>Date</key>
+				<real>20201214</real>
+			</dict>
+		</dict>
+		<key>14.4</key>
+		<dict>
+			<key>18K5780c</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20201216</real>
+			</dict>
 		</dict>
 		<key>7.3</key>
 		<dict>
@@ -2110,6 +2241,46 @@
 			<dict>
 				<key>Date</key>
 				<integer>20190513</integer>
+			</dict>
+		</dict>
+		<key>7.3.1</key>
+		<dict>
+			<key>12H864</key>
+			<dict>
+				<key>Date</key>
+				<real>20190722</real>
+			</dict>
+		</dict>
+		<key>7.4</key>
+		<dict>
+			<key>12H876</key>
+			<dict>
+				<key>Date</key>
+				<real>20190924</real>
+			</dict>
+		</dict>
+		<key>7.5</key>
+		<dict>
+			<key>12H885</key>
+			<dict>
+				<key>Date</key>
+				<real>20200324</real>
+			</dict>
+		</dict>
+		<key>7.6</key>
+		<dict>
+			<key>12H903</key>
+			<dict>
+				<key>Date</key>
+				<real>20200916</real>
+			</dict>
+		</dict>
+		<key>7.6.1</key>
+		<dict>
+			<key>12H911</key>
+			<dict>
+				<key>Date</key>
+				<real>20201105</real>
 			</dict>
 		</dict>
 	</dict>
@@ -3736,6 +3907,62 @@
 				<integer>4</integer>
 				<key>Date</key>
 				<real>20201022</real>
+			</dict>
+			<key>18R589</key>
+			<dict>
+				<key>Date</key>
+				<real>20201102</real>
+				<key>Suffix</key>
+				<string>RC</string>
+			</dict>
+			<key>18R590</key>
+			<dict>
+				<key>Date</key>
+				<real>20201105</real>
+			</dict>
+		</dict>
+		<key>7.2</key>
+		<dict>
+			<key>18S5545f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20201112</real>
+			</dict>
+			<key>18S5555c</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<real>20201118</real>
+			</dict>
+			<key>18S5561a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<real>20201202</real>
+			</dict>
+			<key>18S563</key>
+			<dict>
+				<key>Date</key>
+				<real>20201214</real>
+			</dict>
+			<key>18S564</key>
+			<dict>
+				<key>Date</key>
+				<real>20201214</real>
+			</dict>
+		</dict>
+		<key>7.3</key>
+		<dict>
+			<key>18S5780d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20201216</real>
 			</dict>
 		</dict>
 	</dict>
