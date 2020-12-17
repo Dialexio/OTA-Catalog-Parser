@@ -294,7 +294,7 @@ namespace Octothorpe.Lib
         private void ErrorCheck(bool Pallas)
         {
             // Device check.
-            if (Device == null || Regex.IsMatch(Device, @"(AppleTV|AudioAccessory|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
+            if (Device == null || Regex.IsMatch(Device, @"(AppleTV|AudioAccessory|iMac|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
                 throw new ArgumentException("device");
 
             DeviceIsWatch = Regex.IsMatch(Device, @"Watch\d,\d");
@@ -333,6 +333,7 @@ namespace Octothorpe.Lib
             OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
+            string SUAssetType = "com.apple.SoftwareUpdate";
 
             // Gather the asset audiences.
             switch (Device.Substring(0, 3))
@@ -377,6 +378,15 @@ namespace Octothorpe.Lib
                         });
                     break;
 
+                // macOS
+                case "iMa":
+                case "Mac":
+                    BuildInfo = (NSDictionary)BuildInfo["macOS"];
+                    SUAssetType = "com.apple.MacSoftwareUpdate";
+
+                    AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65");
+                    break;
+
                 // watchOS
                 case "Wat":
                     BuildInfo = (NSDictionary)BuildInfo["watchOS"];
@@ -415,7 +425,7 @@ namespace Octothorpe.Lib
                         request.AddJsonBody(new
                         {
                             AssetAudience = AssetAudience,
-                            AssetType = "com.apple.MobileAsset.SoftwareUpdate",
+                            AssetType = SUAssetType,
                             BuildVersion = build.Key,
                             ClientVersion = 2,
                             HWModelStr = Model,

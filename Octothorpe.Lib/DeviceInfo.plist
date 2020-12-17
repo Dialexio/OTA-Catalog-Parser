@@ -169,6 +169,19 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>iMac</key>
+	<dict>
+		<key>27&quot; iMac (Mid 2019)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>Mac-AA95B1DDAB278B95</key>
+				<string>iMac19,1</string>
+			</dict>
+		</dict>
+	</dict>
 	<key>iPad</key>
 	<dict>
 		<key>iPad (1st generation)</key>
