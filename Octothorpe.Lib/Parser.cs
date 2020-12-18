@@ -294,7 +294,7 @@ namespace Octothorpe.Lib
         private void ErrorCheck(bool Pallas)
         {
             // Device check.
-            if (Device == null || Regex.IsMatch(Device, @"(AppleTV|AudioAccessory|iMac|iPad|iPhone|iPod|Watch)(\d)?\d,\d") == false)
+            if (Device == null || Regex.IsMatch(Device, @"(AppleTV|AudioAccessory|iMac(Pro)?|iPad|iPhone|iPod|Mac(mini|Pro)?|MacBook(Air|Pro)?|Watch)(\d)?\d,\d") == false)
                 throw new ArgumentException("device");
 
             DeviceIsWatch = Regex.IsMatch(Device, @"Watch\d,\d");
@@ -432,7 +432,7 @@ namespace Octothorpe.Lib
                                 BaseUrl = "https://mesu.apple.com/assets/macos/",
                                 BuildVersion = build.Key,
                                 ClientData = new {
-                                    AllowXmlFallback = false,
+                                    AllowXmlFallback = true,
                                     DeviceAccessClient = "softwareupdated"
                                 },
                                 ClientVersion = 2,
@@ -441,12 +441,10 @@ namespace Octothorpe.Lib
                                 DeviceOSData = new {},
                                 HWModelStr = Model,
                                 InternalBuild = false,
-                                NoFallback = true,
+                                NoFallback = false,
                                 ProductType = Device,
                                 ProductVersion = majorVersion.Key,
-                                RestoreVersion = "20.2.29.0.0,0",
-                                Supervised = false,
-                                TrainName = "GoldenGateB"
+                                RestoreVersion = "20.2.29.0.0,0"
                             });
 
                         else
