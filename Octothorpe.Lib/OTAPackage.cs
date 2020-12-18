@@ -172,6 +172,20 @@ namespace Octothorpe.Lib
         }
 
         /// <summary>
+        /// Reports the MobileAsset type.
+        /// </summary>
+        /// <returns>
+        /// A string value of the MobileAsset type. It should be "com.apple.MobileAsset.SoftwareUpdate" or "com.apple.MobileAsset.MacSoftwareUpdate"
+        /// </returns>
+        public string AssetType
+        {
+            get
+            {
+                return ENTRY.TryGetValue("AssetType", out object assettype) ? (string)assettype : null;
+            }
+        }
+
+        /// <summary>
         /// Reports the value of the key "AutoUpdate." If it's not present, returns false.
         /// </summary>
         /// <returns>
@@ -330,29 +344,41 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                switch (SupportedDevices[0].Substring(0, 3))
+                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
+                    osName = "macOS";
+
+                else
                 {
-                    // audioOS
-                    case "Aud":
-                        osName = "audioOS";
-                        break;
+                    switch (SupportedDevices[0].Substring(0, 3))
+                    {
+                        // audioOS
+                        case "Aud":
+                            osName = "audioOS";
+                            break;
 
-                    // tvOS
-                    case "App":
-                        osName = "tvOS";
-                        break;
+                        // tvOS
+                        case "App":
+                            osName = "tvOS";
+                            break;
 
-                    // iOS / iPadOS
-                    case "iPa":
-                    case "iPh":
-                    case "iPo":
-                        osName = "iOS";
-                        break;
+                        // macOS
+                        case "iMa":
+                        case "Mac":
+                            osName = "macOS";
+                            break;
 
-                    // watchOS
-                    case "Wat":
-                        osName = "watchOS";
-                        break;
+                        // iOS / iPadOS
+                        case "iPa":
+                        case "iPh":
+                        case "iPo":
+                            osName = "iOS";
+                            break;
+
+                        // watchOS
+                        case "Wat":
+                            osName = "watchOS";
+                            break;
+                    }
                 }
 
                 foreach (KeyValuePair<string, NSObject> majorVersion in (NSDictionary)BUILD_INFO_DICT[osName])
@@ -360,6 +386,8 @@ namespace Octothorpe.Lib
                     if (((NSDictionary)majorVersion.Value).ContainsKey(ActualBuild))
                     {
                         ItemsForBuild = (NSDictionary)((NSDictionary)majorVersion.Value)[ActualBuild];
+
+                        Console.WriteLine("moment of truth");
 
                         // We have the version in the key name now.
                         if (name == "Version")
@@ -477,29 +505,41 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                switch (SupportedDevices[0].Substring(0, 3))
+                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
+                    osName = "macOS";
+
+                else
                 {
-                    // audioOS
-                    case "Aud":
-                        osName = "audioOS";
-                        break;
+                    switch (SupportedDevices[0].Substring(0, 3))
+                    {
+                        // audioOS
+                        case "Aud":
+                            osName = "audioOS";
+                            break;
 
-                    // tvOS
-                    case "App":
-                        osName = "tvOS";
-                        break;
+                        // tvOS
+                        case "App":
+                            osName = "tvOS";
+                            break;
 
-                    // iOS / iPadOS
-                    case "iPa":
-                    case "iPh":
-                    case "iPo":
-                        osName = "iOS";
-                        break;
+                        // macOS
+                        case "iMa":
+                        case "Mac":
+                            osName = "macOS";
+                            break;
 
-                    // watchOS
-                    case "Wat":
-                        osName = "watchOS";
-                        break;
+                        // iOS / iPadOS
+                        case "iPa":
+                        case "iPh":
+                        case "iPo":
+                            osName = "iOS";
+                            break;
+
+                        // watchOS
+                        case "Wat":
+                            osName = "watchOS";
+                            break;
+                    }
                 }
 
                 foreach (KeyValuePair<string, NSObject> majorVersion in (NSDictionary)BUILD_INFO_DICT[osName])
@@ -647,11 +687,10 @@ namespace Octothorpe.Lib
         private string SortingBuild()
         {
             int LetterPos;
-            string SortBuild = DeclaredBuild, BuildDigits;
+            string BuildDigits, SortBuild;
 
             // Make 9A### appear before 10A###.
-            if (char.IsLetter(SortBuild[1]))
-                SortBuild = $"0{SortBuild}";
+            SortBuild = (char.IsLetter(DeclaredBuild[1])) ? $"0{DeclaredBuild}" : DeclaredBuild;
 
             // Find the letter in the build number.
             for (LetterPos = 1; LetterPos < SortBuild.Length; LetterPos++)
@@ -792,7 +831,9 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return ((object[])ENTRY["SupportedDevices"]).Select(i => (string)i).ToList();
+                return (ENTRY.ContainsKey("SupportedDevices")) ?
+                    ((object[])ENTRY["SupportedDevices"]).Select(i => (string)i).ToList() :
+                    new List<string>();
             }
         }
 

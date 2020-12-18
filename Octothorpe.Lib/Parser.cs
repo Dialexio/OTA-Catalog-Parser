@@ -333,7 +333,7 @@ namespace Octothorpe.Lib
             OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
-            string SUAssetType = "com.apple.SoftwareUpdate";
+            string SUAssetType = "com.apple.MobileAsset.SoftwareUpdate";
 
             // Gather the asset audiences.
             switch (Device.Substring(0, 3))
@@ -382,7 +382,7 @@ namespace Octothorpe.Lib
                 case "iMa":
                 case "Mac":
                     BuildInfo = (NSDictionary)BuildInfo["macOS"];
-                    SUAssetType = "com.apple.MacSoftwareUpdate";
+                    SUAssetType = "com.apple.MobileAsset.MacSoftwareUpdate";
 
                     AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65");
                     break;
@@ -419,19 +419,47 @@ namespace Octothorpe.Lib
                         string PostingDate;
 
                         // If this isn't the first run-through, remove the previous JSON body.
-                        if (request.Parameters.Count >= 2)
+                        while (request.Parameters.Count >= 2)
                             request.Parameters.RemoveAt(1);
 
-                        request.AddJsonBody(new
-                        {
-                            AssetAudience = AssetAudience,
-                            AssetType = SUAssetType,
-                            BuildVersion = build.Key,
-                            ClientVersion = 2,
-                            HWModelStr = Model,
-                            ProductType = Device,
-                            ProductVersion = majorVersion.Key
-                        });
+                        // Add the JSON body. Macs have slightly different parameters.
+                        if (Device.Substring(0, 3) == "iMa" || Device.Substring(0, 3) == "Mac")
+                            request.AddJsonBody(new
+                            {
+                                AllowSameBuildVersion = false,
+                                AssetAudience = AssetAudience,
+                                AssetType = SUAssetType,
+                                BaseUrl = "https://mesu.apple.com/assets/macos/",
+                                BuildVersion = build.Key,
+                                ClientData = new {
+                                    AllowXmlFallback = false,
+                                    DeviceAccessClient = "softwareupdated"
+                                },
+                                ClientVersion = 2,
+                                DelayRequested = false,
+                                DeviceName = "Mac",
+                                DeviceOSData = new {},
+                                HWModelStr = Model,
+                                InternalBuild = false,
+                                NoFallback = true,
+                                ProductType = Device,
+                                ProductVersion = majorVersion.Key,
+                                RestoreVersion = "20.2.29.0.0,0",
+                                Supervised = false,
+                                TrainName = "GoldenGateB"
+                            });
+
+                        else
+                            request.AddJsonBody(new
+                            {
+                                AssetAudience = AssetAudience,
+                                AssetType = SUAssetType,
+                                BuildVersion = build.Key,
+                                ClientVersion = 2,
+                                HWModelStr = Model,
+                                ProductType = Device,
+                                ProductVersion = majorVersion.Key
+                            });
 
                         // Get Apple's response, then decode it.
                         response = Fido.Execute(request);
