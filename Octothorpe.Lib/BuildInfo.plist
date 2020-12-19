@@ -188,6 +188,14 @@
 				<integer>20201215</integer>
 			</dict>
 		</dict>
+		<key>14.4</key>
+		<dict>
+			<key>17M61</key>
+			<dict>
+				<key>Date</key>
+				<integer>20200715</integer>
+			</dict>
+		</dict>
 	</dict>
 	<key>iOS</key>
 	<dict>
@@ -1263,6 +1271,14 @@
 			<dict>
 				<key>Date</key>
 				<integer>20200812</integer>
+			</dict>
+		</dict>
+		<key>13.7</key>
+		<dict>
+			<key>17H33</key>
+			<dict>
+				<key>Date</key>
+				<integer>20200826</integer>
 			</dict>
 		</dict>
 		<key>14.0</key>

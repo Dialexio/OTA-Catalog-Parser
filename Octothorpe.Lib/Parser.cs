@@ -325,6 +325,7 @@ namespace Octothorpe.Lib
         private void GetPallasEntries()
         {
             Dictionary<string, object> DecryptedPayload;
+            int ArrayIndex = 0;
             IRestResponse response;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
             List<string> AssetAudiences = new List<string>(),
@@ -334,6 +335,7 @@ namespace Octothorpe.Lib
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
             string SUAssetType = "com.apple.MobileAsset.SoftwareUpdate";
+            string[] SplicedBuildNum = new string[4];
 
             // Gather the asset audiences.
             switch (Device.Substring(0, 3))
@@ -384,7 +386,21 @@ namespace Octothorpe.Lib
                     BuildInfo = (NSDictionary)BuildInfo["macOS"];
                     SUAssetType = "com.apple.MobileAsset.MacSoftwareUpdate";
 
-                    AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65");
+                    AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65"); // macOS 11 Public
+
+                    // We also need to splice the build number. This looked like an ideal spot to put it without creating another if statement.
+                    foreach (char BuildChar in pallasBuild)
+                    {
+                        if ((char.IsDigit(BuildChar) || char.IsLower(BuildChar)) == false)
+                            ArrayIndex++;
+
+                        SplicedBuildNum[ArrayIndex] = $"{SplicedBuildNum[ArrayIndex]}{BuildChar}";
+
+                        if (char.IsDigit(BuildChar) == false)
+                            ArrayIndex++;
+                    }
+
+                    ArrayIndex = 0;
                     break;
 
                 // watchOS
@@ -431,20 +447,21 @@ namespace Octothorpe.Lib
                                 AssetType = SUAssetType,
                                 BaseUrl = "https://mesu.apple.com/assets/macos/",
                                 BuildVersion = build.Key,
-                                ClientData = new {
+                                ClientData = new
+                                {
                                     AllowXmlFallback = true,
                                     DeviceAccessClient = "softwareupdated"
                                 },
                                 ClientVersion = 2,
                                 DelayRequested = false,
                                 DeviceName = "Mac",
-                                DeviceOSData = new {},
+                                DeviceOSData = new { },
                                 HWModelStr = Model,
                                 InternalBuild = false,
                                 NoFallback = false,
                                 ProductType = Device,
                                 ProductVersion = majorVersion.Key,
-                                RestoreVersion = "20.2.29.0.0,0"
+                                RestoreVersion = $"{SplicedBuildNum[0]}.{((int)SplicedBuildNum[1][0])-64}.{SplicedBuildNum[2]}.0.0,0"
                             });
 
                         else
