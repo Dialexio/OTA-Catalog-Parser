@@ -393,7 +393,12 @@ namespace Octothorpe.Lib
                     BuildInfo = (NSDictionary)BuildInfo["macOS"];
                     SUAssetType = "com.apple.MobileAsset.MacSoftwareUpdate";
 
-                    AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65"); // macOS 11 Public
+                    AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65"); // macOS Public
+
+                    if (showBeta)
+                        AssetAudiences.AddRange(new string[] {
+                            "ca60afc6-5954-46fd-8cb9-60dde6ac39fd"  // macOS 11 beta
+                        });
 
                     // We also need to splice the build number. This looked like an ideal spot to put it without creating another if statement.
                     foreach (char BuildChar in pallasCurrentBuild)

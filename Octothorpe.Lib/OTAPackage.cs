@@ -724,35 +724,33 @@ namespace Octothorpe.Lib
         private string SortingPrerequisiteBuild()
         {
             // Sort by release type.
-            int ReleaseTypeInt = 0;
             string build = PrerequisiteBuild;
+
+            // Skip everything if we know this is a universal build.
+            if (PrerequisiteBuild == "N/A")
+                switch (ReleaseType)
+                {
+                    case "Beta":
+                        return "0000000001";
+
+                    case "Carrier":
+                        return "0000000002";
+
+                    case "Internal":
+                        return "0000000003";
+
+                    default:
+                        return "0000000000";
+                }
 
             // Get up to (and including) the first letter. We'll get to this in a bit.
             match = Regex.Match(build, @"\d?\d[A-Z]");
-
-            switch (ReleaseType)
-            {
-                case "Beta":
-                    ReleaseTypeInt = 1;
-                    break;
-
-                case "Carrier":
-                    ReleaseTypeInt = 2;
-                    break;
-
-                case "Internal":
-                    ReleaseTypeInt = 3;
-                    break;
-            }
-
-            if (PrerequisiteBuild == "N/A")
-                return $"000000000{ReleaseTypeInt}";
 
             // If the build is old (i.e. before iOS 7), pad it.
             if (char.IsLetter(build[1]))
                 return $"0{build}";
                 
-            if (PrerequisiteVer().Contains("beta"))
+            if (PrerequisiteVer().Contains("beta") || PrerequisiteVer().Contains("RC"))
                 build = RemoveBuildPadding(build);
 
             // If the number after the capital letter is too small, pad it.
