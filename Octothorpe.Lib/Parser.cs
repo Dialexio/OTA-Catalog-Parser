@@ -35,7 +35,7 @@ namespace Octothorpe.Lib
 {
     public class Parser
     {
-        private bool fullTable, removeStubs, showBeta, wikiMarkup, AddStubBlurb, DeviceIsWatch, ModelNeedsChecking;
+        private bool fullTable, removeStubs, showBeta, pallasSupervised, wikiMarkup, AddStubBlurb, DeviceIsWatch, ModelNeedsChecking;
         private Dictionary<string, List<string>> FileRowspan = new Dictionary<string, List<string>>();
         private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
             DateRowspan = new Dictionary<string, uint>(),
@@ -44,15 +44,10 @@ namespace Octothorpe.Lib
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
         private object[] Assets;
         private readonly List<OTAPackage> Packages = new List<OTAPackage>();
-        private string model = null, pallasBuild = null;
-        private Version max, minimum, pallasVersion;
+        private string model = null, pallasCurrentBuild = null, pallasRequestedVersion;
+        private Version max, minimum, pallasCurrentVersion;
 
         public string Device { get; set; }
-
-        public bool RemoveStubs
-        {
-            set { removeStubs = value; }
-        }
 
         public bool FullTable
         {
@@ -71,10 +66,7 @@ namespace Octothorpe.Lib
 
         public string Model
         {
-            get
-            {
-                return model;
-            }
+            get { return model; }
 
             set
             {
@@ -83,14 +75,29 @@ namespace Octothorpe.Lib
             }
         }
 
-        public string PallasBuild
+        public string PallasCurrentBuild
         {
-            set { pallasBuild = value; }
+            set { pallasCurrentBuild = value; }
         }
 
-        public string PallasVersion
+        public string PallasCurrentVersion
         {
-            set { pallasVersion = new Version(value); }
+            set { pallasCurrentVersion = new Version(value); }
+        }
+
+        public string PallasRequestedVersion
+        {
+            set { pallasRequestedVersion = value; }
+        }
+
+        public bool PallasSupervised
+        {
+            set { pallasSupervised = value; }
+        }
+
+        public bool RemoveStubs
+        {
+            set { removeStubs = value; }
         }
 
         public bool ShowBeta
@@ -311,10 +318,10 @@ namespace Octothorpe.Lib
 
             if (Pallas)
             {
-                if (string.IsNullOrEmpty(pallasBuild))
+                if (string.IsNullOrEmpty(pallasCurrentBuild))
                     throw new ArgumentException();
 
-                else if (char.IsDigit(pallasBuild[0]) == false)
+                else if (char.IsDigit(pallasCurrentBuild[0]) == false)
                     throw new ArgumentException("badbuild");
             }
 
@@ -389,7 +396,7 @@ namespace Octothorpe.Lib
                     AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65"); // macOS 11 Public
 
                     // We also need to splice the build number. This looked like an ideal spot to put it without creating another if statement.
-                    foreach (char BuildChar in pallasBuild)
+                    foreach (char BuildChar in pallasCurrentBuild)
                     {
                         if ((char.IsDigit(BuildChar) || char.IsLower(BuildChar)) == false)
                             ArrayIndex++;
@@ -425,7 +432,7 @@ namespace Octothorpe.Lib
             foreach (KeyValuePair<string, NSObject> majorVersion in BuildInfo)
             {
                 // Is the version lower than where we're starting? Skip it.
-                if (new Version(majorVersion.Key).CompareTo(pallasVersion) < 0)
+                if (new Version(majorVersion.Key).CompareTo(pallasCurrentVersion) < 0)
                     continue;
 
                 foreach (KeyValuePair<string, NSObject> build in (NSDictionary)majorVersion.Value)
@@ -461,7 +468,9 @@ namespace Octothorpe.Lib
                                 NoFallback = false,
                                 ProductType = Device,
                                 ProductVersion = majorVersion.Key,
-                                RestoreVersion = $"{SplicedBuildNum[0]}.{((int)SplicedBuildNum[1][0])-64}.{SplicedBuildNum[2]}.0.0,0"
+                                RequestedVersion = pallasRequestedVersion,
+                                RestoreVersion = $"{SplicedBuildNum[0]}.{((int)SplicedBuildNum[1][0]) - 64}.{SplicedBuildNum[2]}.0.0,0",
+                                Supervised = pallasSupervised
                             });
 
                         else

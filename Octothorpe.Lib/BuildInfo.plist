@@ -1638,12 +1638,118 @@
 	</dict>
 	<key>macOS</key>
 	<dict>
+		<key>11.0</key>
+		<dict>
+			<key>20A4299v</key>
+			<dict>
+				<key>Beta</key>
+				<string>1</string>
+				<key>Date</key>
+				<integer>20200622</integer>
+			</dict>
+			<key>20A4300b</key>
+			<dict>
+				<key>Beta</key>
+				<string>2</string>
+				<key>Date</key>
+				<real>20200707</real>
+			</dict>
+			<key>20A5323l</key>
+			<dict>
+				<key>Beta</key>
+				<string>3</string>
+				<key>Date</key>
+				<real>20200722</real>
+			</dict>
+			<key>20A5343i</key>
+			<dict>
+				<key>Beta</key>
+				<string>4</string>
+				<key>Date</key>
+				<real>20200804</real>
+			</dict>
+			<key>20A5343j</key>
+			<dict>
+				<key>Beta</key>
+				<string>4</string>
+				<key>Date</key>
+				<real>20200806</real>
+			</dict>
+			<key>20A5354i</key>
+			<dict>
+				<key>Beta</key>
+				<string>5</string>
+				<key>Date</key>
+				<real>20200820</real>
+			</dict>
+			<key>20A5364e</key>
+			<dict>
+				<key>Beta</key>
+				<string>6</string>
+				<key>Date</key>
+				<real>20200903</real>
+			</dict>
+			<key>20A5374g</key>
+			<dict>
+				<key>Beta</key>
+				<string>7</string>
+				<key>Date</key>
+				<real>20200917</real>
+			</dict>
+			<key>20A5374i</key>
+			<dict>
+				<key>Beta</key>
+				<string>8</string>
+				<key>Date</key>
+				<real>20200922</real>
+			</dict>
+			<key>20A5384c</key>
+			<dict>
+				<key>Beta</key>
+				<string>9</string>
+				<key>Date</key>
+				<real>20200929</real>
+			</dict>
+			<key>20A5395g</key>
+			<dict>
+				<key>Beta</key>
+				<string>10</string>
+				<key>Date</key>
+				<real>20201014</real>
+			</dict>
+			<key>20A2411</key>
+			<dict>
+				<key>Date</key>
+				<real>20201110</real>
+			</dict>
+		</dict>
 		<key>11.0.1</key>
 		<dict>
+			<key>20B5012d</key>
+			<dict>
+				<key>Beta</key>
+				<string>1</string>
+				<key>Date</key>
+				<real>20201028</real>
+			</dict>
+			<key>20B5022a</key>
+			<dict>
+				<key>Date</key>
+				<real>20201105</real>
+				<key>Suffix</key>
+				<string>RC</string>
+			</dict>
+			<key>20B28</key>
+			<dict>
+				<key>Date</key>
+				<real>20201110</real>
+				<key>Suffix</key>
+				<string>RC 2</string>
+			</dict>
 			<key>20B29</key>
 			<dict>
 				<key>Date</key>
-				<integer>20201112</integer>
+				<real>20201112</real>
 			</dict>
 			<key>20B50</key>
 			<dict>

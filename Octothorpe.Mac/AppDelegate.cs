@@ -1,10 +1,10 @@
-﻿using AppKit;
+using AppKit;
 using Foundation;
 
 namespace Octothorpe.Mac
 {
 	[Register("AppDelegate")]
-	public class AppDelegate : NSApplicationDelegate
+	public partial class AppDelegate : NSApplicationDelegate
 	{
 		MainWindowController mainWindowController;
 
@@ -22,5 +22,13 @@ namespace Octothorpe.Mac
 		{
 			// Insert code here to tear down your application
 		}
+
+        #region Custom actions
+		partial void UpdateSourceChanged(NSMenuItem sender)
+        {
+			mainWindowController.ParserModeChanged(sender.Title);
+		}
+
+		#endregion
 	}
 }

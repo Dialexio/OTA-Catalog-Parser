@@ -35,7 +35,8 @@ namespace Octothorpe.Mac
 {
     public partial class MainWindowController : NSWindowController
     {
-        private bool DisplayWikiMarkup = true, Pallas = false;
+        private bool DisplayWikiMarkup = true;
+        private string DisplayMode { get; set; } = "Mesu Mode";
         private NSAlert alert;
         private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + "DeviceInfo.plist");
         private Parser parser = new Parser();
@@ -57,21 +58,12 @@ namespace Octothorpe.Mac
         {
             base.AwakeFromNib();
 
-            // Populate the Device dropdown box
+            // Populate the Class dropdown box
             foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
-            {
-                // Prevent drawing a separator at the top
-                if (DeviceSelection.ItemCount > 0)
-                    DeviceSelection.Menu.AddItem(NSMenuItem.SeparatorItem);
+                ClassSelection.AddItem(deviceClass.Key);
 
-                // Group headers
-                DeviceSelection.AddItem(deviceClass.Key);
-                DeviceSelection.LastItem.Action = null;
-                DeviceSelection.LastItem.Enabled = false;
-
-                foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
-                    DeviceSelection.AddItem(device.Key);
-            }
+            ClassSelection.SelectItem(0);
+            ClassChanged(ClassSelection);
         }
 
         public new MainWindow Window
@@ -90,12 +82,12 @@ namespace Octothorpe.Mac
                 FilePrompt.CanChooseDirectories = false;
 
                 if (FilePrompt.RunModal() == 1)
-                    NSTextFieldFile.StringValue = FilePrompt.Url.Path;
+                    MesuFileLoc.StringValue = FilePrompt.Url.Path;
 
                 else
                     throw new ArgumentException("nofile");
 
-                parser.LoadPlist(NSTextFieldFile.StringValue);
+                parser.LoadPlist(MesuFileLoc.StringValue);
                 NSButtonParse.Enabled = true;
             }
 
@@ -159,6 +151,21 @@ namespace Octothorpe.Mac
                 TableHeaders.State = NSCellStateValue.Off;
         }
 
+        partial void ClassChanged(NSPopUpButton sender)
+        {
+            NSDictionary deviceClass = (NSDictionary)deviceInfo[ClassSelection.SelectedItem.Title];
+
+            // Make sure the dropdown box for devices is empty
+            DeviceSelection.RemoveAllItems();
+
+            // And populate the dropdown box for devices
+            foreach (KeyValuePair<string, NSObject> device in deviceClass)
+                DeviceSelection.AddItem(device.Key);
+
+            DeviceSelection.SelectItem(0);
+            DeviceChanged(DeviceSelection);
+        }
+
         partial void DeviceChanged(NSPopUpButton sender)
         {
             string SelectedDevice = DeviceSelection.SelectedItem.Title;
@@ -175,12 +182,12 @@ namespace Octothorpe.Mac
                         ModelSelection.AddItem(model.Key);
 
                     ModelSelection.SelectItem(0);
-                    DeviceModelUpdate(ModelSelection);
+                    ModelChanged(ModelSelection);
                 }
             }
         }
 
-        partial void DeviceModelUpdate(NSPopUpButton sender)
+        partial void ModelChanged(NSPopUpButton sender)
         {
             bool loopBreak = false;
             string ModelSelected = (string)ModelSelection.SelectedItem.Title;
@@ -224,36 +231,42 @@ namespace Octothorpe.Mac
 
                 parser.FullTable = (TableHeaders.State == NSCellStateValue.On);
 
-                if (Pallas)
+                if (DisplayMode == "Pallas Mode")
                 {
-                    parser.PallasBuild = PallasBuild.StringValue;
-                    parser.PallasVersion = (uint.TryParse(PallasVersion.StringValue, out var verstring)) ?
-                        $"{verstring}.0" :
-                        PallasVersion.StringValue;
+                    parser.PallasCurrentBuild = PallasCurrentBuild.StringValue;
+                    parser.PallasCurrentVersion = (uint.TryParse(PallasCurrentVersion.StringValue, out var curverstring)) ?
+                        $"{curverstring}.0" :
+                        PallasCurrentVersion.StringValue;
+
+                    parser.PallasRequestedVersion = (uint.TryParse(PallasRequestedVersion.StringValue, out var reqverstring)) ?
+                        $"{reqverstring}.0" :
+                        PallasCurrentVersion.StringValue;
+
+                    parser.PallasSupervised = (PallasSupervised.State == NSCellStateValue.On);
                 }
 
                 else
                 {
-                    parser.RemoveStubs = (NSButtonRemoveStubs.State == NSCellStateValue.On);
+                    parser.RemoveStubs = (MesuRemoveStubs.State == NSCellStateValue.On);
 
                     try
                     {
                         // Set maximum version if one was specified
-                        if (string.IsNullOrEmpty(NSTextFieldMax.StringValue) == false)
+                        if (string.IsNullOrEmpty(MaxVersion.StringValue) == false)
                         {
                             // Doing it like this converts an integer, e.g. "11" into "11.0"
-                            parser.Maximum = (uint.TryParse(NSTextFieldMax.StringValue, out var verstring)) ?
+                            parser.Maximum = (uint.TryParse(MaxVersion.StringValue, out var verstring)) ?
                                 new Version($"{verstring}.0") :
-                                new Version(NSTextFieldMax.StringValue);
+                                new Version(MaxVersion.StringValue);
                         }
 
                         // Set minimum version if one was specified
-                        if (string.IsNullOrEmpty(NSTextFieldMin.StringValue) == false)
+                        if (string.IsNullOrEmpty(MesuMinVersion.StringValue) == false)
                         {
                             // Doing it like this converts an integer, e.g. "11" into "11.0"
-                            parser.Minimum = (uint.TryParse(NSTextFieldMin.StringValue, out var verstring)) ?
+                            parser.Minimum = (uint.TryParse(MesuMinVersion.StringValue, out var verstring)) ?
                                 new Version($"{verstring}.0") :
-                                new Version(NSTextFieldMax.StringValue);
+                                new Version(MaxVersion.StringValue);
                         }
                     }
 
@@ -263,7 +276,7 @@ namespace Octothorpe.Mac
                     }
                 }
 
-                NSTextViewOutput.Value = parser.ParseAssets(Pallas);
+                NSTextViewOutput.Value = parser.ParseAssets(DisplayMode == "Pallas Mode");
             }
 
             catch (ArgumentException message)
@@ -368,41 +381,41 @@ namespace Octothorpe.Mac
                     case "Custom URL":
                         NSBoxFile.Hidden = true;
                         NSBoxLoc.Hidden = false;
-                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        NSTextFieldLoc.Enabled = true;
-                        parser.LoadPlist(NSTextFieldLoc.StringValue);
+                        MesuURL.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        MesuURL.Enabled = true;
+                        parser.LoadPlist(MesuURL.StringValue);
                         break;
 
                     case "audioOS (Public)":
                         NSBoxFile.Hidden = true;
                         NSBoxLoc.Hidden = false;
-                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        NSTextFieldLoc.Enabled = false;
-                        parser.LoadPlist(NSTextFieldLoc.StringValue);
+                        MesuURL.StringValue = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        MesuURL.Enabled = false;
+                        parser.LoadPlist(MesuURL.StringValue);
                         break;
 
                     case "iOS (Public)":
                         NSBoxFile.Hidden = true;
                         NSBoxLoc.Hidden = false;
-                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        NSTextFieldLoc.Enabled = false;
-                        parser.LoadPlist(NSTextFieldLoc.StringValue);
+                        MesuURL.StringValue = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        MesuURL.Enabled = false;
+                        parser.LoadPlist(MesuURL.StringValue);
                         break;
 
                     case "tvOS (Public)":
                         NSBoxFile.Hidden = true;
                         NSBoxLoc.Hidden = false;
-                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        NSTextFieldLoc.Enabled = true;
-                        parser.LoadPlist(NSTextFieldLoc.StringValue);
+                        MesuURL.StringValue = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        MesuURL.Enabled = true;
+                        parser.LoadPlist(MesuURL.StringValue);
                         break;
 
                     case "watchOS (Public)":
                         NSBoxFile.Hidden = true;
                         NSBoxLoc.Hidden = false;
-                        NSTextFieldLoc.StringValue = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        NSTextFieldLoc.Enabled = false;
-                        parser.LoadPlist(NSTextFieldLoc.StringValue);
+                        MesuURL.StringValue = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        MesuURL.Enabled = false;
+                        parser.LoadPlist(MesuURL.StringValue);
                         break;
 
                     default:
@@ -444,7 +457,7 @@ namespace Octothorpe.Mac
         {
             try
             {
-                parser.LoadPlist(NSTextFieldLoc.StringValue);
+                parser.LoadPlist(MesuURL.StringValue);
                 NSButtonParse.Enabled = true;
             }
             
@@ -482,12 +495,16 @@ namespace Octothorpe.Mac
             }
         }
 
-        partial void UpdateSourceChanged(NSButton sender)
+        public void ParserModeChanged(string mode)
         {
-            Pallas = (sender.Title == "Pallas");
-            MinVerField.Hidden = Pallas;
-            PallasView.Hidden = !Pallas;
-            PlistView.Hidden = Pallas;
+            DisplayMode = mode;
+
+            MesuOptional.Hidden = (DisplayMode == "Pallas Mode");
+            MesuView.Hidden = (DisplayMode == "Pallas Mode");
+            PallasOptional.Hidden = (DisplayMode != "Pallas Mode");
+            PallasView.Hidden = (DisplayMode != "Pallas Mode");
+
+            NSTextViewOutput.Value = $"Parser is now in {DisplayMode}.";
         }
     }
 }

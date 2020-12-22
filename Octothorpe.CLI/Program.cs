@@ -99,13 +99,13 @@ namespace Octothorpe.CLI
                         break;
 
                     case "-pb":
-                        parser.PallasBuild = args[i++];
+                        parser.PallasCurrentBuild = args[i++];
 
                         Pallas = true;
                         break;
 
                     case "-pv":
-                        parser.PallasVersion = args[i++];
+                        parser.PallasCurrentVersion = args[i++];
 
                         Pallas = true;
                         break;

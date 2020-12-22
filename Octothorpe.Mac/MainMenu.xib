@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -279,6 +279,23 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Mode" id="CB2-19-U6Y">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Mode" id="6QW-Ed-e1F">
+                        <items>
+                            <menuItem title="Mesu Mode" keyEquivalent="1" id="8CN-Zt-w7o">
+                                <connections>
+                                    <action selector="UpdateSourceChanged:" target="Voe-Tx-rLC" id="UgI-sd-gjl"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Pallas Mode" keyEquivalent="2" id="t4c-4b-jAS">
+                                <connections>
+                                    <action selector="UpdateSourceChanged:" target="Voe-Tx-rLC" id="8H6-Bk-Cv9"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
                 <menuItem title="Window" id="aUF-d1-5bR">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
@@ -304,19 +321,8 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Help" hidden="YES" enabled="NO" id="wpr-3q-Mcd">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
-                        <items>
-                            <menuItem title="Octothorpe.Mac Help" enabled="NO" keyEquivalent="?" id="FKE-Sm-Kum">
-                                <connections>
-                                    <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
-                                </connections>
-                            </menuItem>
-                        </items>
-                    </menu>
-                </menuItem>
             </items>
+            <point key="canvasLocation" x="122" y="154"/>
         </menu>
         <menu id="nZ8-JY-s8g">
             <items>
@@ -665,7 +671,20 @@
                         </items>
                     </menu>
                 </menuItem>
+                <menuItem title="Help" hidden="YES" enabled="NO" id="wpr-3q-Mcd">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
+                        <items>
+                            <menuItem title="Octothorpe.Mac Help" enabled="NO" keyEquivalent="?" id="FKE-Sm-Kum">
+                                <connections>
+                                    <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
             </items>
+            <point key="canvasLocation" x="121" y="29"/>
         </menu>
     </objects>
 </document>

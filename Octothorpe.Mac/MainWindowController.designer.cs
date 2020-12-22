@@ -13,13 +13,34 @@ namespace Octothorpe.Mac
 	partial class MainWindowController
 	{
 		[Outlet]
+		AppKit.NSPopUpButton ClassSelection { get; set; }
+
+		[Outlet]
 		AppKit.NSPopUpButton DeviceSelection { get; set; }
 
 		[Outlet]
 		AppKit.NSPopUpButton FileSelection { get; set; }
 
 		[Outlet]
-		AppKit.NSView MinVerField { get; set; }
+		AppKit.NSTextField MaxVersion { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField MesuFileLoc { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField MesuMinVersion { get; set; }
+
+		[Outlet]
+		AppKit.NSView MesuOptional { get; set; }
+
+		[Outlet]
+		AppKit.NSButton MesuRemoveStubs { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField MesuURL { get; set; }
+
+		[Outlet]
+		AppKit.NSView MesuView { get; set; }
 
 		[Outlet]
 		AppKit.NSPopUpButton ModelSelection { get; set; }
@@ -34,34 +55,25 @@ namespace Octothorpe.Mac
 		AppKit.NSButton NSButtonParse { get; set; }
 
 		[Outlet]
-		AppKit.NSButton NSButtonRemoveStubs { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField NSTextFieldFile { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField NSTextFieldLoc { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField NSTextFieldMax { get; set; }
-
-		[Outlet]
-		AppKit.NSTextField NSTextFieldMin { get; set; }
-
-		[Outlet]
 		AppKit.NSTextView NSTextViewOutput { get; set; }
 
 		[Outlet]
-		AppKit.NSTextField PallasBuild { get; set; }
+		AppKit.NSTextField PallasCurrentBuild { get; set; }
 
 		[Outlet]
-		AppKit.NSTextField PallasVersion { get; set; }
+		AppKit.NSTextField PallasCurrentVersion { get; set; }
+
+		[Outlet]
+		AppKit.NSView PallasOptional { get; set; }
+
+		[Outlet]
+		AppKit.NSTextField PallasRequestedVersion { get; set; }
+
+		[Outlet]
+		AppKit.NSButton PallasSupervised { get; set; }
 
 		[Outlet]
 		AppKit.NSView PallasView { get; set; }
-
-		[Outlet]
-		AppKit.NSView PlistView { get; set; }
 
 		[Outlet]
 		AppKit.NSButton ShowBeta { get; set; }
@@ -75,11 +87,14 @@ namespace Octothorpe.Mac
 		[Action ("ChangeOutputFormat:")]
 		partial void ChangeOutputFormat (AppKit.NSButton sender);
 
+		[Action ("ClassChanged:")]
+		partial void ClassChanged (AppKit.NSPopUpButton sender);
+
 		[Action ("DeviceChanged:")]
 		partial void DeviceChanged (AppKit.NSPopUpButton sender);
 
-		[Action ("DeviceModelUpdate:")]
-		partial void DeviceModelUpdate (AppKit.NSPopUpButton sender);
+		[Action ("ModelChanged:")]
+		partial void ModelChanged (AppKit.NSPopUpButton sender);
 
 		[Action ("ParsingSTART:")]
 		partial void ParsingSTART (AppKit.NSButton sender);
@@ -89,12 +104,14 @@ namespace Octothorpe.Mac
 
 		[Action ("SourceEdited:")]
 		partial void PlistPathEdited (AppKit.NSTextField sender);
-
-		[Action ("UpdateSourceChanged:")]
-		partial void UpdateSourceChanged (AppKit.NSButton sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ClassSelection != null) {
+				ClassSelection.Dispose ();
+				ClassSelection = null;
+			}
+
 			if (DeviceSelection != null) {
 				DeviceSelection.Dispose ();
 				DeviceSelection = null;
@@ -103,6 +120,41 @@ namespace Octothorpe.Mac
 			if (FileSelection != null) {
 				FileSelection.Dispose ();
 				FileSelection = null;
+			}
+
+			if (MaxVersion != null) {
+				MaxVersion.Dispose ();
+				MaxVersion = null;
+			}
+
+			if (MesuFileLoc != null) {
+				MesuFileLoc.Dispose ();
+				MesuFileLoc = null;
+			}
+
+			if (MesuMinVersion != null) {
+				MesuMinVersion.Dispose ();
+				MesuMinVersion = null;
+			}
+
+			if (MesuOptional != null) {
+				MesuOptional.Dispose ();
+				MesuOptional = null;
+			}
+
+			if (MesuRemoveStubs != null) {
+				MesuRemoveStubs.Dispose ();
+				MesuRemoveStubs = null;
+			}
+
+			if (MesuURL != null) {
+				MesuURL.Dispose ();
+				MesuURL = null;
+			}
+
+			if (MesuView != null) {
+				MesuView.Dispose ();
+				MesuView = null;
 			}
 
 			if (ModelSelection != null) {
@@ -125,54 +177,39 @@ namespace Octothorpe.Mac
 				NSButtonParse = null;
 			}
 
-			if (NSButtonRemoveStubs != null) {
-				NSButtonRemoveStubs.Dispose ();
-				NSButtonRemoveStubs = null;
-			}
-
-			if (NSTextFieldFile != null) {
-				NSTextFieldFile.Dispose ();
-				NSTextFieldFile = null;
-			}
-
-			if (NSTextFieldLoc != null) {
-				NSTextFieldLoc.Dispose ();
-				NSTextFieldLoc = null;
-			}
-
-			if (NSTextFieldMax != null) {
-				NSTextFieldMax.Dispose ();
-				NSTextFieldMax = null;
-			}
-
-			if (NSTextFieldMin != null) {
-				NSTextFieldMin.Dispose ();
-				NSTextFieldMin = null;
-			}
-
 			if (NSTextViewOutput != null) {
 				NSTextViewOutput.Dispose ();
 				NSTextViewOutput = null;
 			}
 
-			if (PallasBuild != null) {
-				PallasBuild.Dispose ();
-				PallasBuild = null;
+			if (PallasCurrentBuild != null) {
+				PallasCurrentBuild.Dispose ();
+				PallasCurrentBuild = null;
 			}
 
-			if (PallasVersion != null) {
-				PallasVersion.Dispose ();
-				PallasVersion = null;
+			if (PallasCurrentVersion != null) {
+				PallasCurrentVersion.Dispose ();
+				PallasCurrentVersion = null;
+			}
+
+			if (PallasOptional != null) {
+				PallasOptional.Dispose ();
+				PallasOptional = null;
+			}
+
+			if (PallasRequestedVersion != null) {
+				PallasRequestedVersion.Dispose ();
+				PallasRequestedVersion = null;
+			}
+
+			if (PallasSupervised != null) {
+				PallasSupervised.Dispose ();
+				PallasSupervised = null;
 			}
 
 			if (PallasView != null) {
 				PallasView.Dispose ();
 				PallasView = null;
-			}
-
-			if (PlistView != null) {
-				PlistView.Dispose ();
-				PlistView = null;
 			}
 
 			if (ShowBeta != null) {
@@ -183,11 +220,6 @@ namespace Octothorpe.Mac
 			if (TableHeaders != null) {
 				TableHeaders.Dispose ();
 				TableHeaders = null;
-			}
-
-			if (MinVerField != null) {
-				MinVerField.Dispose ();
-				MinVerField = null;
 			}
 		}
 	}
