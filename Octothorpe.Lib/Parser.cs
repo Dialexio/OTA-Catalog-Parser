@@ -141,7 +141,7 @@ namespace Octothorpe.Lib
                 GetPallasEntries();
 
             else
-                AddPlistEntries();
+                GetMesuEntries();
 
 
             if (wikiMarkup)
@@ -153,62 +153,6 @@ namespace Octothorpe.Lib
 
             else
                 return OutputHumanFormat();
-        }
-
-        private void AddPlistEntries()
-        {
-            List<Task> AssetTasks = new List<Task>();
-
-            // Look at every item in the NSArray named "Assets."
-            foreach (object entry in Assets)
-            {
-                AssetTasks.Add(Task.Factory.StartNew( () => {
-                    bool matched = false;
-                    OTAPackage package = new OTAPackage((Dictionary<string, object>)entry); // Feed the info into a custom object so we can easily pull info and sort.
-
-                    // Beta check.
-                    if (showBeta == false && package.ActualReleaseType > 0)
-                        return;
-
-                    // Device check.
-                    matched = package.SupportedDevices.Contains(Device);
-
-                    // Model check, if needed.
-                    if (matched && ModelNeedsChecking)
-                    {
-                        matched = false; // Skipping unless we can verify we want it.
-
-                        // Make sure "SupportedDeviceModels" exists before checking it.
-                        if (package.SupportedDeviceModels.Count > 0)
-                            matched = (package.SupportedDeviceModels.Contains(Model));
-                    }
-
-                    // Stub check.
-                    // But first, determine if we need to add the stub blurb.
-                    if (Regex.IsMatch(Device, "iPad[4-6]|iPhone[6-8]|iPod7,1") && package.AllowableOTA == false && package.ActualBuild == "99Z999")
-                        AddStubBlurb = true;
-
-                    if (removeStubs && package.AllowableOTA == false)
-                        return;
-
-                    // If it's still a match, check the OS version.
-                    // If the OS version doesn't fit what we're
-                    // searching for, continue to the next entry.
-                    if (matched)
-                    {
-                        if (max != null && max.CompareTo(new Version(package.MarketingVersion)) < 0)
-                            return;
-                        if (minimum != null && minimum.CompareTo(new Version(package.MarketingVersion)) > 0)
-                            return;
-
-                        // It survived the checks!
-                        Packages.Add(package);
-                    }
-                }));
-            }
-            Task.WaitAll(AssetTasks.ToArray());
-
-            Packages.Sort();
         }
 
         private void Cleanup()
@@ -301,8 +245,11 @@ namespace Octothorpe.Lib
         private void ErrorCheck(bool Pallas)
         {
             // Device check.
-            if (Device == null || Regex.IsMatch(Device, @"(AppleTV|AudioAccessory|iMac(Pro)?|iPad|iPhone|iPod|Mac(mini|Pro)?|MacBook(Air|Pro)?|Watch)(\d)?\d,\d") == false)
+            if (Device == null || Regex.IsMatch(Device, @"(ADP|AppleTV|AudioAccessory|iMac(Pro)?|iPad|iPhone|iPod|Mac(mini|Pro)?|MacBook(Air|Pro)?|Watch)(\d)?\d,\d") == false)
                 throw new ArgumentException("device");
+
+            if ((Device.Contains("ADP") || Device.Contains("Mac")) && Pallas == false)
+                throw new ArgumentException("needspallas");
 
             DeviceIsWatch = Regex.IsMatch(Device, @"Watch\d,\d");
 
@@ -316,17 +263,69 @@ namespace Octothorpe.Lib
                     throw new ArgumentException("model");
             }
 
-            if (Pallas)
-            {
-                if (string.IsNullOrEmpty(pallasCurrentBuild))
-                    throw new ArgumentException();
+            // Make sure we have a build number to search from via Pallas.
+            if (Pallas && Regex.IsMatch(pallasCurrentBuild, @"\d{2}[A-Z]\d{2}\d?\d?[a-z]?") == false)
+                throw new ArgumentException("badbuild");
 
-                else if (char.IsDigit(pallasCurrentBuild[0]) == false)
-                    throw new ArgumentException("badbuild");
-            }
-
-            else if (Pallas == false && Assets == null)
+            // If we're not using Pallas, we need to check a Mesu-formatted plist
+            else if (Assets == null)
                 throw new ArgumentException("nofile");
+        }
+
+        private void GetMesuEntries()
+        {
+            List<Task> AssetTasks = new List<Task>();
+
+            // Look at every item in the NSArray named "Assets."
+            foreach (object entry in Assets)
+            {
+                AssetTasks.Add(Task.Factory.StartNew(() => {
+                    bool matched = false;
+                    OTAPackage package = new OTAPackage((Dictionary<string, object>)entry); // Feed the info into a custom object so we can easily pull info and sort.
+
+                    // Beta check.
+                    if (showBeta == false && package.ActualReleaseType > 0)
+                        return;
+
+                    // Device check.
+                    matched = package.SupportedDevices.Contains(Device);
+
+                    // Model check, if needed.
+                    if (matched && ModelNeedsChecking)
+                    {
+                        matched = false; // Skipping unless we can verify we want it.
+
+                        // Make sure "SupportedDeviceModels" exists before checking it.
+                        if (package.SupportedDeviceModels.Count > 0)
+                            matched = (package.SupportedDeviceModels.Contains(Model));
+                    }
+
+                    // Stub check.
+                    // But first, determine if we need to add the stub blurb.
+                    if (Regex.IsMatch(Device, "iPad[4-6]|iPhone[6-8]|iPod7,1") && package.AllowableOTA == false && package.ActualBuild == "99Z999")
+                        AddStubBlurb = true;
+
+                    if (removeStubs && package.AllowableOTA == false)
+                        return;
+
+                    // If it's still a match, check the OS version.
+                    // If the OS version doesn't fit what we're
+                    // searching for, continue to the next entry.
+                    if (matched)
+                    {
+                        if (max != null && max.CompareTo(new Version(package.MarketingVersion)) < 0)
+                            return;
+                        if (minimum != null && minimum.CompareTo(new Version(package.MarketingVersion)) > 0)
+                            return;
+
+                        // It survived the checks!
+                        Packages.Add(package);
+                    }
+                }));
+            }
+            Task.WaitAll(AssetTasks.ToArray());
+
+            Packages.Sort();
         }
 
         private void GetPallasEntries()

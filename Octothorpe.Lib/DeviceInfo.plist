@@ -154,6 +154,19 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>Developer Transition Kit</key>
+	<dict>
+		<key>Developer Transition Kit (2020)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>J273aAP</key>
+				<string>ADP3,2</string>
+			</dict>
+		</dict>
+	</dict>
 	<key>HomePod</key>
 	<dict>
 		<key>HomePod 1st generation</key>
@@ -221,7 +234,7 @@
 				<string>iMac17,1</string>
 			</dict>
 		</dict>
-		<key>iMac (27&quot; Mid 2019)</key>
+		<key>iMac (Retina 5K, 27-inch, 2019)</key>
 		<dict>
 			<key>HeaderLevel</key>
 			<integer>3</integer>

@@ -287,7 +287,7 @@ namespace Octothorpe.Mac
                         alert = new NSAlert()
                         {
                             MessageText = "Build Not Specified",
-                            InformativeText = "A build number was specified."
+                            InformativeText = "A build number was not specified."
                         };
                         break;
 
@@ -312,6 +312,14 @@ namespace Octothorpe.Mac
                         {
                             MessageText = "Model Not Specified",
                             InformativeText = "This device requires you to specify a model number. For example, N71AP is a model number for the iPhone 6S."
+                        };
+                        break;
+
+                    case "needspallas":
+                        alert = new NSAlert()
+                        {
+                            MessageText = "Incorrect Source Selected",
+                            InformativeText = "This device's software updates are found via Pallas, not Mesu."
                         };
                         break;
 
