@@ -112,9 +112,9 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0">Installed OS Version:</Label>
-                    <TextBox Grid.Column="1" Grid.Row="0" Name="PallasCurrentVersion" />
+                    <TextBox Grid.Column="1" Grid.Row="0" Name="PallasCurrentVersion" VerticalContentAlignment="Center" />
                     <Label Grid.Column="0" Grid.Row="2">Build Number:</Label>
-                    <TextBox Grid.Column="1" Grid.Row="2" Name="PallasCurrentBuild" />
+                    <TextBox Grid.Column="1" Grid.Row="2" Name="PallasCurrentBuild" VerticalContentAlignment="Center" />
                 </Grid>
                 <GroupBox BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Grid.Row="7" Header="Optional" Margin="0,10">
                     <Grid>
