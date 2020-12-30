@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2019 Dialexio
+ * Copyright (c) 2021 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -40,24 +40,18 @@ namespace Octothorpe
         private Microsoft.Win32.OpenFileDialog FilePrompt;
         private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}DeviceInfo.plist");
         private Parser parser = new Parser();
+        private string DisplayMode { get; set; } = "Mesu Mode";
 
-
+        
         public MainWindow()
         {
             InitializeComponent();
 
+            // Populate the Class dropdown box
             foreach (KeyValuePair<string, NSObject> deviceClass in deviceInfo)
-            {
-                // Prevent drawing a separator at the top
-                if (ComboBoxDevice.Items.Count > 0)
-                    ComboBoxDevice.Items.Add(new Separator());
+                ClassSelection.Items.Add(deviceClass.Key);
 
-                // Group headers
-                ComboBoxDevice.Items.Add(new ComboBoxItem() { Content = deviceClass.Key, IsEnabled = false });
-
-                foreach (KeyValuePair<string, NSObject> device in (NSDictionary)deviceInfo.Get(deviceClass.Key))
-                    ComboBoxDevice.Items.Add(new ComboBoxItem() { Content = $"\t{device.Key}" });
-            }
+            ClassSelection.SelectedIndex = 0;
         }
 
         private void BrowseForFile(object sender, RoutedEventArgs e)
@@ -108,34 +102,51 @@ namespace Octothorpe
             }
         }
 
+        private void ClassChanged(object sender, SelectionChangedEventArgs e)
+        {
+            NSDictionary deviceClass = (NSDictionary)deviceInfo[(string)ClassSelection.SelectedItem];
+
+            // Make sure the dropdown box for devices is empty
+            DeviceSelection.Items.Clear();
+
+            // And populate the dropdown box for devices
+            foreach (KeyValuePair<string, NSObject> device in deviceClass)
+                DeviceSelection.Items.Add(new ComboBoxItem() { Content = device.Key });
+
+            DeviceSelection.SelectedIndex = 0;
+            DeviceChanged((ComboBoxItem)DeviceSelection.SelectedItem, null);
+        }
+
+
         private void DeviceChanged(object sender, SelectionChangedEventArgs e)
         {
-            string SelectedDevice = (string)((ComboBoxItem)ComboBoxDevice.SelectedItem).Content.Substring(1);
-
-            // Empty out the dropdown box for models
-            ComboBoxModel.Items.Clear();
-
-            foreach (NSDictionary deviceClass in deviceInfo.Values)
+            // When we empty out the dropdown box, it changes the selected item and will cause a NullReferenceException.
+            try
             {
-                if (deviceClass.TryGetValue(SelectedDevice, out NSObject DeviceDict))
-                {
-                    // Repopulate the dropdown box for models
-                    foreach (KeyValuePair<string, NSObject> model in (NSDictionary)((NSDictionary)DeviceDict)["Models"])
-                        ComboBoxModel.Items.Add(new ComboBoxItem() { Content = model.Key });
+                string SelectedDevice = (string)(((ComboBoxItem)DeviceSelection.SelectedItem).Content);
 
-                    ComboBoxModel.SelectedIndex = 0;
-                }
+                // Empty out the dropdown box for models
+                ModelSelection.Items.Clear();
+
+                // Repopulate the dropdown box for models
+                foreach (KeyValuePair<string, NSObject> model in (NSDictionary)(((NSDictionary)((NSDictionary)deviceInfo[(string)ClassSelection.SelectedItem])[SelectedDevice])["Models"]))
+                    ModelSelection.Items.Add(new ComboBoxItem() { Content = model.Key });
+
+                ModelSelection.SelectedIndex = 0;
             }
+
+            catch (NullReferenceException)
+            { }
         }
 
         private void DeviceModelUpdate(object sender, SelectionChangedEventArgs e)
         {
             // Prevent a NullReferenceException when the model dropdown box is cleared
-            if (ComboBoxModel.Items.Count == 0)
+            if (ModelSelection.Items.Count == 0)
                 return;
 
             bool loopBreak = false;
-            string ModelSelected = (string)((ComboBoxItem)ComboBoxModel.SelectedItem).Content;
+            string ModelSelected = (string)((ComboBoxItem)ModelSelection.SelectedItem).Content;
 
             foreach (NSDictionary deviceClassDict in deviceInfo.Values)
             {
@@ -168,7 +179,7 @@ namespace Octothorpe
         {
             try
             {
-                parser.Model = (string)((ComboBoxItem)ComboBoxModel.SelectedItem).Content;
+                parser.Model = (string)((ComboBoxItem)ModelSelection.SelectedItem).Content;
                 parser.WikiMarkup = (RadioWiki.IsChecked == true);
 
                 parser.FullTable = CheckBoxFullTable.IsChecked.Value;
@@ -201,7 +212,7 @@ namespace Octothorpe
                     throw new ArgumentException("badvalue");
                 }
 
-                TextOutput.Text = parser.ParseAssets();
+                TextOutput.Text = parser.ParseAssets(false);
             }
 
             catch (ArgumentException message)
@@ -238,7 +249,7 @@ namespace Octothorpe
             }
         }
 
-        private void SourceChanged(object sender, SelectionChangedEventArgs e)
+        private void PlistChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
@@ -247,31 +258,31 @@ namespace Octothorpe
                     case "Custom URL...":
                     case "Custom URL…":
                     case "Custom URL":
-                        TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        parser.LoadPlist(TextBoxLoc.Text);
+                        MesuURL.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        parser.LoadPlist(MesuURL.Text);
                         break;
 
                     case "audioOS (Public)":
-                        TextBoxLoc.Text = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        parser.LoadPlist(TextBoxLoc.Text);
+                        MesuURL.Text = "https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        parser.LoadPlist(MesuURL.Text);
                         ButtonParse.IsEnabled = true;
                         break;
 
                     case "iOS (Public)":
-                        TextBoxLoc.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        parser.LoadPlist(TextBoxLoc.Text);
+                        MesuURL.Text = "https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        parser.LoadPlist(MesuURL.Text);
                         ButtonParse.IsEnabled = true;
                         break;
 
                     case "tvOS (Public)":
-                        TextBoxLoc.Text = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        parser.LoadPlist(TextBoxLoc.Text);
+                        MesuURL.Text = "https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        parser.LoadPlist(MesuURL.Text);
                         ButtonParse.IsEnabled = true;
                         break;
 
                     case "watchOS (Public)":
-                        TextBoxLoc.Text = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
-                        parser.LoadPlist(TextBoxLoc.Text);
+                        MesuURL.Text = "https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml";
+                        parser.LoadPlist(MesuURL.Text);
                         ButtonParse.IsEnabled = true;
                         break;
                 }
