@@ -38,7 +38,7 @@ namespace Octothorpe
     public partial class MainWindow : Window
     {
         private Microsoft.Win32.OpenFileDialog FilePrompt;
-        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}DeviceInfo.plist");
+        private NSDictionary deviceInfo = (NSDictionary)PropertyListParser.Parse($"{AppContext.BaseDirectory}DeviceInfo.plist");
         private Parser parser = new Parser();
         private string DisplayMode { get; set; } = "Mesu Mode";
 
@@ -183,36 +183,54 @@ namespace Octothorpe
                 parser.WikiMarkup = (RadioWiki.IsChecked == true);
 
                 parser.FullTable = CheckBoxFullTable.IsChecked.Value;
-                parser.RemoveStubs = CheckBoxRemoveStubs.IsChecked.Value;
                 parser.ShowBeta = CheckBoxBeta.IsChecked.Value;
 
-                try
+                if (DisplayMode == "Pallas Mode")
                 {
-                    // Set maximum version if one was specified
-                    if (String.IsNullOrEmpty(TextBoxMax.Text) == false)
+                    parser.PallasCurrentBuild = PallasCurrentBuild.Text;
+                    parser.PallasCurrentVersion = (uint.TryParse(PallasCurrentVersion.Text, out var curverstring)) ?
+                        $"{curverstring}.0" :
+                        PallasCurrentVersion.Text;
+
+                    parser.PallasRequestedVersion = (uint.TryParse(PallasRequestedVersion.Text, out var reqverstring)) ?
+                        $"{reqverstring}.0" :
+                        PallasCurrentVersion.Text;
+
+                    parser.PallasSupervised = (PallasSupervised.IsChecked.GetValueOrDefault());
+                }
+
+                else
+                {
+                    parser.RemoveStubs = CheckBoxRemoveStubs.IsChecked.Value;
+
+                    try
                     {
-                        // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Maximum = (uint.TryParse(TextBoxMax.Text, out var verstring)) ?
-                            new Version(TextBoxMax.Text + ".0") :
-                            new Version(TextBoxMax.Text);
+                        // Set maximum version if one was specified
+                        if (String.IsNullOrEmpty(TextBoxMax.Text) == false)
+                        {
+                            // Doing it like this converts an integer, e.g. "11" into "11.0"
+                            parser.Maximum = (uint.TryParse(TextBoxMax.Text, out var verstring)) ?
+                                new Version(TextBoxMax.Text + ".0") :
+                                new Version(TextBoxMax.Text);
+                        }
+
+                        // Set minimum version if one was specified
+                        if (String.IsNullOrEmpty(TextBoxMin.Text) == false)
+                        {
+                            // Doing it like this converts an integer, e.g. "11" into "11.0"
+                            parser.Minimum = (uint.TryParse(TextBoxMin.Text, out var verstring)) ?
+                                new Version(TextBoxMin.Text + ".0") :
+                                new Version(TextBoxMin.Text);
+                        }
                     }
 
-                    // Set minimum version if one was specified
-                    if (String.IsNullOrEmpty(TextBoxMin.Text) == false)
+                    catch (ArgumentException)
                     {
-                        // Doing it like this converts an integer, e.g. "11" into "11.0"
-                        parser.Minimum = (uint.TryParse(TextBoxMin.Text, out var verstring)) ?
-                            new Version(TextBoxMin.Text + ".0") :
-                            new Version(TextBoxMin.Text);
+                        throw new ArgumentException("badvalue");
                     }
                 }
 
-                catch (ArgumentException)
-                {
-                    throw new ArgumentException("badvalue");
-                }
-
-                TextOutput.Text = parser.ParseAssets(false);
+                TextOutput.Text = parser.ParseAssets(DisplayMode == "Pallas Mode");
             }
 
             catch (ArgumentException message)
@@ -332,6 +350,41 @@ namespace Octothorpe
 
                 ButtonParse.IsEnabled = false;
             }
+        }
+
+        private void ParserModeChanged(object sender, RoutedEventArgs e)
+        {
+            DisplayMode = ((string)(((MenuItem)sender).Header)).Substring(1);
+
+            MenuMesu.IsChecked = (DisplayMode != "Pallas Mode");
+            MenuPallas.IsChecked = (DisplayMode == "Pallas Mode");
+
+            PallasSupervised.IsChecked = false;
+        }
+    }
+
+    public class BooleanToVisibilityHider : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool flag = false;
+
+            if (value is bool)
+                flag = (bool)value;
+
+            else if (value is bool?)
+            {
+                bool? nullable = (bool?)value;
+                flag = nullable.HasValue ? nullable.Value : false;
+            }
+            return (flag ? Visibility.Visible : Visibility.Hidden);
+
+            throw new InvalidOperationException("Converter can only convert to value of type Visibility.");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new Exception("Invalid call - one way only");
         }
     }
 

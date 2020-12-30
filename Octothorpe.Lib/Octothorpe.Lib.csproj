@@ -4,10 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Dialexio</Authors>
     <Company />
-    <Copyright>Copyright ©2020 Dialexio.</Copyright>
+    <Copyright>Copyright ©2021 Dialexio.</Copyright>
     <PackageProjectUrl>https://github.com/Dialexio/OTA-Catalog-Parser</PackageProjectUrl>
-    <AssemblyVersion>2.2.0.15</AssemblyVersion>
-    <FileVersion>2.2.0.15</FileVersion>
+    <AssemblyVersion>2.2.0.16</AssemblyVersion>
+    <FileVersion>2.2.0.16</FileVersion>
     <Version>1.2</Version>
     <ReleaseVersion>2.2.0</ReleaseVersion>
   </PropertyGroup>

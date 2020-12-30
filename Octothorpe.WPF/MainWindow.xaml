@@ -4,13 +4,14 @@
         xmlns:octothorpe="clr-namespace:Octothorpe" Title="OTA Catalog Parser" MinWidth="800" MinHeight="550" Width="800" Height="550" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <octothorpe:BooleanToVisibilityHider x:Key="BoolToVisHider" />
         <octothorpe:InvertVisibilityConverter x:Key="InvertVis" />
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Mode">
-                <MenuItem Header="_Mesu Mode" IsChecked="True" />
-                <MenuItem Header="_Pallas Mode" />
+                <MenuItem Click="ParserModeChanged" Header="_Mesu Mode" IsChecked="True" Name="MenuMesu" />
+                <MenuItem Click="ParserModeChanged" Header="_Pallas Mode" Name="MenuPallas" />
             </MenuItem>
         </Menu>
         <Grid>
@@ -18,16 +19,17 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <Grid Margin="10,10,5,10" Name="GridForm">
+            <Grid Margin="10,10,5,10" Name="Form">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="15" />
                     <RowDefinition Height="15" />
                     <RowDefinition />
-                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="5*" />
                     <RowDefinition />
-                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="5*"/>
                     <RowDefinition />
-                    <RowDefinition Height="7*" />
+                    <RowDefinition Height="10*" />
+                    <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid Name="ClassDeviceModel" Row="3">
@@ -64,7 +66,7 @@
                         <ComboBox Grid.Column="1" Name="ModelSelection" SelectionChanged="DeviceModelUpdate" />
                     </Grid>
                 </Grid>
-                <Grid Name="Mesu" Row="5" VerticalAlignment="Center">
+                <Grid Name="Mesu" Row="5" VerticalAlignment="Center" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=MenuMesu, Path=IsChecked}">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
@@ -72,7 +74,7 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Label Content="Select source file:" Grid.Row="0" HorizontalContentAlignment="Center" />
-                    <ComboBox Grid.Row="1" HorizontalAlignment="Center" Name="FileSelection" SelectionChanged="PlistChanged" VerticalAlignment="Top" Width="170">
+                    <ComboBox Grid.Row="1" HorizontalAlignment="Center" Margin="0" MinWidth="170" Name="FileSelection" SelectionChanged="PlistChanged" VerticalAlignment="Top">
                         <ComboBoxItem Content="audioOS (Public)" />
                         <ComboBoxItem Content="iOS (Public)" />
                         <ComboBoxItem Content="tvOS (Public)" />
@@ -86,34 +88,68 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Content="Location:" HorizontalAlignment="Left" />
-                            <TextBox IsEnabled="{Binding ElementName=CustomURL, Path=IsSelected}" LostFocus="SourceEdited" Name="MesuURL" VerticalAlignment="Center" Grid.Column="1" />
+                            <Label Content="Location:" />
+                            <TextBox Grid.Column="1" IsEnabled="{Binding ElementName=CustomURL, Path=IsSelected}" LostFocus="SourceEdited" Name="MesuURL" VerticalContentAlignment="Center" />
                         </Grid>
                         <Grid Name="GridFile" VerticalAlignment="Top" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=LocalFile, Path=IsSelected, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBox IsEnabled="False" Margin="0,0,75,0" Name="TextBoxFile" VerticalAlignment="Center" />
-                            <Button Click="BrowseForFile" Content="Browse…" Margin="171,0,0,0" VerticalAlignment="Center" />
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" IsEnabled="False" Name="TextBoxFile" VerticalContentAlignment="Center" />
+                            <Button Grid.Column="1" Click="BrowseForFile" Content="Browse…" Margin="5,0,0,0" />
                         </Grid>
                     </Grid>
                 </Grid>
-                <GroupBox BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Grid.Row="7" Header="Optional" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid Margin="20,0" Name="Pallas" Row="5" Visibility="{Binding Converter={StaticResource InvertVis}, ElementName=Mesu, Path=Visibility}" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.75*" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="5" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0">Installed OS Version:</Label>
+                    <TextBox Grid.Column="1" Grid.Row="0" Name="PallasCurrentVersion" />
+                    <Label Grid.Column="0" Grid.Row="2">Build Number:</Label>
+                    <TextBox Grid.Column="1" Grid.Row="2" Name="PallasCurrentBuild" />
+                </Grid>
+                <GroupBox BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Grid.Row="7" Header="Optional" Margin="0,10">
                     <Grid>
-                        <CheckBox Content="Include table headers" HorizontalAlignment="Center" x:Name="CheckBoxFullTable" VerticalAlignment="Top" Margin="0,6,0,0" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=RadioWiki, Path=IsChecked}" />
-                        <CheckBox Content="Search for betas" HorizontalAlignment="Center" x:Name="CheckBoxBeta" VerticalAlignment="Top" IsChecked="True" Margin="0,26,0,0" />
-                        <CheckBox Content="Remove stubs" HorizontalAlignment="Center" x:Name="CheckBoxRemoveStubs" VerticalAlignment="Top" IsChecked="True" Margin="0,46,0,0" />
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,66,10,0" Width="165">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5" />
+                            <RowDefinition />
+                            <RowDefinition Height="5" />
+                            <RowDefinition />
+                            <RowDefinition Height="5" />
+                            <RowDefinition />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="4*" />
+                        </Grid.RowDefinitions>
+                        <CheckBox Content="Include table headers" Grid.Row="1" HorizontalAlignment="Center" Name="CheckBoxFullTable" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=RadioWiki, Path=IsChecked}" />
+                        <CheckBox Content="Search for betas" Grid.Row="3" HorizontalAlignment="Center" IsChecked="True" Name="CheckBoxBeta" />
+                        <CheckBox Content="Remove stubs" Grid.Row="5" HorizontalAlignment="Center" IsChecked="True" Name="CheckBoxRemoveStubs" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=MenuMesu, Path=IsChecked}" />
+                        <CheckBox Content="Device is supervised" Grid.Row="5" HorizontalAlignment="Center" Name="PallasSupervised" Visibility="{Binding Converter={StaticResource InvertVis}, ElementName=Mesu, Path=Visibility}" />
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Row="7" Width="165">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="0.5*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
+                                <RowDefinition Height="6" />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <Label Content="Minimum version:" Grid.Column="0" Grid.Row="0" x:Name="LabelMin" />
-                            <TextBox Grid.Column="1" Grid.Row="0" x:Name="TextBoxMin" VerticalAlignment="Center" />
+                            <Label Content="Minimum version:" Grid.Column="0" Grid.Row="0" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=MenuMesu, Path=IsChecked}" />
+                            <TextBox Grid.Column="1" Grid.Row="0" Name="TextBoxMin" VerticalContentAlignment="Center" Visibility="{Binding Converter={StaticResource BoolToVis}, ElementName=MenuMesu, Path=IsChecked}" />
 
-                            <Label Content="Maximum version:" Grid.Column="0" Grid.Row="1" x:Name="LabelMax" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <TextBox Grid.Column="1" Grid.Row="1" x:Name="TextBoxMax" VerticalAlignment="Center" />
+                            <Label Content="Requested version:" Grid.Column="0" Grid.Row="0" Visibility="{Binding Converter={StaticResource BoolToVisHider}, ElementName=PallasSupervised, Path=IsChecked}" />
+                            <TextBox Grid.Column="1" Grid.Row="0" Name="PallasRequestedVersion" VerticalContentAlignment="Center" Visibility="{Binding Converter={StaticResource BoolToVisHider}, ElementName=PallasSupervised, Path=IsChecked}" />
+
+                            <Label Content="Maximum version:" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <TextBox Grid.Column="1" Grid.Row="2" Name="TextBoxMax" VerticalContentAlignment="Center" />
                         </Grid>
                     </Grid>
                 </GroupBox>
@@ -122,7 +158,7 @@
                 <RadioButton Content="Human-readable format" Grid.Row="0" Name="RadioHuman" HorizontalAlignment="Center" Width="152" VerticalAlignment="Center" />
                 <RadioButton Content="The iPhone Wiki markup" Grid.Row="1" Name="RadioWiki" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" Width="152" />
 
-                <Button Content="Parse" Grid.Row="8" Name="ButtonParse" VerticalAlignment="Bottom" Click="ParsingSTART" HorizontalAlignment="Center" Width="58" IsDefault="True" />
+                <Button Click="ParsingSTART" Content="Parse" Grid.Row="9" HorizontalAlignment="Center" IsDefault="True" Name="ButtonParse" Width="58" />
             </Grid>
             <Grid Column="1">
                 <TextBox Name="TextOutput" IsReadOnly="True" IsEnabled="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="10" />

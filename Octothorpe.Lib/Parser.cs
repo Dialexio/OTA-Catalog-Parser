@@ -264,8 +264,11 @@ namespace Octothorpe.Lib
             }
 
             // Make sure we have a build number to search from via Pallas.
-            if (Pallas && Regex.IsMatch(pallasCurrentBuild, @"\d{2}[A-Z]\d{2}\d?\d?[a-z]?") == false)
-                throw new ArgumentException("badbuild");
+            if (Pallas)
+            {
+                if (Regex.IsMatch(pallasCurrentBuild, @"\d{2}[A-Z]\d{2}\d?\d?[a-z]?") == false)
+                    throw new ArgumentException("badbuild");
+            }
 
             // If we're not using Pallas, we need to check a Mesu-formatted plist
             else if (Assets == null)
@@ -336,7 +339,7 @@ namespace Octothorpe.Lib
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
             List<string> AssetAudiences = new List<string>(),
                 PackagesPresent = new List<string>();
-            NSDictionary BuildInfo = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "BuildInfo.plist");
+            NSDictionary BuildInfo = (NSDictionary)PropertyListParser.Parse($"{AppContext.BaseDirectory}BuildInfo.plist");
             OTAPackage package;
             RestClient Fido = new RestClient();
             RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
