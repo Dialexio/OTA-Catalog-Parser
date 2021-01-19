@@ -869,6 +869,36 @@
 				<string>12.4.8</string>
 			</dict>
 		</dict>
+		<key>12.4.9</key>
+		<dict>
+			<key>16H5</key>
+			<dict>
+				<key>Date</key>
+				<integer>20201105</integer>
+				<key>Version</key>
+				<string>12.4.9</string>
+			</dict>
+		</dict>
+		<key>12.5</key>
+		<dict>
+			<key>16H20</key>
+			<dict>
+				<key>Date</key>
+				<integer>20201214</integer>
+				<key>Version</key>
+				<string>12.5</string>
+			</dict>
+		</dict>
+		<key>12.5.1</key>
+		<dict>
+			<key>16H22</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210111</integer>
+				<key>Version</key>
+				<string>12.5.1</string>
+			</dict>
+		</dict>
 		<key>13.0</key>
 		<dict>
 			<key>17A5492t</key>
@@ -1454,6 +1484,13 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20201216</integer>
+			</dict>
+			<key>18D5043d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210113</integer>
 			</dict>
 		</dict>
 		<key>5.1</key>
