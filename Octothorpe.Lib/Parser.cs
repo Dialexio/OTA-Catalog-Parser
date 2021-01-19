@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2020 Dialexio
+ * Copyright (c) 2021 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -44,7 +44,7 @@ namespace Octothorpe.Lib
             PrereqOSRowspan = new Dictionary<string, Dictionary<string, uint>>(); // DeclaredBuild, <PrereqOS, count>
         private object[] Assets;
         private readonly List<OTAPackage> Packages = new List<OTAPackage>();
-        private string model = null, pallasCurrentBuild = null, pallasRequestedVersion;
+        private string pallasCurrentBuild = null, pallasRequestedVersion;
         private Version max, minimum, pallasCurrentVersion;
 
         public string Device { get; set; }
@@ -64,16 +64,7 @@ namespace Octothorpe.Lib
             set { minimum = value; }
         }
 
-        public string Model
-        {
-            get { return model; }
-
-            set
-            {
-                model = value;
-                ModelNeedsChecking = Regex.IsMatch(Device, "(iPad6,(11|12)|iPhone8,(1|2|4))");
-            }
-        }
+        public string Model { get; set; }
 
         public string PallasCurrentBuild
         {
@@ -254,7 +245,7 @@ namespace Octothorpe.Lib
             DeviceIsWatch = Regex.IsMatch(Device, @"Watch\d,\d");
 
             // Model check.
-            if (ModelNeedsChecking)
+            if (Regex.IsMatch(Device, @"(iPad6,1(1|2)|iPhone8,(1|2|4))"))
             {
                 if (Model == null)
                     throw new ArgumentException("model");
@@ -294,14 +285,8 @@ namespace Octothorpe.Lib
                     matched = package.SupportedDevices.Contains(Device);
 
                     // Model check, if needed.
-                    if (matched && ModelNeedsChecking)
-                    {
-                        matched = false; // Skipping unless we can verify we want it.
-
-                        // Make sure "SupportedDeviceModels" exists before checking it.
-                        if (package.SupportedDeviceModels.Count > 0)
-                            matched = (package.SupportedDeviceModels.Contains(Model));
-                    }
+                    if (matched && package.SupportedDeviceModels.Count > 0)
+                        matched = package.SupportedDeviceModels.Contains(Model);
 
                     // Stub check.
                     // But first, determine if we need to add the stub blurb.
