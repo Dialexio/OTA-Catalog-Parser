@@ -18,9 +18,9 @@ If no arguments are specified, the program will return the following information
 ### Required Arguments
 * `-d <device>` specifies what device you're looking for. This argument is looking for a value like "iPad2,3" or "iPod7,1." (If you do not know what value to use, you may refer to the identifiers listed on [The iPhone Wiki](https://www.theiphonewiki.com/wiki/Models).)
 * `-f <file>` specifies the location of the OTA update catalog. This may be either an XML file saved on your computer, or a mesu.apple.com URL.
-* `-m <model>` specifies what device you're looking for. This argument is looking for a value like "N71AP" or "N66mAP." (If you do not know what value to use, you may refer to the internal names listed on [The iPhone Wiki](https://www.theiphonewiki.com/wiki/Models).) __This argument is required only if you are looking for OTA updates for the iPhone 6S, 6S Plus, or iPhone SE, or for Pallas requests. It is ignored for all other devices.__
-* `-pb <build>` specifies the build that you are starting a query of Pallas requests from. Both this and `-pv` are required for querying Pallas requests only.
-* `-pv <version>` specifies the version that you are starting a query of Pallas requests from. Both this and `-pb` are required for querying Pallas requests only.
+* `-m <model>` specifies what device you're looking for. This argument is looking for a value like "N71AP" or "N66mAP." (If you do not know what value to use, you may refer to the internal names listed on [The iPhone Wiki](https://www.theiphonewiki.com/wiki/Models).)
+* `-pb <OS build>` specifies the build that you are starting a query of Pallas requests from. Both this and `-pv` are required for querying Pallas requests only.
+* `-pv <OS version>` specifies the version that you are starting a query of Pallas requests from. Both this and `-pb` are required for querying Pallas requests only.
 
 ### Optional Arguments
 * `-b` specifies that you would like to see beta releases. By default, this program does not display beta releases.
@@ -47,9 +47,9 @@ This program utilizes a PLIST file, named "BuildInfo.plist," to override the inf
 * In each OS branch's dictionary are more dictionaries, named by the version number.
 * In each version number's dictionary, there is another dictionary for each build number available.
 * In each build number's dictionary, you may specify the following keys:
- * "Beta" (what number beta it is; if it is not a beta, it will be 0)
+ * "Beta" (what number beta it is; if it is not a beta, the value should be 0)
  * "Suffix" (if something should follow, e.g. "watchOS 3.1 beta 2 **Pre-release**")
- * "Date" (the release date for the software)
+ * "Date" (the release date for the software, as an integer)
  * "Devices" (if the entry should only be applied to certain devices)
 
 Before reporting issues with the program's output, please make sure BuildInfo.plist contains information for the latest OS updates. For the Mac version, this file can be found at `OTA Parser.app/Contents/MonoBundle/BuildInfo.plist`.
@@ -57,6 +57,4 @@ Before reporting issues with the program's output, please make sure BuildInfo.pl
 ## Licensing Information
 This program is distributed under the MIT License.
 
-This program utilizes the [plist-cil](https://github.com/claunia/plist-cil) library.
-
-Please refer to LICENSE.md for more details regarding the licenses for third-party libraries.
+This program utilizes the [Json.NET](https://www.newtonsoft.com/json), [JWT.NET](https://github.com/jwt-dotnet/jwt), [plist-cil](https://github.com/claunia/plist-cil), and [RestSharp](https://restsharp.dev) libraries. Please refer to LICENSE.md for more details regarding the licenses for third-party libraries.
