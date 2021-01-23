@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2020 Dialexio
+ * Copyright (c) 2021 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -386,8 +386,6 @@ namespace Octothorpe.Lib
                     if (((NSDictionary)majorVersion.Value).ContainsKey(ActualBuild))
                     {
                         ItemsForBuild = (NSDictionary)((NSDictionary)majorVersion.Value)[ActualBuild];
-
-                        Console.WriteLine("moment of truth");
 
                         // We have the version in the key name now.
                         if (name == "Version")
