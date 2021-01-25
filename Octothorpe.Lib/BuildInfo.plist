@@ -190,10 +190,26 @@
 		</dict>
 		<key>14.4</key>
 		<dict>
-			<key>17M61</key>
+			<key>18K5780c</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20201116</integer>
+			</dict>
+			<key>18K5793d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210113</integer>
+			</dict>
+			<key>18K802</key>
 			<dict>
 				<key>Date</key>
-				<integer>20200715</integer>
+				<integer>20210121</integer>
+				<key>Suffix</key>
+				<string>RC</string>
 			</dict>
 		</dict>
 	</dict>
@@ -1492,6 +1508,13 @@
 				<key>Date</key>
 				<integer>20210113</integer>
 			</dict>
+			<key>18D52</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210121</integer>
+				<key>Suffix</key>
+				<string>RC</string>
+			</dict>
 		</dict>
 		<key>5.1</key>
 		<dict>
@@ -1806,8 +1829,31 @@
 		<dict>
 			<key>20D5029f</key>
 			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
 				<key>Date</key>
 				<integer>20201216</integer>
+			</dict>
+			<key>20D5042d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210113</integer>
+			</dict>
+			<key>20D53</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210121</integer>
+				<key>Suffix</key>
+				<string>RC</string>
+			</dict>
+			<key>20D62</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210125</integer>
+				<key>Suffix</key>
+				<string>RC 2</string>
 			</dict>
 		</dict>
 	</dict>
@@ -2424,6 +2470,20 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20201216</integer>
+			</dict>
+			<key>18K5793d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210113</integer>
+			</dict>
+			<key>18K802</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210121</integer>
+				<key>Suffix</key>
+				<string>RC</string>
 			</dict>
 		</dict>
 		<key>7.3</key>
@@ -4154,6 +4214,20 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20201216</integer>
+			</dict>
+			<key>18S5793d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210113</integer>
+			</dict>
+			<key>18S801</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210121</integer>
+				<key>Suffix</key>
+				<string>RC</string>
 			</dict>
 		</dict>
 	</dict>
