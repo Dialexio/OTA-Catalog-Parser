@@ -35,7 +35,7 @@ namespace Octothorpe.Lib
 {
     public class Parser
     {
-        private bool fullTable, removeStubs, showBeta, pallasSupervised, wikiMarkup, AddStubBlurb, DeviceIsWatch, ModelNeedsChecking;
+        private bool fullTable, removeStubs, showBeta, pallasSupervised, wikiMarkup, AddStubBlurb, DeviceIsWatch;
         private Dictionary<string, List<string>> FileRowspan = new Dictionary<string, List<string>>();
         private Dictionary<string, uint> BuildNumberRowspan = new Dictionary<string, uint>(),
             DateRowspan = new Dictionary<string, uint>(),

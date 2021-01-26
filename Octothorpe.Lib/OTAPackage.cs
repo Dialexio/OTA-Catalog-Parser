@@ -753,7 +753,7 @@ namespace Octothorpe.Lib
 
             // If the number after the capital letter is too small, pad it.
             // (Note [A-Z] vs. [A-z]. The latter may chop off a lower case letter at the end.)
-            if (new Regex("[A-z]").Split(build)[1].Length < 3 && match.Success)
+            while (new Regex("[A-z]").Split(build)[1].Length < 3 && match.Success)
                 build = $"{match.Value}0{new Regex("[A-Z]").Split(build)[1]}";
 
             // If the build does not have a letter, add a fake one to push it below similarly-numbered betas.
