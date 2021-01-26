@@ -207,9 +207,7 @@
 			<key>18K802</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210121</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210126</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -877,7 +875,7 @@
 		</dict>
 		<key>12.4.8</key>
 		<dict>
-			<key>16G192</key>
+			<key>16G201</key>
 			<dict>
 				<key>Date</key>
 				<integer>20200715</integer>
@@ -1511,9 +1509,7 @@
 			<key>18D52</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210121</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210126</integer>
 			</dict>
 		</dict>
 		<key>5.1</key>
@@ -2481,9 +2477,7 @@
 			<key>18K802</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210121</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210126</integer>
 			</dict>
 		</dict>
 		<key>7.3</key>
@@ -4225,9 +4219,7 @@
 			<key>18S801</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210121</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210126</integer>
 			</dict>
 		</dict>
 	</dict>
