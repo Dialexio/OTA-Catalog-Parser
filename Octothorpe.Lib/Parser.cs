@@ -477,6 +477,9 @@ namespace Octothorpe.Lib
                                 ProductVersion = majorVersion.Key
                             });
 
+                        // Disable TLS verification. (Needed for Windows since it doesn't have Apple Root CA.)
+                        Fido.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+
                         // Get Apple's response, then decode it.
                         response = Fido.Execute(request);
                         DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);

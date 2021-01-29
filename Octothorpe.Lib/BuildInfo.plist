@@ -1851,6 +1851,13 @@
 				<key>Suffix</key>
 				<string>RC 2</string>
 			</dict>
+			<key>20D64</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210128</integer>
+				<key>Suffix</key>
+				<string>RC 3</string>
+			</dict>
 		</dict>
 	</dict>
 	<key>tvOS</key>
