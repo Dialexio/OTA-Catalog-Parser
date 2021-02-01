@@ -210,6 +210,16 @@
 				<integer>20210126</integer>
 			</dict>
 		</dict>
+		<key>14.5</key>
+		<dict>
+			<key>18L5149j</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210201</integer>
+			</dict>
+		</dict>
 	</dict>
 	<key>iOS</key>
 	<dict>
@@ -1512,6 +1522,16 @@
 				<integer>20210126</integer>
 			</dict>
 		</dict>
+		<key>14.5</key>
+		<dict>
+			<key>18E5140j</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210201</integer>
+			</dict>
+		</dict>
 		<key>5.1</key>
 		<dict>
 			<key>9B176</key>
@@ -1854,9 +1874,7 @@
 			<key>20D64</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210128</integer>
-				<key>Suffix</key>
-				<string>RC 3</string>
+				<integer>20210201</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -2485,6 +2503,16 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210126</integer>
+			</dict>
+		</dict>
+		<key>14.5</key>
+		<dict>
+			<key>18L5149j</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210201</integer>
 			</dict>
 		</dict>
 		<key>7.3</key>
@@ -4227,6 +4255,16 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210126</integer>
+			</dict>
+		</dict>
+		<key>7.4</key>
+		<dict>
+			<key>18T5144k</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210201</integer>
 			</dict>
 		</dict>
 	</dict>

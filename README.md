@@ -57,4 +57,4 @@ Before reporting issues with the program's output, please make sure BuildInfo.pl
 ## Licensing Information
 This program is distributed under the MIT License.
 
-This program utilizes the [Json.NET](https://www.newtonsoft.com/json), [JWT.NET](https://github.com/jwt-dotnet/jwt), [plist-cil](https://github.com/claunia/plist-cil), and [RestSharp](https://restsharp.dev) libraries. Please refer to LICENSE.md for more details regarding the licenses for third-party libraries.
+This program utilizes the [Json.NET](https://www.newtonsoft.com/json), [Jwt.Net](https://github.com/jwt-dotnet/jwt), [plist-cil](https://github.com/claunia/plist-cil), and [RestSharp](https://restsharp.dev) libraries. Please refer to LICENSE.md for more details regarding the licenses for third-party libraries.
