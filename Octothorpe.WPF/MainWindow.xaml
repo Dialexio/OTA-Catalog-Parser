@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Octothorpe.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:octothorpe="clr-namespace:Octothorpe" Title="OTA Catalog Parser" MinWidth="800" MinHeight="550" Width="800" Height="550" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+        xmlns:octothorpe="clr-namespace:Octothorpe" Title="OTA Catalog Parser" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Height="550" MinHeight="550" MinWidth="800" Width="800" KeyDown="ReadKeyboardShortcuts">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <octothorpe:BooleanToVisibilityHider x:Key="BoolToVisHider" />
@@ -10,8 +10,8 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Mode">
-                <MenuItem Click="ParserModeChanged" Header="_Mesu Mode" IsChecked="True" Name="MenuMesu" />
-                <MenuItem Click="ParserModeChanged" Header="_Pallas Mode" Name="MenuPallas" />
+                <MenuItem Click="ParserModeChanged" Header="_Mesu Mode" InputGestureText="Ctrl+1" IsChecked="True" Name="MenuMesu" />
+                <MenuItem Click="ParserModeChanged" Header="_Pallas Mode" InputGestureText="Ctrl+2" Name="MenuPallas" />
             </MenuItem>
         </Menu>
         <Grid>
@@ -24,15 +24,15 @@
                     <RowDefinition Height="15" />
                     <RowDefinition Height="15" />
                     <RowDefinition />
-                    <RowDefinition Height="5*" />
+                    <RowDefinition Height="100" />
                     <RowDefinition />
                     <RowDefinition Height="5*"/>
                     <RowDefinition />
                     <RowDefinition Height="10*" />
                     <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="1.1*" />
                 </Grid.RowDefinitions>
-                <Grid Name="ClassDeviceModel" Row="3">
+                <Grid Name="ClassDeviceModel" Row="3" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition Height="5" />

@@ -1,14 +1,14 @@
 # OTA Catalog Parser
 This program lets you view an OTA update catalog for [audioOS](https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml), [iOS](https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml), [tvOS](https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml), and [watchOS](https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml) in a more pleasant format. It can also output the information in a format suitable for entry on [The iPhone Wiki](https://www.theiphonewiki.com/wiki/OTA_Updates).
 
-__NOTE:__ Dates are extracted from the file URL, which may not be the actual release date.
+It is also capable of making/receiving requests to Apple's [https://gdmf.apple.com/v2/assets](Pallas server), which also provides OTA updates.
 
 ## Program Requirements
 The Mac version requires macOS v10.9 (Mavericks) or newer. It is built with Xamarin.Mac; no additional downloads are required.
 
-The Windows version requires .NET Framework 4.6.1 or newer.
+The Windows version requires .NET Framework 4.7.2 or newer. (Technically, the program will compile for .NET Framework 4.6.1, but will require significantly more DLLs to be distributed alongside it.)
 
-The command-line version is cross-platform and requires either [Mono](http://www.mono-project.com/) or .NET Framework 4.6.1 or newer to be installed.
+The command-line version is cross-platform and requires either [Mono](http://www.mono-project.com/) or .NET Framework 4.7.2 or newer to be installed. (Technically, the program will compile for .NET Framework 4.6.1, but will require significantly more DLLs to be distributed alongside it.)
 
 ([Link to .NET Framework 4.8 for Windows 7 and newer.](https://support.microsoft.com/kb/4503548))
 

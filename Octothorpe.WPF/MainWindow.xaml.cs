@@ -28,6 +28,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using Octothorpe.Lib;
 
 namespace Octothorpe
@@ -360,6 +361,18 @@ namespace Octothorpe
             MenuPallas.IsChecked = (DisplayMode == "Pallas Mode");
 
             PallasSupervised.IsChecked = false;
+        }
+
+        private void ReadKeyboardShortcuts(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                if (Keyboard.IsKeyDown(Key.D1))
+                    ParserModeChanged(MenuMesu, null);
+
+                if (Keyboard.IsKeyDown(Key.D2))
+                    ParserModeChanged(MenuPallas, null);
+            }
         }
     }
 
