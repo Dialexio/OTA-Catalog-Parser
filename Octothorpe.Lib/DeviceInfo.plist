@@ -365,6 +365,18 @@
 				<string>iPad7,12</string>
 			</dict>
 		</dict>
+		<key>iPad (8th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J171aAP</key>
+				<string>iPad11,6</string>
+				<key>J172aAP</key>
+				<string>iPad11,7</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPad Air</key>
 	<dict>
