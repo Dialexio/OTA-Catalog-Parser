@@ -186,6 +186,15 @@ namespace Octothorpe
                 parser.FullTable = CheckBoxFullTable.IsChecked.Value;
                 parser.ShowBeta = CheckBoxBeta.IsChecked.Value;
 
+                // Set maximum version if one was specified
+                if (String.IsNullOrEmpty(TextBoxMax.Text) == false)
+                {
+                    // Doing it like this converts an integer, e.g. "11" into "11.0"
+                    parser.Maximum = (uint.TryParse(TextBoxMax.Text, out var verstring)) ?
+                        new Version($"{verstring}.0") :
+                        new Version(TextBoxMax.Text);
+                }
+
                 if (DisplayMode == "Pallas Mode")
                 {
                     parser.PallasCurrentBuild = PallasCurrentBuild.Text;
@@ -206,21 +215,12 @@ namespace Octothorpe
 
                     try
                     {
-                        // Set maximum version if one was specified
-                        if (String.IsNullOrEmpty(TextBoxMax.Text) == false)
-                        {
-                            // Doing it like this converts an integer, e.g. "11" into "11.0"
-                            parser.Maximum = (uint.TryParse(TextBoxMax.Text, out var verstring)) ?
-                                new Version(TextBoxMax.Text + ".0") :
-                                new Version(TextBoxMax.Text);
-                        }
-
                         // Set minimum version if one was specified
                         if (String.IsNullOrEmpty(TextBoxMin.Text) == false)
                         {
                             // Doing it like this converts an integer, e.g. "11" into "11.0"
                             parser.Minimum = (uint.TryParse(TextBoxMin.Text, out var verstring)) ?
-                                new Version(TextBoxMin.Text + ".0") :
+                                new Version($"{verstring}.0") :
                                 new Version(TextBoxMin.Text);
                         }
                     }

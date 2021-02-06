@@ -231,6 +231,15 @@ namespace Octothorpe.Mac
 
                 parser.FullTable = (TableHeaders.State == NSCellStateValue.On);
 
+                // Set maximum version if one was specified
+                if (string.IsNullOrEmpty(MaxVersion.StringValue) == false)
+                {
+                    // Doing it like this converts an integer, e.g. "11" into "11.0"
+                    parser.Maximum = (uint.TryParse(MaxVersion.StringValue, out var verstring)) ?
+                        new Version($"{verstring}.0") :
+                        new Version(MaxVersion.StringValue);
+                }
+
                 if (DisplayMode == "Pallas Mode")
                 {
                     parser.PallasCurrentBuild = PallasCurrentBuild.StringValue;
@@ -251,15 +260,6 @@ namespace Octothorpe.Mac
 
                     try
                     {
-                        // Set maximum version if one was specified
-                        if (string.IsNullOrEmpty(MaxVersion.StringValue) == false)
-                        {
-                            // Doing it like this converts an integer, e.g. "11" into "11.0"
-                            parser.Maximum = (uint.TryParse(MaxVersion.StringValue, out var verstring)) ?
-                                new Version($"{verstring}.0") :
-                                new Version(MaxVersion.StringValue);
-                        }
-
                         // Set minimum version if one was specified
                         if (string.IsNullOrEmpty(MesuMinVersion.StringValue) == false)
                         {

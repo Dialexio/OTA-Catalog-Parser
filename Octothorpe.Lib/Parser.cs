@@ -495,6 +495,10 @@ namespace Octothorpe.Lib
                             {
                                 package = new OTAPackage(container, PostingDate);
 
+                                // If the version is higher than the maximum version, skip it.
+                                if (new Version(package.OSVersion).CompareTo(max) > 0)
+                                    continue;
+
                                 // Prevent addition of duplicate entries.
                                 if (PackagesPresent.Contains(package.SortingString) == false)
                                 {
