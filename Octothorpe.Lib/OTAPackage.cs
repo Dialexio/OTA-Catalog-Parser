@@ -712,7 +712,7 @@ namespace Octothorpe.Lib
                 if (char.IsLetter(BuildDigits[BuildDigits.Length - 1]))
                     BuildDigits = BuildDigits.Substring(0, BuildDigits.Length - 1);
 
-                while (BuildDigits.Length < 3)
+                while (BuildDigits.Length < 4)
                     BuildDigits = $"0{BuildDigits}";
 
                 return $"{SortBuild.Substring(0, LetterPos)}{BuildDigits}{SortBuild[SortBuild.Length-1]}";
@@ -773,7 +773,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return $"{SortingBuild()}{PrerequisiteVer().Split('.')[0]}{SortingPrerequisiteBuild()}{CompatibilityVersion}{ActualReleaseType}";
+                return $"{SortingBuild()}${PrerequisiteVer().Split('.')[0]}${SortingPrerequisiteBuild()}${CompatibilityVersion}${ActualReleaseType}";
             }
         }
 

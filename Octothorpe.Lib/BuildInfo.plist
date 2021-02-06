@@ -1531,6 +1531,15 @@
 				<key>Date</key>
 				<integer>20210201</integer>
 			</dict>
+			<key>18E5140k</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210204</integer>
+				<key>Suffix</key>
+				<string>Update</string>
+			</dict>
 		</dict>
 		<key>5.1</key>
 		<dict>
@@ -1875,6 +1884,16 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210201</integer>
+			</dict>
+		</dict>
+		<key>11.3</key>
+		<dict>
+			<key>20E5172i</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210202</integer>
 			</dict>
 		</dict>
 	</dict>

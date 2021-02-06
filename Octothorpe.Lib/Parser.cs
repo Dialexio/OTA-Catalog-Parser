@@ -421,13 +421,13 @@ namespace Octothorpe.Lib
             request.AddHeader("Accept", "application/json");
             request.Method = Method.POST;
 
-            foreach (KeyValuePair<string, NSObject> majorVersion in BuildInfo)
+            foreach (KeyValuePair<string, NSObject> osVersion in BuildInfo)
             {
-                // Is the version lower than where we're starting? Skip it.
-                if (new Version(majorVersion.Key).CompareTo(pallasCurrentVersion) < 0)
+                // If the version is lower than our starting version, skip it.
+                if (new Version(osVersion.Key).CompareTo(pallasCurrentVersion) < 0)
                     continue;
 
-                foreach (KeyValuePair<string, NSObject> build in (NSDictionary)majorVersion.Value)
+                foreach (KeyValuePair<string, NSObject> build in (NSDictionary)osVersion.Value)
                 {
                     foreach (string AssetAudience in AssetAudiences)
                     {
@@ -459,7 +459,7 @@ namespace Octothorpe.Lib
                                 InternalBuild = false,
                                 NoFallback = false,
                                 ProductType = Device,
-                                ProductVersion = majorVersion.Key,
+                                ProductVersion = osVersion.Key,
                                 RequestedVersion = pallasRequestedVersion,
                                 RestoreVersion = $"{SplicedBuildNum[0]}.{((int)SplicedBuildNum[1][0]) - 64}.{SplicedBuildNum[2]}.0.0,0",
                                 Supervised = pallasSupervised
@@ -474,7 +474,7 @@ namespace Octothorpe.Lib
                                 ClientVersion = 2,
                                 HWModelStr = Model,
                                 ProductType = Device,
-                                ProductVersion = majorVersion.Key
+                                ProductVersion = osVersion.Key
                             });
 
                         // Disable TLS verification. (Needed for Windows since it doesn't have Apple Root CA.)
