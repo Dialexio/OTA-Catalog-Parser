@@ -438,7 +438,7 @@ namespace Octothorpe.Lib
                             request.Parameters.RemoveAt(1);
 
                         // Add the JSON body. Macs have slightly different parameters.
-                        if (Device.Substring(0, 3) == "iMa" || Device.Substring(0, 3) == "Mac")
+                        if (SUAssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
                             request.AddJsonBody(new
                             {
                                 AllowSameBuildVersion = false,
@@ -496,7 +496,7 @@ namespace Octothorpe.Lib
                                 package = new OTAPackage(container, PostingDate);
 
                                 // If the version is higher than the maximum version, skip it.
-                                if (new Version(package.OSVersion).CompareTo(max) > 0)
+                                if (max != null && new Version(package.OSVersion).CompareTo(max) > 0)
                                     continue;
 
                                 // Prevent addition of duplicate entries.
