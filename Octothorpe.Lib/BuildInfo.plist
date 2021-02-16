@@ -78,7 +78,7 @@
 			<key>18J5354d</key>
 			<dict>
 				<key>Beta</key>
-				<integer>3</integer>
+				<integer>4</integer>
 				<key>Date</key>
 				<integer>20200804</integer>
 			</dict>
@@ -1540,6 +1540,13 @@
 				<key>Suffix</key>
 				<string>Update</string>
 			</dict>
+			<key>18E5154f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210216</integer>
+			</dict>
 		</dict>
 		<key>5.1</key>
 		<dict>
@@ -1892,6 +1899,11 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210209</integer>
+			</dict>
+			<key>20D75</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210215</integer>
 			</dict>
 		</dict>
 		<key>11.3</key>
@@ -2540,6 +2552,13 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20210201</integer>
+			</dict>
+			<key>18L5163d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210216</integer>
 			</dict>
 		</dict>
 		<key>7.3</key>
@@ -4292,6 +4311,13 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20210201</integer>
+			</dict>
+			<key>18T5159f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210216</integer>
 			</dict>
 		</dict>
 	</dict>
