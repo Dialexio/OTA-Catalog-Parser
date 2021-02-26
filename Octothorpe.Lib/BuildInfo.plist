@@ -1906,6 +1906,14 @@
 				<integer>20210215</integer>
 			</dict>
 		</dict>
+		<key>11.2.2</key>
+		<dict>
+			<key>20D80</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210225</integer>
+			</dict>
+		</dict>
 		<key>11.3</key>
 		<dict>
 			<key>20E5172i</key>
@@ -1914,6 +1922,13 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20210202</integer>
+			</dict>
+			<key>20E5186d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210217</integer>
 			</dict>
 		</dict>
 	</dict>
