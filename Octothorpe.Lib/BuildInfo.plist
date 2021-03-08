@@ -1522,6 +1522,14 @@
 				<integer>20210126</integer>
 			</dict>
 		</dict>
+		<key>14.4.1</key>
+		<dict>
+			<key>18D61</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210308</integer>
+			</dict>
+		</dict>
 		<key>14.5</key>
 		<dict>
 			<key>18E5140j</key>
@@ -1936,6 +1944,13 @@
 				<integer>2</integer>
 				<key>Date</key>
 				<integer>20210217</integer>
+			</dict>
+			<key>20E5196f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<real>20210303</real>
 			</dict>
 		</dict>
 	</dict>
@@ -4340,6 +4355,13 @@
 				<integer>2</integer>
 				<key>Date</key>
 				<integer>20210216</integer>
+			</dict>
+			<key>18T5169f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<real>20210304</real>
 			</dict>
 		</dict>
 	</dict>
