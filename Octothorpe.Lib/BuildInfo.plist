@@ -1929,6 +1929,14 @@
 				<integer>20210225</integer>
 			</dict>
 		</dict>
+		<key>11.2.3</key>
+		<dict>
+			<key>20D91</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210308</integer>
+			</dict>
+		</dict>
 		<key>11.3</key>
 		<dict>
 			<key>20E5172i</key>
@@ -4138,6 +4146,22 @@
 				<integer>20200715</integer>
 			</dict>
 		</dict>
+		<key>6.2.9</key>
+		<dict>
+			<key>17U203</key>
+			<dict>
+				<key>Date</key>
+				<integer>20201105</integer>
+			</dict>
+		</dict>
+		<key>6.3</key>
+		<dict>
+			<key>17U216</key>
+			<dict>
+				<key>Date</key>
+				<integer>20201214</integer>
+			</dict>
+		</dict>
 		<key>7.0</key>
 		<dict>
 			<key>18R5310a</key>
@@ -4338,6 +4362,22 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210126</integer>
+			</dict>
+		</dict>
+		<key>7.3.1</key>
+		<dict>
+			<key>18S811</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210215</integer>
+			</dict>
+		</dict>
+		<key>7.3.2</key>
+		<dict>
+			<key>18S821</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210308</integer>
 			</dict>
 		</dict>
 		<key>7.4</key>
