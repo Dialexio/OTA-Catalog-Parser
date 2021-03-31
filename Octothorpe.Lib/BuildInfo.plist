@@ -219,6 +219,34 @@
 				<key>Date</key>
 				<integer>20210201</integer>
 			</dict>
+			<key>18L5173f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<integer>20210303</integer>
+			</dict>
+			<key>18L5186a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>4</integer>
+				<key>Date</key>
+				<integer>20210315</integer>
+			</dict>
+			<key>18L5193a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>5</integer>
+				<key>Date</key>
+				<integer>20210323</integer>
+			</dict>
+			<key>18L5200a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>6</integer>
+				<key>Date</key>
+				<integer>20210331</integer>
+			</dict>
 		</dict>
 	</dict>
 	<key>iOS</key>
@@ -1530,6 +1558,14 @@
 				<integer>20210308</integer>
 			</dict>
 		</dict>
+		<key>14.4.2</key>
+		<dict>
+			<key>18D70</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210326</integer>
+			</dict>
+		</dict>
 		<key>14.5</key>
 		<dict>
 			<key>18E5140j</key>
@@ -1561,6 +1597,27 @@
 				<integer>3</integer>
 				<key>Date</key>
 				<integer>20210302</integer>
+			</dict>
+			<key>18E5178a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>4</integer>
+				<key>Date</key>
+				<integer>20210315</integer>
+			</dict>
+			<key>18E5186a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>5</integer>
+				<key>Date</key>
+				<integer>20210323</integer>
+			</dict>
+			<key>18E5194a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>6</integer>
+				<key>Date</key>
+				<integer>20210331</integer>
 			</dict>
 		</dict>
 		<key>5.1</key>
@@ -1958,7 +2015,28 @@
 				<key>Beta</key>
 				<integer>3</integer>
 				<key>Date</key>
-				<real>20210303</real>
+				<integer>20210303</integer>
+			</dict>
+			<key>20E5210c</key>
+			<dict>
+				<key>Beta</key>
+				<integer>4</integer>
+				<key>Date</key>
+				<integer>20210315</integer>
+			</dict>
+			<key>20E5217a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>5</integer>
+				<key>Date</key>
+				<integer>20210323</integer>
+			</dict>
+			<key>20E5224a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>6</integer>
+				<key>Date</key>
+				<integer>20210331</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -2604,6 +2682,34 @@
 				<integer>2</integer>
 				<key>Date</key>
 				<integer>20210216</integer>
+			</dict>
+			<key>18L5173f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<integer>20210303</integer>
+			</dict>
+			<key>18L5186a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>4</integer>
+				<key>Date</key>
+				<integer>20210315</integer>
+			</dict>
+			<key>18L5193a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>5</integer>
+				<key>Date</key>
+				<integer>20210323</integer>
+			</dict>
+			<key>18L5200a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>6</integer>
+				<key>Date</key>
+				<integer>20210331</integer>
 			</dict>
 		</dict>
 		<key>7.3</key>
@@ -4401,7 +4507,28 @@
 				<key>Beta</key>
 				<integer>3</integer>
 				<key>Date</key>
-				<real>20210304</real>
+				<integer>20210304</integer>
+			</dict>
+			<key>18T5183b</key>
+			<dict>
+				<key>Beta</key>
+				<integer>4</integer>
+				<key>Date</key>
+				<integer>20210315</integer>
+			</dict>
+			<key>18T5190a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>5</integer>
+				<key>Date</key>
+				<integer>20210323</integer>
+			</dict>
+			<key>18T5193a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>6</integer>
+				<key>Date</key>
+				<integer>20210331</integer>
 			</dict>
 		</dict>
 	</dict>
