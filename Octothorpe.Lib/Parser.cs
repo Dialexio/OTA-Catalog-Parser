@@ -370,7 +370,7 @@ namespace Octothorpe.Lib
                             "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
                             "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
                             "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
-                            "84da8706-e267-4554-8207-865ae0c3a120"  // iOS 14 beta
+                            "dbbb0481-d521-4cdf-a2a4-5358affc224b"  // iOS 14 beta
                         });
                     break;
 
