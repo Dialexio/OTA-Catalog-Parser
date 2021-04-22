@@ -50,6 +50,16 @@
 				<string>AppleTV6,2</string>
 			</dict>
 		</dict>
+		<key>Apple TV 4K (2021)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>J305AP</key>
+				<string>AppleTV11,1</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>Apple Watch</key>
 	<dict>
@@ -258,6 +268,18 @@
 			<dict>
 				<key>Mac-AA95B1DDAB278B95</key>
 				<string>iMac19,1</string>
+			</dict>
+		</dict>
+		<key>iMac (24&quot; 2021)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J456AP</key>
+				<string>iMac21,1</string>
+				<key>J457AP</key>
+				<string>iMac21,2</string>
 			</dict>
 		</dict>
 	</dict>
