@@ -247,6 +247,11 @@
 				<key>Date</key>
 				<integer>20210331</integer>
 			</dict>
+			<key>18L203</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210426</integer>
+			</dict>
 		</dict>
 	</dict>
 	<key>iOS</key>
@@ -1636,9 +1641,7 @@
 			<key>18E199</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210420</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210426</integer>
 			</dict>
 		</dict>
 		<key>14.6</key>
@@ -2086,9 +2089,17 @@
 			<key>20E232</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210420</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210426</integer>
+			</dict>
+		</dict>
+		<key>11.4</key>
+		<dict>
+			<key>20F5046g</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210421</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -2773,9 +2784,7 @@
 			<key>18L204</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210420</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210426</integer>
 			</dict>
 		</dict>
 		<key>14.6</key>
@@ -4515,8 +4524,17 @@
 			</dict>
 			<key>18S563</key>
 			<dict>
+				<key>Suffix</key>
+				<string>RC</string>
 				<key>Date</key>
 				<integer>20201214</integer>
+				<key>Models</key>
+				<array>
+					<string>N157sAP</string>
+					<string>N157bAP</string>
+					<string>N158sAP</string>
+					<string>N158bAP</string>
+				</array>
 			</dict>
 			<key>18S564</key>
 			<dict>
@@ -4613,6 +4631,13 @@
 				<integer>6</integer>
 				<key>Date</key>
 				<integer>20210331</integer>
+			</dict>
+			<key>18T5194a</key>
+			<dict>
+				<key>Beta</key>
+				<integer>7</integer>
+				<key>Date</key>
+				<integer>20210407</integer>
 			</dict>
 			<key>18T195</key>
 			<dict>
