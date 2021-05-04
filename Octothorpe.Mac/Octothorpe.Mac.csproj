@@ -93,7 +93,7 @@
   <ItemGroup>
     <Reference Include="Xamarin.Mac" />
     <Reference Include="plist-cil">
-      <HintPath>..\packages\plist-cil.2.1.0\lib\netstandard2.0\plist-cil.dll</HintPath>
+      <HintPath>..\packages\plist-cil.2.2.0\lib\netstandard2.0\plist-cil.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.106.11.7\lib\netstandard2.0\RestSharp.dll</HintPath>

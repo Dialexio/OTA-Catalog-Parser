@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="plist-cil">
-      <HintPath>..\packages\plist-cil.2.1.0\lib\netstandard2.0\plist-cil.dll</HintPath>
+      <HintPath>..\packages\plist-cil.2.2.0\lib\netstandard2.0\plist-cil.dll</HintPath>
     </Reference>
     <Reference Include="System.Memory">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
