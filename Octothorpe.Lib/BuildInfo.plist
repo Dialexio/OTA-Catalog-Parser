@@ -952,8 +952,22 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210111</integer>
-				<key>Version</key>
-				<string>12.5.1</string>
+			</dict>
+		</dict>
+		<key>12.5.2</key>
+		<dict>
+			<key>16H30</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210326</integer>
+			</dict>
+		</dict>
+		<key>12.5.3</key>
+		<dict>
+			<key>16H41</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210503</integer>
 			</dict>
 		</dict>
 		<key>13.0</key>
@@ -1364,8 +1378,15 @@
 		<dict>
 			<key>17H33</key>
 			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
 				<key>Date</key>
 				<integer>20200826</integer>
+			</dict>
+			<key>17H35</key>
+			<dict>
+				<key>Date</key>
+				<integer>20200901</integer>
 			</dict>
 		</dict>
 		<key>14.0</key>
@@ -1644,6 +1665,14 @@
 				<integer>20210426</integer>
 			</dict>
 		</dict>
+		<key>14.5.1</key>
+		<dict>
+			<key>18E212</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210503</integer>
+			</dict>
+		</dict>
 		<key>14.6</key>
 		<dict>
 			<key>18F5046f</key>
@@ -1652,6 +1681,13 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20210422</integer>
+			</dict>
+			<key>18F5055b</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20210430</integer>
 			</dict>
 		</dict>
 		<key>5.1</key>
@@ -2090,6 +2126,14 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210426</integer>
+			</dict>
+		</dict>
+		<key>11.3.1</key>
+		<dict>
+			<key>20E241</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210503</integer>
 			</dict>
 		</dict>
 		<key>11.4</key>
@@ -2797,6 +2841,14 @@
 				<integer>20210422</integer>
 			</dict>
 		</dict>
+		<key>7.2.2</key>
+		<dict>
+			<key>12H606</key>
+			<dict>
+				<key>Date</key>
+				<integer>20161212</integer>
+			</dict>
+		</dict>
 		<key>7.3</key>
 		<dict>
 			<key>12H847</key>
@@ -2843,6 +2895,22 @@
 			<dict>
 				<key>Date</key>
 				<integer>20201105</integer>
+			</dict>
+		</dict>
+		<key>7.6.2</key>
+		<dict>
+			<key>12H914</key>
+			<dict>
+				<key>Date</key>
+				<integer>20201214</integer>
+			</dict>
+		</dict>
+		<key>7.6.3</key>
+		<dict>
+			<key>12H923</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210426</integer>
 			</dict>
 		</dict>
 	</dict>

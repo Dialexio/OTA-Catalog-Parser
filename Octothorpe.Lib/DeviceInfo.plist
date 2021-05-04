@@ -559,6 +559,38 @@
 				<string>iPad8,12</string>
 			</dict>
 		</dict>
+		<key>iPad Pro (11-inch 3rd generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J517AP</key>
+				<string>iPad13,4</string>
+				<key>J517xAP</key>
+				<string>iPad13,5</string>
+				<key>J518AP</key>
+				<string>iPad13,6</string>
+				<key>J518xAP</key>
+				<string>iPad13,7</string>
+			</dict>
+		</dict>
+		<key>iPad Pro (12.9-inch 5th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J522AP</key>
+				<string>iPad13,8</string>
+				<key>J522xAP</key>
+				<string>iPad13,9</string>
+				<key>J523AP</key>
+				<string>iPad13,10</string>
+				<key>J523xAP</key>
+				<string>iPad13,11</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPad mini</key>
 	<dict>
