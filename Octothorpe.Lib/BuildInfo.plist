@@ -4064,6 +4064,14 @@
 				<integer>20200715</integer>
 			</dict>
 		</dict>
+		<key>5.3.9</key>
+		<dict>
+			<key>16U693</key>
+			<dict>
+				<key>Date</key>
+				<integer>20201105</integer>
+			</dict>
+		</dict>
 		<key>6.0</key>
 		<dict>
 			<key>17R5491t</key>
@@ -4710,9 +4718,15 @@
 			<key>18T195</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210420</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<real>20210426</real>
+			</dict>
+		</dict>
+		<key>7.4.1</key>
+		<dict>
+			<key>18T201</key>
+			<dict>
+				<key>Date</key>
+				<real>20210503</real>
 			</dict>
 		</dict>
 		<key>7.5</key>

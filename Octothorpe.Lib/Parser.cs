@@ -427,6 +427,10 @@ namespace Octothorpe.Lib
                 if (new Version(osVersion.Key).CompareTo(pallasCurrentVersion) < 0)
                     continue;
 
+                // If the version we're querying for is higher than the maximum version, we're finished.
+                if (max != null && new Version(osVersion.Key).CompareTo(max) > 0)
+                    break;
+
                 foreach (KeyValuePair<string, NSObject> build in (NSDictionary)osVersion.Value)
                 {
                     foreach (string AssetAudience in AssetAudiences)
@@ -494,6 +498,10 @@ namespace Octothorpe.Lib
                             foreach (JContainer container in (JArray)AssetsArray)
                             {
                                 package = new OTAPackage(container, PostingDate);
+
+                                // If the version is lower than the requested version, skip it.
+                                if (new Version(package.OSVersion).CompareTo(pallasCurrentVersion) < 0)
+                                    continue;
 
                                 // If the version is higher than the maximum version, skip it.
                                 if (max != null && new Version(package.OSVersion).CompareTo(max) > 0)
