@@ -279,14 +279,201 @@
 			<key>18L569</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210517</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210524</integer>
+			</dict>
+		</dict>
+		<key>14.7</key>
+		<dict>
+			<key>18M5523d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210519</integer>
 			</dict>
 		</dict>
 	</dict>
 	<key>iOS</key>
 	<dict>
+		<key>5.1</key>
+		<dict>
+			<key>9B176</key>
+			<dict>
+				<key>Date</key>
+				<integer>20120307</integer>
+			</dict>
+		</dict>
+		<key>6.0</key>
+		<dict>
+			<key>10A405</key>
+			<dict>
+				<key>Date</key>
+				<string>20120919</string>
+			</dict>
+		</dict>
+		<key>6.1</key>
+		<dict>
+			<key>10B141</key>
+			<dict>
+				<key>Date</key>
+				<integer>20140128</integer>
+			</dict>
+		</dict>
+		<key>6.1.3</key>
+		<dict>
+			<key>10B329</key>
+			<dict>
+				<key>Date</key>
+				<integer>20130319</integer>
+			</dict>
+		</dict>
+		<key>8.1</key>
+		<dict>
+			<key>12B407</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20141007</integer>
+			</dict>
+		</dict>
+		<key>8.2</key>
+		<dict>
+			<key>12D436</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20141118</integer>
+			</dict>
+			<key>12D445d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20141210</integer>
+			</dict>
+		</dict>
+		<key>8.3</key>
+		<dict>
+			<key>12F5047f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<integer>20150312</integer>
+			</dict>
+			<key>12F61</key>
+			<dict>
+				<key>Beta</key>
+				<integer>4</integer>
+				<key>Date</key>
+				<integer>20150324</integer>
+			</dict>
+		</dict>
+		<key>8.4.1</key>
+		<dict>
+			<key>12H304</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+			</dict>
+			<key>12H318</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+			</dict>
+		</dict>
+		<key>9.0</key>
+		<dict>
+			<key>13A340</key>
+			<dict>
+				<key>Date</key>
+				<string>20150909</string>
+				<key>Suffix</key>
+				<string>GM</string>
+			</dict>
+			<key>13A341</key>
+			<dict>
+				<key>Date</key>
+				<string>20150909</string>
+				<key>Suffix</key>
+				<string>GM</string>
+			</dict>
+		</dict>
+		<key>9.1</key>
+		<dict>
+			<key>13B136</key>
+			<dict>
+				<key>Beta</key>
+				<integer>4</integer>
+				<key>Date</key>
+				<integer>20151006</integer>
+			</dict>
+			<key>13B137</key>
+			<dict>
+				<key>Beta</key>
+				<integer>5</integer>
+				<key>Date</key>
+				<integer>20151012</integer>
+			</dict>
+		</dict>
+		<key>9.2</key>
+		<dict>
+			<key>13C5055d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20151029</integer>
+			</dict>
+			<key>13C5060d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+			</dict>
+		</dict>
+		<key>9.2.1</key>
+		<dict>
+			<key>13D11</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20151217</integer>
+			</dict>
+			<key>13D14</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+			</dict>
+		</dict>
+		<key>9.3</key>
+		<dict>
+			<key>13E5181d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20160111</integer>
+			</dict>
+			<key>13E5181f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20160114</integer>
+				<key>Suffix</key>
+				<string>Update</string>
+			</dict>
+			<key>13E5200d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>3</integer>
+				<key>Date</key>
+				<integer>20160208</integer>
+			</dict>
+		</dict>
 		<key>10.3.3</key>
 		<dict>
 			<key>14G57</key>
@@ -1734,184 +1921,20 @@
 				<key>Suffix</key>
 				<string>RC</string>
 			</dict>
-		</dict>
-		<key>5.1</key>
-		<dict>
-			<key>9B176</key>
+			<key>18F72</key>
 			<dict>
 				<key>Date</key>
-				<integer>20120307</integer>
+				<integer>20210524</integer>
 			</dict>
 		</dict>
-		<key>6.0</key>
+		<key>14.7</key>
 		<dict>
-			<key>10A405</key>
-			<dict>
-				<key>Date</key>
-				<string>20120919</string>
-			</dict>
-		</dict>
-		<key>6.1</key>
-		<dict>
-			<key>10B141</key>
-			<dict>
-				<key>Date</key>
-				<integer>20140128</integer>
-			</dict>
-		</dict>
-		<key>6.1.3</key>
-		<dict>
-			<key>10B329</key>
-			<dict>
-				<key>Date</key>
-				<integer>20130319</integer>
-			</dict>
-		</dict>
-		<key>8.1</key>
-		<dict>
-			<key>12B407</key>
-			<dict>
-				<key>Beta</key>
-				<integer>2</integer>
-				<key>Date</key>
-				<integer>20141007</integer>
-			</dict>
-		</dict>
-		<key>8.2</key>
-		<dict>
-			<key>12D436</key>
+			<key>18G5023c</key>
 			<dict>
 				<key>Beta</key>
 				<integer>1</integer>
 				<key>Date</key>
-				<integer>20141118</integer>
-			</dict>
-			<key>12D445d</key>
-			<dict>
-				<key>Beta</key>
-				<integer>2</integer>
-				<key>Date</key>
-				<integer>20141210</integer>
-			</dict>
-		</dict>
-		<key>8.3</key>
-		<dict>
-			<key>12F5047f</key>
-			<dict>
-				<key>Beta</key>
-				<integer>3</integer>
-				<key>Date</key>
-				<integer>20150312</integer>
-			</dict>
-			<key>12F61</key>
-			<dict>
-				<key>Beta</key>
-				<integer>4</integer>
-				<key>Date</key>
-				<integer>20150324</integer>
-			</dict>
-		</dict>
-		<key>8.4.1</key>
-		<dict>
-			<key>12H304</key>
-			<dict>
-				<key>Beta</key>
-				<integer>1</integer>
-			</dict>
-			<key>12H318</key>
-			<dict>
-				<key>Beta</key>
-				<integer>2</integer>
-			</dict>
-		</dict>
-		<key>9.0</key>
-		<dict>
-			<key>13A340</key>
-			<dict>
-				<key>Date</key>
-				<string>20150909</string>
-				<key>Suffix</key>
-				<string>GM</string>
-			</dict>
-			<key>13A341</key>
-			<dict>
-				<key>Date</key>
-				<string>20150909</string>
-				<key>Suffix</key>
-				<string>GM</string>
-			</dict>
-		</dict>
-		<key>9.1</key>
-		<dict>
-			<key>13B136</key>
-			<dict>
-				<key>Beta</key>
-				<integer>4</integer>
-				<key>Date</key>
-				<integer>20151006</integer>
-			</dict>
-			<key>13B137</key>
-			<dict>
-				<key>Beta</key>
-				<integer>5</integer>
-				<key>Date</key>
-				<integer>20151012</integer>
-			</dict>
-		</dict>
-		<key>9.2</key>
-		<dict>
-			<key>13C5055d</key>
-			<dict>
-				<key>Beta</key>
-				<integer>1</integer>
-				<key>Date</key>
-				<integer>20151029</integer>
-			</dict>
-			<key>13C5060d</key>
-			<dict>
-				<key>Beta</key>
-				<integer>2</integer>
-			</dict>
-		</dict>
-		<key>9.2.1</key>
-		<dict>
-			<key>13D11</key>
-			<dict>
-				<key>Beta</key>
-				<integer>1</integer>
-				<key>Date</key>
-				<integer>20151217</integer>
-			</dict>
-			<key>13D14</key>
-			<dict>
-				<key>Beta</key>
-				<integer>2</integer>
-			</dict>
-		</dict>
-		<key>9.3</key>
-		<dict>
-			<key>13E5181d</key>
-			<dict>
-				<key>Beta</key>
-				<integer>1</integer>
-				<key>Date</key>
-				<integer>20160111</integer>
-			</dict>
-			<key>13E5181f</key>
-			<dict>
-				<key>Beta</key>
-				<integer>1</integer>
-				<key>Date</key>
-				<integer>20160114</integer>
-				<key>Suffix</key>
-				<string>Update</string>
-			</dict>
-			<key>13E5200d</key>
-			<dict>
-				<key>Beta</key>
-				<integer>3</integer>
-				<key>Date</key>
-				<integer>20160208</integer>
+				<integer>20210519</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -2203,6 +2226,21 @@
 				<integer>3</integer>
 				<key>Date</key>
 				<integer>20210510</integer>
+			</dict>
+			<key>20F71</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210524</integer>
+			</dict>
+		</dict>
+		<key>11.5</key>
+		<dict>
+			<key>20G5023d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210519</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -2988,9 +3026,17 @@
 			<key>18L569</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210517</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210524</integer>
+			</dict>
+		</dict>
+		<key>14.7</key>
+		<dict>
+			<key>18M5523d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210519</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -4835,9 +4881,17 @@
 			<key>18T567</key>
 			<dict>
 				<key>Date</key>
-				<integer>20210517</integer>
-				<key>Suffix</key>
-				<string>RC</string>
+				<integer>20210524</integer>
+			</dict>
+		</dict>
+		<key>7.6</key>
+		<dict>
+			<key>18U5523d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<integer>20210519</integer>
 			</dict>
 		</dict>
 	</dict>

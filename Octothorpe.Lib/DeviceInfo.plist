@@ -40,7 +40,7 @@
 				<string>AppleTV5,3</string>
 			</dict>
 		</dict>
-		<key>Apple TV 4K</key>
+		<key>Apple TV 4K (1st generation)</key>
 		<dict>
 			<key>HeaderLevel</key>
 			<integer>2</integer>
@@ -50,7 +50,7 @@
 				<string>AppleTV6,2</string>
 			</dict>
 		</dict>
-		<key>Apple TV 4K (2021)</key>
+		<key>Apple TV 4K (2nd generation)</key>
 		<dict>
 			<key>HeaderLevel</key>
 			<integer>2</integer>
