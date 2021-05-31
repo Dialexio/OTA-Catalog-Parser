@@ -375,6 +375,7 @@ namespace Octothorpe.Lib
                     break;
 
                 // macOS
+                case "ADP":
                 case "iMa":
                 case "Mac":
                     BuildInfo = (NSDictionary)BuildInfo["macOS"];
@@ -452,7 +453,7 @@ namespace Octothorpe.Lib
                                 BuildVersion = build.Key,
                                 ClientData = new
                                 {
-                                    AllowXmlFallback = true,
+                                    AllowXmlFallback = false,
                                     DeviceAccessClient = "softwareupdated"
                                 },
                                 ClientVersion = 2,
@@ -461,7 +462,7 @@ namespace Octothorpe.Lib
                                 DeviceOSData = new { },
                                 HWModelStr = Model,
                                 InternalBuild = false,
-                                NoFallback = false,
+                                NoFallback = true,
                                 ProductType = Device,
                                 ProductVersion = osVersion.Key,
                                 RequestedVersion = pallasRequestedVersion,
@@ -472,14 +473,37 @@ namespace Octothorpe.Lib
                         else
                             request.AddJsonBody(new
                             {
+                                AllowSameBuildVersion = false,
                                 AssetAudience = AssetAudience,
                                 AssetType = SUAssetType,
+                                BaseUrl = "https://mesu.apple.com/assets/",
                                 BuildVersion = build.Key,
+                                ClientData = new
+                                {
+                                    AllowXmlFallback = false,
+                                    DeviceAccessClient = "softwareupdateservicesd"
+                                },
                                 ClientVersion = 2,
+                                DelayRequested = false,
+                                DeviceCheck = "Foreground",
+                                DeviceClass = 1,
+                                DeviceOSData = new
+                                {
+                                    BuildVersion = build.Key,
+                                    HWModelStr = Model,
+                                    ProductType = Device,
+                                    ProductVersion = osVersion.Key
+                                },
                                 HWModelStr = Model,
+                                InternalBuild = false,
+                                IsUIBuild = true,
+                                NoFallback = true,
                                 ProductType = Device,
-                                ProductVersion = osVersion.Key
-                            });
+                                ProductVersion = osVersion.Key,
+                                ScanRequestCount = 1,
+                                SigningFuse = true,
+                                Supervised = false
+                           });
 
                         // Disable TLS verification. (Needed for Windows since it doesn't have Apple Root CA.)
                         Fido.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
