@@ -334,6 +334,14 @@ namespace Octothorpe.Lib
             // Gather the asset audiences.
             switch (Device.Substring(0, 3))
             {
+                // AirPods Pro
+                case "iPr":
+                    BuildInfo = (NSDictionary)BuildInfo["AirPods"];
+
+                    if (showBeta)
+                        AssetAudiences.Add("f859d8a7-5f87-4659-b6a0-5ee9fa439b8f");
+                    break;
+
                 // audioOS
                 case "Aud":
                     BuildInfo = (NSDictionary)BuildInfo["audioOS"];
