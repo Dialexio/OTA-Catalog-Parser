@@ -340,7 +340,10 @@ namespace Octothorpe.Lib
                     AssetAudiences.Add("0322d49d-d558-4ddf-bdff-c0443d0e6fac");
 
                     if (showBeta)
-                        AssetAudiences.Add("b05ddb59-b26d-4c89-9d09-5fda15e99207"); //audioOS 14 beta
+                        AssetAudiences.AddRange(new string[] {
+                            "b05ddb59-b26d-4c89-9d09-5fda15e99207", // audioOS 14 beta
+                            "58ff8d56-1d77-4473-ba88-ee1690475e40"  // audioOS 15 beta
+                        });
                     break;
 
                 // tvOS
@@ -353,7 +356,8 @@ namespace Octothorpe.Lib
                         AssetAudiences.AddRange(new string[] {
                             "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
                             "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
-                            "65254ac3-f331-4c19-8559-cbe22f5bc1a6"  // tvOS 14 beta
+                            "65254ac3-f331-4c19-8559-cbe22f5bc1a6", // tvOS 14 beta
+                            "4d0dcdf7-12f2-4ebf-9672-ac4a4459a8bc"  // tvOS 15 beta
                         });
                     break;
 
@@ -370,7 +374,8 @@ namespace Octothorpe.Lib
                             "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
                             "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
                             "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
-                            "dbbb0481-d521-4cdf-a2a4-5358affc224b"  // iOS 14 beta
+                            "dbbb0481-d521-4cdf-a2a4-5358affc224b", // iOS 14 beta
+                            "ce48f60c-f590-4157-a96f-41179ca08278"  // iOS 15 beta
                         });
                     break;
 
@@ -385,7 +390,8 @@ namespace Octothorpe.Lib
 
                     if (showBeta)
                         AssetAudiences.AddRange(new string[] {
-                            "ca60afc6-5954-46fd-8cb9-60dde6ac39fd"  // macOS 11 beta
+                            "ca60afc6-5954-46fd-8cb9-60dde6ac39fd", // macOS 11 beta
+                            "298e518d-b45e-4d36-94be-34a63d6777ec"  // macOS 12 beta
                         });
 
                     // We also need to splice the build number. This looked like an ideal spot to put it without creating another if statement.
@@ -413,7 +419,8 @@ namespace Octothorpe.Lib
                         AssetAudiences.AddRange(new string[] {
                             "e841259b-ad2e-4046-b80f-ca96bc2e17f3", // watchOS 5 beta
                             "d08cfd47-4a4a-4825-91b5-3353dfff194f", // watchOS 6 beta
-                            "ff6df985-3cbe-4d54-ba5f-50d02428d2a3"  // watchOS 7 beta
+                            "ff6df985-3cbe-4d54-ba5f-50d02428d2a3", // watchOS 7 beta
+                            "b407c130-d8af-42fc-ad7a-171efea5a3d0"  // watchOS 8 beta
                         });
                     break;
             }
