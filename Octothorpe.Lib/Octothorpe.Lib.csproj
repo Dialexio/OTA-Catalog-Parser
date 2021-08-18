@@ -12,8 +12,8 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="plist-cil" Version="2.2.0" />
-        <PackageReference Include="JWT" Version="8.2.2" />
-        <PackageReference Include="RestSharp" Version="106.11.7" />
+        <PackageReference Include="JWT" Version="8.2.3" />
+        <PackageReference Include="RestSharp" Version="106.12.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         </ItemGroup>
         <ItemGroup>
