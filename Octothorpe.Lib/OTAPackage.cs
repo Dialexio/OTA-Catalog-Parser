@@ -77,8 +77,8 @@ namespace Octothorpe.Lib
         {
             get
             {
-                // If it's labeled as a beta when it's not one... We need the actual build number.
-                return (Regex.Match(DeclaredBuild, REGEX_BETA).Success && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]) == false) ?
+                // If the build number smells like a beta... We'll need to verify its actual build number.
+                return (Regex.Match(DeclaredBuild, REGEX_BETA).Success) ?
                     RemoveBuildPadding(DeclaredBuild) :
                     DeclaredBuild;
             }
@@ -649,9 +649,21 @@ namespace Octothorpe.Lib
                 if (BuildNum[LetterPos] == '8')
                     return BuildNum;
 
-                // NumPos will be the first actual digit that comes after the letter.
+                // NumPos will be the position of the first actual digit that comes after the letter.
                 NumPos = LetterPos + 1;
-                
+
+                // Do one last rudimentary check to make sure we don't accidentally trim a beta build number.
+                // This currently checks if there are five characters after the first letter in the build number.
+                if (BuildNum.Substring(LetterPos).Length == 5)
+                {
+                    // Apple likes to specify a fake 6 in the build number to target every beta with the OTA update. Let's (try to) fix that.
+                    if (BuildNum[LetterPos] == '6' && char.IsLetter(DeclaredBuild[DeclaredBuild.Length - 1]))
+                        return BuildNum.Substring(0, LetterPos) + '5' + BuildNum.Substring(NumPos);
+
+                    // Return the beta build number.
+                    return BuildNum;
+                }
+
                 // Checking on the number after the beta padding.
                 // This handles padded numbers like 15B6092.
                 if (BuildNum[NumPos] == '0')
