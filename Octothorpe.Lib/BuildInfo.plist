@@ -1996,6 +1996,14 @@
 				<integer>20210726</integer>
 			</dict>
 		</dict>
+		<key>14.8</key>
+		<dict>
+			<key>18H17</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210913</integer>
+			</dict>
+		</dict>
 		<key>15.0</key>
 		<dict>
 			<key>19A5261w</key>
@@ -2062,6 +2070,13 @@
 				<integer>8</integer>
 				<key>Date</key>
 				<integer>20210831</integer>
+			</dict>
+			<key>19A344</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210914</integer>
+				<key>Suffix</key>
+				<string>RC</string>
 			</dict>
 		</dict>
 	</dict>
@@ -2424,6 +2439,14 @@
 			<dict>
 				<key>Date</key>
 				<integer>20210811</integer>
+			</dict>
+		</dict>
+		<key>11.6</key>
+		<dict>
+			<key>20G165</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210913</integer>
 			</dict>
 		</dict>
 		<key>12.0</key>
@@ -3357,6 +3380,13 @@
 				<integer>8</integer>
 				<key>Date</key>
 				<integer>20210831</integer>
+			</dict>
+			<key>19J346</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210914</integer>
+				<key>Suffix</key>
+				<string>RC</string>
 			</dict>
 		</dict>
 	</dict>
@@ -5255,6 +5285,14 @@
 				<integer>20210729</integer>
 			</dict>
 		</dict>
+		<key>7.6.2</key>
+		<dict>
+			<key>18U80</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210913</integer>
+			</dict>
+		</dict>
 		<key>8.0</key>
 		<dict>
 			<key>19R5266q</key>
@@ -5312,6 +5350,13 @@
 				<integer>8</integer>
 				<key>Date</key>
 				<integer>20210831</integer>
+			</dict>
+			<key>19R346</key>
+			<dict>
+				<key>Date</key>
+				<integer>20210914</integer>
+				<key>Suffix</key>
+				<string>RC</string>
 			</dict>
 		</dict>
 	</dict>
