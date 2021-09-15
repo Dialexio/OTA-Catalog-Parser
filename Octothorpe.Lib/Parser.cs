@@ -834,11 +834,14 @@ namespace Octothorpe.Lib
                     }
 
                     // Add the suffix (if appropriate).
-                    if (package.PrerequisiteVer().Contains(" RC"))
-                        Output.Append($" [[Release Candidate|RC]]");
+                    if (string.IsNullOrEmpty(package.Suffix) == false)
+                    {
+                        if (package.Suffix.Contains("RC"))
+                            Output.Append($" {package.Suffix.Replace("RC", "[[Release Candidate|RC]]")}");
 
-                    else if (string.IsNullOrEmpty(package.Suffix) == false)
-                        Output.Append($" {package.Suffix}");
+                        else
+                            Output.Append($" {package.Suffix}");
+                    }
 
                     Output.AppendLine();
 
