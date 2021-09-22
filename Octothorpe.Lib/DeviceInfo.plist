@@ -270,6 +270,18 @@
 				<string>iMac19,1</string>
 			</dict>
 		</dict>
+		<key>iMac (Retina 5K, 27-inch, 2020)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J185AP</key>
+				<string>iMac20,1</string>
+				<key>J185fAP</key>
+				<string>iMac20,2</string>
+			</dict>
+		</dict>
 		<key>iMac (24&quot; 2021)</key>
 		<dict>
 			<key>HeaderLevel</key>
@@ -280,6 +292,19 @@
 				<string>iMac21,1</string>
 				<key>J457AP</key>
 				<string>iMac21,2</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>iMac Pro</key>
+	<dict>
+		<key>iMac Pro (2017)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>Mac-7BA5B2D9E42DDD94</key>
+				<string>iMacPro1,1</string>
 			</dict>
 		</dict>
 	</dict>
@@ -1045,6 +1070,26 @@
 				<string>Macmini7,1</string>
 			</dict>
 		</dict>
+		<key>Mac mini (Late 2018)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J174AP</key>
+				<string>Macmini8,1</string>
+			</dict>
+		</dict>
+		<key>Mac mini (2020)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J274AP</key>
+				<string>Macmini9,1</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>Mac Pro</key>
 	<dict>
@@ -1054,7 +1099,7 @@
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>Mac-27AD2F918AE68F61</key>
+				<key>J160AP</key>
 				<string>MacPro7,1</string>
 			</dict>
 		</dict>
@@ -1071,13 +1116,23 @@
 				<string>MacBookAir6,1</string>
 			</dict>
 		</dict>
+		<key>MacBook Air (Late 2018)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J140kAP</key>
+				<string>MacBookAir8,1</string>
+			</dict>
+		</dict>
 		<key>MacBook Air (Retina 2019)</key>
 		<dict>
 			<key>HeaderLevel</key>
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>Mac-226CB3C6A851A671</key>
+				<key>J140aAP</key>
 				<string>MacBookAir8,2</string>
 			</dict>
 		</dict>
@@ -1087,8 +1142,18 @@
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>Mac-0CFF9C7C2B63DF8D</key>
+				<key>J230kAP</key>
 				<string>MacBookAir9,1</string>
+			</dict>
+		</dict>
+		<key>MacBook Air (Late 2020)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J313AP</key>
+				<string>MacBookAir10,1</string>
 			</dict>
 		</dict>
 	</dict>
@@ -1114,13 +1179,23 @@
 				<string>MacBookPro13,2</string>
 			</dict>
 		</dict>
+		<key>MacBook Pro (13&quot; Mid 2018)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J132AP</key>
+				<string>MacBookPro15,2</string>
+			</dict>
+		</dict>
 		<key>MacBook Pro (13&quot; Late 2019)</key>
 		<dict>
 			<key>HeaderLevel</key>
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>Mac-53FDB3D8DB8CA971</key>
+				<key>J213AP</key>
 				<string>MacBookPro15,4</string>
 			</dict>
 		</dict>
@@ -1130,8 +1205,20 @@
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>Mac-5F9802EFE386AA28</key>
+				<key>J214kAP</key>
+				<string>MacBookPro16,2</string>
+				<key>J223AP</key>
 				<string>MacBookPro16,3</string>
+			</dict>
+		</dict>
+		<key>MacBook Pro (13&quot; Late 2020)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J293AP</key>
+				<string>MacBookPro17,1</string>
 			</dict>
 		</dict>
 		<key>MacBook Pro (15&quot; Late 2013)</key>
@@ -1186,14 +1273,28 @@
 				<string>MacBookPro14,3</string>
 			</dict>
 		</dict>
-		<key>MacBook Pro (15&quot; Mid 2019)</key>
+		<key>MacBook Pro (15&quot; Mid 2018)</key>
 		<dict>
 			<key>HeaderLevel</key>
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>Mac-1E7E29AD0135F9BC</key>
+				<key>J680AP</key>
+				<string>MacBookPro15,1</string>
+				<key>J780AP</key>
 				<string>MacBookPro15,3</string>
+			</dict>
+		</dict>
+		<key>MacBook Pro (16&quot; Late 2019)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J213AP</key>
+				<string>MacBookPro15,4</string>
+				<key>J215AP</key>
+				<string>MacBookPro16,4</string>
 			</dict>
 		</dict>
 		<key>MacBook Pro (17&quot; Late 2011)</key>
@@ -1204,16 +1305,6 @@
 			<dict>
 				<key>Mac-50619A408DB004DA</key>
 				<string>MacBookPro8,3</string>
-			</dict>
-		</dict>
-		<key>MacBook Pro (2019)</key>
-		<dict>
-			<key>HeaderLevel</key>
-			<integer>3</integer>
-			<key>Models</key>
-			<dict>
-				<key>J132AP</key>
-				<string>MacBookPro15,2</string>
 			</dict>
 		</dict>
 	</dict>
