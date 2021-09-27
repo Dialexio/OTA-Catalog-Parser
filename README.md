@@ -1,7 +1,7 @@
 # OTA Catalog Parser
 This program lets you view an OTA update catalog for [audioOS](https://mesu.apple.com/assets/audio/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml), [iOS](https://mesu.apple.com/assets/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml), [tvOS](https://mesu.apple.com/assets/tv/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml), and [watchOS](https://mesu.apple.com/assets/watch/com_apple_MobileAsset_SoftwareUpdate/com_apple_MobileAsset_SoftwareUpdate.xml) in a more pleasant format. It can also output the information in a format suitable for entry on [The iPhone Wiki](https://www.theiphonewiki.com/wiki/OTA_Updates).
 
-It is also capable of making/receiving requests to Apple's [https://gdmf.apple.com/v2/assets](Pallas server), which also provides OTA updates.
+It is also capable of making/receiving requests to Apple's [Pallas server](https://gdmf.apple.com/v2/assets), which also provides OTA updates.
 
 ## Program Requirements
 The Mac version requires macOS v10.9 (Mavericks) or newer. It is built with Xamarin.Mac; no additional downloads are required.

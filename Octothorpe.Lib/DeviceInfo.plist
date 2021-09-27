@@ -179,6 +179,22 @@
 				<string>Watch6,4</string>
 			</dict>
 		</dict>
+		<key>Apple Watch Series 7</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>N187sAP</key>
+				<string>Watch6,6</string>
+				<key>N187bAP</key>
+				<string>Watch6,7</string>
+				<key>N188sAP</key>
+				<string>Watch6,8</string>
+				<key>N188bAP</key>
+				<string>Watch6,9</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>Developer Transition Kit</key>
 	<dict>
@@ -687,6 +703,18 @@
 				<string>iPad11,2</string>
 			</dict>
 		</dict>
+		<key>iPad mini (6th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J310AP</key>
+				<string>iPad14,1</string>
+				<key>J311AP</key>
+				<string>iPad14,2</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPhone</key>
 	<dict>
@@ -998,6 +1026,46 @@
 				<string>iPhone13,4</string>
 			</dict>
 		</dict>
+		<key>iPhone 13</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D17AP</key>
+				<string>iPhone14,5</string>
+			</dict>
+		</dict>
+		<key>iPhone 13 mini</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D16AP</key>
+				<string>iPhone14,4</string>
+			</dict>
+		</dict>
+		<key>iPhone 13 Pro</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D63AP</key>
+				<string>iPhone14,2</string>
+			</dict>
+		</dict>
+		<key>iPhone 13 Pro Max</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D64AP</key>
+				<string>iPhone14,3</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPod touch</key>
 	<dict>
@@ -1122,7 +1190,7 @@
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>J140kAP</key>
+				<key>J140KAP</key>
 				<string>MacBookAir8,1</string>
 			</dict>
 		</dict>
@@ -1132,7 +1200,7 @@
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>J140aAP</key>
+				<key>J140AAP</key>
 				<string>MacBookAir8,2</string>
 			</dict>
 		</dict>
@@ -1142,7 +1210,7 @@
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>J230kAP</key>
+				<key>J230KAP</key>
 				<string>MacBookAir9,1</string>
 			</dict>
 		</dict>
@@ -1205,7 +1273,7 @@
 			<integer>3</integer>
 			<key>Models</key>
 			<dict>
-				<key>J214kAP</key>
+				<key>J214KAP</key>
 				<string>MacBookPro16,2</string>
 				<key>J223AP</key>
 				<string>MacBookPro16,3</string>

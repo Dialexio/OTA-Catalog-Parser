@@ -2071,12 +2071,42 @@
 				<key>Date</key>
 				<integer>20210831</integer>
 			</dict>
+			<key>19A340</key>
+			<dict>
+				<key>Date</key>
+				<integer>99999999</integer>
+			</dict>
+			<key>19A341</key>
+			<dict>
+				<key>Date</key>
+				<real>99999999</real>
+			</dict>
 			<key>19A344</key>
 			<dict>
 				<key>Date</key>
 				<integer>20210914</integer>
 				<key>Suffix</key>
 				<string>RC</string>
+			</dict>
+			<key>19A345</key>
+			<dict>
+				<key>Date</key>
+				<integer>99999999</integer>
+			</dict>
+			<key>19A346</key>
+			<dict>
+				<key>Date</key>
+				<real>20210920</real>
+			</dict>
+		</dict>
+		<key>15.1</key>
+		<dict>
+			<key>19B5042h</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20210924</real>
 			</dict>
 		</dict>
 	</dict>
