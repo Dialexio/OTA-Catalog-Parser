@@ -2079,7 +2079,7 @@
 			<key>19A341</key>
 			<dict>
 				<key>Date</key>
-				<real>99999999</real>
+				<integer>99999999</integer>
 			</dict>
 			<key>19A344</key>
 			<dict>
@@ -2096,7 +2096,7 @@
 			<key>19A346</key>
 			<dict>
 				<key>Date</key>
-				<real>20210920</real>
+				<integer>20210920</integer>
 			</dict>
 		</dict>
 		<key>15.1</key>
@@ -2106,7 +2106,7 @@
 				<key>Beta</key>
 				<integer>1</integer>
 				<key>Date</key>
-				<real>20210924</real>
+				<integer>20210924</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -2484,44 +2484,51 @@
 			<key>21A5248p</key>
 			<dict>
 				<key>Beta</key>
-				<string>1</string>
+				<integer>1</integer>
 				<key>Date</key>
 				<integer>20210607</integer>
 			</dict>
 			<key>21A5268h</key>
 			<dict>
 				<key>Beta</key>
-				<string>2</string>
+				<integer>2</integer>
 				<key>Date</key>
 				<integer>20210628</integer>
 			</dict>
 			<key>21A5284e</key>
 			<dict>
 				<key>Beta</key>
-				<string>3</string>
+				<integer>3</integer>
 				<key>Date</key>
 				<integer>20210714</integer>
 			</dict>
 			<key>21A5294g</key>
 			<dict>
 				<key>Beta</key>
-				<string>4</string>
+				<integer>4</integer>
 				<key>Date</key>
 				<integer>20210727</integer>
 			</dict>
 			<key>21A5304g</key>
 			<dict>
 				<key>Beta</key>
-				<string>5</string>
+				<integer>5</integer>
 				<key>Date</key>
 				<integer>20210811</integer>
 			</dict>
 			<key>21A5506j</key>
 			<dict>
 				<key>Beta</key>
-				<string>6</string>
+				<integer>6</integer>
 				<key>Date</key>
 				<integer>20210830</integer>
+			</dict>
+			<key>21A5522h</key>
+			<dict>
+				<key>Beta</key>
+				<integer>7</integer>
+				<key>Date</key>
+				<integer>20210921</integer>
 			</dict>
 		</dict>
 	</dict>
