@@ -385,6 +385,11 @@ namespace Octothorpe.Lib
                             "dbbb0481-d521-4cdf-a2a4-5358affc224b", // iOS 14 beta
                             "ce48f60c-f590-4157-a96f-41179ca08278"  // iOS 15 beta
                         });
+
+                    // iOS 14 security releases
+                    if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                        AssetAudiences.Add("c724cb61-e974-42d3-a911-ffd4dce11eda");
+
                     break;
 
                 // macOS
