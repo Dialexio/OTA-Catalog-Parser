@@ -576,17 +576,23 @@ namespace Octothorpe.Lib
         
             foreach (OTAPackage package in Packages)
             {
-                switch (Device.Substring(0, 4))
+                switch (Device.Substring(0, 3))
                 {
-                    case "Appl":
+                    case "ADP":
+                    case "iMa":
+                    case "Mac":
+                        osName = "macOS";
+                        break;
+
+                    case "App":
                         osName = (Regex.Match(Device, @"AppleTV(2,1|3,1|3,2)").Success) ? "Apple TV software" : "tvOS";
                         break;
 
-                    case "Audi":
+                    case "Aud":
                         osName = "audioOS";
                         break;
 
-                    case "Watc":
+                    case "Wat":
                         osName = "watchOS";
                         break;
 

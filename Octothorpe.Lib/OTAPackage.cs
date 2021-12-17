@@ -768,6 +768,10 @@ namespace Octothorpe.Lib
             while (new Regex("[A-z]").Split(build)[1].Length < 3 && match.Success)
                 build = $"{match.Value}0{new Regex("[A-Z]").Split(build)[1]}";
 
+            // Add a 6 to bump a public release's build number to be higher than beta build numbers.
+            if ((new Regex("[A-z]").Split(build)[1]).Length == 3)
+                build = $"{match.Value}6{new Regex("[A-Z]").Split(build)[1]}";
+
             // If the build does not have a letter, add a fake one to push it below similarly-numbered betas.
             if (char.IsDigit(build[build.Length - 1]))
                 build = $"{build}z";
