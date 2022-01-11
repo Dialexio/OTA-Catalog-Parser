@@ -2427,6 +2427,16 @@
 				<integer>20211213</integer>
 			</dict>
 		</dict>
+		<key>15.3</key>
+		<dict>
+			<key>19D5026g</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20211217</real>
+			</dict>
+		</dict>
 	</dict>
 	<key>macOS</key>
 	<dict>
@@ -2972,6 +2982,13 @@
 				<integer>1</integer>
 				<key>Date</key>
 				<integer>20211216</integer>
+			</dict>
+			<key>21D5039d</key>
+			<dict>
+				<key>Beta</key>
+				<integer>2</integer>
+				<key>Date</key>
+				<integer>20220111</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -3952,6 +3969,16 @@
 			<dict>
 				<key>Date</key>
 				<integer>20211213</integer>
+			</dict>
+		</dict>
+		<key>15.3</key>
+		<dict>
+			<key>19K5527e</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20211217</real>
 			</dict>
 		</dict>
 	</dict>
@@ -6008,6 +6035,16 @@
 			<dict>
 				<key>Date</key>
 				<integer>20211213</integer>
+			</dict>
+		</dict>
+		<key>8.4</key>
+		<dict>
+			<key>19S5525f</key>
+			<dict>
+				<key>Beta</key>
+				<integer>1</integer>
+				<key>Date</key>
+				<real>20211217</real>
 			</dict>
 		</dict>
 	</dict>

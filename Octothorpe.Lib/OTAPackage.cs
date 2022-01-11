@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2021 Dialexio
+ * Copyright (c) 2022 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -344,7 +344,7 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
+                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate" || AssetType == "com.apple.MobileAsset.SFRSoftwareUpdate")
                     osName = "macOS";
 
                 else
@@ -503,7 +503,7 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
+                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate" || AssetType == "com.apple.MobileAsset.SFRSoftwareUpdate")
                     osName = "macOS";
 
                 else

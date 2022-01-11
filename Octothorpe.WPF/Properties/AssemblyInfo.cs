@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Octothorpe.WPF")]
-[assembly: AssemblyCopyright("Copyright ©2021 Dialexio.")]
+[assembly: AssemblyCopyright("Copyright ©2022 Dialexio.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
