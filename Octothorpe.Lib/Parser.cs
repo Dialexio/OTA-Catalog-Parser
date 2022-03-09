@@ -22,6 +22,7 @@
  */
 using Claunia.PropertyList;
 using JWT;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -107,9 +108,9 @@ namespace Octothorpe.Lib
 
             if (Regex.IsMatch(AssetFile, @"://mesu.apple.com/assets/"))
             {
-                RestClient Fido = new RestClient();
-                var request = new RestRequest(AssetFile);
-                IRestResponse response = Fido.Execute(request);
+                RestClient Fido = new RestClient(AssetFile);
+                RestRequest request = new RestRequest();
+                RestResponse response = Fido.ExecuteAsync(request).GetAwaiter().GetResult();
                 MemoryStream ResponseAsStream = new MemoryStream(Encoding.UTF8.GetBytes(response.Content));
                 root = (NSDictionary)PropertyListParser.Parse(ResponseAsStream);
             }
@@ -319,15 +320,16 @@ namespace Octothorpe.Lib
         private void GetPallasEntries()
         {
             Dictionary<string, object> DecryptedPayload;
+            Dictionary<string, string> AssetAudiences = new Dictionary<string, string>();
             int ArrayIndex = 0;
-            IRestResponse response;
             JwtDecoder ResponseDecoder = new JwtDecoder(new JWT.Serializers.JsonNetSerializer(), new JwtBase64UrlEncoder());
-            List<string> AssetAudiences = new List<string>(),
-                PackagesPresent = new List<string>();
+            List<string> PackagesPresent = new List<string>();
             NSDictionary BuildInfo = (NSDictionary)PropertyListParser.Parse($"{AppContext.BaseDirectory}BuildInfo.plist");
+            object JsonRequest;
             OTAPackage package;
-            RestClient Fido = new RestClient();
-            RestRequest request = new RestRequest("https://gdmf.apple.com/v2/assets");
+            RestClient Fido;
+            RestRequest request;
+            RestResponse response;
             string SUAssetType = "com.apple.MobileAsset.SoftwareUpdate";
             string[] SplicedBuildNum = new string[4];
 
@@ -339,34 +341,49 @@ namespace Octothorpe.Lib
                     BuildInfo = (NSDictionary)BuildInfo["AirPods"];
 
                     if (showBeta)
-                        AssetAudiences.Add("f859d8a7-5f87-4659-b6a0-5ee9fa439b8f");
+                        AssetAudiences.Add("f859d8a7-5f87-4659-b6a0-5ee9fa439b8f", null);
                     break;
 
                 // audioOS
                 case "Aud":
                     BuildInfo = (NSDictionary)BuildInfo["audioOS"];
-                    AssetAudiences.Add("0322d49d-d558-4ddf-bdff-c0443d0e6fac");
+                    AssetAudiences.Add("0322d49d-d558-4ddf-bdff-c0443d0e6fac", null);
 
+                    // Beta Asset Audiences
                     if (showBeta)
-                        AssetAudiences.AddRange(new string[] {
-                            "b05ddb59-b26d-4c89-9d09-5fda15e99207", // audioOS 14 beta
-                            "58ff8d56-1d77-4473-ba88-ee1690475e40"  // audioOS 15 beta
-                        });
+                    {
+                        // Let's cut down on the amount of requests we make.
+                        if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                            AssetAudiences.Add("b05ddb59-b26d-4c89-9d09-5fda15e99207", "Beta"); // audioOS 14 beta
+
+
+                        if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
+                            AssetAudiences.Add("58ff8d56-1d77-4473-ba88-ee1690475e40", "Beta"); // audioOS 15 beta
+                    }
                     break;
 
                 // tvOS
                 case "App":
                     BuildInfo = (NSDictionary)BuildInfo["tvOS"];
 
-                    AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0");
+                    AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0", null);
 
+                    // Beta Asset Audiences
                     if (showBeta)
-                        AssetAudiences.AddRange(new string[] {
-                            "5b220c65-fe50-460b-bac5-b6774b2ff475", // tvOS 12 beta
-                            "975af5cb-019b-42db-9543-20327280f1b2", // tvOS 13 beta
-                            "65254ac3-f331-4c19-8559-cbe22f5bc1a6", // tvOS 14 beta
-                            "4d0dcdf7-12f2-4ebf-9672-ac4a4459a8bc"  // tvOS 15 beta
-                        });
+                    {
+                        // Let's cut down on the amount of requests we make.
+                        if (pallasCurrentVersion.CompareTo(new Version("13.0")) < 0)
+                            AssetAudiences.Add("5b220c65-fe50-460b-bac5-b6774b2ff475", "Beta"); // tvOS 12 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("14.0")) < 0)
+                            AssetAudiences.Add("975af5cb-019b-42db-9543-20327280f1b2", "Beta"); // tvOS 13 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                            AssetAudiences.Add("65254ac3-f331-4c19-8559-cbe22f5bc1a6", "Beta"); // tvOS 14 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
+                            AssetAudiences.Add("4d0dcdf7-12f2-4ebf-9672-ac4a4459a8bc", "Beta"); // tvOS 15 beta
+                    }
                     break;
 
                 // iOS / iPadOS
@@ -375,20 +392,31 @@ namespace Octothorpe.Lib
                 case "iPo":
                     BuildInfo = (NSDictionary)BuildInfo["iOS"];
 
-                    AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c");
-
-                    if (showBeta)
-                        AssetAudiences.AddRange(new string[] {
-                            "b7580fda-59d3-43ae-9488-a81b825e3c73", // iOS 11 beta
-                            "ef473147-b8e7-4004-988e-0ae20e2532ef", // iOS 12 beta
-                            "d8ab8a45-ee39-4229-891e-9d3ca78a87ca", // iOS 13 beta
-                            "dbbb0481-d521-4cdf-a2a4-5358affc224b", // iOS 14 beta
-                            "ce48f60c-f590-4157-a96f-41179ca08278"  // iOS 15 beta
-                        });
+                    AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c", null);
 
                     // iOS 14 security releases
                     if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
-                        AssetAudiences.Add("c724cb61-e974-42d3-a911-ffd4dce11eda");
+                        AssetAudiences.Add("c724cb61-e974-42d3-a911-ffd4dce11eda", null);
+
+                    // Beta Asset Audiences
+                    if (showBeta)
+                    {
+                        // Let's cut down on the amount of requests we make.
+                        if (pallasCurrentVersion.CompareTo(new Version("12.0")) < 0)
+                            AssetAudiences.Add("b7580fda-59d3-43ae-9488-a81b825e3c73", "Beta"); // 11
+
+                        if (pallasCurrentVersion.CompareTo(new Version("13.0")) < 0)
+                            AssetAudiences.Add("ef473147-b8e7-4004-988e-0ae20e2532ef", "Beta"); // 12
+
+                        if (pallasCurrentVersion.CompareTo(new Version("14.0")) < 0)
+                            AssetAudiences.Add("d8ab8a45-ee39-4229-891e-9d3ca78a87ca", "Beta"); // 13
+
+                        if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                            AssetAudiences.Add("dbbb0481-d521-4cdf-a2a4-5358affc224b", "Beta"); // 14
+
+                        if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
+                            AssetAudiences.Add("ce48f60c-f590-4157-a96f-41179ca08278", "Beta"); // 15
+                    }
 
                     break;
 
@@ -399,13 +427,18 @@ namespace Octothorpe.Lib
                     BuildInfo = (NSDictionary)BuildInfo["macOS"];
                     SUAssetType = "com.apple.MobileAsset.MacSoftwareUpdate";
 
-                    AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65"); // macOS Public
+                    AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65", null);
 
+                    // Beta Asset Audiences
                     if (showBeta)
-                        AssetAudiences.AddRange(new string[] {
-                            "ca60afc6-5954-46fd-8cb9-60dde6ac39fd", // macOS 11 beta
-                            "298e518d-b45e-4d36-94be-34a63d6777ec"  // macOS 12 beta
-                        });
+                    {
+                        // Let's cut down on the amount of requests we make.
+                        if (pallasCurrentVersion.CompareTo(new Version("12.0")) < 0)
+                            AssetAudiences.Add("ca60afc6-5954-46fd-8cb9-60dde6ac39fd", "Beta"); // macOS 11 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("13.0")) < 0)
+                            AssetAudiences.Add("298e518d-b45e-4d36-94be-34a63d6777ec", "Beta"); // macOS 12 beta
+                    }
 
                     // We also need to splice the build number. This looked like an ideal spot to put it without creating another if statement.
                     foreach (char BuildChar in pallasCurrentBuild)
@@ -426,21 +459,25 @@ namespace Octothorpe.Lib
                 case "Wat":
                     BuildInfo = (NSDictionary)BuildInfo["watchOS"];
 
-                    AssetAudiences.Add("b82fcf9c-c284-41c9-8eb2-e69bf5a5269f");
+                    AssetAudiences.Add("b82fcf9c-c284-41c9-8eb2-e69bf5a5269f", null);
 
                     if (showBeta)
-                        AssetAudiences.AddRange(new string[] {
-                            "e841259b-ad2e-4046-b80f-ca96bc2e17f3", // watchOS 5 beta
-                            "d08cfd47-4a4a-4825-91b5-3353dfff194f", // watchOS 6 beta
-                            "ff6df985-3cbe-4d54-ba5f-50d02428d2a3", // watchOS 7 beta
-                            "b407c130-d8af-42fc-ad7a-171efea5a3d0"  // watchOS 8 beta
-                        });
+                    {
+                        // Let's cut down on the amount of requests we make.
+                        if (pallasCurrentVersion.CompareTo(new Version("6.0")) < 0)
+                            AssetAudiences.Add("e841259b-ad2e-4046-b80f-ca96bc2e17f3", "Beta"); // watchOS 5 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("7.0")) < 0)
+                            AssetAudiences.Add("d08cfd47-4a4a-4825-91b5-3353dfff194f", "Beta"); // watchOS 6 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("8.0")) < 0)
+                            AssetAudiences.Add("ff6df985-3cbe-4d54-ba5f-50d02428d2a3", "Beta"); // watchOS 7 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("9.0")) < 0)
+                            AssetAudiences.Add("b407c130-d8af-42fc-ad7a-171efea5a3d0", "Beta"); // watchOS 8 beta
+                    }
                     break;
             }
-
-            // Put together the request.
-            request.AddHeader("Accept", "application/json");
-            request.Method = Method.POST;
 
             foreach (KeyValuePair<string, NSObject> osVersion in BuildInfo)
             {
@@ -454,20 +491,24 @@ namespace Octothorpe.Lib
 
                 foreach (KeyValuePair<string, NSObject> build in (NSDictionary)osVersion.Value)
                 {
-                    foreach (string AssetAudience in AssetAudiences)
+                    foreach (KeyValuePair<string, string> PallasAssetAudience in AssetAudiences)
                     {
                         string PostingDate;
 
-                        // If this isn't the first run-through, remove the previous JSON body.
-                        while (request.Parameters.Count >= 2)
-                            request.Parameters.RemoveAt(1);
+                        // Put together the request.
+                        request = new RestRequest("https://gdmf.apple.com/v2/assets", Method.Post);
+
+                        // Adding the Accept/Content-type headers manually because we can't use RestRequest.AddJsonBody()
+                        request.AddHeader("Accept", "application/json");
+                        request.AddHeader("Content-type", "application/json");
 
                         // Add the JSON body. Macs have slightly different parameters.
                         if (SUAssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
-                            request.AddJsonBody(new
+                        {
+                            JsonRequest = new
                             {
                                 AllowSameBuildVersion = false,
-                                AssetAudience = AssetAudience,
+                                AssetAudience = PallasAssetAudience.Key,
                                 AssetType = SUAssetType,
                                 BaseUrl = "https://mesu.apple.com/assets/macos/",
                                 BuildVersion = build.Key,
@@ -488,13 +529,14 @@ namespace Octothorpe.Lib
                                 RequestedVersion = pallasRequestedVersion,
                                 RestoreVersion = $"{SplicedBuildNum[0]}.{((int)SplicedBuildNum[1][0]) - 64}.{SplicedBuildNum[2]}.0.0,0",
                                 Supervised = pallasSupervised
-                            });
+                            };
+                        }
 
                         else
-                            request.AddJsonBody(new
+                        {
+                            JsonRequest = new
                             {
-                                AllowSameBuildVersion = false,
-                                AssetAudience = AssetAudience,
+                                AssetAudience = PallasAssetAudience.Key,
                                 AssetType = SUAssetType,
                                 BaseUrl = "https://mesu.apple.com/assets/",
                                 BuildVersion = build.Key,
@@ -504,9 +546,7 @@ namespace Octothorpe.Lib
                                     DeviceAccessClient = "softwareupdateservicesd"
                                 },
                                 ClientVersion = 2,
-                                DelayRequested = false,
-                                DeviceCheck = "Foreground",
-                                DeviceClass = 1,
+                                DelayRequested = pallasSupervised,
                                 DeviceOSData = new
                                 {
                                     BuildVersion = build.Key,
@@ -520,16 +560,24 @@ namespace Octothorpe.Lib
                                 NoFallback = true,
                                 ProductType = Device,
                                 ProductVersion = osVersion.Key,
-                                ScanRequestCount = 1,
+                                RequestedProductVersion = osVersion.Key,
                                 SigningFuse = true,
-                                Supervised = false
-                           });
+                                Supervised = pallasSupervised
+                            };
+                        }
 
-                        // Disable TLS verification. (Needed for Windows since it doesn't have Apple Root CA.)
-                        Fido.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+
+                        // We can't use RestRequest.AddJsonBody() because Pallas is picky about the aforementioned headers.
+                        request.AddStringBody(JsonConvert.SerializeObject(JsonRequest), DataFormat.Json);
+
+                        Fido = new RestClient(new RestClientOptions()
+                        {
+                            // Disable TLS verification. (Windows doesn't have Apple Root CA.)
+                            RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
+                        });
 
                         // Get Apple's response, then decode it.
-                        response = Fido.Execute(request);
+                        response = Fido.ExecuteAsync(request).GetAwaiter().GetResult();
                         DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
 
                         // Grab the release date. If none is present, default to all zeroes.
@@ -537,8 +585,9 @@ namespace Octothorpe.Lib
                             ((string)DecryptedPayload["PostingDate"]).Replace("-", string.Empty) :
                             "00000000";
 
-                        if (((Dictionary<string, object>)DecryptedPayload).TryGetValue("Assets", out object AssetsArray))
+                        if (DecryptedPayload.TryGetValue("Assets", out object AssetsArray))
                         {
+                            // In case we get multiple assets from one request, for some reason.
                             foreach (JContainer container in (JArray)AssetsArray)
                             {
                                 package = new OTAPackage(container, PostingDate);
@@ -558,6 +607,9 @@ namespace Octothorpe.Lib
                                     PackagesPresent.Add(package.SortingString);
                                 }
                             }
+
+                            AssetsArray = null;
+                            package = null;
                         }
                     }
                 }

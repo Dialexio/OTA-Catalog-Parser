@@ -344,7 +344,7 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate" || AssetType == "com.apple.MobileAsset.SFRSoftwareUpdate")
+                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
                     osName = "macOS";
 
                 else
@@ -503,7 +503,7 @@ namespace Octothorpe.Lib
             try
             {
                 // Items are separated by OS branch.
-                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate" || AssetType == "com.apple.MobileAsset.SFRSoftwareUpdate")
+                if (AssetType == "com.apple.MobileAsset.MacSoftwareUpdate")
                     osName = "macOS";
 
                 else
