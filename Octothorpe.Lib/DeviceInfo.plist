@@ -493,6 +493,18 @@
 				<string>iPad13,2</string>
 			</dict>
 		</dict>
+		<key>iPad Air (5th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J407AP</key>
+				<string>iPad13,16</string>
+				<key>J408AP</key>
+				<string>iPad13,17</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPad Pro</key>
 	<dict>
@@ -1064,6 +1076,16 @@
 			<dict>
 				<key>D64AP</key>
 				<string>iPhone14,3</string>
+			</dict>
+		</dict>
+		<key>iPhone SE (3rd generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D49AP</key>
+				<string>iPhone14,6</string>
 			</dict>
 		</dict>
 	</dict>
