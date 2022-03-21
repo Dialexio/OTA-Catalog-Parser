@@ -2,6 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Apple Studio Display</key>
+	<dict>
+		<key>Apple Studio Display (1st generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>J327AP</key>
+				<string>AppleDisplay2,1</string>
+			</dict>
+		</dict>
+	</dict>
 	<key>Apple TV</key>
 	<dict>
 		<key>Apple TV (2nd generation)</key>
@@ -1191,6 +1204,21 @@
 			<dict>
 				<key>J160AP</key>
 				<string>MacPro7,1</string>
+			</dict>
+		</dict>
+	</dict>
+	<key>Mac Studio</key>
+	<dict>
+		<key>Mac Studio (2022)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J375cAP</key>
+				<string>Mac13,1</string>
+				<key>J375dAP</key>
+				<string>Mac13,2</string>
 			</dict>
 		</dict>
 	</dict>

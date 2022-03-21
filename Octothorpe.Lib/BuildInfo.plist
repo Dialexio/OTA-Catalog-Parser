@@ -569,6 +569,37 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>displayOS</key>
+	<dict>
+		<key>15.3</key>
+		<dict>
+			<key>19D49</key>
+			<dict>
+				<key>Date</key>
+				<integer>20220120</integer>
+				<key>Suffix</key>
+				<string>RC</string>
+			</dict>
+			<key>19D50</key>
+			<dict>
+				<key>Date</key>
+				<integer>20220127</integer>
+			</dict>
+			<key>19D8050</key>
+			<dict>
+				<key>Date</key>
+				<integer>20220318</integer>
+			</dict>
+		</dict>
+		<key>15.4</key>
+		<dict>
+			<key>19E241</key>
+			<dict>
+				<key>Date</key>
+				<integer>20220314</integer>
+			</dict>
+		</dict>
+	</dict>
 	<key>iOS</key>
 	<dict>
 		<key>5.1</key>
@@ -3247,6 +3278,11 @@
 		</dict>
 		<key>12.2</key>
 		<dict>
+			<key>21D2048</key>
+			<dict>
+				<key>Date</key>
+				<integer>20220318</integer>
+			</dict>
 			<key>21D5025f</key>
 			<dict>
 				<key>Beta</key>

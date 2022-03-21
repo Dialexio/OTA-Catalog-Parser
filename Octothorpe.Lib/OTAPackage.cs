@@ -102,6 +102,7 @@ namespace Octothorpe.Lib
                     // If that returns nothing, we check if the OTAPackage.DeclaredBuild
                     // looks like a beta build.
                     case "Beta":
+                    case "Darwin":
                     case "Public":
                         if (DocumentationID.Contains("Public"))
                             return 1;
@@ -167,7 +168,9 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return ENTRY.TryGetValue("AllowableOTA", out object allowable) ? (bool)allowable : true;
+                return ENTRY.TryGetValue("AllowableOTA", out object allowable) ?
+                    (bool)allowable :
+                    true;
             }
         }
 
@@ -181,7 +184,9 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return ENTRY.TryGetValue("AssetType", out object assettype) ? (string)assettype : null;
+                return ENTRY.TryGetValue("AssetType", out object assettype) ?
+                    (string)assettype :
+                    null;
             }
         }
 
@@ -332,7 +337,9 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return ENTRY.TryGetValue("SUDocumentationID", out object docid) ? (string)docid : "N/A";
+                return ENTRY.TryGetValue("SUDocumentationID", out object docid) ?
+                    (string)docid :
+                    "N/A";
             }
         }
 
@@ -356,9 +363,9 @@ namespace Octothorpe.Lib
                             osName = "audioOS";
                             break;
 
-                        // tvOS
+                        // displayOS / tvOS
                         case "App":
-                            osName = "tvOS";
+                            osName = (SupportedDevices[0].Contains("Display") ? "displayOS" : "tvOS");
                             break;
 
                         // macOS
@@ -452,6 +459,30 @@ namespace Octothorpe.Lib
         }
 
         /// <returns>
+        /// The "_MaxOSVersion" key, as a string. If this key isn't present, returns "99.99" instead. This key is present for Apple Studio Display.
+        /// </returns>
+
+        public string MaxOSVersion
+        {
+            get
+            {
+                return (ENTRY.TryGetValue("_MaxOSVersion", out object version) ? (string)version : "99.99");
+            }
+        }
+
+        /// <returns>
+        /// The "_MinOSVersion" key, as a string. If this key isn't present, returns OTAPackage.PrerequisiteVer() instead. This key is present for Apple Studio Display.
+        /// </returns>
+
+        public string MinOSVersion
+        {
+            get
+            {
+                return (ENTRY.TryGetValue("_MinOSVersion", out object version) ? (string)version : PrerequisiteVer());
+            }
+        }
+
+        /// <returns>
         /// The "OSVersion" key, as a string. For iOS 10 and newer, this will also strip "9.9." from the version.
         /// </returns>
 
@@ -515,9 +546,9 @@ namespace Octothorpe.Lib
                             osName = "audioOS";
                             break;
 
-                        // tvOS
+                        // displayOS / tvOS
                         case "App":
-                            osName = "tvOS";
+                            osName = (SupportedDevices[0].Contains("Display") ? "displayOS" : "tvOS");
                             break;
 
                         // macOS

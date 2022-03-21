@@ -237,7 +237,7 @@ namespace Octothorpe.Lib
         private void ErrorCheck(bool Pallas)
         {
             // Device check.
-            if (Device == null || Regex.IsMatch(Device, @"(ADP|AppleTV|AudioAccessory|iMac(Pro)?|iPad|iPhone|iPod|Mac(mini|Pro)?|MacBook(Air|Pro)?|Watch)(\d)?\d,\d") == false)
+            if (Device == null || Regex.IsMatch(Device, @"(ADP|AppleDisplay|AppleTV|AudioAccessory|iMac(Pro)?|iPad|iPhone|iPod|Mac(mini|Pro)?|MacBook(Air|Pro)?|Watch)(\d)?\d,\d") == false)
                 throw new ArgumentException("device");
 
             if ((Device.Contains("ADP") || Device.Contains("Mac")) && Pallas == false)
@@ -362,27 +362,40 @@ namespace Octothorpe.Lib
                     }
                     break;
 
-                // tvOS
+                // We have to break up displayOS and tvOS further.
                 case "App":
-                    BuildInfo = (NSDictionary)BuildInfo["tvOS"];
-
-                    AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0", null);
-
-                    // Beta Asset Audiences
-                    if (showBeta)
+                    // displayOS
+                    if (Device.Contains("Display"))
                     {
-                        // Let's cut down on the amount of requests we make.
-                        if (pallasCurrentVersion.CompareTo(new Version("13.0")) < 0)
-                            AssetAudiences.Add("5b220c65-fe50-460b-bac5-b6774b2ff475", "Beta"); // tvOS 12 beta
+                        BuildInfo = (NSDictionary)BuildInfo["iOS"];
+                        SUAssetType = "com.apple.MobileAsset.DarwinAccessoryUpdate.A2525";
 
-                        if (pallasCurrentVersion.CompareTo(new Version("14.0")) < 0)
-                            AssetAudiences.Add("975af5cb-019b-42db-9543-20327280f1b2", "Beta"); // tvOS 13 beta
+                        AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65", null);
+                    }
 
-                        if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
-                            AssetAudiences.Add("65254ac3-f331-4c19-8559-cbe22f5bc1a6", "Beta"); // tvOS 14 beta
+                    // tvOS
+                    else
+                    {
+                        BuildInfo = (NSDictionary)BuildInfo["tvOS"];
 
-                        if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
-                            AssetAudiences.Add("4d0dcdf7-12f2-4ebf-9672-ac4a4459a8bc", "Beta"); // tvOS 15 beta
+                        AssetAudiences.Add("356d9da0-eee4-4c6c-bbe5-99b60eadddf0", null);
+
+                        // Beta Asset Audiences
+                        if (showBeta)
+                        {
+                            // Let's cut down on the amount of requests we make.
+                            if (pallasCurrentVersion.CompareTo(new Version("13.0")) < 0)
+                                AssetAudiences.Add("5b220c65-fe50-460b-bac5-b6774b2ff475", "Beta"); // tvOS 12 beta
+
+                            if (pallasCurrentVersion.CompareTo(new Version("14.0")) < 0)
+                                AssetAudiences.Add("975af5cb-019b-42db-9543-20327280f1b2", "Beta"); // tvOS 13 beta
+
+                            if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                                AssetAudiences.Add("65254ac3-f331-4c19-8559-cbe22f5bc1a6", "Beta"); // tvOS 14 beta
+
+                            if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
+                                AssetAudiences.Add("4d0dcdf7-12f2-4ebf-9672-ac4a4459a8bc", "Beta"); // tvOS 15 beta
+                        }
                     }
                     break;
 
