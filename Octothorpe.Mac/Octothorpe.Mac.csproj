@@ -102,7 +102,7 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="JWT">
-      <HintPath>..\packages\JWT.8.9.0\lib\netstandard2.0\JWT.dll</HintPath>
+      <HintPath>..\packages\JWT.9.0.0\lib\netstandard2.0\JWT.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -114,7 +114,7 @@
       <HintPath>..\packages\System.Text.Encodings.Web.6.0.0\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Json">
-      <HintPath>..\packages\System.Text.Json.6.0.2\lib\netstandard2.0\System.Text.Json.dll</HintPath>
+      <HintPath>..\packages\System.Text.Json.6.0.4\lib\netstandard2.0\System.Text.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -161,5 +161,5 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Import Project="..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" />
+  <Import Project="..\packages\System.Text.Json.6.0.4\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.4\build\System.Text.Json.targets')" />
 </Project>
