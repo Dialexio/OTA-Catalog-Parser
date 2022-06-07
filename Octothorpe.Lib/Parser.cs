@@ -237,10 +237,10 @@ namespace Octothorpe.Lib
         private void ErrorCheck(bool Pallas)
         {
             // Device check.
-            if (Device == null || Regex.IsMatch(Device, @"(ADP|AppleDisplay|AppleTV|AudioAccessory|iMac(Pro)?|iPad|iPhone|iPod|Mac(mini|Pro)?|MacBook(Air|Pro)?|Watch)(\d)?\d,\d") == false)
+            if (Device == null || Regex.IsMatch(Device, @"(ADP|AppleDisplay|AppleTV|AudioAccessory|iMac(Pro)?|iPad|iPhone|iPod|Mac(mini|Pro)?|MacBook(Air|Pro)?|VirtualMac|Watch)(\d)?\d,\d") == false)
                 throw new ArgumentException("device");
 
-            if ((Device.Contains("ADP") || Device.Contains("Mac")) && Pallas == false)
+            if ((Device.Contains("ADP") || Device.Contains("AppleDisplay") || Device.Contains("Mac")) && Pallas == false)
                 throw new ArgumentException("needspallas");
 
             DeviceIsWatch = Regex.IsMatch(Device, @"Watch\d,\d");
@@ -356,18 +356,20 @@ namespace Octothorpe.Lib
                         if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
                             AssetAudiences.Add("b05ddb59-b26d-4c89-9d09-5fda15e99207", "Beta"); // audioOS 14 beta
 
-
                         if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
                             AssetAudiences.Add("58ff8d56-1d77-4473-ba88-ee1690475e40", "Beta"); // audioOS 15 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("17.0")) < 0)
+                            AssetAudiences.Add("59377047-7b3f-45b9-8e99-294c0daf3c85", "Beta"); // audioOS 16 beta
                     }
                     break;
 
                 // We have to break up displayOS and tvOS further.
                 case "App":
                     // displayOS
-                    if (Device.Contains("Display"))
+                    if (Device.Contains("AppleDisplay"))
                     {
-                        BuildInfo = (NSDictionary)BuildInfo["iOS"];
+                        BuildInfo = (NSDictionary)BuildInfo["displayOS"];
                         SUAssetType = "com.apple.MobileAsset.DarwinAccessoryUpdate.A2525";
 
                         AssetAudiences.Add("60b55e25-a8ed-4f45-826c-c1495a4ccc65", null);
@@ -395,6 +397,9 @@ namespace Octothorpe.Lib
 
                             if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
                                 AssetAudiences.Add("4d0dcdf7-12f2-4ebf-9672-ac4a4459a8bc", "Beta"); // tvOS 15 beta
+
+                            if (pallasCurrentVersion.CompareTo(new Version("17.0")) < 0)
+                                AssetAudiences.Add("d6bac98b-9e2a-4f87-9aba-22c898b25d84", "Beta"); // tvOS 16 beta
                         }
                     }
                     break;
@@ -416,19 +421,22 @@ namespace Octothorpe.Lib
                     {
                         // Let's cut down on the amount of requests we make.
                         if (pallasCurrentVersion.CompareTo(new Version("12.0")) < 0)
-                            AssetAudiences.Add("b7580fda-59d3-43ae-9488-a81b825e3c73", "Beta"); // 11
+                            AssetAudiences.Add("b7580fda-59d3-43ae-9488-a81b825e3c73", "Beta"); // iOS 11 beta
 
                         if (pallasCurrentVersion.CompareTo(new Version("13.0")) < 0)
-                            AssetAudiences.Add("ef473147-b8e7-4004-988e-0ae20e2532ef", "Beta"); // 12
+                            AssetAudiences.Add("ef473147-b8e7-4004-988e-0ae20e2532ef", "Beta"); // iOS 12 beta
 
-                        if (pallasCurrentVersion.CompareTo(new Version("14.0")) < 0)
-                            AssetAudiences.Add("d8ab8a45-ee39-4229-891e-9d3ca78a87ca", "Beta"); // 13
+                        if (pallasCurrentVersion.CompareTo(new Version("12.3")) >= 0 && pallasCurrentVersion.CompareTo(new Version("14.0")) < 0)
+                            AssetAudiences.Add("d8ab8a45-ee39-4229-891e-9d3ca78a87ca", "Beta"); // iOS 13 beta
 
-                        if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
-                            AssetAudiences.Add("dbbb0481-d521-4cdf-a2a4-5358affc224b", "Beta"); // 14
+                        if (pallasCurrentVersion.CompareTo(new Version("13.5")) >= 0 && pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                            AssetAudiences.Add("dbbb0481-d521-4cdf-a2a4-5358affc224b", "Beta"); // iOS 14 beta
 
-                        if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
-                            AssetAudiences.Add("ce48f60c-f590-4157-a96f-41179ca08278", "Beta"); // 15
+                        if (pallasCurrentVersion.CompareTo(new Version("14.3")) >= 0 && pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
+                            AssetAudiences.Add("ce48f60c-f590-4157-a96f-41179ca08278", "Beta"); // iOS 15 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("15.1")) >= 0 && pallasCurrentVersion.CompareTo(new Version("17.0")) < 0)
+                            AssetAudiences.Add("a6050bca-50d8-4e45-adc2-f7333396a42c", "Beta"); // iOS 16 beta
                     }
 
                     break;
@@ -437,6 +445,7 @@ namespace Octothorpe.Lib
                 case "ADP":
                 case "iMa":
                 case "Mac":
+                case "Vir":
                     BuildInfo = (NSDictionary)BuildInfo["macOS"];
                     SUAssetType = "com.apple.MobileAsset.MacSoftwareUpdate";
 
@@ -488,6 +497,9 @@ namespace Octothorpe.Lib
 
                         if (pallasCurrentVersion.CompareTo(new Version("9.0")) < 0)
                             AssetAudiences.Add("b407c130-d8af-42fc-ad7a-171efea5a3d0", "Beta"); // watchOS 8 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("10.0")) < 0)
+                            AssetAudiences.Add("341f2a17-0024-46cd-968d-b4444ec3699f", "Beta"); // watchOS 8 beta
                     }
                     break;
             }
@@ -549,6 +561,8 @@ namespace Octothorpe.Lib
                         {
                             JsonRequest = new
                             {
+                                AllowSameBuildVersion = false,
+                                AllowSameRestoreVersion = false,
                                 AssetAudience = PallasAssetAudience.Key,
                                 AssetType = SUAssetType,
                                 BaseUrl = "https://mesu.apple.com/assets/",
@@ -624,6 +638,8 @@ namespace Octothorpe.Lib
                             AssetsArray = null;
                             package = null;
                         }
+
+                        DecryptedPayload.Clear();
                     }
                 }
             }
@@ -646,11 +662,20 @@ namespace Octothorpe.Lib
                     case "ADP":
                     case "iMa":
                     case "Mac":
+                    case "Vir":
                         osName = "macOS";
                         break;
 
+                    // We have to break up displayOS and tvOS further.
                     case "App":
-                        osName = (Regex.Match(Device, @"AppleTV(2,1|3,1|3,2)").Success) ? "Apple TV software" : "tvOS";
+                        // displayOS
+                        if (Device.Contains("AppleDisplay"))
+                            osName = "displayOS";
+
+                        // tvOS
+                        else
+                            osName = (Regex.Match(Device, @"AppleTV(2,1|3,1|3,2)").Success) ? "Apple TV software" : "tvOS";
+
                         break;
 
                     case "Aud":
@@ -789,7 +814,7 @@ namespace Octothorpe.Lib
                 Output.AppendLine("! OTA Download URL");
                 Output.AppendLine("! File Size");
             }
-        
+
             foreach (OTAPackage package in Packages)
             {
                 BorkedDelta = (package.SupportedDevices.Contains("iPod5,1") && package.PrerequisiteBuild == "10B141");
