@@ -871,8 +871,8 @@ namespace Octothorpe.Lib
                 if (name.Success)
                     fileName = name.ToString();
 
-                // Hacky workaround to handle 9.0 rowspan for watchOS.
-                if (DeviceIsWatch && MarketingVersionRowspan.ContainsKey("9.0"))
+                // Hacky workaround to handle watchOS 2.x calling itself "9.0".
+                if (DeviceIsWatch && package.ActualBuild.StartsWith("13S"))
                 {
                     MarketingVersionRowspan.Remove("9.0");
                     WatchPlus2 = true;
