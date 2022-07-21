@@ -1274,6 +1274,16 @@
 				<string>MacBookAir10,1</string>
 			</dict>
 		</dict>
+		<key>MacBook Air (Mid 2022)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J313AP</key>
+				<string>Mac14,2</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>MacBook Pro</key>
 	<dict>
@@ -1337,6 +1347,16 @@
 			<dict>
 				<key>J293AP</key>
 				<string>MacBookPro17,1</string>
+			</dict>
+		</dict>
+		<key>MacBook Pro (13&quot; Mid 2022)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J293AP</key>
+				<string>Mac14,7</string>
 			</dict>
 		</dict>
 		<key>MacBook Pro (14&quot; Late 2021)</key>
