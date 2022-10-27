@@ -453,6 +453,30 @@
 				<string>iPad11,7</string>
 			</dict>
 		</dict>
+		<key>iPad (9th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J181AP</key>
+				<string>iPad12,1</string>
+				<key>J182AP</key>
+				<string>iPad12,2</string>
+			</dict>
+		</dict>
+		<key>iPad (10th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J271AP</key>
+				<string>iPad13,18</string>
+				<key>J272AP</key>
+				<string>iPad13,19</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPad Air</key>
 	<dict>
@@ -569,7 +593,7 @@
 				<string>iPad7,4</string>
 			</dict>
 		</dict>
-		<key>iPad Pro (11-inch)</key>
+		<key>iPad Pro (11-inch 1st generation)</key>
 		<dict>
 			<key>HeaderLevel</key>
 			<integer>3</integer>
@@ -655,6 +679,30 @@
 				<string>iPad13,10</string>
 				<key>J523xAP</key>
 				<string>iPad13,11</string>
+			</dict>
+		</dict>
+		<key>iPad Pro (11-inch 4th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J617AP</key>
+				<string>iPad14,3</string>
+				<key>J618AP</key>
+				<string>iPad14,4</string>
+			</dict>
+		</dict>
+		<key>iPad Pro (12.9-inch 6th generation)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J620AP</key>
+				<string>iPad14,5</string>
+				<key>J621AP</key>
+				<string>iPad14,6</string>
 			</dict>
 		</dict>
 	</dict>
@@ -1099,6 +1147,46 @@
 			<dict>
 				<key>D49AP</key>
 				<string>iPhone14,6</string>
+			</dict>
+		</dict>
+		<key>iPhone 14</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D27AP</key>
+				<string>iPhone14,7</string>
+			</dict>
+		</dict>
+		<key>iPhone 14 Plus</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D28AP</key>
+				<string>iPhone14,8</string>
+			</dict>
+		</dict>
+		<key>iPhone 14 Pro</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D73AP</key>
+				<string>iPhone15,2</string>
+			</dict>
+		</dict>
+		<key>iPhone 14 Pro Max</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D74AP</key>
+				<string>iPhone15,3</string>
 			</dict>
 		</dict>
 	</dict>
