@@ -412,8 +412,8 @@ namespace Octothorpe.Lib
 
                     AssetAudiences.Add("01c1d682-6e8f-4908-b724-5501fe3f5e5c", null);
 
-                    // iOS 14 security releases
-                    if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                    // iOS security releases
+                    if (pallasCurrentVersion.CompareTo(new Version("16.0")) < 0)
                         AssetAudiences.Add("c724cb61-e974-42d3-a911-ffd4dce11eda", null);
 
                     // Beta Asset Audiences
