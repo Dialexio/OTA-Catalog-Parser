@@ -178,7 +178,7 @@ namespace Octothorpe.Lib
         /// Reports the MobileAsset type.
         /// </summary>
         /// <returns>
-        /// A string value of the MobileAsset type. It should be "com.apple.MobileAsset.SoftwareUpdate" or "com.apple.MobileAsset.MacSoftwareUpdate"
+        /// A string value of the MobileAsset type. It should be "com.apple.MobileAsset.SoftwareUpdate", "com.apple.MobileAsset.MacSoftwareUpdate", or "com.apple.MobileAsset.SplatSoftwareUpdate"
         /// </returns>
         public string AssetType
         {
@@ -446,15 +446,20 @@ namespace Octothorpe.Lib
         {
             get
             {
+                string mv = OSVersion;
+
                 if (ENTRY.ContainsKey("MarketingVersion"))
                 {
-                    string mv = (string)ENTRY["MarketingVersion"];
+                    mv = (string)ENTRY["MarketingVersion"];
 
-                    return (mv.Contains(".") == false) ? $"{mv}.0" : mv;
+                    if (mv.Contains(".") == false)
+                        mv += ".0";
                 }
 
-                else
-                    return OSVersion;
+                if (string.IsNullOrEmpty(ProductVersionExtra) == false)
+                    mv += $" ${ProductVersionExtra}";
+
+                return mv;
             }
         }
 
@@ -627,6 +632,20 @@ namespace Octothorpe.Lib
                 return ENTRY.TryGetValue("PrerequisiteOSVersion", out object ver) ?
                     (string)ver :
                     "0.0";
+            }
+        }
+
+        /// <summary>
+        /// Specifies a suffix to append to the build number, commonly used with security response updates ("Splat Software Updates").
+        /// </summary>
+        /// <returns>
+        /// The "ProductVersionExtra" key, as a string. If the key is not present, returns null.
+        /// </returns>
+        public string ProductVersionExtra
+        {
+            get
+            {
+                return ENTRY.TryGetValue("ProductVersionExtra", out object extra) ? (string)extra : null;
             }
         }
 
