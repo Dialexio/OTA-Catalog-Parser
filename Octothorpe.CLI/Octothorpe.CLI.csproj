@@ -44,13 +44,13 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="JWT">
-      <HintPath>..\packages\JWT.9.0.3\lib\net46\JWT.dll</HintPath>
+      <HintPath>..\packages\JWT.10.0.2\lib\net40\JWT.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
-      <HintPath>..\packages\RestSharp.108.0.3\lib\netstandard2.0\RestSharp.dll</HintPath>
+      <HintPath>..\packages\RestSharp.109.0.1\lib\netstandard2.0\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System.Web" />
@@ -64,11 +64,8 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="System.ValueTuple">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Text.Json">
-      <HintPath>..\packages\System.Text.Json.7.0.0\lib\netstandard2.0\System.Text.Json.dll</HintPath>
+      <HintPath>..\packages\System.Text.Json.7.0.2\lib\netstandard2.0\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
   </ItemGroup>

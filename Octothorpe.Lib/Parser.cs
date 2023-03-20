@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2022 Dialexio
+ * Copyright (c) 2023 Dialexio
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -557,6 +557,44 @@ namespace Octothorpe.Lib
                             };
                         }
 
+                        // If the build is a beta for audioOS, iOS, or tvOS, specify a release type.
+                        else if (Regex.IsMatch(build.Key, OTAPackage.REGEX_BETA) && Regex.IsMatch(Device, "AppleTV|Audio|iPad|iPhone"))
+                        {
+                            JsonRequest = new
+                            {
+                                AllowSameBuildVersion = false,
+                                AllowSameRestoreVersion = false,
+                                AssetAudience = PallasAssetAudience.Key,
+                                AssetType = SUAssetType,
+                                BaseUrl = "https://mesu.apple.com/assets/",
+                                BuildVersion = build.Key,
+                                ClientData = new
+                                {
+                                    AllowXmlFallback = false,
+                                    DeviceAccessClient = "softwareupdateservicesd"
+                                },
+                                ClientVersion = 2,
+                                DelayRequested = pallasSupervised,
+                                DeviceOSData = new
+                                {
+                                    BuildVersion = build.Key,
+                                    HWModelStr = Model,
+                                    ProductType = Device,
+                                    ProductVersion = osVersion.Key
+                                },
+                                HWModelStr = Model,
+                                InternalBuild = false,
+                                IsUIBuild = true,
+                                NoFallback = true,
+                                ProductType = Device,
+                                ProductVersion = osVersion.Key,
+                                ReleaseType = "Beta",
+                                RequestedProductVersion = osVersion.Key,
+                                SigningFuse = true,
+                                Supervised = pallasSupervised
+                            };
+                        }
+
                         else
                         {
                             JsonRequest = new
@@ -605,7 +643,7 @@ namespace Octothorpe.Lib
 
                         // Get Apple's response, then decode it.
                         response = Fido.ExecuteAsync(request).GetAwaiter().GetResult();
-                        DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content);
+                        DecryptedPayload = ResponseDecoder.DecodeToObject<Dictionary<string, object>>(response.Content, "", false);
 
                         // Grab the release date. If none is present, default to all zeroes.
                         PostingDate = (DecryptedPayload.ContainsKey("PostingDate")) ?
