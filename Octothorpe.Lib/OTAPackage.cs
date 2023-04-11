@@ -839,7 +839,10 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return $"{SortingBuild()}${PrerequisiteVer().Split('.')[0]}${SortingPrerequisiteBuild()}${CompatibilityVersion}${ActualReleaseType}";
+                // If the prerequisite version is less than 10, pad it.
+                string SortPreVer = (PrerequisiteVer().Split('.')[0].Length < 2) ? $"0{PrerequisiteVer()}" : PrerequisiteVer();
+
+                return $"{SortingBuild()}${SortPreVer.Split(' ')[0]}${SortingPrerequisiteBuild()}${CompatibilityVersion}${ActualReleaseType}";
             }
         }
 
