@@ -14,7 +14,7 @@
         <PackageReference Include="plist-cil" Version="2.2.0" />
         <PackageReference Include="JWT" Version="10.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="RestSharp" Version="109.0.1" />
+        <PackageReference Include="RestSharp" Version="110.2.0" />
         </ItemGroup>
         <ItemGroup>
         <None Update="BuildInfo.plist">

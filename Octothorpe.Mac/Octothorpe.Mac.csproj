@@ -92,7 +92,7 @@
       <HintPath>..\packages\plist-cil.2.2.0\lib\netstandard2.0\plist-cil.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
-      <HintPath>..\packages\RestSharp.109.0.1\lib\netstandard2.0\RestSharp.dll</HintPath>
+      <HintPath>..\packages\RestSharp.110.2.0\lib\netstandard2.0\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
