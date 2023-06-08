@@ -400,6 +400,9 @@ namespace Octothorpe.Lib
 
                             if (pallasCurrentVersion.CompareTo(new Version("17.0")) < 0)
                                 AssetAudiences.Add("d6bac98b-9e2a-4f87-9aba-22c898b25d84", "Beta"); // tvOS 16 beta
+
+                            if (pallasCurrentVersion.CompareTo(new Version("18.0")) < 0)
+                                AssetAudiences.Add("61693fed-ab18-49f3-8983-7c3adf843913", "Beta"); // tvOS 17 beta
                         }
                     }
                     break;
@@ -437,6 +440,9 @@ namespace Octothorpe.Lib
 
                         if (pallasCurrentVersion.CompareTo(new Version("15.1")) >= 0 && pallasCurrentVersion.CompareTo(new Version("17.0")) < 0)
                             AssetAudiences.Add("a6050bca-50d8-4e45-adc2-f7333396a42c", "Beta"); // iOS 16 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("15.7")) >= 0 && pallasCurrentVersion.CompareTo(new Version("18.0")) < 0)
+                            AssetAudiences.Add("9dcdaf87-801d-42f6-8ec6-307bd2ab9955", "Beta"); // iOS 17 beta
                     }
 
                     break;
@@ -460,9 +466,15 @@ namespace Octothorpe.Lib
 
                         if (pallasCurrentVersion.CompareTo(new Version("13.0")) < 0)
                             AssetAudiences.Add("298e518d-b45e-4d36-94be-34a63d6777ec", "Beta"); // macOS 12 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("14.0")) < 0)
+                            AssetAudiences.Add("683e9586-8a82-4e5f-b0e7-767541864b8b", "Beta"); // macOS 13 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("15.0")) < 0)
+                            AssetAudiences.Add("77c3bd36-d384-44e8-b550-05122d7da438", "Beta"); // macOS 14 beta
                     }
 
-                    // We also need to splice the build number. This looked like an ideal spot to put it without creating another if statement.
+                    // We also need to splice the build number.
                     foreach (char BuildChar in pallasCurrentBuild)
                     {
                         if ((char.IsDigit(BuildChar) || char.IsLower(BuildChar)) == false)
@@ -499,7 +511,10 @@ namespace Octothorpe.Lib
                             AssetAudiences.Add("b407c130-d8af-42fc-ad7a-171efea5a3d0", "Beta"); // watchOS 8 beta
 
                         if (pallasCurrentVersion.CompareTo(new Version("10.0")) < 0)
-                            AssetAudiences.Add("341f2a17-0024-46cd-968d-b4444ec3699f", "Beta"); // watchOS 8 beta
+                            AssetAudiences.Add("341f2a17-0024-46cd-968d-b4444ec3699f", "Beta"); // watchOS 9 beta
+
+                        if (pallasCurrentVersion.CompareTo(new Version("11.0")) < 0)
+                            AssetAudiences.Add("7ae7f3b9-886a-437f-9b22-e9f017431b0e", "Beta"); // watchOS 10 beta
                     }
                     break;
             }
@@ -903,11 +918,8 @@ namespace Octothorpe.Lib
                 }
 
                 // Obtain the file name.
-                fileName = string.Empty;
                 name = Regex.Match(package.URL, @"[0-9a-f]{40}\.zip");
-
-                if (name.Success)
-                    fileName = name.ToString();
+                fileName = (name.Success) ? name.ToString() : string.Empty;
 
                 // Hacky workaround to handle watchOS 2.x calling itself "9.0".
                 if (DeviceIsWatch && package.ActualBuild.StartsWith("13S"))

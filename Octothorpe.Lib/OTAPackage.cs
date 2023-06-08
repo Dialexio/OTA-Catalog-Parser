@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Octothorpe.Lib
@@ -34,7 +35,7 @@ namespace Octothorpe.Lib
     {
         private Match match;
         private readonly Dictionary<string, object> ENTRY;
-        private readonly NSDictionary BUILD_INFO_DICT = (NSDictionary)PropertyListParser.Parse(AppContext.BaseDirectory + Path.DirectorySeparatorChar + "BuildInfo.plist");
+        private readonly NSDictionary BUILD_INFO_DICT = (NSDictionary)PropertyListParser.Parse($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}BuildInfo.plist");
 
         public OTAPackage(Dictionary<string, object> package)
         {
@@ -214,7 +215,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                if (GetKey("Beta") == null)
+                if (GetKeyFromBuildInfo("Beta") == null)
                 {
                     string number = DocumentationID.Substring(DocumentationID.Length - 2);
 
@@ -236,7 +237,7 @@ namespace Octothorpe.Lib
 
                 else
                 {
-                    return (int)GetKey("Beta");
+                    return (int)GetKeyFromBuildInfo("Beta");
                 }
             }
         }
@@ -270,7 +271,7 @@ namespace Octothorpe.Lib
         /// </returns>
         public string Date()
         {
-            if (GetKey("Date") == null)
+            if (GetKeyFromBuildInfo("Date") == null)
             {
                 // Catch excess zeroes, e.g. "2016008004"
                 match = Regex.Match(URL, @"\d{4}(\-|\.)20\d{8}\-");
@@ -291,7 +292,7 @@ namespace Octothorpe.Lib
             }
 
             else
-                return GetKey("Date").ToString();
+                return GetKeyFromBuildInfo("Date").ToString();
         }
 
         /// <summary>
@@ -343,7 +344,7 @@ namespace Octothorpe.Lib
             }
         }
 
-        private object GetKey(string name)
+        private object GetKeyFromBuildInfo(string name)
         {
             NSDictionary ItemsForBuild;
             string osName = null;
@@ -446,20 +447,20 @@ namespace Octothorpe.Lib
         {
             get
             {
-                string mv = OSVersion;
+                StringBuilder mv = new StringBuilder(OSVersion);
 
                 if (ENTRY.ContainsKey("MarketingVersion"))
                 {
-                    mv = (string)ENTRY["MarketingVersion"];
+                    mv = new StringBuilder((string)ENTRY["MarketingVersion"]);
 
-                    if (mv.Contains(".") == false)
-                        mv += ".0";
+                    if (mv.ToString().Contains(".") == false)
+                        mv.Append(".0");
                 }
 
                 if (string.IsNullOrEmpty(ProductVersionExtra) == false)
-                    mv += $" ${ProductVersionExtra}";
+                    mv.Append($" {ProductVersionExtra}");
 
-                return mv;
+                return mv.ToString();
             }
         }
 
@@ -495,14 +496,14 @@ namespace Octothorpe.Lib
         {
             get
             {
-                if (GetKey("Version") == null)
+                if (GetKeyFromBuildInfo("Version") == null)
                 {
                     string version = (string)ENTRY["OSVersion"];
                     return (version.Substring(0, 3) == "9.9") ? version.Substring(4) : version;
                 }
 
                 else
-                    return (string)GetKey("Version");
+                    return (string)GetKeyFromBuildInfo("Version");
             }
         }
 
@@ -856,7 +857,7 @@ namespace Octothorpe.Lib
         {
             get
             {
-                return (string)GetKey("Suffix");
+                return (string)GetKeyFromBuildInfo("Suffix");
             }
         }
 
