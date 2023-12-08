@@ -323,6 +323,18 @@
 				<string>iMac21,2</string>
 			</dict>
 		</dict>
+		<key>iMac (24&quot; 2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J433AP</key>
+				<string>Mac15,4</string>
+				<key>J434AP</key>
+				<string>Mac15,5</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iMac Pro</key>
 	<dict>
@@ -1189,6 +1201,46 @@
 				<string>iPhone15,3</string>
 			</dict>
 		</dict>
+		<key>iPhone 15</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D37AP</key>
+				<string>iPhone15,4</string>
+			</dict>
+		</dict>
+		<key>iPhone 15 Plus</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D38AP</key>
+				<string>iPhone15,5</string>
+			</dict>
+		</dict>
+		<key>iPhone 15 Pro</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D83AP</key>
+				<string>iPhone16,1</string>
+			</dict>
+		</dict>
+		<key>iPhone 15 Pro Max</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>D84AP</key>
+				<string>iPhone16,2</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>iPod touch</key>
 	<dict>
@@ -1281,6 +1333,18 @@
 				<string>Macmini9,1</string>
 			</dict>
 		</dict>
+		<key>Mac mini (2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J473AP</key>
+				<string>Mac14,3</string>
+				<key>J474sAP</key>
+				<string>Mac14,2</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>Mac Pro</key>
 	<dict>
@@ -1307,6 +1371,18 @@
 				<string>Mac13,1</string>
 				<key>J375dAP</key>
 				<string>Mac13,2</string>
+			</dict>
+		</dict>
+		<key>Mac Studio (2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J475cAP</key>
+				<string>Mac14,13</string>
+				<key>J475dAP</key>
+				<string>Mac14,14</string>
 			</dict>
 		</dict>
 	</dict>
@@ -1370,6 +1446,16 @@
 			<dict>
 				<key>J313AP</key>
 				<string>Mac14,2</string>
+			</dict>
+		</dict>
+		<key>MacBook Air (2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J415AP</key>
+				<string>Mac14,8</string>
 			</dict>
 		</dict>
 	</dict>
@@ -1459,6 +1545,34 @@
 				<string>MacBookPro18,4</string>
 			</dict>
 		</dict>
+		<key>MacBook Pro (14&quot; Mid 2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J414cAP</key>
+				<string>Mac14,5</string>
+				<key>J414sAP</key>
+				<string>Mac14,9</string>
+			</dict>
+		</dict>
+		<key>MacBook Pro (14&quot; Late 2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J504AP</key>
+				<string>Mac15,3</string>
+				<key>J514cAP</key>
+				<string>Mac15,6</string>
+				<key>J514mAP</key>
+				<string>Mac15,8</string>
+				<key>J514sAP</key>
+				<string>Mac15,10</string>
+			</dict>
+		</dict>
 		<key>MacBook Pro (15&quot; Late 2013)</key>
 		<dict>
 			<key>HeaderLevel</key>
@@ -1545,6 +1659,32 @@
 				<string>MacBookPro18,1</string>
 				<key>J316cAP</key>
 				<string>MacBookPro18,2</string>
+			</dict>
+		</dict>
+		<key>MacBook Pro (16&quot; Mid 2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J416cAP</key>
+				<string>Mac14,6</string>
+				<key>J416sAP</key>
+				<string>Mac14,10</string>
+			</dict>
+		</dict>
+		<key>MacBook Pro (16&quot; Late 2023)</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>3</integer>
+			<key>Models</key>
+			<dict>
+				<key>J516cAP</key>
+				<string>Mac15,7</string>
+				<key>J516mAP</key>
+				<string>Mac15,9</string>
+				<key>J516sAP</key>
+				<string>Mac15,11</string>
 			</dict>
 		</dict>
 		<key>MacBook Pro (17&quot; Late 2011)</key>
