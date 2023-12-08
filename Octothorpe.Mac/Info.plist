@@ -7,7 +7,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>io.dialex.ota-catalog-parser</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2.0.10</string>
+	<string>2.2.0.11</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.9</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -19,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>OTA Catalog Parser 2.2.0.10, Copyright ©2023 Dialexio</string>
+	<string>OTA Catalog Parser 2.2.0.11, Copyright ©2023 Dialexio</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>NSMainNibFile</key>
@@ -29,6 +29,6 @@
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>CFBundleVersion</key>
-	<string>2.2.0.10</string>
+	<string>2.2.0.11</string>
 </dict>
 </plist>

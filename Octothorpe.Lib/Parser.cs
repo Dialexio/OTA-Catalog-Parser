@@ -915,6 +915,12 @@ namespace Octothorpe.Lib
                         if (Version.Parse(package.OSVersion).CompareTo(Version.Parse("11.2")) >= 0)
                             ReduceRowspanBy = 1;
                         break;
+
+                    // For iOS 17.1 and newer, iOS 17.0 and 17.0.3 share the same delta, but iOS 17.0.1 and iOS 17.0.2 do not.
+                    case "21A329":
+                        if (Version.Parse(package.OSVersion).CompareTo(Version.Parse("17.1")) >= 0)
+                            ReduceRowspanBy = 1;
+                        break;
                 }
 
                 // Obtain the file name.

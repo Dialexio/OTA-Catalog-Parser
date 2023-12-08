@@ -75,7 +75,7 @@ namespace Octothorpe.CLI
                         Console.WriteLine("-min <version>   Choose the lowest firmware version you are searching for. (e.g. 8.4.1)");
                         Console.WriteLine("-s               Removes stubs. Apple uses stubs for problematic OTA updates.");
                         Console.WriteLine("-t               If -w is specified, the parser will also output the table headers.");
-                        Console.WriteLine("-w               Formats the output for The iPhone Wiki.");
+                        Console.WriteLine("-w               Formats the output for The Apple Wiki.");
                         Environment.Exit(0);
                         break;
 

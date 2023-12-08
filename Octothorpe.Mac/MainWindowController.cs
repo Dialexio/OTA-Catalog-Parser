@@ -143,9 +143,9 @@ namespace Octothorpe.Mac
 
         partial void ChangeOutputFormat(NSButton sender)
         {
-            DisplayWikiMarkup = (sender.Title == "The iPhone Wiki markup");
-            TableHeaders.Enabled = (sender.Title == "The iPhone Wiki markup");
-            TableHeaders.Hidden = (sender.Title != "The iPhone Wiki markup");
+            DisplayWikiMarkup = (sender.Title == "The Apple Wiki markup");
+            TableHeaders.Enabled = (sender.Title == "The Apple Wiki markup");
+            TableHeaders.Hidden = (sender.Title != "The Apple Wiki markup");
 
             if (TableHeaders.Enabled == false)
                 TableHeaders.State = NSCellStateValue.Off;
