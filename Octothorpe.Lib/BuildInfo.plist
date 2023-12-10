@@ -3845,7 +3845,7 @@
 				<key>Date</key>
 				<integer>20231205</integer>
 				<key>Suffix</key>
-				<string>GM</string>
+				<string>RC</string>
 			</dict>
 		</dict>
 	</dict>
@@ -5374,14 +5374,14 @@
 				<key>Date</key>
 				<integer>20231205</integer>
 				<key>Suffix</key>
-				<string>GM</string>
+				<string>RC</string>
 			</dict>
 			<key>23C64</key>
 			<dict>
 				<key>Date</key>
 				<integer>20231207</integer>
 				<key>Suffix</key>
-				<string>GM 2</string>
+				<string>RC 2</string>
 			</dict>
 		</dict>
 	</dict>
@@ -6963,7 +6963,14 @@
 				<key>Date</key>
 				<integer>20231205</integer>
 				<key>Suffix</key>
-				<string>GM</string>
+				<string>RC</string>
+			</dict>
+			<key>21K365</key>
+			<dict>
+				<key>Date</key>
+				<integer>20231208</integer>
+				<key>Suffix</key>
+				<string>RC 2</string>
 			</dict>
 		</dict>
 	</dict>
@@ -9682,7 +9689,7 @@
 				<key>Date</key>
 				<integer>20231205</integer>
 				<key>Suffix</key>
-				<string>GM</string>
+				<string>RC</string>
 			</dict>
 		</dict>
 	</dict>
