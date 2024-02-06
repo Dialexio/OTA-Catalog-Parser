@@ -74,6 +74,19 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>Apple Vision Pro</key>
+	<dict>
+		<key>Apple Vision Pro 1st generation</key>
+		<dict>
+			<key>HeaderLevel</key>
+			<integer>2</integer>
+			<key>Models</key>
+			<dict>
+				<key>N301AP</key>
+				<string>RealityDevice14,1</string>
+			</dict>
+		</dict>
+	</dict>
 	<key>Apple Watch</key>
 	<dict>
 		<key>Apple Watch 1st generation</key>
